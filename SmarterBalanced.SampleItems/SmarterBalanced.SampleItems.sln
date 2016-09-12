@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2AFB7917-7735-4090-97DD-FA468D05E1C8}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Web", "src\SmarterBalanced.SampleItems.Web\SmarterBalanced.SampleItems.Web.xproj", "{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Dal", "src\SmarterBalanced.SampleItems.Dal\SmarterBalanced.SampleItems.Dal.xproj", "{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Core", "src\SmarterBalanced.SampleItems.Core\SmarterBalanced.SampleItems.Core.xproj", "{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmarterBalanced.SampleItems.Test", "SmarterBalanced.SampleItems.Test\SmarterBalanced.SampleItems.Test.csproj", "{5C798A52-0687-4F9F-9DA2-85E0F18F09A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A} = {E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C798A52-0687-4F9F-9DA2-85E0F18F09A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C798A52-0687-4F9F-9DA2-85E0F18F09A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C798A52-0687-4F9F-9DA2-85E0F18F09A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C798A52-0687-4F9F-9DA2-85E0F18F09A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
+	EndGlobalSection
+EndGlobal
