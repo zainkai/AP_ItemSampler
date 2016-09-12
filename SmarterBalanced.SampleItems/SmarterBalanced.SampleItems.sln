@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Web", "src\SmarterBalanced.SampleItems.Web\SmarterBalanced.SampleItems.Web.xproj", "{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}"
 	ProjectSection(ProjectDependencies) = postProject
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}
 		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}
 	EndProjectSection
 EndProject

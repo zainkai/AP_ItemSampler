@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+
 namespace SmarterBalanced.SampleItems.Web
 {
     public class Startup
@@ -22,6 +23,8 @@ namespace SmarterBalanced.SampleItems.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
+            Core.Infrastructure.AutoMapperConfig.Configure();
+            Dal.Infrastructure.AutoMapperConfig.Configure();
 
             if (env.IsDevelopment())
             {
