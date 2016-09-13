@@ -15,9 +15,6 @@ namespace SmarterBalanced.SampleItems.Dal.Models.XMLRepresentations
         public int bank;
 
         [XmlAttribute("id")]
-
-    
-
-
+        public int itemKey { get; set; }
     }
 }
