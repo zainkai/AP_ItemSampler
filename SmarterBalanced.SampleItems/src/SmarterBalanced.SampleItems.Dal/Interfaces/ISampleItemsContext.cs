@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Interfaces
 {
-    public interface ISampleItemsContext : IDisposable
+    public interface ISampleItemsContext 
     {
         IEnumerable<ItemDigest> ItemDigests { get; set; }
-
-        void Dispose();
     }
 }
