@@ -17,10 +17,17 @@ namespace SmarterBalanced.SampleItems.Dal.Context
         /// </summary>
         public SampleItemsContext()
         {
-            throw new NotImplementedException();
-            ItemContents itemcontents = null;
-            ItemMetadata itemMetadata = null;
-            var stuff = ItemDigestTranslation.ItemToItemDigest(itemMetadata, itemcontents);
+            List<ItemDigest> digests = new List<ItemDigest>();
+            for(int i =0; i < 100; i++)
+            {
+                ItemDigest digest = new ItemDigest
+                {
+                    BankKey = 103,
+                    ItemKey = i
+                };
+                digests.Add(digest);
+            }
+            ItemDigests = digests;
         }
  
         public void Dispose()

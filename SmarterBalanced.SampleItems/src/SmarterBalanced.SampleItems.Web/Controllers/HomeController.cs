@@ -3,13 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Dal.Interfaces;
+using SmarterBalanced.SampleItems.Dal.Infrastructure;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private ISampleItemsRepo s_repo;
+
+        public HomeController(ISampleItemsRepo repo)
+        {
+            s_repo = repo;
+        }
+
+
         public IActionResult Index()
         {
+            var items = s_repo.GetItemDigests();
+            var item = items.Where(t => t.ItemKey == 8);
+
             return View();
         }
 
