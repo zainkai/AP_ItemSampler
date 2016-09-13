@@ -24,6 +24,11 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmarterBalanced.SampleItems.Test", "src\SmarterBalanced.SampleItems.Test\SmarterBalanced.SampleItems.Test.csproj", "{5C798A52-0687-4F9F-9DA2-85E0F18F09A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A} = {E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
