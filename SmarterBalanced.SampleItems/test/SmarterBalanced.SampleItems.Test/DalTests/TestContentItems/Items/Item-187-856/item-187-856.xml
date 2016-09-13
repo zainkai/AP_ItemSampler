@@ -1,0 +1,371 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="ht" id="856" version="10" bankkey="187">
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>856</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>ELA</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>ELA.07.CR.2.L.08.xxx</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::ELAG7::SP13 (15); PracTest::ELAG7::SP14 (20); PracTest::ELAG7::SP14::Braille (20);</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>HT</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>7</val>
+        <desc>7</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>HT</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>8</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>HotText</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1 pt.</val>
+        <desc>1 Point</desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1076" bankkey="187" />
+    <resourceslist />
+    <statistic />
+    <MachineRubric filename="Item_856_v10.qrx" />
+    <content language="ENU" version="2.0" approvedVersion="10">
+      <rationaleoptlist />
+      <stem><![CDATA[<p style="">A student is writing a report for science class. This paragraph from the draft of the report contains language that is not appropriate for the audience or the task. Read the paragraph and complete the task that follows. </p><p style="">&#xA0;</p><p style="margin-left:0in; margin-right:0.5in; text-indent:-0.0102in; "><span id="item_856_TAG_34_BEGIN">There are <span id="item_856_TAG_1_BEGIN"><span class="interaction selectable" data-its-identifier="1" data-its-group="1">loads of </span></span><span id="item_856_TAG_2_BEGIN"><span class="interaction selectable" data-its-identifier="2" data-its-group="1">reasons</span></span> to <span id="item_856_TAG_3_BEGIN"><span class="interaction selectable" data-its-identifier="3" data-its-group="1">eat </span></span><span id="item_856_TAG_4_BEGIN"><span class="interaction selectable" data-its-identifier="4" data-its-group="1">organic food</span></span>. The term “organic” <span id="item_856_TAG_5_BEGIN"><span class="interaction selectable" data-its-identifier="5" data-its-group="1">indicates</span></span> that the food <span id="item_856_TAG_6_BEGIN"><span class="interaction selectable" data-its-identifier="6" data-its-group="1">has been grown</span></span> without <span id="item_856_TAG_7_BEGIN"><span class="interaction selectable" data-its-identifier="7" data-its-group="1">pesticides</span></span> or other <span id="item_856_TAG_8_BEGIN"><span class="interaction selectable" data-its-identifier="8" data-its-group="1">chemicals.</span></span> A <span id="item_856_TAG_9_BEGIN"><span class="interaction selectable" data-its-identifier="9" data-its-group="1">consumer</span></span> who <span id="item_856_TAG_10_BEGIN"><span class="interaction selectable" data-its-identifier="10" data-its-group="1">chooses</span></span> to eat <span id="item_856_TAG_11_BEGIN"><span class="interaction selectable" data-its-identifier="11" data-its-group="1">organic food</span></span> does not <span id="item_856_TAG_12_BEGIN"><span class="interaction selectable" data-its-identifier="12" data-its-group="1">consume</span></span> any of this <span id="item_856_TAG_13_BEGIN"><span class="interaction selectable" data-its-identifier="13" data-its-group="1">junk</span></span>. <span id="item_856_TAG_14_BEGIN"><span class="interaction selectable" data-its-identifier="14" data-its-group="1">Crops</span></span> that are <span id="item_856_TAG_15_BEGIN"><span class="interaction selectable" data-its-identifier="15" data-its-group="1">grown</span></span> organically are <span id="item_856_TAG_16_BEGIN"><span class="interaction selectable" data-its-identifier="16" data-its-group="1">great</span></span> for the <span id="item_856_TAG_17_BEGIN"><span class="interaction selectable" data-its-identifier="17" data-its-group="1">land</span></span> because <span id="item_856_TAG_18_BEGIN"><span class="interaction selectable" data-its-identifier="18" data-its-group="1">farmers</span></span> do not have to <span id="item_856_TAG_19_BEGIN"><span class="interaction selectable" data-its-identifier="19" data-its-group="1">add </span></span><span id="item_856_TAG_20_BEGIN"><span class="interaction selectable" data-its-identifier="20" data-its-group="1">chemicals</span></span> to the <span id="item_856_TAG_21_BEGIN"><span class="interaction selectable" data-its-identifier="21" data-its-group="1">soil</span></span>. <span id="item_856_TAG_22_BEGIN"><span class="interaction selectable" data-its-identifier="22" data-its-group="1">Growing </span></span><span id="item_856_TAG_23_BEGIN"><span class="interaction selectable" data-its-identifier="23" data-its-group="1">organic food</span></span> also <span id="item_856_TAG_24_BEGIN"><span class="interaction selectable" data-its-identifier="24" data-its-group="1">improves</span></span> the <span id="item_856_TAG_25_BEGIN"><span class="interaction selectable" data-its-identifier="25" data-its-group="1">lives</span></span> of <span id="item_856_TAG_26_BEGIN"><span class="interaction selectable" data-its-identifier="26" data-its-group="1">farm workers</span></span> because they can <span id="item_856_TAG_27_BEGIN"><span class="interaction selectable" data-its-identifier="27" data-its-group="1">avoid </span></span><span id="item_856_TAG_28_BEGIN"><span class="interaction selectable" data-its-identifier="28" data-its-group="1">working with poisons</span></span>. <span id="item_856_TAG_29_BEGIN"><span class="interaction selectable" data-its-identifier="29" data-its-group="1">In sum</span></span>, everyone <span id="item_856_TAG_30_BEGIN"><span class="interaction selectable" data-its-identifier="30" data-its-group="1">benefits</span></span> from the <span id="item_856_TAG_31_BEGIN"><span class="interaction selectable" data-its-identifier="31" data-its-group="1">farming of </span></span><span id="item_856_TAG_32_BEGIN"><span class="interaction selectable" data-its-identifier="32" data-its-group="1">organic food</span></span>.</span></p><p style="margin-left:0.5in; margin-right:0.5in; text-indent:0.25in; ">&#xA0;</p><p style="margin-left:0in; margin-right:0.5in; text-indent:0in; ">Click on <span id="item_856_TAG_33_BEGIN"><span style="font-weight:bold; ">three</span></span> words or groups of words that are too vague or informal for a science report.</p>]]></stem>
+      <rubriclist>
+        <rubric scorepoint="">
+          <name>
+        Rubric </name>
+          <val><![CDATA[<p style="">For this item, a 1-point full-credit response includes:</p><p style="">&#xA0;</p><ul style="padding-left:1.5000em; "><li><p style="">The student selects “loads of” </p><p style="">AND</p></li><li><p style="">The student selects “junk”</p><p style="">AND</p></li><li><p style="">The student selects “great”</p></li></ul><p style="">&#xA0;</p><p style="">&#xA0;</p><p style="">&#xA0;</p>]]></val>
+        </rubric>
+        <samplelist maxval="" minval="" />
+      </rubriclist>
+      <attachmentlist></attachmentlist>
+      <constraints>
+        <cardinality target="1" min="0" max="0" />
+        <cardinality target="" min="1" max="0" />
+      </constraints>
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae1">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_34_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation></textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>There are loads of reasons to eat organic food. The term “organic” indicates that the food has been grown without pesticides or other chemicals. A consumer who 0chooses0 to eat 1organic food1 does not 2consume2 any of this 3junk3. 4Crops4 that are 5grown5 organically are 6great6 for the 7land7 because 8farmers8 do not have to 9add 90chemicals0 to the 1soil1. 2Growing 23organic food3 also 4improves4 the 5lives5 of 6farm workers6 because they can 7avoid 78working with poisons8. 9In sum9, everyone 0benefits0 from the 1farming of 12organic food2.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>There are loads of reasons to eat organic food. The term “organic” indicates that the food has been grown without pesticides or other chemicals. A consumer who 0chooses0 to eat 1organic food1 does not 2consume2 any of this 3junk3. 4Crops4 that are 5grown5 organically are 6great6 for the 7land7 because 8farmers8 do not have to 9add 90chemicals0 to the 1soil1. 2Growing 23organic food3 also 4improves4 the 5lives5 of 6farm workers6 because they can 7avoid 78working with poisons8. 9In sum9, everyone 0benefits0 from the 1farming of 12organic food2.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae2">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_1_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae3">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_2_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae4">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_3_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae5">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_4_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae6">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_5_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae7">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_6_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae8">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_7_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae9">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_8_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae10">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_9_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae11">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_10_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae12">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_11_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae13">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_12_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae14">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_13_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae15">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_14_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae16">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_15_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae17">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_16_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae18">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_17_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae19">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_18_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae20">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_19_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae21">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_20_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae22">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_21_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae23">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_22_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae24">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_23_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae25">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_24_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae26">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_25_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae27">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_26_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae28">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_27_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae29">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_28_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae30">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_29_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae31">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_30_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae32">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_31_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae33">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_32_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud />
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae34">
+            <contentLinkInfo itsLinkIdentifierRef="item_856_TAG_33_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>three,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>three</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>three</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>

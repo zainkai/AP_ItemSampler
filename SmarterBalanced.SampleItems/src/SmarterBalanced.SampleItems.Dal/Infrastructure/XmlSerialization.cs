@@ -11,21 +11,20 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
 {
     public static class XmlSerialization
     {
-       public static T DeserializeXml<T>(FileInfo file)
+        public static T DeserializeXml<T>(FileInfo file)
         {
             T xml = default(T);
 
-            if (!file.Exists)
+            if (file.Exists)
             {
-                throw new Exception("File does not exist.");
+                var serializer = new XmlSerializer(typeof(T));
+                using (var reader = file.OpenRead())
+                {
+                    xml = (T)serializer.Deserialize(reader);
+                }
             }
 
-            var serializer = new XmlSerializer(typeof(T));
 
-            using (var reader = file.OpenRead())
-            {
-                xml = (T)serializer.Deserialize(reader);
-            }
 
             return xml;
         }

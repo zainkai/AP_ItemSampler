@@ -10,7 +10,7 @@ namespace SmarterBalanced.SampleItems.Dal.Models
     [XmlRoot("metadata")]
     public class ItemMetadata
     {
-        [XmlElement("smarterAppMetadata")]
+        [XmlElement("smarterAppMetadata", Namespace = "http://www.smarterapp.org/ns/1/assessment_item_metadata")]
         public SmarterAppMetadataXmlRepresentation metadata { get; set; }
     }
 }

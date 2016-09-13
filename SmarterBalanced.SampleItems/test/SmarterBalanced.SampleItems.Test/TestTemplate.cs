@@ -2,7 +2,7 @@
 using Xunit;
 using SmarterBalanced.SampleItems.Dal;
 
-namespace SmarterBalanced.SampleItems.Tests
+namespace SmarterBalanced.SampleItems.Test
 {
     public class Tests
     {
