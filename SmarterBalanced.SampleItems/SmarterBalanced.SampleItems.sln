@@ -23,7 +23,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems
 		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Test", "test\SmarterBalanced.SampleItems.Test\SmarterBalanced.SampleItems.Test.xproj", "{958072CA-C25F-4C27-A0AA-0338707C83F1}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Test", "src\SmarterBalanced.SampleItems.Test\SmarterBalanced.SampleItems.Test.xproj", "{958072CA-C25F-4C27-A0AA-0338707C83F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
