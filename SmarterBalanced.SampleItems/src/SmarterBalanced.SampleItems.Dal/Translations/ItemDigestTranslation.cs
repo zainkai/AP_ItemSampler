@@ -25,15 +25,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return digest;
         }
 
-        public static List<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
+        public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
         {
-            List<ItemDigest> digests = (from content in itemContents
-                          join metadata in itemMetadata 
-                          on  content.item.ItemKey equals metadata.metadata.ItemKey
-                          select ItemToItemDigest(metadata, content)).ToList();
-
-            return digests;
+            return itemMetadata.Join(itemContents, 
+                metadata => metadata.metadata.ItemKey, 
+                contents => contents.item.ItemKey, 
+                (metadata, content) => ItemToItemDigest(metadata, content));
         }
-
     }
 }
