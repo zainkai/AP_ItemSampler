@@ -29,15 +29,5 @@ namespace SmarterBalanced.SampleItems.Dal.Context
             }
             ItemDigests = digests;
         }
- 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        private void Dispose(bool isDisposing)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

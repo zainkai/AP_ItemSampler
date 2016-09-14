@@ -44,7 +44,6 @@ namespace SmarterBalanced.SampleItems.Web
 
             services.AddSingleton<ISampleItemsRepo, SampleItemsRepo>();
             services.AddRouting();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
