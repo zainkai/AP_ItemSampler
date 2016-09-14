@@ -10,6 +10,6 @@ namespace SmarterBalanced.SampleItems.Dal.Models
     public class ItemContents
     {
         [XmlElement("item")]
-        ItemXmlFieldRepresentation item { get; set; }
+        public ItemXmlFieldRepresentation item { get; set; }
     }
 }

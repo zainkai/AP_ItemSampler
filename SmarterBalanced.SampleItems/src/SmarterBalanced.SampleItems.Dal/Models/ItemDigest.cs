@@ -11,10 +11,23 @@ namespace SmarterBalanced.SampleItems.Dal.Models
         [Display(Name="Bank")]
         public int BankKey { get; set; }
 
-        [Display(Name = "ItemKey")]
+        [Display(Name = "Item Key")]
         public int ItemKey { get; set; }
 
-        public int? MinGrade { get; set; }
+        [Display(Name = "Subject")]
+        public string Subject { get; set; }
+
+        [Display(Name = "Grade")]
+        public int Grade { get; set; }
+
+        [Display(Name = "Claim")]
+        public string Claim { get; set; }
+
+        [Display(Name = "Target Assessment Type")]
+        public string Target { get; set; }
+
+        [Display(Name = "Interaction Type")]
+        public string InteractionType { get; set; }
 
         public override string ToString()
         {

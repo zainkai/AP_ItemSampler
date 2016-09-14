@@ -12,9 +12,9 @@ namespace SmarterBalanced.SampleItems.Dal.Models.XMLRepresentations
     public class ItemXmlFieldRepresentation
     {
         [XmlAttribute("bankkey")]
-        public int bank;
+        public int ItemBank;
 
         [XmlAttribute("id")]
-        public int itemKey { get; set; }
+        public int ItemKey { get; set; }
     }
 }
