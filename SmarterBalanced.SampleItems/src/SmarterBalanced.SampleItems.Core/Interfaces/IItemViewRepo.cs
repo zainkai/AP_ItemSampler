@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SmarterBalanced.SampleItems.Dal.Interfaces
+namespace SmarterBalanced.SampleItems.Core.Interfaces
 {
-    public interface ISampleItemsContext 
+    public interface IItemViewRepo
     {
-        IEnumerable<ItemDigest> ItemDigests { get; set; }
     }
 }

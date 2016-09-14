@@ -17,12 +17,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             s_repo = repo;
         }
 
-
         public IActionResult Index()
         {
-            var items = s_repo.GetItemDigests();
-            var item = items.Where(t => t.ItemKey == 8);
-
             return View();
         }
 
