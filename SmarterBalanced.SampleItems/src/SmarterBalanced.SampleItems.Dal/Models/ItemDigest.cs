@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Models
 {
+    /// <summary>
+    /// Flattened digest of an ItemMetadata object and an ItemContents object
+    /// </summary>
     public class ItemDigest : IEquatable<ItemDigest>
     {
         [Display(Name="Bank")]
@@ -18,7 +21,7 @@ namespace SmarterBalanced.SampleItems.Dal.Models
         public string Subject { get; set; }
 
         [Display(Name = "Grade")]
-        public int Grade { get; set; }
+        public string Grade { get; set; }
 
         [Display(Name = "Claim")]
         public string Claim { get; set; }

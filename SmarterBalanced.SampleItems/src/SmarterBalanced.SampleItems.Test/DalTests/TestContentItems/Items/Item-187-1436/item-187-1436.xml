@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="eq" id="1436" version="22" bankkey="187">
+    <associatedpassage>3688</associatedpassage>
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>1436</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>MATH</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>MAT.HS.PT.SPEED_Q1B - SB OP</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::MG11::Perf::SP13 (2); PracTest::MG11::Perf::SP13::BRAILLE (2); PracTest::MG11::Perf::SP13::ENU::Refresh (2); PracTest::MG11::Perf::SP13::BRL::Refresh (2); PracTest::MG11::Perf::SP13::ESN::Refresh (2);</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>EQ</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>11</val>
+        <desc>11</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>EQ</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>21</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>EquationEditor</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1 pt.</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="stm_pass_id">
+        <name>Stim: ITS ID</name>
+        <val>3688</val>
+        <desc></desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1074" bankkey="187" />
+    <resourceslist>
+      <resource type="wordList" id="1640" index="1" bankkey="187" />
+    </resourceslist>
+    <statistic />
+    <MachineRubric filename="Item_1436_v22.qrx" />
+    <RendererSpec filename="Item_1436_v22.eax" />
+    <content language="ENU" version="2.0" approvedVersion="22">
+      <rationaleoptlist />
+      <stem><![CDATA[<p style="font-style:italic; font-weight:bold; ">Part <span id="item_1436_TAG_1_BEGIN">B</span></p><p style="">Create an equation to calculate the Massachusetts <span id="item_1436_TAG_10" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>speeding fine<span class="its-tag" data-tag-ref="item_1436_TAG_10" data-tag-boundary="end"></span>, <span style="font-style:italic; ">f</span>, <span id="item_1436_TAG_11" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>based on<span class="its-tag" data-tag-ref="item_1436_TAG_11" data-tag-boundary="end"></span> the number of miles <span id="item_1436_TAG_12" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>per<span class="its-tag" data-tag-ref="item_1436_TAG_12" data-tag-boundary="end"></span> hour, <span style="font-style:italic; ">m</span>, <span id="item_1436_TAG_13" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>over the speed limit<span class="its-tag" data-tag-ref="item_1436_TAG_13" data-tag-boundary="end"></span> when <span id="item_1436_TAG_2_BEGIN">1<span style="font-style:normal; "> </span><span style="font-style:normal; ">≤ </span><span style="font-style:italic; ">m</span><span style="font-style:normal; "> </span><span style="font-style:normal; ">≤ 1</span><span style="font-style:normal; ">0</span></span>.</p>]]></stem>
+      <rubriclist>
+        <rubric scorepoint="">
+          <name>
+        Rubric </name>
+          <val><![CDATA[<p style="">&#xA0;</p><p style="">Exemplar:</p><p style="">&#xA0;</p><ul style="padding-left:1.5000em; "><li><p style="">&#xA0;<span style="font-style:italic; ">f</span><span style=""> = 100</span></p></li></ul><p style="">&#xA0;</p><p style="">Other Correct Responses:</p><p style="">&#xA0;</p><ul style="padding-left:1.5000em; "><li><p style=""><span style="font-style:italic; ">f</span> = 0<span style="font-style:italic; ">m</span> + 100</p></li></ul><p style="">&#xA0;</p><p style="">For this item, a full-credit (1 point) response includes</p><p style="">&#xA0;</p><ul style="padding-left:1.5000em; "><li><p style="">The student enters the equation <span style="font-style:italic; ">f</span> = 100 or an equivalent equation.</p></li></ul><p style="">&#xA0;</p>]]></val>
+        </rubric>
+        <samplelist maxval="" minval="" />
+      </rubriclist>
+      <attachmentlist>
+        <attachment pass="true" id="aslfile1" type="ASL" subtype="STEM" file="item_1436_ASL_STEM.MP4" />
+      </attachmentlist>
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae1">
+            <contentLinkInfo itsLinkIdentifierRef="item_1436_TAG_1_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>B. ,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>B</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>B</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae6">
+            <contentLinkInfo itsLinkIdentifierRef="item_1436_TAG_2_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>1 is less than or equal to m, which is less than or equal to 10. The equation tool has two sections. In the left section, from left to right and top to bottom the equation tool reeds, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, point, negative.  In the right section mathematical functions are displayed.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>1 ≤ m ≤ 10</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>1 ≤ m ≤ 10</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+    <content language="ESN" version="2.0" approvedVersion="22">
+      <stem><![CDATA[<p style="font-style:italic; font-weight:bold; ">Parte B</p><p style="">Crea una ecuación para calcular la multa por exceso de velocidad en Massachusetts, <span style="font-style:italic; ">e</span>, basándote en el número de millas por hora, <span style="font-style:italic; ">m</span>, por encima del límite de velocidad cuando 1 <span style="font-style:normal; ">≤ </span><span style="font-style:italic; ">m</span><span style="font-style:normal; "> </span><span style="font-style:normal; ">≤ 1</span><span style="font-style:normal; ">0</span>.</p><p class="languagedivider">&#xA0;</p><p style="font-style:italic; font-weight:bold; ">Part <span id="item_1436_TAG_1_BEGIN">B</span></p><p style="">Create an equation to calculate the Massachusetts <span id="item_1436_TAG_10" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>speeding fine<span class="its-tag" data-tag-ref="item_1436_TAG_10" data-tag-boundary="end"></span>, <span style="font-style:italic; ">f</span>, <span id="item_1436_TAG_11" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>based on<span class="its-tag" data-tag-ref="item_1436_TAG_11" data-tag-boundary="end"></span> the number of miles <span id="item_1436_TAG_12" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>per<span class="its-tag" data-tag-ref="item_1436_TAG_12" data-tag-boundary="end"></span> hour, <span style="font-style:italic; ">m</span>, <span id="item_1436_TAG_13" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>over the speed limit<span class="its-tag" data-tag-ref="item_1436_TAG_13" data-tag-boundary="end"></span> when <span id="item_1436_TAG_2_BEGIN">1<span style="font-style:normal; "> </span><span style="font-style:normal; ">≤ </span><span style="font-style:italic; ">m</span><span style="font-style:normal; "> </span><span style="font-style:normal; ">≤ 1</span><span style="font-style:normal; ">0</span></span>.</p>]]></stem>
+      <rubriclist>
+        <rubric scorepoint="_Spanish">
+          <name>
+        Rubric _Spanish</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rubric>
+        <samplelist maxval="_Spanish" minval="_Spanish" />
+      </rubriclist>
+      <attachmentlist />
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae1">
+            <contentLinkInfo itsLinkIdentifierRef="item_1436_TAG_1_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>B. ,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>B</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>B</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae6">
+            <contentLinkInfo itsLinkIdentifierRef="item_1436_TAG_2_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>1 is less than or equal to m, which is less than or equal to 10. The equation tool has two sections. In the left section, from left to right and top to bottom the equation tool reeds, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, point, negative.  In the right section mathematical functions are displayed.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>1 ≤ m ≤ 10</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>1 ≤ m ≤ 10</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>

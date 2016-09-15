@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<metadata>
+  <smarterAppMetadata xmlns="http://www.smarterapp.org/ns/1/assessment_item_metadata">
+    <Identifier>1432</Identifier>
+    <AssociatedStimulus>3688</AssociatedStimulus>
+    <ItemAuthorIdentifier>Shashank_Abhyankar</ItemAuthorIdentifier>
+    <ItemSpecFormat>SmarterApp</ItemSpecFormat>
+    <LastModifiedBy>Shashank_Abhyankar</LastModifiedBy>
+    <SecurityStatus>Non-secure</SecurityStatus>
+    <SmarterAppItemDescriptor>MAT.HS.PT.SPEED_Q3 - SB OP</SmarterAppItemDescriptor>
+    <Status>Ready for Field Test</Status>
+    <StimulusFormat>Standard</StimulusFormat>
+    <Subject>MATH</Subject>
+    <Version>22</Version>
+    <IntendedGrade>11</IntendedGrade>
+    <MathematicalPractice>2</MathematicalPractice>
+    <MathematicalPractice>6</MathematicalPractice>
+    <DepthOfKnowledge>3</DepthOfKnowledge>
+    <TargetAssessmentType>Pilot</TargetAssessmentType>
+    <InteractionType>ER</InteractionType>
+    <EducationalDifficulty>Hard</EducationalDifficulty>
+    <MaximumNumberOfPoints>2</MaximumNumberOfPoints>
+    <AllowCalculator>N</AllowCalculator>
+    <BrailleType>BRF</BrailleType>
+    <ScorePoints>"0,1,2"</ScorePoints>
+    <StandardPublication>
+      <Publication>SBAC-MA-v1</Publication>
+      <PrimaryStandard>SBAC-MA-v1:3|F-IF|B</PrimaryStandard>
+    </StandardPublication>
+    <StandardPublication>
+      <Publication>SBAC-MA-v3</Publication>
+      <PrimaryStandard>SBAC-MA-v3:MA-Undesignated</PrimaryStandard>
+    </StandardPublication>
+    <AssociatedTutorial>1078</AssociatedTutorial>
+    <AssociatedWordlist>1645</AssociatedWordlist>
+    <Language>eng</Language>
+    <Language>spa</Language>
+  </smarterAppMetadata>
+</metadata>

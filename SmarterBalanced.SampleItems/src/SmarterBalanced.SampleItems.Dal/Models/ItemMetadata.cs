@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 
 namespace SmarterBalanced.SampleItems.Dal.Models
 {
+    /// <summary>
+    /// Object representation of a metadata.xml file
+    /// </summary>
     [XmlRoot("metadata")]
     public class ItemMetadata
     {

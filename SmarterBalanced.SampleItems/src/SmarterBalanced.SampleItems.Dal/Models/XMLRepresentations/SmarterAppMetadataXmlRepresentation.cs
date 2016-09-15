@@ -18,7 +18,7 @@ namespace SmarterBalanced.SampleItems.Dal.Models.XMLRepresentations
         public string Subject { get; set; }
 
         [XmlElement("IntendedGrade")]
-        public int Grade { get; set; }
+        public string Grade { get; set; }
 
         [XmlElement("SufficientEvidenceOfClaim")]
         public string Claim { get; set; }

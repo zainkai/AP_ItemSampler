@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="gi" id="1435" version="41" bankkey="187">
+    <associatedpassage>3688</associatedpassage>
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>1435</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>MATH</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>MAT.HS.PT.SPEED_Q2A - SB OP</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::MG11::Perf::SP13 (4); PracTest::MG11::Perf::SP13::ENU::Refresh (4); PracTest::MG11::Perf::SP13::ESN::Refresh (4); PracTest::MG11::Perf::SP15 (4); PracTest::MG11::Perf::SP15::ESN (4);</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>GI</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>11</val>
+        <desc>11</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>GI</val>
+        <desc>GI [2]</desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>21</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>Grid</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1 pt.</val>
+        <desc>1 Point</desc>
+      </attrib>
+      <attrib attid="itm_att_Cloze Answers">
+        <name>Item: Cloze Answers</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="stm_pass_id">
+        <name>Stim: ITS ID</name>
+        <val>3688</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Max Choices">
+        <name>Item:Max Choices</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key (Part II)">
+        <name>Item: Answer Key (Part II)</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1075" bankkey="187" />
+    <resourceslist>
+      <resource type="wordList" id="1642" index="1" bankkey="187" />
+    </resourceslist>
+    <statistic />
+    <MachineRubric filename="Item_1435_v41.qrx" />
+    <RendererSpec filename="Item_1435_v41.gax" />
+    <content language="ENU" version="2.0" approvedVersion="41">
+      <rationaleoptlist />
+      <stem><![CDATA[<p style="color:#000000; ">The graph <span id="item_1435_TAG_14" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>below<span class="its-tag" data-tag-ref="item_1435_TAG_14" data-tag-boundary="end"></span> shows <span id="item_1435_TAG_20" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>data<span class="its-tag" data-tag-ref="item_1435_TAG_20" data-tag-boundary="end"></span> from <span id="item_1435_TAG_15" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>a sample<span class="its-tag" data-tag-ref="item_1435_TAG_15" data-tag-boundary="end"></span> of <span id="item_1435_TAG_26" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>actual<span class="its-tag" data-tag-ref="item_1435_TAG_26" data-tag-boundary="end"></span> <span id="item_1435_TAG_27" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="5"></span>fines<span class="its-tag" data-tag-ref="item_1435_TAG_27" data-tag-boundary="end"></span> for driving <span id="item_1435_TAG_21" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="6"></span>above the<span class="its-tag" data-tag-ref="item_1435_TAG_21" data-tag-boundary="end"></span> <span id="item_1435_TAG_22" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="7"></span>speed limit<span class="its-tag" data-tag-ref="item_1435_TAG_22" data-tag-boundary="end"></span> in New <span id="item_1435_TAG_4_BEGIN">York.</span></p><p style="color:#000000; ">&#xA0;</p><p style="color:#000000; font-style:italic; font-weight:bold; "><span id="item_1435_TAG_2_BEGIN">Part A</span></p><p style="color:#000000; "><span id="item_1435_TAG_18" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="8"></span>Use<span class="its-tag" data-tag-ref="item_1435_TAG_18" data-tag-boundary="end"></span> the <span id="item_1435_TAG_23" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="9"></span>Connect Line tool<span class="its-tag" data-tag-ref="item_1435_TAG_23" data-tag-boundary="end"></span> to create a piecewise linear <span id="item_1435_TAG_11_BEGIN">model with two line segments, one for <span style="font-weight:normal; ">1 </span><span style="font-weight:normal; ">≤</span><span style="font-weight:normal; "> </span><span style="font-style:italic; font-weight:normal; ">m</span><span style="font-weight:normal; "> </span><span style="font-weight:normal; ">≤ 20 and one for 20 ≤ </span><span style="font-style:italic; font-weight:normal; ">m</span><span style="font-weight:normal; "> ≤ 40,</span></span> that <span id="item_1435_TAG_25" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="12"></span>approximates<span class="its-tag" data-tag-ref="item_1435_TAG_25" data-tag-boundary="end"></span> <span id="item_1435_TAG_19" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="10"></span>the best fit<span class="its-tag" data-tag-ref="item_1435_TAG_19" data-tag-boundary="end"></span> for the <span id="item_1435_TAG_24" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span><span id="item_1435_TAG_1_BEGIN">data.</span><span class="its-tag" data-tag-ref="item_1435_TAG_24" data-tag-boundary="end"></span></p>]]></stem>
+      <rubriclist>
+        <rubric scorepoint="">
+          <name>
+        Rubric </name>
+          <val><![CDATA[<p style="color:#000000; font-weight:normal; ">Exemplar:</p><p style="color:#000000; font-weight:normal; ">&#xA0;</p><p style="color:#000000; font-weight:normal; "><img id="item_1435_graphics1" src="item_1435_v41_graphics1_png256.png" width="705" height="577" style="vertical-align:baseline;" /></p><p style="color:#000000; font-weight:normal; ">&#xA0;</p><p style="color:#000000; font-weight:normal; ">Full credit (1 point):</p><p style="color:#000000; font-weight:normal; ">&#xA0;</p><p style="color:#000000; font-weight:normal; ">The student graphs the following lines of best fit:</p><p style="color:#000000; font-weight:normal; ">&#xA0;</p><ul style="padding-left:1.5000em; "><li><p style="color:#000000; font-weight:normal; "><span style="font-style:italic; ">f</span> = 2<span style="font-style:italic; ">m</span> + 90 for 1 <span style="">≤</span> <span style="font-style:italic; ">m</span> <span style="">≤ 20</span></p><p style="color:#000000; font-weight:normal; ">AND</p></li><li><p style="color:#000000; font-weight:normal; "><span style="font-style:italic; ">f</span> = 15<span style="font-style:italic; ">m</span> – 170 for 20<span style=""> ≤ </span><span style="font-style:italic; ">m</span><span style=""> ≤ 40</span></p></li></ul><p style="color:#000000; font-weight:normal; ">&#xA0;</p><p style="color:#000000; font-style:italic; font-weight:normal; ">Note: There should be 2 distinct lines of best fit, but there will be a range of acceptable answers.</p><p style="color:#000000; font-weight:normal; ">&#xA0;</p><p style="color:#000000; font-weight:normal; ">For this item, a full-credit response includes:</p><p style="color:#000000; font-weight:normal; ">&#xA0;</p><p style="color:#000000; font-weight:normal; ">The response demonstrates students understanding of how to graph functions expressed symbolically and show key features of the graph.</p>]]></val>
+        </rubric>
+        <samplelist maxval="" minval="" />
+      </rubriclist>
+      <attachmentlist>
+        <attachment pass="true" id="aslfile1" type="ASL" subtype="STEM" file="item_1435_ASL_STEM.MP4" />
+      </attachmentlist>
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae8">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_4_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>York</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>York.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>York.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae9">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_2_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>. Part A;</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Part A</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Part A</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae12">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_11_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>model with two line segments, one for 1 less than or equal to m, which is less than or equal to 20, and one for 20 is less than or equal to m, which is less than or equal to 40,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>model with two line segments, one for 1 less than or equal to m, which is less than or equal to 20, and one for 20 is less than or equal to m, which is less than or equal to 40,</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>model with two line segments, one for 1 ≤ m ≤ 20 and one for 20 ≤ m ≤ 40,</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae16">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_1_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>data.
+This is an interactive image. From left to right, the blue buttons above the image reed, delete, connect line. The graph in the main answer space is titled, New York speeding fines. The horizontal axis, m, is titled, miles per hour over speed limit. The axis has a range from 0 to 45, increasing in increments of 5. The vertical axis, f, is titled, fine, in dollars. The axis has a range from 0 to 6 hundred, increasing in increments of 1 hundred.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>data.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>data.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+    <content language="ESN" version="2.0" approvedVersion="41">
+      <stem><![CDATA[<p style="color:#000000; ">La siguiente gráfica muestra datos de una muestra de multas reales por manejar por encima del límite de velocidad en Nueva York.</p><p style="color:#000000; ">&#xA0;</p><p style="color:#000000; font-style:italic; font-weight:bold; ">Parte A</p><p style="color:#000000; ">Usa la herramienta Conectar líneas para crear un modelo lineal definido por partes con dos segmentos de recta, uno para <span style="font-weight:normal; ">1 </span><span style="font-weight:normal; ">≤</span><span style="font-weight:normal; "> </span><span style="font-style:italic; font-weight:normal; ">m</span><span style="font-weight:normal; "> </span><span style="font-weight:normal; ">≤ 20 y otro para 20 ≤ </span><span style="font-style:italic; font-weight:normal; ">m</span><span style="font-weight:normal; "> ≤ 40,</span> que se aproxime al mejor ajuste para los datos.</p><p class="languagedivider">&#xA0;</p><p style="color:#000000; ">The graph <span id="item_1435_TAG_14" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>below<span class="its-tag" data-tag-ref="item_1435_TAG_14" data-tag-boundary="end"></span> shows <span id="item_1435_TAG_20" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>data<span class="its-tag" data-tag-ref="item_1435_TAG_20" data-tag-boundary="end"></span> from <span id="item_1435_TAG_15" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>a sample<span class="its-tag" data-tag-ref="item_1435_TAG_15" data-tag-boundary="end"></span> of <span id="item_1435_TAG_26" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>actual<span class="its-tag" data-tag-ref="item_1435_TAG_26" data-tag-boundary="end"></span> <span id="item_1435_TAG_27" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="5"></span>fines<span class="its-tag" data-tag-ref="item_1435_TAG_27" data-tag-boundary="end"></span> for driving <span id="item_1435_TAG_21" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="6"></span>above the<span class="its-tag" data-tag-ref="item_1435_TAG_21" data-tag-boundary="end"></span> <span id="item_1435_TAG_22" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="7"></span>speed limit<span class="its-tag" data-tag-ref="item_1435_TAG_22" data-tag-boundary="end"></span> in New <span id="item_1435_TAG_4_BEGIN">York.</span></p><p style="color:#000000; ">&#xA0;</p><p style="color:#000000; font-style:italic; font-weight:bold; "><span id="item_1435_TAG_2_BEGIN">Part A</span></p><p style="color:#000000; "><span id="item_1435_TAG_18" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="8"></span>Use<span class="its-tag" data-tag-ref="item_1435_TAG_18" data-tag-boundary="end"></span> the <span id="item_1435_TAG_23" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="9"></span>Connect Line tool<span class="its-tag" data-tag-ref="item_1435_TAG_23" data-tag-boundary="end"></span> to create a piecewise linear <span id="item_1435_TAG_11_BEGIN">model with two line segments, one for <span style="font-weight:normal; ">1 </span><span style="font-weight:normal; ">≤</span><span style="font-weight:normal; "> </span><span style="font-style:italic; font-weight:normal; ">m</span><span style="font-weight:normal; "> </span><span style="font-weight:normal; ">≤ 20 and one for 20 ≤ </span><span style="font-style:italic; font-weight:normal; ">m</span><span style="font-weight:normal; "> ≤ 40,</span></span> that <span id="item_1435_TAG_25" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="12"></span>approximates<span class="its-tag" data-tag-ref="item_1435_TAG_25" data-tag-boundary="end"></span> <span id="item_1435_TAG_19" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="10"></span>the best fit<span class="its-tag" data-tag-ref="item_1435_TAG_19" data-tag-boundary="end"></span> for the <span id="item_1435_TAG_24" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span><span id="item_1435_TAG_1_BEGIN">data.</span><span class="its-tag" data-tag-ref="item_1435_TAG_24" data-tag-boundary="end"></span></p>]]></stem>
+      <rubriclist>
+        <rubric scorepoint="_Spanish">
+          <name>
+        Rubric _Spanish</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rubric>
+        <samplelist maxval="_Spanish" minval="_Spanish" />
+      </rubriclist>
+      <attachmentlist />
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae8">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_4_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>York</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>York.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>York.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae9">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_2_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>. Part A;</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Part A</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Part A</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae12">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_11_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>model with two line segments, one for 1 less than or equal to m, which is less than or equal to 20, and one for 20 is less than or equal to m, which is less than or equal to 40,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>model with two line segments, one for 1 less than or equal to m, which is less than or equal to 20, and one for 20 is less than or equal to m, which is less than or equal to 40,</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>model with two line segments, one for 1 ≤ m ≤ 20 and one for 20 ≤ m ≤ 40,</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae16">
+            <contentLinkInfo itsLinkIdentifierRef="item_1435_TAG_1_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>data.
+This is an interactive image. From left to right, the blue buttons above the image reed, delete, connect line. The graph in the main answer space is titled, New York speeding fines. The horizontal axis, m, is titled, miles per hour over speed limit. The axis has a range from 0 to 45, increasing in increments of 5. The vertical axis, f, is titled, fine, in dollars. The axis has a range from 0 to 6 hundred, increasing in increments of 1 hundred.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>data.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>data.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>

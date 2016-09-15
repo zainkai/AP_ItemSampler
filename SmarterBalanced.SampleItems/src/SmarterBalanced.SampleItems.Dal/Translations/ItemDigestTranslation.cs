@@ -6,11 +6,21 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
+    /// <summary>
+    /// Contains methods to digest ItemMetadata and ItemContents objects into ItemDigest objects.
+    /// </summary>
     public static class ItemDigestTranslation
     {
+        /// <summary>
+        /// Translate an ItemMetadata and ItemContents object into an ItemDigest object.
+        /// The ItemKey field of the ItemMetadata and ItemContents must be the same.
+        /// </summary>
+        /// <param name="itemMetadata"></param>
+        /// <param name="itemContents"></param>
+        /// <returns></returns>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata, ItemContents itemContents)
         {
-            if(itemContents.item.ItemKey != itemMetadata.metadata.ItemKey)
+            if (itemContents.item.ItemKey != itemMetadata.metadata.ItemKey)
             {
                 throw new Exception("Cannot digest items with different ItemKey values.");
             }
@@ -25,12 +35,43 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return digest;
         }
 
-        public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
+        /// <summary>
+        /// Digests a collection of ItemMetadata objects and a collection of ItemContents objects into a collection of ItemDigest objects.
+        /// Matches the ItemMetadata and ItemContents objects based on their ItemKey fields.
+        /// </summary>
+        /// <param name="itemMetadata"></param>
+        /// <param name="itemContents"></param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<ItemDigest>> ItemsToItemDigestsAsync(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
         {
-            return itemMetadata.Join(itemContents, 
-                metadata => metadata.metadata.ItemKey, 
-                contents => contents.item.ItemKey, 
-                (metadata, content) => ItemToItemDigest(metadata, content));
+            List<ItemDigest> digests = new List<ItemDigest>();
+            if (itemMetadata.Count() != itemContents.Count())
+            {
+                throw new Exception("Item metadata and contents counts differ.");
+            }
+            await Task.Run(() =>
+            {
+                foreach (ItemMetadata metadata in itemMetadata)
+                {
+                    var countitems = itemContents.Where(c => c.item.ItemKey == metadata.metadata.ItemKey);
+
+                    if (countitems.Count() == 1)
+                    {
+                        digests.Add(ItemToItemDigest(metadata, countitems.First()));
+                    }
+
+                    else if (countitems.Count() == 0)
+                    {
+                        throw new Exception("Could not match ItemMetadata object with ItemKey: " + metadata.metadata.ItemKey +
+                            " with an ItemContents object");
+                    }
+                    else
+                    {
+                        throw new Exception("Multiple ItemContents wih ItemKey: " + metadata.metadata.ItemKey + " found.");
+                    }
+                }
+            });
+            return digests;
         }
     }
 }

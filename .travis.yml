@@ -1,7 +1,9 @@
 language: csharp
 sudo: required
-before_script: chmod ugo+x travis-run.sh
-script: ./travis-run.sh
+before_script: cd ./SmarterBalanced.SampleItems
+script: 
+  - dotnet restore
+  - dotnet test ./src/SmarterBalanced.SampleItems.Test/project.json
 
 matrix:
   include:

@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="er" id="1432" version="22" bankkey="187">
+    <associatedpassage>3688</associatedpassage>
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>1432</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>MATH</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>MAT.HS.PT.SPEED_Q3 - SB OP</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::MG11::Perf::SP13 (7); PracTest::MG11::Perf::SP13::BRAILLE (7); PracTest::MG11::Perf::SP13::ENU::Refresh (7); PracTest::MG11::Perf::SP13::BRL::Refresh (7); PracTest::MG11::Perf::SP13::ESN::Refresh (7);</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>ER</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>11</val>
+        <desc>11</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>ER</val>
+        <desc>ER [7]</desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>21</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>PlainText</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>2 pts.</val>
+        <desc>2 Points</desc>
+      </attrib>
+      <attrib attid="stm_pass_id">
+        <name>Stim: ITS ID</name>
+        <val>3688</val>
+        <desc></desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1078" bankkey="187" />
+    <resourceslist>
+      <resource type="wordList" id="1645" index="1" bankkey="187" />
+    </resourceslist>
+    <statistic />
+    <content language="ENU" version="2.0" approvedVersion="22">
+      <rationaleoptlist />
+      <stem><![CDATA[<p style="">The NDA <span id="item_1432_TAG_9" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>claims<span class="its-tag" data-tag-ref="item_1432_TAG_9" data-tag-boundary="end"></span> that the proposed new model for the New York <span id="item_1432_TAG_15" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>speeding fine<span class="its-tag" data-tag-ref="item_1432_TAG_15" data-tag-boundary="end"></span> system is <span id="item_1432_TAG_23" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>fairer than<span class="its-tag" data-tag-ref="item_1432_TAG_23" data-tag-boundary="end"></span> the <span id="item_1432_TAG_16" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>current<span class="its-tag" data-tag-ref="item_1432_TAG_16" data-tag-boundary="end"></span> system.</p><p style="">&#xA0;</p><p style="">Do you <span id="item_1432_TAG_17" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="5"></span>agree<span class="its-tag" data-tag-ref="item_1432_TAG_17" data-tag-boundary="end"></span> or <span id="item_1432_TAG_18" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="6"></span>disagree<span class="its-tag" data-tag-ref="item_1432_TAG_18" data-tag-boundary="end"></span> with the <span id="item_1432_TAG_12" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="7"></span>claim<span class="its-tag" data-tag-ref="item_1432_TAG_12" data-tag-boundary="end"></span>? Explain your <span id="item_1432_TAG_22" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="12"></span>reasoning<span class="its-tag" data-tag-ref="item_1432_TAG_22" data-tag-boundary="end"></span> <span id="item_1432_TAG_19" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="8"></span>using<span class="its-tag" data-tag-ref="item_1432_TAG_19" data-tag-boundary="end"></span> <span id="item_1432_TAG_20" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="9"></span>specific<span class="its-tag" data-tag-ref="item_1432_TAG_20" data-tag-boundary="end"></span> <span id="item_1432_TAG_21" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="10"></span>examples<span class="its-tag" data-tag-ref="item_1432_TAG_21" data-tag-boundary="end"></span> from this <span id="item_1432_TAG_13" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="11"></span>task<span class="its-tag" data-tag-ref="item_1432_TAG_13" data-tag-boundary="end"></span>.</p><p style="">&#xA0;</p>]]></stem>
+      <rubriclist>
+        <rubric scorepoint="4">
+          <name>
+        Rubric 4</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rubric>
+        <samplelist maxval="4" minval="4">
+          <sample purpose="Exemplar" scorepoint="4">
+            <name>4-Point Official Sample Answer
+      </name>
+            <annotation />
+            <samplecontent><![CDATA[<p style="">I agree with the claim. The proposed new model is fairer because it eliminates that possibility of bias affecting the fine issued for a speeding ticket. The fine will be assigned based only on the excess speed. In the current system, a driver who is ticketed for speeding by 11 mph could be fined $300 and a driver who is ticketed for speeding by 30 mph could be fined $90. It is unfair that a driver ticketed for a lesser excess speed could be forced to pay a greater fine. In the new system, any driver who is ticketed for speeding by 11 mph would pay $112 and a driver who is ticketed for speeding by 30 mph would pay $280. I think it is much fairer that drivers who are ticketed for the same excess speed will pay the same fine and that the fine will increase as the excess speed increases.</p>]]></samplecontent>
+          </sample>
+          <sample purpose="OtherExemplar" scorepoint="4">
+            <name>4-Point Other Official Sample Answers
+      </name>
+            <annotation />
+            <samplecontent><![CDATA[<p style="">&#xA0;</p>]]></samplecontent>
+          </sample>
+        </samplelist>
+        <rubric scorepoint="3">
+          <name>
+        Rubric 3</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rubric>
+        <samplelist maxval="3" minval="3">
+          <sample purpose="Exemplar" scorepoint="3">
+            <name>3-Point Official Sample Answer
+      </name>
+            <annotation />
+            <samplecontent><![CDATA[<p style="">&#xA0;</p>]]></samplecontent>
+          </sample>
+        </samplelist>
+        <rubric scorepoint="2">
+          <name>
+        Rubric 2</name>
+          <val><![CDATA[<p style="">Full Credit: (2 points):</p><ul style="padding-left:1.5000em; "><li><p style="">The student agrees with the claim.</p><p style="">AND </p></li><li><p style="">The student justifies their response by citing at least one example to compare the systems.</p></li></ul>]]></val>
+        </rubric>
+        <samplelist maxval="2" minval="2">
+          <sample purpose="Exemplar" scorepoint="2">
+            <name>2-Point Official Sample Answer
+      </name>
+            <annotation />
+            <samplecontent><![CDATA[<p style="">&#xA0;</p><ul style="padding-left:3.0000em; "><li><p style="">&#xA0;</p></li></ul>]]></samplecontent>
+          </sample>
+        </samplelist>
+        <rubric scorepoint="1">
+          <name>
+        Rubric 1</name>
+          <val><![CDATA[<p style="">Partial Credit: (1 point):</p><ul style="padding-left:1.5000em; "><li><p style="">The student agrees with the claim.</p><p style="">AND </p></li><li><p style="">The student justifies their response WITHOUT citing any examples.</p></li></ul>]]></val>
+        </rubric>
+        <samplelist maxval="1" minval="1">
+          <sample purpose="Exemplar" scorepoint="1">
+            <name>1-Point Official Sample Answer
+      </name>
+            <annotation />
+            <samplecontent><![CDATA[<p style="">For example, the response may:</p><ul style="padding-left:3.0000em; "><li><p style="">&#xA0;</p></li></ul>]]></samplecontent>
+          </sample>
+        </samplelist>
+        <rubric scorepoint="0">
+          <name>
+        Rubric 0</name>
+          <val><![CDATA[<p style="">The response indicates inadequate understanding of the task and the response does not meet the criteria required to earn one point.</p>]]></val>
+        </rubric>
+        <samplelist maxval="0" minval="0">
+          <sample purpose="Exemplar" scorepoint="0">
+            <name>0-Point Official Sample Answer
+      </name>
+            <annotation />
+            <samplecontent><![CDATA[<p style="">For example, the response may:</p><ul style="padding-left:3.0000em; "><li><p style="">&#xA0;</p></li><li><p style="">Include unrelated statements or work. </p></li></ul>]]></samplecontent>
+          </sample>
+        </samplelist>
+      </rubriclist>
+      <attachmentlist>
+        <attachment pass="true" id="aslfile1" type="ASL" subtype="STEM" file="item_1432_ASL_STEM.MP4" />
+      </attachmentlist>
+      <apipAccessibility>
+        <accessibilityInfo />
+      </apipAccessibility>
+    </content>
+    <content language="ESN" version="2.0" approvedVersion="22">
+      <stem><![CDATA[<p style="">La ACN afirma que el modelo nuevo propuesto para el sistema de multas por exceso de velocidad para Nueva York es más justo que el sistema actual.</p><p style="">&#xA0;</p><p style="">¿Estás de acuerdo o en desacuerdo con la afirmación? Explica tu razonamiento usando ejemplos específicos de esta tarea.</p><p class="languagedivider">&#xA0;</p><p style="">The NDA <span id="item_1432_TAG_9" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>claims<span class="its-tag" data-tag-ref="item_1432_TAG_9" data-tag-boundary="end"></span> that the proposed new model for the New York <span id="item_1432_TAG_15" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>speeding fine<span class="its-tag" data-tag-ref="item_1432_TAG_15" data-tag-boundary="end"></span> system is <span id="item_1432_TAG_23" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>fairer than<span class="its-tag" data-tag-ref="item_1432_TAG_23" data-tag-boundary="end"></span> the <span id="item_1432_TAG_16" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>current<span class="its-tag" data-tag-ref="item_1432_TAG_16" data-tag-boundary="end"></span> system.</p><p style="">&#xA0;</p><p style="">Do you <span id="item_1432_TAG_17" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="5"></span>agree<span class="its-tag" data-tag-ref="item_1432_TAG_17" data-tag-boundary="end"></span> or <span id="item_1432_TAG_18" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="6"></span>disagree<span class="its-tag" data-tag-ref="item_1432_TAG_18" data-tag-boundary="end"></span> with the <span id="item_1432_TAG_12" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="7"></span>claim<span class="its-tag" data-tag-ref="item_1432_TAG_12" data-tag-boundary="end"></span>? Explain your <span id="item_1432_TAG_22" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="12"></span>reasoning<span class="its-tag" data-tag-ref="item_1432_TAG_22" data-tag-boundary="end"></span> <span id="item_1432_TAG_19" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="8"></span>using<span class="its-tag" data-tag-ref="item_1432_TAG_19" data-tag-boundary="end"></span> <span id="item_1432_TAG_20" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="9"></span>specific<span class="its-tag" data-tag-ref="item_1432_TAG_20" data-tag-boundary="end"></span> <span id="item_1432_TAG_21" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="10"></span>examples<span class="its-tag" data-tag-ref="item_1432_TAG_21" data-tag-boundary="end"></span> from this <span id="item_1432_TAG_13" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="11"></span>task<span class="its-tag" data-tag-ref="item_1432_TAG_13" data-tag-boundary="end"></span>.</p><p style="">&#xA0;</p>]]></stem>
+      <rubriclist />
+      <attachmentlist />
+      <apipAccessibility>
+        <accessibilityInfo />
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>
