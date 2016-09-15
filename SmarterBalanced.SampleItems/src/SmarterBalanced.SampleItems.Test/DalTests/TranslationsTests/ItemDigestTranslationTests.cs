@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using SmarterBalanced.SampleItems.Dal.Exceptions;
 using SmarterBalanced.SampleItems.Dal.Models;
 using SmarterBalanced.SampleItems.Dal.Translations;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
@@ -66,7 +67,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.item.ItemKey = 2;
             contents.item.ItemBank = 3;
-            var exception = Assert.Throws(typeof(Exception), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents));
             Assert.Equal("Cannot digest items with different ItemKey values.", exception.Message);
         }
 
@@ -76,7 +77,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// into a collection of ItemDigest objects.
         /// </summary>
         [Fact]
-        public async void TestItemstoItemDigests()
+        public void TestItemstoItemDigests()
         {
             int testItemCount = 3;
             List<ItemContents> contentsList = new List<ItemContents>();
@@ -117,7 +118,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
             }
-            digests = await ItemDigestTranslation.ItemsToItemDigestsAsync(metadataList, contentsList);
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 
@@ -131,105 +132,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 Assert.Equal(testInteractionType + id, digest.InteractionType);
                 Assert.Equal(testSubject + id, digest.Subject);
             }
-        }
-
-        /// <summary>
-        /// Test ItemsToItemsDigests method throws and exception if lists of different sizes are provided.
-        /// </summary>
-        [Fact]
-        public async void TestItemsToItemsDigestsInvalidCollectionSizes()
-        {
-            int testMetadataCount = 20;
-            int testContentsCount = 10;
-
-            List<ItemContents> contentsList = new List<ItemContents>();
-            List<ItemMetadata> metadataList = new List<ItemMetadata>();
-
-            int[] itemKeysMetadata = Enumerable.Range(50, testMetadataCount).ToArray();
-            int[] itemKeysContents = Enumerable.Range(50, testContentsCount).ToArray();
-            int[] banksKeys = Enumerable.Range(100, testMetadataCount).ToArray();
-            string testTarget = "Test target string";
-            string testClaim = "Test claim string";
-            string testInteractionType = "EQ";
-            string testSubject = "MATH";
-
-            int i;
-            for (i = 0; i < testMetadataCount; i++)
-            {
-                ItemMetadata metadata = new ItemMetadata();
-                metadata.metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-                metadata.metadata.ItemKey = itemKeysMetadata[i];
-                metadata.metadata.Grade = itemKeysMetadata[i].ToString();
-                metadata.metadata.Target = testTarget + itemKeysMetadata[i];
-                metadata.metadata.Claim = testClaim + itemKeysMetadata[i];
-                metadata.metadata.InteractionType = testInteractionType + itemKeysMetadata[i];
-                metadata.metadata.Subject = testSubject + itemKeysMetadata[i];
-
-                metadataList.Add(metadata);
-            }
-
-            for (i = 0; i < testContentsCount; i++)
-            {
-                ItemContents contents = new ItemContents();
-                contents.item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
-                contents.item.ItemKey = itemKeysContents[i];
-                contents.item.ItemBank = banksKeys[i];
-
-                contentsList.Add(contents);
-            }
-
-            var exceptionTask = Assert.ThrowsAsync(typeof(Exception), () => ItemDigestTranslation.ItemsToItemDigestsAsync(metadataList, contentsList));
-            var exception = await exceptionTask;
-            Assert.Equal("Item metadata and contents counts differ.", exception.Message);
-        }
-
-        /// <summary>
-        /// Test that an exception is thrown if each ItemKey in the ItemMetadata collection
-        /// can not be matched to an ItemKey in the ItemContents collection
-        /// </summary>
-        [Fact]
-        public void TestItemsToItemsDigestsNonMatchingKeys()
-        {
-            int testMetadataCount = 20;
-            int testContentsCount = 20;
-
-            List<ItemContents> contentsList = new List<ItemContents>();
-            List<ItemMetadata> metadataList = new List<ItemMetadata>();
-
-            int[] itemKeysMetadata = Enumerable.Range(50, testMetadataCount).ToArray();
-            int[] itemKeysContents = Enumerable.Range(60, testContentsCount).ToArray();
-            int[] banksKeys = Enumerable.Range(100, testMetadataCount).ToArray();
-            string testTarget = "Test target string";
-            string testClaim = "Test claim string";
-            string testInteractionType = "EQ";
-            string testSubject = "MATH";
-
-            int i;
-            for (i = 0; i < testMetadataCount; i++)
-            {
-                ItemMetadata metadata = new ItemMetadata();
-                metadata.metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-                metadata.metadata.ItemKey = itemKeysMetadata[i];
-                metadata.metadata.Grade = itemKeysMetadata[i].ToString();
-                metadata.metadata.Target = testTarget + itemKeysMetadata[i];
-                metadata.metadata.Claim = testClaim + itemKeysMetadata[i];
-                metadata.metadata.InteractionType = testInteractionType + itemKeysMetadata[i];
-                metadata.metadata.Subject = testSubject + itemKeysMetadata[i];
-
-                metadataList.Add(metadata);
-            }
-
-            for (i = 0; i < testContentsCount; i++)
-            {
-                ItemContents contents = new ItemContents();
-                contents.item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
-                contents.item.ItemKey = itemKeysContents[i];
-                contents.item.ItemBank = banksKeys[i];
-
-                contentsList.Add(contents);
-            }
-
-            var exception = Assert.ThrowsAsync(typeof(Exception), () => ItemDigestTranslation.ItemsToItemDigestsAsync(metadataList, contentsList));
         }
     }
 }

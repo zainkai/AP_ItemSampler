@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Translations;
+using System.IO;
 
 namespace SmarterBalanced.SampleItems.Dal.Context
 {
@@ -18,16 +20,21 @@ namespace SmarterBalanced.SampleItems.Dal.Context
         public SampleItemsContext()
         {
             List<ItemDigest> digests = new List<ItemDigest>();
-            for(int i =0; i < 100; i++)
-            {
-                ItemDigest digest = new ItemDigest
-                {
-                    BankKey = 103,
-                    ItemKey = i
-                };
-                digests.Add(digest);
-            }
-            ItemDigests = digests;
+            string contentDir = @"c:/content/Items";
+
+            //Find xml files
+            Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            Task<IEnumerable<FileInfo>> fetchContentsFiles = XmlSerialization.FindContentXmlFiles(contentDir);
+            IEnumerable <FileInfo> metadataFiles =fetchMetadataFiles .Result;
+            IEnumerable<FileInfo> contentsFiles = fetchContentsFiles.Result;
+
+            //Parse Xml Files
+            Task<IEnumerable<ItemMetadata>> deserializeMetadata = XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metadataFiles);
+            Task<IEnumerable<ItemContents>> deserializeContents = XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentsFiles);
+            IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
+            IEnumerable<ItemContents> itemContents = deserializeContents.Result;
+
+            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents);
         }
     }
 }
