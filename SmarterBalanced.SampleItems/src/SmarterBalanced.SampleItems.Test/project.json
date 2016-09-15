@@ -7,9 +7,10 @@
     "System.Runtime.Serialization.Primitives": "4.1.1",
     "xunit": "2.1.0",
     "dotnet-test-xunit": "1.0.0-rc2-192208-24",
-    "SmarterBalanced.SampleItems.Dal" : {
+    "SmarterBalanced.SampleItems.Dal": {
       "target": "project"
-    }
+    },
+    "Moq": "4.6.38-alpha"
   },
   "testRunner": "xunit",
   "frameworks": {
