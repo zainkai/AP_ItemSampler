@@ -10,7 +10,9 @@
     "SmarterBalanced.SampleItems.Dal": {
       "target": "project"
     },
-    "Moq": "4.6.38-alpha"
+    "Moq": "4.6.38-alpha",
+    "SmarterBalanced.SampleItems.Core": "1.0.0-*",
+    "SmarterBalanced.SampleItems.Web": "1.0.0-*"
   },
   "testRunner": "xunit",
   "frameworks": {

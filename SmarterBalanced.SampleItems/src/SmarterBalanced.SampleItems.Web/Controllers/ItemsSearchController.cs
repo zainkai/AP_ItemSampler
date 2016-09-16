@@ -12,11 +12,11 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemsSearchController : Controller
     {
-        private ISampleItemsSearch s_repo;
+        private ISampleItemsSearchRepo s_repo;
 
         public ItemsSearchController(ISampleItemsRepo repo)
         {
-            s_repo = new SampleItemsSearch(repo);
+            s_repo = new SampleItemsSearchRepo(repo);
         }
 
         // GET: /<controller>/

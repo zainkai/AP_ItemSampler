@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Dal.Interfaces;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using SmarterBalanced.SampleItems.Core.Interfaces;
+using SmarterBalanced.SampleItems.Core.Infrastructure;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -42,7 +44,10 @@ namespace SmarterBalanced.SampleItems.Web
 
             services.AddMvc();
 
-            services.AddSingleton<ISampleItemsRepo, SampleItemsRepo>();
+            services.AddScoped<IItemViewRepo>(provider =>
+            {
+                return new ItemViewRepo(SampleItemsRepo.Default);
+            });
             services.AddRouting();
         }
 

@@ -8,5 +8,6 @@ namespace SmarterBalanced.SampleItems.Core.Interfaces
 {
     public interface IItemViewRepo
     {
+        ItemDigest GetItemDigest(int bankKey, int itemKey);
     }
 }

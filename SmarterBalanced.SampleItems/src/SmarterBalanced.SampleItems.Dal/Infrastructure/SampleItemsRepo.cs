@@ -12,18 +12,24 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
     {
         private ISampleItemsContext s_context;
 
-        /// <summary>
-        /// Instantiate Context 
-        /// </summary>
-        public SampleItemsRepo() : this(new SampleItemsContext()) { }
+        private static SampleItemsRepo s_singletonInstance;
 
-        /// <summary>
-        /// Constructor for repo
-        /// </summary>
-        /// <param name="context"></param>
-        public SampleItemsRepo(ISampleItemsContext context)
+        private SampleItemsRepo()
         {
-            s_context = context;
+            s_context = new SampleItemsContext();
+        }
+        
+        public static SampleItemsRepo Default
+        {
+            get
+            {
+                if(s_singletonInstance == null)
+                {
+                    s_singletonInstance = new SampleItemsRepo();
+                }
+
+                return s_singletonInstance;
+            }
         }
 
         /// <summary>

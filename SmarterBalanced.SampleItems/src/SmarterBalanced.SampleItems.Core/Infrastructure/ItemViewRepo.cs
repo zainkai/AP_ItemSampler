@@ -12,10 +12,14 @@ namespace SmarterBalanced.SampleItems.Core.Infrastructure
     public class ItemViewRepo : IItemViewRepo
      {
         private ISampleItemsRepo s_repo;
-        public ItemViewRepo() : this(new SampleItemsRepo()) { }
         public ItemViewRepo(ISampleItemsRepo repo)
         {
             s_repo = repo;
+        }
+
+        public ItemDigest GetItemDigest(int bankKey, int itemKey)
+        {
+            return s_repo.GetItemDigest(bankKey, itemKey);
         }
     }
 }

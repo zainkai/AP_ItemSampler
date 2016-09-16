@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Interfaces
 {
-    public interface ISampleItemsSearch
+    public interface ISampleItemsSearchRepo
     {
     }
 }

@@ -9,11 +9,10 @@ using SmarterBalanced.SampleItems.Core.Interfaces;
 
 namespace SmarterBalanced.SampleItems.Core.Infrastructure
 {
-    public class SampleItemsSearch : ISampleItemsSearch
+    public class SampleItemsSearchRepo : ISampleItemsSearchRepo
      {
         private ISampleItemsRepo s_repo;
-        public SampleItemsSearch() : this(new SampleItemsRepo()) { }
-        public SampleItemsSearch(ISampleItemsRepo repo)
+        public SampleItemsSearchRepo(ISampleItemsRepo repo)
         {
             s_repo = repo;
         }
