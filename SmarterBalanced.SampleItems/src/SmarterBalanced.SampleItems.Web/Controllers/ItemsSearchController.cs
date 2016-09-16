@@ -14,9 +14,9 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
     {
         private ISampleItemsSearchRepo sampleItemsSearchRepo;
 
-        public ItemsSearchController(ISampleItemsRepo repo)
+        public ItemsSearchController(ISampleItemsSearchRepo repo)
         {
-            sampleItemsSearchRepo = new SampleItemsSearchRepo(repo);
+            sampleItemsSearchRepo = repo;
         }
 
         // GET: /<controller>/
