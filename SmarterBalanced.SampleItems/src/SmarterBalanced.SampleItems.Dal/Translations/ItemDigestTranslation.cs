@@ -1,5 +1,7 @@
-﻿using SmarterBalanced.SampleItems.Dal.Models;
+﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
+using SmarterBalanced.SampleItems.Dal.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             if (itemContents.item.ItemKey != itemMetadata.metadata.ItemKey)
             {
-                throw new Exception("Cannot digest items with different ItemKey values.");
+                throw new SampleItemsContextException("Cannot digest items with different ItemKey values.");
             }
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.item.ItemBank;
@@ -32,6 +34,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             digest.Subject = itemMetadata.metadata.Subject;
             digest.InteractionType = itemMetadata.metadata.InteractionType;
             digest.Claim = itemMetadata.metadata.Claim;
+            digest.AssociatedStimulus = itemMetadata.metadata.AssociatedStimulus;
+
             return digest;
         }
 
@@ -42,36 +46,23 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <param name="itemMetadata"></param>
         /// <param name="itemContents"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<ItemDigest>> ItemsToItemDigestsAsync(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
+        public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
         {
-            List<ItemDigest> digests = new List<ItemDigest>();
-            if (itemMetadata.Count() != itemContents.Count())
+            BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
+            Parallel.ForEach<ItemMetadata>(itemMetadata, (metadata) =>
             {
-                throw new Exception("Item metadata and contents counts differ.");
-            }
-            await Task.Run(() =>
-            {
-                foreach (ItemMetadata metadata in itemMetadata)
+                var countitems = itemContents.Where(c => c.item.ItemKey == metadata.metadata.ItemKey);
+
+                if (countitems.Count() == 1)
                 {
-                    var countitems = itemContents.Where(c => c.item.ItemKey == metadata.metadata.ItemKey);
-
-                    if (countitems.Count() == 1)
-                    {
-                        digests.Add(ItemToItemDigest(metadata, countitems.First()));
-                    }
-
-                    else if (countitems.Count() == 0)
-                    {
-                        throw new Exception("Could not match ItemMetadata object with ItemKey: " + metadata.metadata.ItemKey +
-                            " with an ItemContents object");
-                    }
-                    else
-                    {
-                        throw new Exception("Multiple ItemContents wih ItemKey: " + metadata.metadata.ItemKey + " found.");
-                    }
+                    digests.Add(ItemToItemDigest(metadata, countitems.First()));
+                }
+                else if (countitems.Count() > 1)
+                {
+                    throw new SampleItemsContextException("Multiple ItemContents wih ItemKey: " + metadata.metadata.ItemKey + " found.");
                 }
             });
-            return digests;
+            return digests as IEnumerable<ItemDigest>;
         }
     }
 }

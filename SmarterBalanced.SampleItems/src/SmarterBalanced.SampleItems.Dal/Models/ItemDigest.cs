@@ -32,11 +32,8 @@ namespace SmarterBalanced.SampleItems.Dal.Models
         [Display(Name = "Interaction Type")]
         public string InteractionType { get; set; }
 
-        public int? MaxGrade { get; set; }
-
-        public int? TargetedGrade { get; set; }
-
-        public string SubjectCode { get; set; }
+        [Display(Name = "AssociatedStimulus")]
+        public int? AssociatedStimulus { get; set; }
 
         #region Helper Methods
 
