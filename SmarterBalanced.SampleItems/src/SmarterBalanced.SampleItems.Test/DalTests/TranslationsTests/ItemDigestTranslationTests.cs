@@ -25,17 +25,17 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-            contents.item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
-            metadata.metadata.ItemKey = testItemKey;
-            metadata.metadata.Grade = testGrade;
-            metadata.metadata.Target = "Test target string";
-            metadata.metadata.Claim = "Test claim string";
-            metadata.metadata.InteractionType = "EQ";
-            metadata.metadata.Subject = "MATH";
+            metadata.Metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
+            contents.Item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
+            metadata.Metadata.ItemKey = testItemKey;
+            metadata.Metadata.Grade = testGrade;
+            metadata.Metadata.Target = "Test target string";
+            metadata.Metadata.Claim = "Test claim string";
+            metadata.Metadata.InteractionType = "EQ";
+            metadata.Metadata.Subject = "MATH";
 
-            contents.item.ItemKey = testItemKey;
-            contents.item.ItemBank = testItemBank;
+            contents.Item.ItemKey = testItemKey;
+            contents.Item.ItemBank = testItemBank;
 
             ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents);
             Assert.Equal(testItemKey, digest.ItemKey);
@@ -56,17 +56,17 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-            contents.item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
-            metadata.metadata.ItemKey = 1;
-            metadata.metadata.Grade = "7";
-            metadata.metadata.Target = "Test target string";
-            metadata.metadata.Claim = "Test claim string";
-            metadata.metadata.InteractionType = "EQ";
-            metadata.metadata.Subject = "MATH";
+            metadata.Metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
+            contents.Item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
+            metadata.Metadata.ItemKey = 1;
+            metadata.Metadata.Grade = "7";
+            metadata.Metadata.Target = "Test target string";
+            metadata.Metadata.Claim = "Test claim string";
+            metadata.Metadata.InteractionType = "EQ";
+            metadata.Metadata.Subject = "MATH";
 
-            contents.item.ItemKey = 2;
-            contents.item.ItemBank = 3;
+            contents.Item.ItemKey = 2;
+            contents.Item.ItemBank = 3;
             var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents));
             Assert.Equal("Cannot digest items with different ItemKey values.", exception.Message);
         }
@@ -100,20 +100,20 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 ItemMetadata metadata = new ItemMetadata();
                 ItemContents contents = new ItemContents();
 
-                metadata.metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-                contents.item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
+                metadata.Metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
+                contents.Item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
 
                 //Test metadata attributes
-                metadata.metadata.ItemKey = itemKeys[i];
-                metadata.metadata.Grade = itemKeys[i].ToString();
-                metadata.metadata.Target = testTarget + itemKeys[i];
-                metadata.metadata.Claim = testClaim + itemKeys[i];
-                metadata.metadata.InteractionType = testInteractionType + itemKeys[i];
-                metadata.metadata.Subject = testSubject + itemKeys[i];
+                metadata.Metadata.ItemKey = itemKeys[i];
+                metadata.Metadata.Grade = itemKeys[i].ToString();
+                metadata.Metadata.Target = testTarget + itemKeys[i];
+                metadata.Metadata.Claim = testClaim + itemKeys[i];
+                metadata.Metadata.InteractionType = testInteractionType + itemKeys[i];
+                metadata.Metadata.Subject = testSubject + itemKeys[i];
 
                 //Test contents attributes
-                contents.item.ItemKey = itemKeys[i];
-                contents.item.ItemBank = banksKeys[i];
+                contents.Item.ItemKey = itemKeys[i];
+                contents.Item.ItemBank = banksKeys[i];
 
                 metadataList.Add(metadata);
                 contentsList.Add(contents);

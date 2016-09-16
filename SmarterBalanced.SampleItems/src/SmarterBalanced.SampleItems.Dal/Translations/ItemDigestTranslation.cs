@@ -22,19 +22,20 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <returns></returns>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata, ItemContents itemContents)
         {
-            if (itemContents.item.ItemKey != itemMetadata.metadata.ItemKey)
+            if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
             {
                 throw new SampleItemsContextException("Cannot digest items with different ItemKey values.");
             }
+
             ItemDigest digest = new ItemDigest();
-            digest.BankKey = itemContents.item.ItemBank;
-            digest.ItemKey = itemContents.item.ItemKey;
-            digest.Grade = itemMetadata.metadata.Grade;
-            digest.Target = itemMetadata.metadata.Target;
-            digest.Subject = itemMetadata.metadata.Subject;
-            digest.InteractionType = itemMetadata.metadata.InteractionType;
-            digest.Claim = itemMetadata.metadata.Claim;
-            digest.AssociatedStimulus = itemMetadata.metadata.AssociatedStimulus;
+            digest.BankKey = itemContents.Item.ItemBank;
+            digest.ItemKey = itemContents.Item.ItemKey;
+            digest.Grade = itemMetadata.Metadata.Grade;
+            digest.Target = itemMetadata.Metadata.Target;
+            digest.Subject = itemMetadata.Metadata.Subject;
+            digest.InteractionType = itemMetadata.Metadata.InteractionType;
+            digest.Claim = itemMetadata.Metadata.Claim;
+            digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
 
             return digest;
         }
@@ -51,7 +52,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach<ItemMetadata>(itemMetadata, (metadata) =>
             {
-                var countitems = itemContents.Where(c => c.item.ItemKey == metadata.metadata.ItemKey);
+                var countitems = itemContents.Where(c => c.Item.ItemKey == metadata.Metadata.ItemKey);
 
                 if (countitems.Count() == 1)
                 {
@@ -59,7 +60,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
                 else if (countitems.Count() > 1)
                 {
-                    throw new SampleItemsContextException("Multiple ItemContents wih ItemKey: " + metadata.metadata.ItemKey + " found.");
+                    throw new SampleItemsContextException("Multiple ItemContents wih ItemKey: " + metadata.Metadata.ItemKey + " found.");
                 }
             });
             return digests as IEnumerable<ItemDigest>;

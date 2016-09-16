@@ -10,25 +10,25 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
 {
     public class SampleItemsRepo: ISampleItemsRepo
     {
-        private ISampleItemsContext s_context;
+        private ISampleItemsContext sampleItemsContext;
 
-        private static SampleItemsRepo s_singletonInstance;
+        private static SampleItemsRepo sampleItemsSingletonInstance;
 
         private SampleItemsRepo()
         {
-            s_context = new SampleItemsContext();
+            sampleItemsContext = new SampleItemsContext();
         }
         
         public static SampleItemsRepo Default
         {
             get
             {
-                if(s_singletonInstance == null)
+                if(sampleItemsSingletonInstance == null)
                 {
-                    s_singletonInstance = new SampleItemsRepo();
+                    sampleItemsSingletonInstance = new SampleItemsRepo();
                 }
 
-                return s_singletonInstance;
+                return sampleItemsSingletonInstance;
             }
         }
 
@@ -40,7 +40,7 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
         /// </returns>
         public IEnumerable<ItemDigest> GetItemDigests()
         {
-            return s_context.ItemDigests.OrderBy(t => t.BankKey)
+            return sampleItemsContext.ItemDigests.OrderBy(t => t.BankKey)
                                         .ThenBy(t => t.ItemKey);
         }
 

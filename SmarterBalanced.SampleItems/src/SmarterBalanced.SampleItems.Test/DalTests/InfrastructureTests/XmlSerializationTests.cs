@@ -32,13 +32,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.InfrastructureTests
             ItemMetadata metadata = XmlSerialization.DeserializeXml<ItemMetadata>(metadataFile);
 
             Assert.NotNull(metadata);
-            Assert.NotNull(metadata.metadata);
-            Assert.Equal(expectedItemKey, metadata.metadata.ItemKey);
-            Assert.Equal(expectedGrade, metadata.metadata.Grade);
-            Assert.Equal(expectedTarget, metadata.metadata.Target);
-            Assert.Equal(expectedInteractionType, metadata.metadata.InteractionType);
-            Assert.Equal(expectedSubject, metadata.metadata.Subject);
-            Assert.Equal(expectedClaim, metadata.metadata.Claim);
+            Assert.NotNull(metadata.Metadata);
+            Assert.Equal(expectedItemKey, metadata.Metadata.ItemKey);
+            Assert.Equal(expectedGrade, metadata.Metadata.Grade);
+            Assert.Equal(expectedTarget, metadata.Metadata.Target);
+            Assert.Equal(expectedInteractionType, metadata.Metadata.InteractionType);
+            Assert.Equal(expectedSubject, metadata.Metadata.Subject);
+            Assert.Equal(expectedClaim, metadata.Metadata.Claim);
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.InfrastructureTests
             FileInfo metadataFile = new FileInfo(baseTestDirectory + testFile);
             ItemContents contents = XmlSerialization.DeserializeXml<ItemContents>(metadataFile);
 
-            Assert.Equal(expectedItemKey, contents.item.ItemKey);
-            Assert.Equal(expectedBankKey, contents.item.ItemBank);
+            Assert.Equal(expectedItemKey, contents.Item.ItemKey);
+            Assert.Equal(expectedBankKey, contents.Item.ItemBank);
         }
 
         /// <summary>

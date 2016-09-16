@@ -11,10 +11,10 @@ namespace SmarterBalanced.SampleItems.Core.Infrastructure
 {
     public class SampleItemsSearchRepo : ISampleItemsSearchRepo
      {
-        private ISampleItemsRepo s_repo;
+        private ISampleItemsRepo sampleItemsRepo;
         public SampleItemsSearchRepo(ISampleItemsRepo repo)
         {
-            s_repo = repo;
+            sampleItemsRepo = repo;
         }
     }
 }

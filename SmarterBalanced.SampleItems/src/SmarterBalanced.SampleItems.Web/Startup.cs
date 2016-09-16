@@ -43,11 +43,13 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();
-
+            
+            // Injecting Singleton SampleItemsRepo into each Controller Repository
             services.AddScoped<IItemViewRepo>(provider =>
             {
                 return new ItemViewRepo(SampleItemsRepo.Default);
             });
+
             services.AddRouting();
         }
 

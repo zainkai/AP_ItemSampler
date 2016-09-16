@@ -10,12 +10,6 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private ISampleItemsRepo s_repo;
-
-        public HomeController(ISampleItemsRepo repo)
-        {
-            s_repo = repo;
-        }
 
         public IActionResult Index()
         {
