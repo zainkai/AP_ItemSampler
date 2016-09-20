@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+  - source: SampleItemsWebsite
+    destination: /home/ubuntu/SampleItemsWebsite
+  - source: CodeDeploy/SampleItemsWebsite.conf
+    destination: /etc/supervisor/conf.d
+  - source: CodeDeploy/default
+    destination: etc/nginx/sites-available
+hooks:
+  ApplicationStart:
+    - location: CodeDeploy/AppStart.sh
