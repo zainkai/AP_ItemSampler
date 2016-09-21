@@ -250,3 +250,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# whatever _references.js is, I don't think I want it
+_references.js
