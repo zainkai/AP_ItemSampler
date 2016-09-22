@@ -3,6 +3,8 @@
 import React = __React;
 import ReactDOM = __React.__DOM;
 
-declare namespace __React {
-    export import addons = __React.__Addons;
-}
+// No idea why the below namespace doesn't work, but these definitions files don't affect semantics. If there are no compiler errors, it's fine.
+
+//declare namespace __React {
+//    export import addons = __React.__Addons;
+//}

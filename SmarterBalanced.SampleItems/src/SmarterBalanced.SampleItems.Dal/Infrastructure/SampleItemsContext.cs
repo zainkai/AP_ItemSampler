@@ -25,7 +25,7 @@ namespace SmarterBalanced.SampleItems.Dal.Context
             //Find xml files
             Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             Task<IEnumerable<FileInfo>> fetchContentsFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-            IEnumerable <FileInfo> metadataFiles =fetchMetadataFiles .Result;
+            IEnumerable <FileInfo> metadataFiles = fetchMetadataFiles.Result;
             IEnumerable<FileInfo> contentsFiles = fetchContentsFiles.Result;
 
             //Parse Xml Files
