@@ -1,7 +1,5 @@
 ﻿
-console.log("wat");
-
 ReactDOM.render(
-    <Hello compiler="Derp" framework="Stuff" />,
-    document.getElementById("example")
+    <Hello compiler="TypeScript" framework="React" />,
+    document.getElementById("example") as HTMLElement
 );
