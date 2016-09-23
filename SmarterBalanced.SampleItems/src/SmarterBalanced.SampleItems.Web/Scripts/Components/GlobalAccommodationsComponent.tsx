@@ -2,20 +2,14 @@
 // for more information see the following page on the TypeScript wiki:
 // https://github.com/Microsoft/TypeScript/wiki/JSX
 
-interface Accommodation {
-    name: string;
-    selectedIndex: number;
-    options: string[];
-}
-
 namespace GlobalAccommodations {
     export interface State {
-        presentation: Accommodation;
-        textToSpeech: Accommodation;
-        masking: Accommodation;
-        colorContrast: Accommodation;
+        presentation: ComboBox.Props;
+        textToSpeech: ComboBox.Props;
+        masking: ComboBox.Props;
+        colorContrast: ComboBox.Props;
         highlighter: boolean;
-        studentComments: Accommodation;
+        studentComments: ComboBox.Props;
     }
 
     export interface Props {
@@ -26,53 +20,75 @@ namespace GlobalAccommodations {
         state = this.props.initialState;
 
         render() {
-            const { presentation, textToSpeech, masking, colorContrast, highlighter, studentComments } = this.state;
             return (
-                <div>
-                    <div>
-                        <p style={{ display: "inline-block" }}>Presentation:</p>
-                        {comboBox(presentation)}
-                    </div>
-
-                    <div>
-                        <p style={{ display: "inline-block" }}>Text-To-Speech:</p>
-                        {comboBox(textToSpeech)}
-                    </div>
-
-                    <div>
-                        <p style={{ display: "inline-block" }}>Masking:</p>
-                        {comboBox(masking)}
-                    </div>
-
-                    <div>
-                        <p style={{ display: "inline-block" }}>Color Contrast:</p>
-                        {comboBox(colorContrast)}
-                    </div>
-
-                    <div>
-                        <p style={{ display: "inline-block" }}>Highlighter:</p>
-                        <input type="checkbox" selected={highlighter}></input>
-                    </div>
-
-                    <div>
-                        <p style={{ display: "inline-block" }}>Student Comments:</p>
-                        {comboBox(studentComments)}
-                    </div>
+                <div className="accommodations">
+                    <h1>All Accommodations</h1>
+                    {this.renderFields()}
+                    <button onClick={() => this.report()}>Submit</button>
                 </div>
             );
         }
+
+        renderFields(): JSX.Element {
+            const { presentation, textToSpeech, masking, colorContrast, highlighter, studentComments } = this.state;
+            return (
+                <div>
+                    <ComboBox.Component {...presentation} />
+                    <ComboBox.Component {...textToSpeech} />
+                    <ComboBox.Component {...masking} />
+                    <ComboBox.Component {...colorContrast} />
+
+                    <div>
+                        <label htmlFor="select-highlighter">Highlighter:</label>
+                        <input type="checkbox" id="select-highlighter" selected={highlighter}></input>
+                    </div>
+
+                    <ComboBox.Component {...studentComments} />
+                </div>
+            );
+        }
+
+        report() {
+            alert(JSON.stringify(this.state));
+        }
+    }
+}
+
+namespace ComboBox {
+    export interface Props {
+        name: string;
+        id: string;
+        initialValue?: string;
+        options: string[];
     }
 
-    function comboBox(accommodation: Accommodation): JSX.Element {
-        const options: JSX.Element[] = accommodation.options.map(function (name, idx) {
-            const isSelected = idx === accommodation.selectedIndex;
-            return <option selected={isSelected}>{name}</option>;
-        });
+    export interface State {
+        value: string;
+    }
 
-        return (
-            <select>
-                {options}
-            </select>
-        );
+    export class Component extends React.Component<Props, State> {
+        state = {
+            value: this.props.initialValue || this.props.options[0]
+        };
+
+        render() {
+            const options: JSX.Element[] = this.props.options.map(name => <option key={this.props.id + "-" + name}>{name}</option>);
+            return (
+                // should event handlers be passed down?
+                // e => this.props.onChange((e.target as HTMLInputElement).value)
+                <div>
+                    <label htmlFor={this.props.id}>{this.props.name}</label>
+                    <select id={this.props.id} onChange={e => this.onChange(e)}> 
+                        {options}
+                    </select>
+                </div>
+            );
+        }
+
+        onChange(e: React.FormEvent) {
+            this.setState({
+                value: (e.target as HTMLInputElement).value
+            });
+        }
     }
 }

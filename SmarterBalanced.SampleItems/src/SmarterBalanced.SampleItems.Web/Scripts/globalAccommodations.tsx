@@ -4,22 +4,37 @@
 
 /// <reference path="Components/GlobalAccommodationsComponent.tsx" />
 
-const example: Accommodation = {
+const example: ComboBox.Props = {
     name: "Example",
-    selectedIndex: 42,
+    id: "select-example",
     options: ["foo", "bar", "baz"]
 }
 
 let initialState: GlobalAccommodations.State = {
     presentation: example,
-    textToSpeech: { selectedIndex: 0, options: [], name: "" },
-    masking: { selectedIndex: 0, options: [], name: "" },
-    colorContrast: { selectedIndex: 0, options: [], name: "" },
+    textToSpeech: { options: [], name: "", id: "s1" },
+    masking: { options: [], name: "", id: "s2" },
+    colorContrast: { options: [], name: "", id: "s3" },
     highlighter: false,
-    studentComments: { selectedIndex: 0, options: [], name: "" }
+    studentComments: { options: [], name: "", id: "s4" }
 }
 
-ReactDOM.render(
-    <GlobalAccommodations.Component initialState={initialState} />,
-    document.getElementById("container") as HTMLElement
-);
+function clone<T>(input: T): T {
+    return JSON.parse(JSON.stringify(input));
+}
+
+namespace GlobalAccommodations {
+    export class Controller {
+        constructor(private state: GlobalAccommodations.State) { }
+
+        render() {
+            ReactDOM.render(
+                <GlobalAccommodations.Component initialState={this.state} />,
+                document.getElementById("container") as HTMLElement
+            );
+        }
+    }
+
+}
+
+new GlobalAccommodations.Controller(initialState).render();
