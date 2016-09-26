@@ -4,15 +4,20 @@
 
 namespace GlobalAccommodations {
     export interface State {
-        presentation: ComboBox.Props;
-        textToSpeech: ComboBox.Props;
-        masking: ComboBox.Props;
-        colorContrast: ComboBox.Props;
-        highlighter: boolean;
-        studentComments: ComboBox.Props;
+        selectedPresentation: string;
+        selectedTextToSpeech: string;
+        selectedMasking: string;
+        selectedColorContrast: string;
+        useHighlighter: boolean;
+        selectedComments: string;
     }
 
     export interface Props {
+        presentation: ComboBox.Data;
+        textToSpeech: ComboBox.Data;
+        masking: ComboBox.Data;
+        colorContrast: ComboBox.Data;
+        studentComments: ComboBox.Data;
         initialState: State
     }
 
@@ -30,20 +35,23 @@ namespace GlobalAccommodations {
         }
 
         renderFields(): JSX.Element {
-            const { presentation, textToSpeech, masking, colorContrast, highlighter, studentComments } = this.state;
+            const { presentation, textToSpeech, masking, colorContrast, studentComments } = this.props;
             return (
                 <div>
-                    <ComboBox.Component {...presentation} />
-                    <ComboBox.Component {...textToSpeech} />
-                    <ComboBox.Component {...masking} />
-                    <ComboBox.Component {...colorContrast} />
+                    <ComboBox.Component {...presentation} id={"presentation"} value={this.state.selectedPresentation} onChange={newValue => this.setState({ selectedPresentation: newValue } as State)} />
+                    <ComboBox.Component {...textToSpeech} id={"text-to-speech"} value={this.state.selectedTextToSpeech} onChange={newValue => this.setState({ selectedTextToSpeech: newValue } as State)} />
+                    <ComboBox.Component {...masking} id={"masking"} value={this.state.selectedMasking} onChange={newValue => this.setState({ selectedMasking: newValue } as State)} />
+                    <ComboBox.Component {...colorContrast} id={"color-contrast"} value={this.state.selectedColorContrast} onChange={newValue => this.setState({ selectedColorContrast: newValue } as State)} />
 
                     <div>
                         <label htmlFor="select-highlighter">Highlighter:</label>
-                        <input type="checkbox" id="select-highlighter" selected={highlighter}></input>
+                        <input type="checkbox"
+                            id="select-highlighter"
+                            selected={this.state.useHighlighter}
+                            onChange={e => this.setState({ useHighlighter: (e.target as HTMLInputElement).checked } as State)} ></input>
                     </div>
 
-                    <ComboBox.Component {...studentComments} />
+                    <ComboBox.Component {...studentComments} id={"student-comments"} value = { this.state.selectedComments } onChange= { newValue => this.setState({ selectedComments: newValue } as State) } />
                 </div>
             );
         }
@@ -55,30 +63,27 @@ namespace GlobalAccommodations {
 }
 
 namespace ComboBox {
-    export interface Props {
-        name: string;
-        id: string;
-        initialValue?: string;
+    export interface Data {
+        title: string;
         options: string[];
+        value?: string;
     }
 
-    export interface State {
-        value: string;
+    export interface Props extends Data {
+        id: string;
+        onChange: (value: string) => void;
     }
+
+    export interface State { }
 
     export class Component extends React.Component<Props, State> {
-        state = {
-            value: this.props.initialValue || this.props.options[0]
-        };
 
         render() {
             const options: JSX.Element[] = this.props.options.map(name => <option key={this.props.id + "-" + name}>{name}</option>);
             return (
-                // should event handlers be passed down?
-                // e => this.props.onChange((e.target as HTMLInputElement).value)
                 <div>
-                    <label htmlFor={this.props.id}>{this.props.name}</label>
-                    <select id={this.props.id} onChange={e => this.onChange(e)}> 
+                    <label htmlFor={this.props.id}>{this.props.title}</label>
+                    <select id={this.props.id} value={this.props.value} onChange={e => this.onChange(e)}> 
                         {options}
                     </select>
                 </div>
@@ -86,9 +91,8 @@ namespace ComboBox {
         }
 
         onChange(e: React.FormEvent) {
-            this.setState({
-                value: (e.target as HTMLInputElement).value
-            });
+            const newValue = (e.target as HTMLInputElement).value;
+            this.props.onChange(newValue);
         }
     }
 }
