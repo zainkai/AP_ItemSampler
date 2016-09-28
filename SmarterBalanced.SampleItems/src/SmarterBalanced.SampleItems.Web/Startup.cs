@@ -50,6 +50,11 @@ namespace SmarterBalanced.SampleItems.Web
                 return new ItemViewRepo(SampleItemsRepo.Default);
             });
 
+            services.AddScoped<ISampleItemsSearchRepo>(provider =>
+            {
+                return new SampleItemsSearchRepo(SampleItemsRepo.Default);
+            });
+
             services.AddRouting();
         }
 
