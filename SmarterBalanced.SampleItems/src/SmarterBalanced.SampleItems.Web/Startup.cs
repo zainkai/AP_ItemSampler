@@ -12,6 +12,7 @@ using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
+using SmarterBalanced.SampleItems.Dal.Models;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -41,8 +42,8 @@ namespace SmarterBalanced.SampleItems.Web
         {
 
             services.AddApplicationInsightsTelemetry(Configuration);
-
             services.AddMvc();
+            SampleItemsRepo.BuildConfiguration(Configuration);
             
             // Injecting Singleton SampleItemsRepo into each Controller Repository
             services.AddScoped<IItemViewRepo>(provider =>

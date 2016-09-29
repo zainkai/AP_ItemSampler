@@ -5,18 +5,54 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
+using SmarterBalanced.SampleItems.Dal.Translations;
 
 namespace SmarterBalanced.SampleItems.Dal.Infrastructure
 {
-    public class SampleItemsRepo: ISampleItemsRepo
+    public class SampleItemsRepo : ISampleItemsRepo
     {
         private ISampleItemsContext sampleItemsContext;
 
         private static SampleItemsRepo sampleItemsSingletonInstance;
 
+        private static AppSettings Settings { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configurations"></param>
+        /// TODO: Throw custom exception and add error logging
+        public static void BuildConfiguration(IConfigurationRoot configurations)
+        {
+
+            var appJsonRoot = configurations.GetSection("AppSettings");
+            var settingsJson = appJsonRoot.GetSection("SettingsConfig");
+            var exceptionJson = appJsonRoot.GetSection("ExceptionMessages");
+
+            var appSettings = new AppSettings();
+            try
+            {
+                appSettings.SettingsConfig = settingsJson.ConfigurationSectionToObject<SettingsConfig>();
+                appSettings.ExceptionMessages = exceptionJson.ConfigurationSectionToObject<ExceptionMessages>();
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Invalid appsettings file");
+            }
+       
+
+            Settings = appSettings;
+
+        }
+
         private SampleItemsRepo()
         {
-            sampleItemsContext = new SampleItemsContext();
+
+            sampleItemsContext = new SampleItemsContext(GetSettings());
+
         }
         
         public static SampleItemsRepo Default
@@ -75,6 +111,9 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
             return GetItemDigest(t => t.BankKey == bankKey && t.ItemKey == itemKey);
         }
 
-
+        public AppSettings GetSettings()
+        {
+            return Settings;
+        }
     }
 }

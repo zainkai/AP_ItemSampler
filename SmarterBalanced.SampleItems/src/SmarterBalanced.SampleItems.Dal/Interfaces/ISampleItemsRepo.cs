@@ -1,4 +1,5 @@
-﻿using SmarterBalanced.SampleItems.Dal.Models;
+﻿using Microsoft.Extensions.Options;
+using SmarterBalanced.SampleItems.Dal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace SmarterBalanced.SampleItems.Dal.Interfaces
         /// </returns>
         IEnumerable<ItemDigest> GetItemDigests();
 
+      AppSettings GetSettings();
         /// <summary>
         /// Get all ItemDigests matching the given predicate.
         /// </summary>

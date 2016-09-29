@@ -13,14 +13,13 @@ namespace SmarterBalanced.SampleItems.Dal.Context
     public class SampleItemsContext : ISampleItemsContext
     {
         public IEnumerable<ItemDigest> ItemDigests { get; set; }
-
         /// <summary>
         /// TODO: Create itemdigest from xml serialization 
         /// </summary>
-        public SampleItemsContext()
+        public SampleItemsContext(AppSettings settings)
         {
             List<ItemDigest> digests = new List<ItemDigest>();
-            string contentDir = @"c:/content/Items";
+            string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
             //Find xml files
             Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
