@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SmarterBalanced.SampleItems.Dal.Models
+namespace SmarterBalanced.SampleItems.Dal.Models.Configurations
 {
     public class AppSettings
     {

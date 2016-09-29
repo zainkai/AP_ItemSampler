@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Translations;
 using System.IO;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
 
 namespace SmarterBalanced.SampleItems.Dal.Context
 {

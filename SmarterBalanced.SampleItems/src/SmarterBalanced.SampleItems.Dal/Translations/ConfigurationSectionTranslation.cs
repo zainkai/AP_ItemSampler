@@ -10,10 +10,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class ConfigurationSectionTranslation
     {
+        /// <summary>
+        /// Returns an object tranlated from a configuration section
+        /// </summary>
+        /// <typeparam name="T">Generic object</typeparam>
+        /// <param name="section"></param>
         public static T ConfigurationSectionToObject<T>(this IConfigurationSection section) where T : new()
         {
             Type tType = typeof(T);
-
             T result = (T)Activator.CreateInstance(typeof(T));
 
             List<IConfigurationSection> sectionMembers = section.GetChildren().ToList();

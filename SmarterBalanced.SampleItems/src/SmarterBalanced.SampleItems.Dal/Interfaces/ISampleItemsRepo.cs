@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using SmarterBalanced.SampleItems.Dal.Models;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,13 @@ namespace SmarterBalanced.SampleItems.Dal.Interfaces
         /// </returns>
         IEnumerable<ItemDigest> GetItemDigests();
 
-      AppSettings GetSettings();
+        /// <summary>
+        /// Adds the appsettings configuration into AppSettings class
+        /// </summary>
+        /// <param name="configurations"></param>
+        /// TODO: Throw custom exception and add error logging
+        AppSettings GetSettings();
+
         /// <summary>
         /// Get all ItemDigests matching the given predicate.
         /// </summary>
@@ -30,7 +37,7 @@ namespace SmarterBalanced.SampleItems.Dal.Interfaces
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>ItemDigest</returns>
-       ItemDigest GetItemDigest(Func<ItemDigest, bool> predicate);
+        ItemDigest GetItemDigest(Func<ItemDigest, bool> predicate);
 
         /// <summary>
         /// Get ItemDigest matching the specified identifier keys

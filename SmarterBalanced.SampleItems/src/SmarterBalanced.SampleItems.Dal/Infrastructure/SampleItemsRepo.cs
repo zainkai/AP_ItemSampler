@@ -15,23 +15,19 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
     public class SampleItemsRepo : ISampleItemsRepo
     {
         private ISampleItemsContext sampleItemsContext;
-
         private static SampleItemsRepo sampleItemsSingletonInstance;
-
         private static AppSettings Settings { get; set; }
 
         /// <summary>
-        /// 
+        /// Adds the appsettings configuration into AppSettings class
         /// </summary>
         /// <param name="configurations"></param>
         /// TODO: Throw custom exception and add error logging
         public static void BuildConfiguration(IConfigurationRoot configurations)
         {
-
             var appJsonRoot = configurations.GetSection("AppSettings");
             var settingsJson = appJsonRoot.GetSection("SettingsConfig");
             var exceptionJson = appJsonRoot.GetSection("ExceptionMessages");
-
             var appSettings = new AppSettings();
             try
             {
@@ -42,17 +38,13 @@ namespace SmarterBalanced.SampleItems.Dal.Infrastructure
             {
                 throw new Exception("Invalid appsettings file");
             }
-       
 
             Settings = appSettings;
-
         }
 
         private SampleItemsRepo()
         {
-
             sampleItemsContext = new SampleItemsContext(GetSettings());
-
         }
         
         public static SampleItemsRepo Default
