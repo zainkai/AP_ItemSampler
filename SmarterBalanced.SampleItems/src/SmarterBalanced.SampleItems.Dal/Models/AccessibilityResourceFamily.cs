@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Gen = SmarterBalanced.SampleItems.Dal.Models.Generated;
+
 namespace SmarterBalanced.SampleItems.Dal.Models
 {
     public class AccessibilityResourceFamily
     {
-        public string Code { get; set; }
+        public List<string> Codes { get; set; }
 
-        public GradeType[] Grades { get; set; }
+        public Gen.GradeType[] Grades { get; set; }
 
 
     }
