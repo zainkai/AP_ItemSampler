@@ -13,7 +13,8 @@ namespace SmarterBalanced.SampleItems.Dal.Context
 {
     public class SampleItemsContext : ISampleItemsContext
     {
-        public IEnumerable<ItemDigest> ItemDigests { get; set; }
+        public IList<ItemDigest> ItemDigests { get; set; }
+
         /// <summary>
         /// TODO: Create itemdigest from xml serialization 
         /// </summary>
@@ -34,7 +35,9 @@ namespace SmarterBalanced.SampleItems.Dal.Context
             IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
             IEnumerable<ItemContents> itemContents = deserializeContents.Result;
 
-            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents);
+            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
+
+            var accessibility = XmlSerialization.DeserializeXml<Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
         }
     }
 }
