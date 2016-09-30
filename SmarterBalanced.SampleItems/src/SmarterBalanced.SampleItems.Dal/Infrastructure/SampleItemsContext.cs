@@ -17,6 +17,7 @@ namespace SmarterBalanced.SampleItems.Dal.Context
     public class SampleItemsContext : ISampleItemsContext
     {
         public IList<ItemDigest> ItemDigests { get; set; }
+        public IList<AccessibilityResource> AccessibilityResources { get; set; }
 
         public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
