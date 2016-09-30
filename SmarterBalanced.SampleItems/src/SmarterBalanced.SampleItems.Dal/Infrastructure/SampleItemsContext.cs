@@ -8,12 +8,16 @@ using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Translations;
 using System.IO;
 using SmarterBalanced.SampleItems.Dal.Models.Configurations;
+using System.Xml.Linq;
+using System.Xml;
+using Gen = SmarterBalanced.SampleItems.Dal.Models.Generated;
 
 namespace SmarterBalanced.SampleItems.Dal.Context
 {
     public class SampleItemsContext : ISampleItemsContext
     {
         public IList<ItemDigest> ItemDigests { get; set; }
+        public IList<AccessibilityResource> AccessibilityResources { get; set; }
 
         /// <summary>
         /// TODO: Create itemdigest from xml serialization 
@@ -37,7 +41,15 @@ namespace SmarterBalanced.SampleItems.Dal.Context
 
             ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
 
-            var accessibility = XmlSerialization.DeserializeXml<Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
+            var generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
+
+            AccessibilityResources = generatedAccessibility.MasterResourceFamily
+                .OfType<Gen.AccessibilitySingleSelectResource>()
+                .Where(r => r.Selection != null)
+                .Select(r => r.ToAccessibilityResource())
+                .ToList();
+
+            var accessibilityResourceFamilies = generatedAccessibility.ResourceFamily.Select(f => f.ToAccessibilityResourceFamily());
         }
     }
 }
