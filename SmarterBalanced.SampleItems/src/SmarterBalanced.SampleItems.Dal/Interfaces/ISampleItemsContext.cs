@@ -8,6 +8,6 @@ namespace SmarterBalanced.SampleItems.Dal.Interfaces
 {
     public interface ISampleItemsContext 
     {
-        IEnumerable<ItemDigest> ItemDigests { get; set; }
+        IList<ItemDigest> ItemDigests { get; set; }
     }
 }
