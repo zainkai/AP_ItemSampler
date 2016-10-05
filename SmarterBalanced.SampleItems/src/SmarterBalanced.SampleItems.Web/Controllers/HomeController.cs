@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Dal.Interfaces;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers

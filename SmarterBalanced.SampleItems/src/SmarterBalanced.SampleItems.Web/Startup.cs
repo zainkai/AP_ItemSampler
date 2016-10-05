@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SmarterBalanced.SampleItems.Dal.Interfaces;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Models;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
+using SmarterBalanced.SampleItems.Dal.Context;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -40,21 +41,14 @@ namespace SmarterBalanced.SampleItems.Web
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc();
-            SampleItemsRepo.BuildConfiguration(Configuration);
             
-            // Injecting Singleton SampleItemsRepo into each Controller Repository
-            services.AddScoped<IItemViewRepo>(provider =>
-            {
-                return new ItemViewRepo(SampleItemsRepo.Default);
-            });
+            var appSettings = new AppSettings(Configuration);
+            SampleItemsContext.RegisterSettings(appSettings);
 
-            services.AddScoped<ISampleItemsSearchRepo>(provider =>
-            {
-                return new SampleItemsSearchRepo(SampleItemsRepo.Default);
-            });
+            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
+            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(SampleItemsContext.Default));
 
             services.AddRouting();
         }

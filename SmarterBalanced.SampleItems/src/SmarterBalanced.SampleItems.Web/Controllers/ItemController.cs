@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Dal.Interfaces;
 using SmarterBalanced.SampleItems.Dal.Models;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860

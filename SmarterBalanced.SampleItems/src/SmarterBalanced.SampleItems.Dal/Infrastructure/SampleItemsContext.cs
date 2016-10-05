@@ -1,5 +1,4 @@
-﻿using SmarterBalanced.SampleItems.Dal.Interfaces;
-using SmarterBalanced.SampleItems.Dal.Models;
+﻿using SmarterBalanced.SampleItems.Dal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +13,38 @@ using Gen = SmarterBalanced.SampleItems.Dal.Models.Generated;
 
 namespace SmarterBalanced.SampleItems.Dal.Context
 {
-    public class SampleItemsContext : ISampleItemsContext
+    public class SampleItemsContext
     {
+        // TODO: lazy loading
         public IList<ItemDigest> ItemDigests { get; set; }
 
         public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
-        /// <summary>
-        /// TODO: Create itemdigest from xml serialization 
-        /// </summary>
-        public SampleItemsContext(AppSettings settings)
+        private static AppSettings settings;
+        public static void RegisterSettings(AppSettings settings)
+        {
+            SampleItemsContext.settings = settings;
+        }
+
+        private static SampleItemsContext instance; 
+        public static SampleItemsContext Default
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    if (settings == null)
+                        throw new InvalidOperationException("You need to register app settings before accessing the default instance.");
+
+                    instance = new SampleItemsContext();
+                }
+
+                return instance;
+            }
+        }
+
+        private SampleItemsContext()
         {
             string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
