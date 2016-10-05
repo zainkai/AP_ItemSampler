@@ -8,18 +8,24 @@ using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Translations;
 using System.IO;
 using SmarterBalanced.SampleItems.Dal.Models.Configurations;
+using System.Xml.Linq;
+using System.Xml;
+using Gen = SmarterBalanced.SampleItems.Dal.Models.Generated;
 
 namespace SmarterBalanced.SampleItems.Dal.Context
 {
     public class SampleItemsContext : ISampleItemsContext
     {
-        public IEnumerable<ItemDigest> ItemDigests { get; set; }
+        public IList<ItemDigest> ItemDigests { get; set; }
+
+        public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
+        public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
+
         /// <summary>
         /// TODO: Create itemdigest from xml serialization 
         /// </summary>
         public SampleItemsContext(AppSettings settings)
         {
-            List<ItemDigest> digests = new List<ItemDigest>();
             string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
             //Find xml files
@@ -34,7 +40,14 @@ namespace SmarterBalanced.SampleItems.Dal.Context
             IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
             IEnumerable<ItemContents> itemContents = deserializeContents.Result;
 
-            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents);
+            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
+
+            Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
+            GlobalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
+
+            AccessibilityResourceFamilies = generatedAccessibility.ResourceFamily
+                .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
+                .ToList();
         }
     }
 }
