@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
-    public class GlobalAccommodations : Controller
+    public class UserAccessibility : Controller
     {
         // GET: /<controller>/
         public IActionResult Index()
