@@ -13,6 +13,6 @@ namespace SmarterBalanced.SampleItems.Dal.Models
 
         public Gen.GradeType[] Grades { get; set; }
 
-
+        public List<AccessibilityResource> Resources { get; set; }
     }
 }

@@ -17,20 +17,21 @@ namespace SmarterBalanced.SampleItems.Dal.Context
     public class SampleItemsContext : ISampleItemsContext
     {
         public IList<ItemDigest> ItemDigests { get; set; }
-        public IList<AccessibilityResource> AccessibilityResources { get; set; }
+
+        public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
+        public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
         /// <summary>
         /// TODO: Create itemdigest from xml serialization 
         /// </summary>
         public SampleItemsContext(AppSettings settings)
         {
-            List<ItemDigest> digests = new List<ItemDigest>();
             string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
             //Find xml files
             Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             Task<IEnumerable<FileInfo>> fetchContentsFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-            IEnumerable <FileInfo> metadataFiles =fetchMetadataFiles .Result;
+            IEnumerable <FileInfo> metadataFiles = fetchMetadataFiles.Result;
             IEnumerable<FileInfo> contentsFiles = fetchContentsFiles.Result;
 
             //Parse Xml Files
@@ -41,15 +42,12 @@ namespace SmarterBalanced.SampleItems.Dal.Context
 
             ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
 
-            var generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
+            Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
+            GlobalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
 
-            AccessibilityResources = generatedAccessibility.MasterResourceFamily
-                .OfType<Gen.AccessibilitySingleSelectResource>()
-                .Where(r => r.Selection != null)
-                .Select(r => r.ToAccessibilityResource())
+            AccessibilityResourceFamilies = generatedAccessibility.ResourceFamily
+                .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
                 .ToList();
-
-            var accessibilityResourceFamilies = generatedAccessibility.ResourceFamily.Select(f => f.ToAccessibilityResourceFamily());
         }
     }
 }
