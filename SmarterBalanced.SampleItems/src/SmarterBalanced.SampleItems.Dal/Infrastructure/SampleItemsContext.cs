@@ -21,9 +21,6 @@ namespace SmarterBalanced.SampleItems.Dal.Context
         public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
-        public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
-        public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
-
         /// <summary>
         /// TODO: Create itemdigest from xml serialization 
         /// </summary>
