@@ -12,8 +12,8 @@ using Microsoft.Extensions.Configuration;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Models;
-using SmarterBalanced.SampleItems.Dal.Models.Configurations;
 using SmarterBalanced.SampleItems.Dal.Context;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -43,12 +43,16 @@ namespace SmarterBalanced.SampleItems.Web
         {
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc();
-            
-            var appSettings = new AppSettings(Configuration);
+            var appSettings = new AppSettings(Configuration); 
+            //Build configuration from appsettings.json
             SampleItemsContext.RegisterSettings(appSettings);
-
+            
+            // Injecting Singleton SampleItemsRepo into each Controller Repository
             services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
+
             services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(SampleItemsContext.Default));
+
+            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(SampleItemsContext.Default));
 
             services.AddRouting();
         }
@@ -83,7 +87,13 @@ namespace SmarterBalanced.SampleItems.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "diagnostic",
+                    template: "status/{action}",
+                    defaults: new { controller = "Diagnostic", action = "Index" });
             });
+
         }
 
     }
