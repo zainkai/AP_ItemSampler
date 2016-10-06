@@ -1,6 +1,6 @@
 ﻿using Moq;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Dal.Interfaces;
+using SmarterBalanced.SampleItems.Dal.Context;
 using SmarterBalanced.SampleItems.Dal.Models;
 using System;
 using System.Collections.Generic;
@@ -55,9 +55,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests
 
             itemDigests.Add(goodItemDigest);
 
-            var sampleItemsRepoMock = new Mock<ISampleItemsRepo>();
-            sampleItemsRepoMock.Setup(x => x.GetItemDigest(goodBankKey, goodItemKey)).Returns(goodItemDigest);
-            sampleItemsSearchRepo = new SampleItemsSearchRepo(sampleItemsRepoMock.Object);
+            var sampleContextMock = new Mock<SampleItemsContext>();
+            sampleContextMock.Setup(x => x.ItemDigests).Returns(itemDigests);
+            sampleItemsSearchRepo = new SampleItemsSearchRepo(sampleContextMock.Object);
         }
 
     }

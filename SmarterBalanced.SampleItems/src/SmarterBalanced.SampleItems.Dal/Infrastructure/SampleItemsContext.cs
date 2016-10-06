@@ -16,10 +16,10 @@ namespace SmarterBalanced.SampleItems.Dal.Context
     public class SampleItemsContext
     {
         // TODO: lazy loading
-        public IList<ItemDigest> ItemDigests { get; set; }
+        public virtual IList<ItemDigest> ItemDigests { get; set; }
 
-        public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
-        public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
+        public virtual IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
+        public virtual IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
         private static AppSettings settings;
         public static void RegisterSettings(AppSettings settings)

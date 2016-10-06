@@ -9,7 +9,6 @@
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0",
-    "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
     "SmarterBalanced.SampleItems.Core": "1.0.0-*",
     "SmarterBalanced.SampleItems.Dal": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
@@ -36,8 +35,7 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true,
-    "exclude": [ "Scripts/*.js", "Scripts/*.js.map"]
+    "preserveCompilationContext": true
   },
 
   "runtimeOptions": {
