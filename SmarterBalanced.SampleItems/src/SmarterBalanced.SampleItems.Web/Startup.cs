@@ -76,7 +76,6 @@ namespace SmarterBalanced.SampleItems.Web
 
             app.UseApplicationInsightsExceptionTelemetry();
 
-            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

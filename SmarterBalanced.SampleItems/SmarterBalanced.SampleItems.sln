@@ -10,6 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Web", "src\SmarterBalanced.SampleItems.Web\SmarterBalanced.SampleItems.Web.xproj", "{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}
+		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}
+	EndProjectSection
+EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Dal", "src\SmarterBalanced.SampleItems.Dal\SmarterBalanced.SampleItems.Dal.xproj", "{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Core", "src\SmarterBalanced.SampleItems.Core\SmarterBalanced.SampleItems.Core.xproj", "{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1}"
@@ -19,14 +25,16 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Test", "src\SmarterBalanced.SampleItems.Test\SmarterBalanced.SampleItems.Test.xproj", "{958072CA-C25F-4C27-A0AA-0338707C83F1}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmarterBalanced.SampleItems.Web", "src\SmarterBalanced.SampleItems.Web\SmarterBalanced.SampleItems.Web.xproj", "{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,18 +47,14 @@ Global
 		{958072CA-C25F-4C27-A0AA-0338707C83F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{958072CA-C25F-4C27-A0AA-0338707C83F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{958072CA-C25F-4C27-A0AA-0338707C83F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
 		{1F3ECA61-B30A-4BE7-8DFD-37D488887BFC} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
 		{B245788D-F9DD-4C6F-9ECA-A37674AB4EF1} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
 		{958072CA-C25F-4C27-A0AA-0338707C83F1} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
-		{E32781E9-8200-4E3E-B0C6-F0C6AF3EBC8A} = {845EEFD7-4A5B-4E82-BB8A-6BEDAF7C6214}
 	EndGlobalSection
 EndGlobal
