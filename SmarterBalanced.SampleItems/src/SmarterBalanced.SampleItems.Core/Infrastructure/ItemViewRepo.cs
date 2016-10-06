@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Dal.Context;
+using SmarterBalanced.SampleItems.Core.Models;
 
 namespace SmarterBalanced.SampleItems.Core.Infrastructure
 {
@@ -49,9 +50,51 @@ namespace SmarterBalanced.SampleItems.Core.Infrastructure
             return GetItemDigests().SingleOrDefault(predicate);
         }
 
+        /// <summary>
+        /// Retrieves an ItemDigest matching the given bankKey and itemKey.
+        /// </summary>
+        /// <param name="bankKey"></param>
+        /// <param name="itemKey"></param>
+        /// <returns>an ItemDigest object.</returns>
         public ItemDigest GetItemDigest(int bankKey, int itemKey)
         {
             return GetItemDigest(item => item.BankKey == bankKey && item.ItemKey == itemKey);
+        }
+
+        /// <summary>
+        /// Constructs an itemviewerservice URL to access the 
+        /// item corresponding to the given ItemDigest.
+        /// </summary>
+        /// <param name="digest"></param>
+        /// <returns>a string URL.</returns>
+        private string GetItemViewerUrl(ItemDigest digest)
+        {
+            if(digest == null)
+            {
+                return string.Empty;
+            }
+
+            string baseUrl = context.AppSettings().SettingsConfig.ItemViewerServiceURL;
+            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}";
+        }
+
+        /// <summary>
+        /// Constructs an ItemViewModel with an ItemViewerService URL.
+        /// </summary>
+        /// <param name="bankKey"></param>
+        /// <param name="itemKey"></param>
+        /// <returns>an ItemViewModel.</returns>
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey)
+        {
+            ItemViewModel itemView = null;
+            ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
+            if(itemDigest != null)
+            {
+                itemView = new ItemViewModel();
+                itemView.ItemDigest = itemDigest;
+                itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest);
+            }
+            return itemView;
         }
     }
 }

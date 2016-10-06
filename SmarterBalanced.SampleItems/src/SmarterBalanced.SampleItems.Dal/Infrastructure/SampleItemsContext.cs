@@ -69,5 +69,10 @@ namespace SmarterBalanced.SampleItems.Dal.Context
                 .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
                 .ToList();
         }
+
+        public AppSettings AppSettings()
+        {
+            return settings;
+        }
     }
 }
