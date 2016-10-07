@@ -1,4 +1,5 @@
-﻿using SmarterBalanced.SampleItems.Dal.Models;
+﻿using SmarterBalanced.SampleItems.Core.Models;
+using SmarterBalanced.SampleItems.Dal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace SmarterBalanced.SampleItems.Core.Interfaces
     public interface IItemViewRepo
     {
         ItemDigest GetItemDigest(int bankKey, int itemKey);
+
+        ItemViewModel GetItemViewModel(int bankKey, int itemKey);
     }
 }

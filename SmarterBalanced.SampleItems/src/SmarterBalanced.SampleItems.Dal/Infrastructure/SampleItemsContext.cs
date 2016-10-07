@@ -1,5 +1,4 @@
-﻿using SmarterBalanced.SampleItems.Dal.Interfaces;
-using SmarterBalanced.SampleItems.Dal.Models;
+﻿using SmarterBalanced.SampleItems.Dal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +6,52 @@ using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using SmarterBalanced.SampleItems.Dal.Translations;
 using System.IO;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
+using System.Xml.Linq;
+using System.Xml;
+using Gen = SmarterBalanced.SampleItems.Dal.Models.Generated;
 
 namespace SmarterBalanced.SampleItems.Dal.Context
 {
-    public class SampleItemsContext : ISampleItemsContext
+    public class SampleItemsContext
     {
-        public IEnumerable<ItemDigest> ItemDigests { get; set; }
+        // TODO: lazy loading
+        public virtual IList<ItemDigest> ItemDigests { get; set; }
 
-        /// <summary>
-        /// TODO: Create itemdigest from xml serialization 
-        /// </summary>
-        public SampleItemsContext()
+        public virtual IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
+        public virtual IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
+
+        private static AppSettings settings;
+        public static void RegisterSettings(AppSettings settings)
         {
-            List<ItemDigest> digests = new List<ItemDigest>();
-            string contentDir = @"c:/content/Items";
+            SampleItemsContext.settings = settings;
+        }
+
+        private static SampleItemsContext instance; 
+        public static SampleItemsContext Default
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    if (settings == null)
+                        throw new InvalidOperationException("You need to register app settings before accessing the default instance.");
+
+                    instance = new SampleItemsContext();
+                }
+
+                return instance;
+            }
+        }
+
+        private SampleItemsContext()
+        {
+            string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
             //Find xml files
             Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             Task<IEnumerable<FileInfo>> fetchContentsFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-            IEnumerable <FileInfo> metadataFiles =fetchMetadataFiles .Result;
+            IEnumerable <FileInfo> metadataFiles = fetchMetadataFiles.Result;
             IEnumerable<FileInfo> contentsFiles = fetchContentsFiles.Result;
 
             //Parse Xml Files
@@ -34,7 +60,19 @@ namespace SmarterBalanced.SampleItems.Dal.Context
             IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
             IEnumerable<ItemContents> itemContents = deserializeContents.Result;
 
-            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents);
+            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
+
+            Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
+            GlobalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
+
+            AccessibilityResourceFamilies = generatedAccessibility.ResourceFamily
+                .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
+                .ToList();
+        }
+
+        public AppSettings AppSettings()
+        {
+            return settings;
         }
     }
 }

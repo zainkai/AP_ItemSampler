@@ -9,6 +9,7 @@ using Moq;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Core.Models;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -30,13 +31,22 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 Grade = "6"
             };
 
+
             var itemViewRepoMock = new Mock<IItemViewRepo>();
             itemViewRepoMock.Setup(x => x.GetItemDigest(bankKey, itemKey)).Returns(itemDigest);
+
+            var itemViewModel = new ItemViewModel()
+            {
+                ItemDigest = itemDigest,
+                ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}"
+            };
+            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey)).Returns(itemViewModel);
+
             controller = new ItemController(itemViewRepoMock.Object);
         }
 
         /// <summary>
-        /// Tests that an ItemDigest model is returned given a vaid id.
+        /// Tests that an ItemViewModel is returned given a vaid id.
         /// </summary>
         [Fact]
         public void TestDetailsSuccess()
@@ -44,7 +54,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             var result = controller.Details(bankKey, itemKey);
 
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<ItemDigest>(viewResult.ViewData.Model);
+            var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
         }
 
         /// <summary>

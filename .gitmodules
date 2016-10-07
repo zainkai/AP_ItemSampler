@@ -1,0 +1,3 @@
+[submodule "SmarterBalanced.SampleItems/AccessibilityAccommodationConfigurations"]
+	path = SmarterBalanced.SampleItems/AccessibilityAccommodationConfigurations
+	url = https://github.com/SmarterApp/AccessibilityAccommodationConfigurations.git

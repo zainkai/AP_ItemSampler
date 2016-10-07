@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SmarterBalanced.SampleItems.Dal.Interfaces;
 using SmarterBalanced.SampleItems.Dal.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
+using SmarterBalanced.SampleItems.Dal.Models;
+using SmarterBalanced.SampleItems.Dal.Context;
+using SmarterBalanced.SampleItems.Dal.Models.Configurations;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -39,16 +41,18 @@ namespace SmarterBalanced.SampleItems.Web
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddApplicationInsightsTelemetry(Configuration);
-
             services.AddMvc();
+            var appSettings = new AppSettings(Configuration); 
+            //Build configuration from appsettings.json
+            SampleItemsContext.RegisterSettings(appSettings);
             
             // Injecting Singleton SampleItemsRepo into each Controller Repository
-            services.AddScoped<IItemViewRepo>(provider =>
-            {
-                return new ItemViewRepo(SampleItemsRepo.Default);
-            });
+            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
+
+            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(SampleItemsContext.Default));
+
+            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(SampleItemsContext.Default));
 
             services.AddRouting();
         }
@@ -83,7 +87,13 @@ namespace SmarterBalanced.SampleItems.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "diagnostic",
+                    template: "status/{action}",
+                    defaults: new { controller = "Diagnostic", action = "Index" });
             });
+
         }
 
     }

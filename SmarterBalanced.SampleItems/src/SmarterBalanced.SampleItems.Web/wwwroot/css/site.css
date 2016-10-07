@@ -36,3 +36,36 @@ textarea {
     display: none
   }
 }
+
+.itemviewer-iframe {
+    height: 70vh;
+    width: 100%;
+}
+
+.list-inline li {
+    padding: .5em;
+}
+
+hr {
+    margin-top:0px;
+}
+
+.local-nav {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    flex-wrap: wrap;
+    -webkit-align-items: center;
+    align-items: baseline;
+    -webkit-justify-content: center;
+    justify-content: flex-start;
+}
+
+.local-nav > * {
+    margin: 1em;
+}
+
+.breadcrumb {
+    margin-bottom: 0px;
+}

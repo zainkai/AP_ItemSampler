@@ -1,0 +1,80 @@
+﻿@model SmarterBalanced.SampleItems.Core.Models.ItemViewModel
+
+<div class="local-nav">
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Library</a></li>
+        <li class="active">Data</li>
+    </ol>
+    <ul class="list-inline">
+        <li><a href="" data-toggle="modal" data-target="#viewMore">View More</a></li>
+        <li><a href="" data-toggle="modal" data-target="#aboutThisItem">About This Item</a></li>
+        <li><a href="" data-toggle="modal" data-target="#accessibility">Item Accessibility</a></li>
+    </ul>
+</div>
+
+<hr/>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <iframe class="itemviewer-iframe" src="@Model.ItemViewerServiceUrl"></iframe>
+    </div>
+</div>
+
+
+<div id="viewMore" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">View More</h4>
+            </div>
+            <div class="modal-body">
+                <p>Other items will be displayed here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="aboutThisItem" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">About This Item</h4>
+            </div>
+            <div class="modal-body">
+                <p>Text about this item will be displayed here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="accessibility" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Item Accessibility</h4>
+            </div>
+            <div class="modal-body">
+                <p>Accessibility options will be displayed here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
