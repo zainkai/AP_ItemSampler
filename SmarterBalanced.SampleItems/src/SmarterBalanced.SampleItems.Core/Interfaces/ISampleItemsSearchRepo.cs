@@ -8,5 +8,7 @@ namespace SmarterBalanced.SampleItems.Core.Interfaces
 {
     public interface ISampleItemsSearchRepo
     {
+        IList<ItemDigest> GetItemDigests();
+
     }
 }

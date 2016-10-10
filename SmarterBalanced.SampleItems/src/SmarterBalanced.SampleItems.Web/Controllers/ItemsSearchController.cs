@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Core.Infrastructure;
-
+using SmarterBalanced.SampleItems.Dal.Models;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -21,7 +21,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            IList<ItemDigest> items = sampleItemsSearchRepo.GetItemDigests();
+            return View(items);
         }
     }
 }

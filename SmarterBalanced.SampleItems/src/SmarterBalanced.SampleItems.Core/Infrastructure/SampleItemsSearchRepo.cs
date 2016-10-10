@@ -16,5 +16,11 @@ namespace SmarterBalanced.SampleItems.Core.Infrastructure
         {
             this.context = context;
         }
+
+        public IList<ItemDigest> GetItemDigests()
+        {
+            return context.ItemDigests.Where(t => !string.IsNullOrEmpty(t.Grade) && t.Grade != "NA").ToList();
+        }
+
     }
 }

@@ -69,3 +69,22 @@ hr {
 .breadcrumb {
     margin-bottom: 0px;
 }
+
+.card {
+    border: 1px solid;
+    width:300px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.card:hover{
+    background-color: #007393; /* make this whatever you want */
+    padding: 10px;
+    width: 350px;
+}
+
+.card-contents {
+    width:300px;
+    padding: 10px;
+}
