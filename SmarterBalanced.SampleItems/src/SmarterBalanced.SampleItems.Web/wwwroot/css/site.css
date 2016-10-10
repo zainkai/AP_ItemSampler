@@ -1,6 +1,20 @@
 ﻿body {
-    padding-top: 50px;
     padding-bottom: 20px;
+    margin-bottom: 75px; /* bottom = footer height */
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding-left: 10px;
+    height: 75px;
+    width: 100%;
 }
 
 /* Wrapping element */
@@ -8,6 +22,64 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+/* Global Navigation Bar */
+.navbar {
+    background-color: white;
+    border-color: #e8ebef;
+    border-bottom-width:2px;
+    min-height: 75px;
+}
+
+/* Navbar text */
+.navbar .nav > li > a {
+    color: #808080;
+    font-size:x-large;
+    margin-left:2em;
+    margin-right:2em;
+}
+
+.navbar .nav > li > a:hover,
+.navbar .nav > li > a:focus {
+    color: #005495;
+}
+
+.navbar .navbar-nav {
+  display: inline-block;
+  float: none;
+}
+
+.navbar .navbar-collapse {
+  text-align: center;
+  vertical-align:middle;
+  margin-top: 10px;
+  height:75px;
+}
+
+.navbar-collapse.in {
+    height: 150px;
+}
+.navbar-toggle,  
+.navbar-inverse .navbar-toggle {
+    background-color: #b7b7b7;
+    border-color: #b7b7b7;
+    margin-top:18px;
+}
+
+.navbar-toggle:hover,
+.navbar-toggle:focus {
+    color: red;  /* TODO FIXME*/
+}
+
+#sb-logo {
+    height: 50px;
+}
+
+.navbar-brand {
+    margin: 0px;
+    padding-left: 10px;
+    padding-top: 10px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -24,8 +96,7 @@ textarea {
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"]
-{
+.carousel-inner .item img[src$=".svg"] {
     width: 100%;
 }
 
