@@ -21,16 +21,23 @@ namespace SmarterBalanced.SampleItems.Dal.Context
         public virtual IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public virtual IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
+        private static bool ContentDownloaded = false;
+
         private static AppSettings settings;
         public static void RegisterSettings(AppSettings settings)
         {
             SampleItemsContext.settings = settings;
         }
 
+        /// <summary>
+        /// Downloads content package from Amazon S3 if "UseS3ForContent" is set to true in the appsettings
+        /// </summary>
+        /// <param name="settings"></param>
         public static void UpdateContent(AppSettings settings)
         {
             ContentDownloader contentDownloader = new ContentDownloader(settings);
             contentDownloader.UpdateContent().Wait();
+            ContentDownloaded = true;
         }
 
         private static SampleItemsContext instance; 
@@ -42,7 +49,8 @@ namespace SmarterBalanced.SampleItems.Dal.Context
                 {
                     if (settings == null)
                         throw new InvalidOperationException("You need to register app settings before accessing the default instance.");
-
+                    if (ContentDownloaded != true)
+                        throw new InvalidOperationException("You need to call UpdateContent() before accessing the default instance.");
                     instance = new SampleItemsContext();
                 }
 
