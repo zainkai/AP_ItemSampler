@@ -46,7 +46,7 @@ namespace SmarterBalanced.SampleItems.Web
             var appSettings = new AppSettings(Configuration); 
             //Build configuration from appsettings.json
             SampleItemsContext.RegisterSettings(appSettings);
-            
+            SampleItemsContext.UpdateContent(appSettings);
             // Injecting Singleton SampleItemsRepo into each Controller Repository
             services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
 

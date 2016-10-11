@@ -27,6 +27,12 @@ namespace SmarterBalanced.SampleItems.Dal.Context
             SampleItemsContext.settings = settings;
         }
 
+        public static void UpdateContent(AppSettings settings)
+        {
+            ContentDownloader contentDownloader = new ContentDownloader(settings);
+            contentDownloader.UpdateContent().Wait();
+        }
+
         private static SampleItemsContext instance; 
         public static SampleItemsContext Default
         {
