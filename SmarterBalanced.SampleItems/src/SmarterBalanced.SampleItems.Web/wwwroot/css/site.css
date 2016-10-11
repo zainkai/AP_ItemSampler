@@ -34,10 +34,18 @@ footer {
 
 /* Navbar text */
 .navbar .nav > li > a {
-    color: #808080;
-    font-size:x-large;
-    margin-left:2em;
-    margin-right:2em;
+    color: #515151;
+    font-size: x-large;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+@media (max-width: 1150px) {
+    .navbar .nav > li > a {
+        color: #515151;
+        font-size: x-large;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
 }
 
 .navbar .nav > li > a:hover,
@@ -60,16 +68,27 @@ footer {
 .navbar-collapse.in {
     height: 150px;
 }
+
 .navbar-toggle,  
 .navbar-inverse .navbar-toggle {
-    background-color: #b7b7b7;
+    background-color: #ffffff;
     border-color: #b7b7b7;
     margin-top:18px;
+    box-shadow: inset 0 0 0 transparent,0 1px 5px rgba(0,0,0,0.6);
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
 }
 
 .navbar-toggle:hover,
-.navbar-toggle:focus {
-    color: red;  /* TODO FIXME*/
+.navbar-inverse .navbar-toggle:hover {
+    box-shadow: none;
+
+}
+
+.navbar-toggle:active,
+.navbar-inverse .navbar-toggle:active {
+     box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
 }
 
 #sb-logo {
@@ -108,6 +127,12 @@ textarea {
   }
 }
 
+@media (min-width: 1400px) {
+    .container {
+        width: 1400px;
+    }
+}
+
 .itemviewer-iframe {
     height: 70vh;
     width: 100%;
@@ -118,7 +143,7 @@ textarea {
 }
 
 hr {
-    margin-top:0px;
+    margin-top: 0px;
 }
 
 .local-nav {
@@ -143,16 +168,19 @@ hr {
 
 .card {
     border: 1px solid;
-    width:300px;
+    border-radius: 5px;
+    border-color: #b7b7b7;
+    width: 300px;
+    box-shadow: inset 0 0 0 transparent,0 1px 5px rgba(0,0,0,0.6);
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
 }
 
 .card:hover{
-    background-color: #007393; /* make this whatever you want */
-    padding: 10px;
-    width: 350px;
+    box-shadow: inset 0 0 0 transparent,0 1px 50px rgba(0,0,0,0.6);
+    padding-left: 10px;
+    width: 310px;
 }
 
 .card-contents {
