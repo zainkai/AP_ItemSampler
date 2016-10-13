@@ -14,6 +14,8 @@ namespace SmarterBalanced.SampleItems.Dal.Models.Configurations
 
         public string AwsRegion { get; set; }
         public string AwsS3Bucket { get; set; }
+        public string AwsS3ContentFilename { get; set; }
+        public bool UseS3ForContent { get; set; }
         public string ItemViewerServiceURL { get; set; }
         public string AwsInstanceTag { get; set; }
         public string StatusUrl { get; set; }
