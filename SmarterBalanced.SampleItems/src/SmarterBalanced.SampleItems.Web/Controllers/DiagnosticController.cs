@@ -21,7 +21,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             diagnosticManager = manager;
         }
 
-        public async Task<ContentResult> Index(int level = 0)
+        public async Task<IActionResult> Index(int level = 0)
         {
             var xmlString = await diagnosticManager.GetDiagnosticStatusesAsync(level);
 
@@ -31,7 +31,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             };
         }
 
-        public async Task<ContentResult> StatusLocal(int level = 0)
+        public async Task<IActionResult> StatusLocal(int level = 0)
         {
             var xmlString = await diagnosticManager.GetDiagnosticStatusAsync(level);
 

@@ -12,6 +12,7 @@ using Amazon.EC2;
 using Amazon.EC2.Model;
 using System.Xml;
 using SmarterBalanced.SampleItems.Dal.Context;
+using Amazon.Runtime;
 
 namespace SmarterBalanced.SampleItems.Core.Infrastructure
 {
@@ -42,17 +43,34 @@ namespace SmarterBalanced.SampleItems.Core.Infrastructure
         /// <returns>a Task<string> of a serialized DiagnosticRoot object.</returns>
         public async Task<string> GetDiagnosticStatusesAsync(int level)
         {
-            List<string> ipAddresses = await GetAwsIps();
+            DiagnosticRoot diagnosticRoot = new DiagnosticRoot();
+            List<string> ipAddresses = new List<string>();
+            try
+            {
+                ipAddresses = await GetAwsIps();
+            }
+            catch (AmazonServiceException)
+            {
+                string msg = context.AppSettings().ExceptionMessages.ErrorDiagnosticApiAwsAccess;
+                diagnosticRoot.AddErrorMessage(msg);
+            }
+
             List<Task<DiagnosticStatus>> awsNodeResultTasks = new List<Task<DiagnosticStatus>>();
             foreach (string ipAddress in ipAddresses)
             {
                 awsNodeResultTasks.Add(QueryAwsNode(ipAddress, level));
             }
 
-            Task.WaitAll(awsNodeResultTasks.ToArray());
-
-            DiagnosticRoot diagnosticRoot = new DiagnosticRoot();
-            diagnosticRoot.DiagnosticStatuses = awsNodeResultTasks.Select(t => t.Result).ToList();
+            try
+            {
+                Task.WaitAll(awsNodeResultTasks.ToArray());
+                diagnosticRoot.DiagnosticStatuses = awsNodeResultTasks.Select(t => t.Result).ToList();
+            }
+            catch(Exception)
+            {
+                string msg = context.AppSettings().ExceptionMessages.ErrorDiagnosticApiAwsNode;
+                diagnosticRoot.AddErrorMessage(msg);
+            }
 
             return Serialize(diagnosticRoot);
         }
@@ -84,7 +102,7 @@ namespace SmarterBalanced.SampleItems.Core.Infrastructure
             {
                 new Filter("tag-key", new List<string> { awsTagKey })
             };
-            var result = await ec2.DescribeInstancesAsync(request);
+           var result = await ec2.DescribeInstancesAsync(request);
 
             List<string> ipAdresses = new List<string>();
             foreach (Reservation res in result.Reservations)
