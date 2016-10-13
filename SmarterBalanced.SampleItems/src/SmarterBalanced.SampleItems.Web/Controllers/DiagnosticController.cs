@@ -1,13 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Core.Interfaces;
-using SmarterBalanced.SampleItems.Core.Models.DiagnosticModels;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using SmarterBalanced.SampleItems.Core.Diagnostics;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {

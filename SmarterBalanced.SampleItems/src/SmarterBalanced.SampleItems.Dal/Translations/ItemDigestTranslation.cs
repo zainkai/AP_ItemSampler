@@ -1,6 +1,5 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
-using SmarterBalanced.SampleItems.Dal.Models;
-using System;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;

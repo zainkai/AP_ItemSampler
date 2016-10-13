@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Core.Interfaces;
-using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Dal.Models;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {

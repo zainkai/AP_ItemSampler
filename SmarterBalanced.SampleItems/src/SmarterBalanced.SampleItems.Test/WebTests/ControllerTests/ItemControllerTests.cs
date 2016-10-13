@@ -1,15 +1,10 @@
-﻿using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Dal.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 using Moq;
-using SmarterBalanced.SampleItems.Core.Interfaces;
 using SmarterBalanced.SampleItems.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Core.Models;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
