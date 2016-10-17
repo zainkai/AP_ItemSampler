@@ -9,6 +9,11 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
     public class AccessibilityResourceViewModel
     {
         public string SelectedCode { get; set; }
+
+        public string Label { get; set; }
+
+        public string Description { get; set; }
+
         public List<SelectListItem> AccessibilityListItems { get; set; }
 
         public bool Disabled { get; set; }

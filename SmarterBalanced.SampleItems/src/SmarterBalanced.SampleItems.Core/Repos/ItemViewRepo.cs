@@ -67,16 +67,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={ISSAPcode}";
         }
 
-        /// <summary>
-        /// Sets the item digest applicable accessibility resources
-        /// </summary>
-        /// <param name="itemDigest"></param>
-        /// TODO: Implement method. Note: Instantiate new Accessibility Resource
-        private void SetApplicableAccessibilityResources(ItemDigest itemDigest)
-        {
-            throw new NotImplementedException();
-        }
-
 
         /// <summary>
         /// Gets the item digest's accessibility resources as a viewmodel
@@ -86,11 +76,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// TODO: Implement method, each item needs to have the selected code set to the default if not specified. 
         private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModel(ItemDigest itemDigest, string iSSAPCode)
         {
-            if (itemDigest.ApplicableAccessibilityResources == null)
-            {
-                SetApplicableAccessibilityResources(itemDigest);
-            }
-
             throw new NotImplementedException();
         }
 
@@ -135,11 +120,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
             if (itemDigest != null)
             {
-                if (itemDigest.ApplicableAccessibilityResources == null)
-                {
-                    SetApplicableAccessibilityResources(itemDigest);
-                }
-
                 itemView = new ItemViewModel();
                 itemView.ItemDigest = itemDigest;
                 itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSSAPCode);

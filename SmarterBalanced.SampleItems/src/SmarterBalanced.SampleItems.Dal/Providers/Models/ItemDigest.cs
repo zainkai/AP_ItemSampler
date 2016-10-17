@@ -33,7 +33,20 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         [Display(Name = "AssociatedStimulus")]
         public int? AssociatedStimulus { get; set; }
 
-        public List<AccessibilityResource> ApplicableAccessibilityResources { get; set; }
+        private List<AccessibilityResource> ApplicableAccessibilityResources
+        {
+            get
+            {
+                return applicableAccessibilityResources.Value;
+            }
+        }
+
+        public Lazy<List<AccessibilityResource>> applicableAccessibilityResources = new Lazy<List<AccessibilityResource>>(() => GenerateAccssibilityResources(), true);
+
+        private static List<AccessibilityResource> GenerateAccssibilityResources()
+        {
+            throw new NotImplementedException();
+        }
 
         #region Helper Methods
 
