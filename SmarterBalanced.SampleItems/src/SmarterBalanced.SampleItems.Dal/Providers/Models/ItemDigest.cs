@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
@@ -31,6 +32,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         [Display(Name = "AssociatedStimulus")]
         public int? AssociatedStimulus { get; set; }
+
+        public List<AccessibilityResource> ApplicableAccessibilityResources { get; set; }
 
         #region Helper Methods
 

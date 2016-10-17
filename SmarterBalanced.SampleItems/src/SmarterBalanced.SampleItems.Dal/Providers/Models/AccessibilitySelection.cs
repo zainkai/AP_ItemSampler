@@ -13,5 +13,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int Order { get; set; }
 
         public string Label { get; set; }
+
+        public bool? Disabled { get; set; }
     }
 }
