@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SmarterBalanced.SampleItems.Dal.Xml.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
@@ -31,21 +33,42 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string InteractionType { get; set; }
 
         [Display(Name = "AssociatedStimulus")]
-        public int? AssociatedStimulus { get; set; }
+        public int? AssociatedStimulus { get; }
 
-        private List<AccessibilityResource> ApplicableAccessibilityResources
+        public List<AccessibilityResource> ApplicableAccessibilityResources { get; set; }
+
+        public void SetApplicableAccessibilityResources(SampleItemsContext context)
         {
-            get
+            //Get all accessibilty options for a specific item based off of its family.
+            List<AccessibilityResourceFamily> applicableResourceFamilies;
+            if (Grade == "NA")
             {
-                return applicableAccessibilityResources.Value;
+                applicableResourceFamilies = context.AccessibilityResourceFamilies.Where(s => (s.Codes.Contains(Subject))).ToList();
             }
-        }
+            else
+            {
+                var enumGrade = Enum.Parse(typeof(GradeType), Grade);
+                applicableResourceFamilies = context.AccessibilityResourceFamilies.Where(s => (s.Codes.Contains(Subject)
+                    && (s.Grades.ToList().Contains((GradeType)enumGrade)))).ToList();
+            }
+            //Combine the resources for each resource family into one list
+            foreach (AccessibilityResourceFamily resourceFamily in applicableResourceFamilies)
+            {
+                ApplicableAccessibilityResources = ApplicableAccessibilityResources.Union(resourceFamily.Resources).ToList();
+            }
 
-        public Lazy<List<AccessibilityResource>> applicableAccessibilityResources = new Lazy<List<AccessibilityResource>>(() => GenerateAccssibilityResources(), true);
-
-        private static List<AccessibilityResource> GenerateAccssibilityResources()
-        {
-            throw new NotImplementedException();
+            //Get a list of all of the accessibility resources and selections that need to be disabled
+            List<AccessibilityResource> disabledAccessibilityOptions = ApplicableAccessibilityResources.Intersect(context.GlobalAccessibilityResources).ToList();
+            //set the disabled flag to true for all accessibility resources and selections that need to be disabled
+            foreach (AccessibilityResource resouce in disabledAccessibilityOptions)
+            {
+                resouce.Disabled = true;
+                foreach (AccessibilitySelection selection in resouce.Selections)
+                {
+                    selection.Disabled = true;
+                }
+            }
+            ApplicableAccessibilityResources = ApplicableAccessibilityResources.Union(disabledAccessibilityOptions).ToList();
         }
 
         #region Helper Methods
