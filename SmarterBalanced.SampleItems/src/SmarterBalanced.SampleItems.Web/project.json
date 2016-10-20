@@ -46,6 +46,7 @@
       "wwwroot",
       "web.config",
       "**/*.cshtml",
+      "../../AccessibilityAccommodationConfigurations/",
       "docker-compose.yml",
       "appsettings.json",
       "Dockerfile",
