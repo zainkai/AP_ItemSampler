@@ -33,7 +33,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string InteractionType { get; set; }
 
         [Display(Name = "AssociatedStimulus")]
-        public int? AssociatedStimulus { get; }
+        public int? AssociatedStimulus { get; set; }
 
         public List<AccessibilityResource> ApplicableAccessibilityResources { get; set; }
 
