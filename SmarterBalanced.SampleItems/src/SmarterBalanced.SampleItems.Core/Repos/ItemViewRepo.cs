@@ -77,23 +77,22 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// TODO: Implement method, each item needs to have the selected code set to the default if not specified. 
         private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModel(ItemDigest itemDigest, string iSSAPCode)
         {
-            //throw new NotImplementedException();
             List<AccessibilityResourceViewModel> viewModels = new List<AccessibilityResourceViewModel>();
             if (( itemDigest.ApplicableAccessibilityResources == null) || !itemDigest.ApplicableAccessibilityResources.Any())
             {
                 itemDigest.SetApplicableAccessibilityResources(context);
             }
-
-            //TODO: set codes as selected for a selection
             List<string> codes = iSSAPCode.Split(';').ToList();
 
             List<AccessibilityResource> orderedAccessibilityResources = itemDigest.ApplicableAccessibilityResources.OrderBy(s => s.Order).ToList();
             foreach (AccessibilityResource resouce in orderedAccessibilityResources)
             {
+                string selectedCode = null;
                 List<SelectListItem> accessibiltyListItems = new List<SelectListItem>();
                 List<AccessibilitySelection> orderedResources = resouce.Selections.OrderBy(s => s.Order).ToList();
                 foreach (AccessibilitySelection selection in orderedResources)
                 {
+
                     SelectListItem selectListItem = new SelectListItem
                     {
                         Disabled = selection.Disabled.GetValueOrDefault(),
@@ -101,13 +100,18 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                         Value = selection.Code
                     };
                     accessibiltyListItems.Add(selectListItem);
+                    if(codes.Where(c => c == selection.Code).Any())
+                    {
+                        selectedCode = selection.Code;
+                    }
                 }
                 AccessibilityResourceViewModel viewModel = new AccessibilityResourceViewModel
                 {
-                    SelectedCode = iSSAPCode,
+                    SelectedCode = (selectedCode == null) ? resouce.DefaultSelection : selectedCode,
                     Label = resouce.Label,
                     Description = resouce.Description,
-                    Disabled = resouce.Disabled.GetValueOrDefault()
+                    Disabled = resouce.Disabled.GetValueOrDefault(),
+                    AccessibilityListItems = accessibiltyListItems
                 };
                 viewModels.Add(viewModel);
             }

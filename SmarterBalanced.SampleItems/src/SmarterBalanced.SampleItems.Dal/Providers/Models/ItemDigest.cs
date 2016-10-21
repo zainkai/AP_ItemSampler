@@ -37,6 +37,45 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         public List<AccessibilityResource> ApplicableAccessibilityResources { get; set; }
 
+
+        private AccessibilityResource DisableNonApplicableAccessibility(AccessibilityResource globalResource, List<AccessibilityResource> itemResources)
+        {
+            AccessibilityResource resource;
+            if (itemResources.Where(r => (r.Code == globalResource.Code)).Any())
+            {
+                AccessibilityResource applicableResource = itemResources.Where(r => r.Code == globalResource.Code).First();
+                List<AccessibilitySelection> selections = new List<AccessibilitySelection>();
+                foreach (AccessibilitySelection selection in globalResource.Selections)
+                {
+                    if (applicableResource.Selections.Select(r => r.Code == selection.Code).Any())
+                    {
+                        AccessibilitySelection enabledSelection = selection.Clone();
+                        enabledSelection.Disabled = false;
+                        selections.Add(enabledSelection);
+                    }
+                    else
+                    {
+                        AccessibilitySelection disabledSelection = selection.Clone();
+                        disabledSelection.Disabled = true;
+                        selections.Add(disabledSelection);
+                    }
+                }
+                resource = globalResource.DeepClone();
+                resource.Disabled = false;
+                resource.Selections = selections;
+            }
+            else
+            {
+                resource = globalResource.DeepClone();
+                resource.Disabled = true;
+                foreach(AccessibilitySelection selection in resource.Selections)
+                {
+                    selection.Disabled = true;
+                }
+            }
+            return resource;
+        }
+
         public void SetApplicableAccessibilityResources(SampleItemsContext context)
         {
             ApplicableAccessibilityResources = new List<AccessibilityResource>();
@@ -52,24 +91,17 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 applicableResourceFamilies = context.AccessibilityResourceFamilies.Where(s => (s.Codes.Contains(Subject)
                     && (s.Grades.ToList().Contains((GradeType)enumGrade)))).ToList();
             }
-            //Combine the resources for each resource family into one list
-            foreach (AccessibilityResourceFamily resourceFamily in applicableResourceFamilies)
+
+            //TODO: Should we throw an exception or default to the global accommodations for an item if it does not belong to a family
+            if (applicableResourceFamilies.Count != 1)
             {
-                ApplicableAccessibilityResources = ApplicableAccessibilityResources.Union(resourceFamily.Resources).ToList();
+                throw new Exception($"Item ID: {ItemKey} Bank: {BankKey} does not belong to any accessibility resource families.");
             }
 
-            //Get a list of all of the accessibility resources and selections that need to be disabled
-            List<AccessibilityResource> disabledAccessibilityOptions = ApplicableAccessibilityResources.Intersect(context.GlobalAccessibilityResources).ToList();
-            //set the disabled flag to true for all accessibility resources and selections that need to be disabled
-            foreach (AccessibilityResource resouce in disabledAccessibilityOptions)
+            foreach(AccessibilityResource globalResource in context.GlobalAccessibilityResources)
             {
-                resouce.Disabled = true;
-                foreach (AccessibilitySelection selection in resouce.Selections)
-                {
-                    selection.Disabled = true;
-                }
+                ApplicableAccessibilityResources.Add(DisableNonApplicableAccessibility(globalResource, applicableResourceFamilies.First().Resources));
             }
-            ApplicableAccessibilityResources = ApplicableAccessibilityResources.Union(disabledAccessibilityOptions).ToList();
         }
 
         #region Helper Methods
