@@ -15,5 +15,16 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Label { get; set; }
 
         public bool? Disabled { get; set; }
+
+        public AccessibilitySelection Clone()
+        {
+            return new AccessibilitySelection
+            {
+                Code = Code,
+                Order = Order,
+                Label = Label,
+                Disabled = Disabled
+            };
+        }
     }
 }
