@@ -39,6 +39,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         public void SetApplicableAccessibilityResources(SampleItemsContext context)
         {
+            ApplicableAccessibilityResources = new List<AccessibilityResource>();
             //Get all accessibilty options for a specific item based off of its family.
             List<AccessibilityResourceFamily> applicableResourceFamilies;
             if (Grade == "NA")

@@ -109,6 +109,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     Description = resouce.Description,
                     Disabled = resouce.Disabled.GetValueOrDefault()
                 };
+                viewModels.Add(viewModel);
             }
 
             return viewModels;
