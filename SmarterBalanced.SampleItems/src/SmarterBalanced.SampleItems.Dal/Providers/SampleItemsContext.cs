@@ -73,13 +73,19 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
             IEnumerable<ItemContents> itemContents = deserializeContents.Result;
 
-            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
-
             Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
             GlobalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
 
             AccessibilityResourceFamilies = generatedAccessibility.ResourceFamily
                 .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
+                .ToList();
+
+            ItemDigests = ItemDigestTranslation
+                .ItemsToItemDigests(
+                    itemMetadata,
+                    itemContents,
+                    GlobalAccessibilityResources,
+                    AccessibilityResourceFamilies)
                 .ToList();
         }
 

@@ -35,8 +35,15 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         [Display(Name = "AssociatedStimulus")]
         public int? AssociatedStimulus { get; set; }
 
-        public List<AccessibilityResource> ApplicableAccessibilityResources { get; set; }
+        public Lazy<List<AccessibilityResource>> ApplicableAccessibilityResources { get; }
 
+        public ItemDigest() { }
+
+        public ItemDigest(IList<AccessibilityResource> globalResources, IList<AccessibilityResourceFamily> resourceFamilies)
+        {
+            ApplicableAccessibilityResources = new Lazy<List<AccessibilityResource>>(
+                () => BuildApplicableAccessibilityResources(globalResources, resourceFamilies), isThreadSafe: true);
+        }
 
         private AccessibilityResource DisableNonApplicableAccessibility(AccessibilityResource globalResource, List<AccessibilityResource> itemResources)
         {
@@ -76,19 +83,19 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             return resource;
         }
 
-        public void SetApplicableAccessibilityResources(SampleItemsContext context)
+        private List<AccessibilityResource> BuildApplicableAccessibilityResources(IList<AccessibilityResource> globalResources, IList<AccessibilityResourceFamily> resourceFamilies)
         {
-            ApplicableAccessibilityResources = new List<AccessibilityResource>();
+            var localResources = new List<AccessibilityResource>();
             //Get all accessibilty options for a specific item based off of its family.
             List<AccessibilityResourceFamily> applicableResourceFamilies;
             if (Grade == "NA")
             {
-                applicableResourceFamilies = context.AccessibilityResourceFamilies.Where(s => (s.Codes.Contains(Subject))).ToList();
+                applicableResourceFamilies = resourceFamilies.Where(s => (s.Codes.Contains(Subject))).ToList();
             }
             else
             {
                 var enumGrade = Enum.Parse(typeof(GradeType), Grade);
-                applicableResourceFamilies = context.AccessibilityResourceFamilies.Where(s => (s.Codes.Contains(Subject)
+                applicableResourceFamilies = resourceFamilies.Where(s => (s.Codes.Contains(Subject)
                     && (s.Grades.ToList().Contains((GradeType)enumGrade)))).ToList();
             }
 
@@ -98,10 +105,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 throw new Exception($"Item ID: {ItemKey} Bank: {BankKey} does not belong to any accessibility resource families.");
             }
 
-            foreach(AccessibilityResource globalResource in context.GlobalAccessibilityResources)
+            foreach(AccessibilityResource globalResource in globalResources)
             {
-                ApplicableAccessibilityResources.Add(DisableNonApplicableAccessibility(globalResource, applicableResourceFamilies.First().Resources));
+                localResources.Add(DisableNonApplicableAccessibility(globalResource, applicableResourceFamilies.First().Resources));
             }
+            return localResources;
         }
 
         #region Helper Methods

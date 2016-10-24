@@ -35,7 +35,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents);
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, null, null);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(testGrade, digest.Grade);
@@ -65,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, null, null));
             Assert.Equal("Cannot digest items with different ItemKey values.", exception.Message);
         }
 
@@ -116,7 +116,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
             }
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList);
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, null, null);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

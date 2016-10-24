@@ -83,7 +83,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <param name="accessibilityResources"></param>
         /// <param name="ISSAPCode"></param>
         /// <returns></returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(List<AccessibilityResource> accessibilityResources, string ISSAPCode)
+        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string ISSAPCode)
         {
             var accResourcesViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
             var codes = ToISSAPList(ISSAPCode);
