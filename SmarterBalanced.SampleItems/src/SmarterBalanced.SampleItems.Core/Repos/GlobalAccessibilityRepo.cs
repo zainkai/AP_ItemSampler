@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Core.Translations;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -15,17 +17,47 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             this.context = context;
         }
-
-        public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel()
+        
+        /// <summary>
+        /// Gets AppSettings
+        /// </summary>
+        /// <returns></returns>
+        public AppSettings GetSettings()
         {
-            throw new NotImplementedException();
+            return context.AppSettings();
         }
 
+        /// <summary>
+        /// Constructs a GlobalAccessibilityViewModel with ISSAP codes
+        /// as the default selected values if ISSAPCode has a value.
+        /// </summary>
+        /// <param name="ISSAPCode"></param>
+        /// <returns></returns>
         public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string ISSAPCode)
         {
-            throw new NotImplementedException();
+            List<AccessibilityResource> globalAccResources = new List<AccessibilityResource>(context.GlobalAccessibilityResources);
+
+            List<AccessibilityResourceViewModel> accResourceViewModels;
+            if (!string.IsNullOrEmpty(ISSAPCode))
+            {
+                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources, ISSAPCode);
+            }
+            else
+            {
+                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources);
+            }
+
+            return new GlobalAccessibilityViewModel()
+            {
+                AccessibilityResourceViewModels = accResourceViewModels
+            };
         }
 
+        /// <summary>
+        /// Generates an ISSAP code from a GlobalAccessibilityViewModel
+        /// </summary>
+        /// <param name="globalAccessibilityViewModel"></param>
+        /// <returns>a ISSAP code string.</returns>
         public string GetISSAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel)
         {
             if(globalAccessibilityViewModel?.AccessibilityResourceViewModels == null)

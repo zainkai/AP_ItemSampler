@@ -1,0 +1,13 @@
+﻿@model SmarterBalanced.SampleItems.Core.Repos.Models.GlobalAccessibilityViewModel
+
+@using (Html.BeginForm())
+{
+    @Html.EditorFor(m => m.AccessibilityResourceViewModels)
+    <button type="submit">Submit</button>
+}
+<br />
+
+<button class="btn btn-info" type="button" 
+        onclick="location.href='@Url.Action("Reset", "GlobalAccessibility")'">
+    Reset
+    </button>

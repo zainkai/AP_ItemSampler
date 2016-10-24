@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -22,24 +21,32 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            //see if cookies exist, if not get default 
-            //load cookie
-            //get view model
+            string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+            var ISSAP = Request.Cookies[cookieName];
+            GlobalAccessibilityViewModel viewmodel = repo.GetGlobalAccessibilityViewModel(ISSAP);
 
-            var viewmodel = repo.GetGlobalAccessibilityViewModel();
-        
             return View(viewmodel);
         }
 
         [HttpPost]
         public IActionResult Index(GlobalAccessibilityViewModel model)
         {
-            //Get ISSAP
-            string iSSAPCookie = repo.GetISSAPCode(model);
-            //Save to Cookie
+            string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+            string ISSAPCode = repo.GetISSAPCode(model);
+            Response.Cookies.Append(cookieName, ISSAPCode);
 
-            //redirect to index
-            return View();
+            return RedirectToAction("Index");
         }
+
+
+        public IActionResult Reset()
+        {
+            string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+            Response.Cookies.Delete(cookieName);
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

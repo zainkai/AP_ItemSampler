@@ -76,6 +76,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// TODO: Implement method, each item needs to have the selected code set to the default if not specified. 
         private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModel(ItemDigest itemDigest, string iSSAPCode)
         {
+            return new List<AccessibilityResourceViewModel>();
             throw new NotImplementedException();
         }
 

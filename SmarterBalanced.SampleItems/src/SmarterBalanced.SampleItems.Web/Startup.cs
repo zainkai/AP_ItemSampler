@@ -45,6 +45,8 @@ namespace SmarterBalanced.SampleItems.Web
 
             services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(SampleItemsContext.Default));
 
+            services.AddScoped<IGlobalAccessibilityRepo>(provider => new GlobalAccessibilityRepo(SampleItemsContext.Default));
+
             services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(SampleItemsContext.Default));
 
             services.AddRouting();
