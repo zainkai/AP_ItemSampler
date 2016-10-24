@@ -20,5 +20,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Description { get; set; }
 
         public bool? Disabled { get; set; }
+
+        public AccessibilityResource DeepClone()
+        {
+            List<AccessibilitySelection> selections = new List<AccessibilitySelection>();
+            foreach(AccessibilitySelection selection in Selections)
+            {
+                selections.Add(selection.Clone());
+            }
+            return new AccessibilityResource
+            {
+                Code = Code,
+                Order = Order,
+                DefaultSelection = DefaultSelection,
+                Selections = selections,
+                Label = Label,
+                Description = Description,
+                Disabled = Disabled
+            };
+        }
     }
 }
