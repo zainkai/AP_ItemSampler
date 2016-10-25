@@ -96,7 +96,6 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                 {
                     var selectedCode = accListItem.Value;
                     
-                    // FIXME: Code is getting added to dropdown list items on save
                     accResourceViewModel.SelectedCode = selectedCode;
                     codes.Remove(selectedCode);
                 }
