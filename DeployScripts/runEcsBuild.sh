@@ -12,7 +12,3 @@ fi
 if [ "$BRANCH" == "master" ]; then
     aws ecs run-task --region us-west-2 --cluster SampleItemsBuild --count 1 --task-definition SampleItemsBuild_master
 fi
-
-if [ "$BRANCH" == "feature_dockeraws" ]; then
-    aws ecs run-task --region us-west-2 --cluster SampleItemsBuild --count 1 --task-definition SampleItemsBuild_dev
-fi
