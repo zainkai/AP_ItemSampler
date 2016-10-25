@@ -28,5 +28,6 @@ after_success:
   - docker build -t sampleitemswebsite .
   - docker tag sampleitemswebsite:latest 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$TRAVIS_BRANCH
   - docker push 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$TRAVIS_BRANCH
-  - chmod ugo+x ./CodeDeploy/dockerDeploy.sh
-  - ./CodeDeploy/dockerDeploy.sh
+  - cd /home/travis/build/osu-cass/SampleItemsWebsite
+  - chmod ugo+x DeployScripts/dockerDeploy.sh
+  - ./DeployScripts/dockerDeploy.sh
