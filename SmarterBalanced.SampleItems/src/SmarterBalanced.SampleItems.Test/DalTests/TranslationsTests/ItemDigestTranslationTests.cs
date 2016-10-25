@@ -38,7 +38,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
-            Assert.Equal(testGrade, digest.Grade);
+            Assert.Equal(GradeLevels.Grade5, digest.Grade);
             Assert.Equal("Test target string", digest.Target);
             Assert.Equal("Test claim string", digest.Claim);
             Assert.Equal("MATH", digest.Subject);
@@ -103,7 +103,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];
-                metadata.Metadata.Grade = itemKeys[i].ToString();
+                metadata.Metadata.Grade = (itemKeys[i] % 9 + 3).ToString();
                 metadata.Metadata.Target = testTarget + itemKeys[i];
                 metadata.Metadata.Claim = testClaim + itemKeys[i];
                 metadata.Metadata.InteractionType = testInteractionType + itemKeys[i];
@@ -124,7 +124,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             {
                 int id = digest.ItemKey;
                 Assert.Equal(digest.ItemKey, digest.BankKey);
-                Assert.Equal(digest.ItemKey.ToString(), digest.Grade);
+                Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), digest.Grade);
                 Assert.Equal(testTarget + id, digest.Target);
                 Assert.Equal(testClaim + id, digest.Claim);
                 Assert.Equal(testInteractionType + id, digest.InteractionType);

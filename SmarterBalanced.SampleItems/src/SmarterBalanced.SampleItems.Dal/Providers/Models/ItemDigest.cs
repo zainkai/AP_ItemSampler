@@ -18,7 +18,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Subject { get; set; }
 
         [Display(Name = "Grade")]
-        public string Grade { get; set; }
+        public GradeLevels Grade { get; set; }
 
         [Display(Name = "Claim")]
         public string Claim { get; set; }

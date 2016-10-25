@@ -29,7 +29,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
-            digest.Grade = itemMetadata.Metadata.Grade;
+            digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
             digest.Target = itemMetadata.Metadata.Target;
             digest.Subject = itemMetadata.Metadata.Subject;
             digest.InteractionType = itemMetadata.Metadata.InteractionType;
