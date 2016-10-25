@@ -4,6 +4,10 @@ sudo: required
 services:
   - docker
 
+before_script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
 script: 
   - dotnet restore
   - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
@@ -26,8 +30,8 @@ after_success:
   - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/project.json
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/bin/Debug/netcoreapp1.0/publish
   - docker build -t sampleitemswebsite .
-  - docker tag sampleitemswebsite:latest 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$TRAVIS_BRANCH
-  - docker push 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$TRAVIS_BRANCH
+  - docker tag sampleitemswebsite:latest 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$BRANCH
+  - docker push 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$BRANCH
   - cd /home/travis/build/osu-cass/SampleItemsWebsite
   - chmod ugo+x DeployScripts/runEcsBuild.sh
   - ./DeployScripts/runEcsBuild.sh
