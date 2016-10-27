@@ -20,5 +20,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             IList<ItemDigest> items = sampleItemsSearchRepo.GetItemDigests();
             return View(items);
         }
+
+        [HttpGet]
+        public IActionResult Search(string terms, GradeLevels gradeLevels, string[] subjects, string claimType)
+        {
+            var items = sampleItemsSearchRepo.GetItemDigests(terms, gradeLevels, subjects, claimType);
+
+            return Json(items);
+        }
     }
 }
