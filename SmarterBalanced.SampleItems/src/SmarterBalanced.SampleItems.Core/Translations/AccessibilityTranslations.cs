@@ -28,6 +28,10 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <returns>List of strings</returns>
         public static List<string> ToISSAPList(string ISSAPCode)
         {
+            if (string.IsNullOrEmpty(ISSAPCode))
+            {
+                return new List<string>();
+            }
             return ISSAPCode.Split(';').ToList();
         }
 

@@ -40,6 +40,7 @@ namespace SmarterBalanced.SampleItems.Web
             //Build configuration from appsettings.json
             SampleItemsContext.RegisterSettings(appSettings);
             SampleItemsContext.UpdateContent(appSettings);
+
             // Injecting Singleton SampleItemsRepo into each Controller Repository
             services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
 
@@ -78,7 +79,7 @@ namespace SmarterBalanced.SampleItems.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}");
 
                 routes.MapRoute(
                     name: "diagnostic",

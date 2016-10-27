@@ -8,11 +8,11 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemController : Controller
     {
-        private IItemViewRepo itemViewRepo;
+        private IItemViewRepo repo;
 
-        public ItemController(IItemViewRepo repo)
+        public ItemController(IItemViewRepo itemViewRepo)
         {
-            itemViewRepo = repo;
+            repo = itemViewRepo;
         }
 
         // GET: /<controller>/
@@ -21,20 +21,28 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return View();
         }
 
+
         /// <summary>
-        /// Returns an ItemDigest given a bankKey and itemKey
+        /// Returns an ItemDigest given a bankKey and itemKey, setting
+        /// ISSAP based on URL or cookie if URL ISSAP not specified.
         /// </summary>
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
-        /// <returns></returns>
-        public IActionResult Details(int? bankKey, int? itemKey)
+        /// <param name="ISSAP"></param>
+        public IActionResult Details(int? bankKey, int? itemKey, string ISSAP)
         {
-            if(!bankKey.HasValue || !itemKey.HasValue)
+            if (!bankKey.HasValue || !itemKey.HasValue)
             {
                 return BadRequest();
             }
 
-            ItemViewModel item = itemViewRepo.GetItemViewModel(bankKey.Value, itemKey.Value);
+            if (string.IsNullOrEmpty(ISSAP))
+            {
+                string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+                ISSAP = Request.Cookies[cookieName];
+            }
+
+            ItemViewModel item = repo.GetItemViewModel(bankKey.Value, itemKey.Value, ISSAP);
 
             if (item == null)
             {

@@ -9,6 +9,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string ISSAPCode);
 
         string GetISSAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel);
+
         AppSettings GetSettings();
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SmarterBalanced.SampleItems.Core.Translations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -16,6 +17,15 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         public ItemViewRepo(SampleItemsContext context)
         {
             this.context = context;
+        }
+
+        /// <summary>
+        /// Gets AppSettings
+        /// </summary>
+        /// <returns></returns>
+        public AppSettings GetSettings()
+        {
+            return context.AppSettings();
         }
 
         /// <summary>
@@ -116,7 +126,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns>an ItemViewModel.</returns>
-        private ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSSAPCode)
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSSAPCode)
         {
             ItemViewModel itemView = null;
             ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
