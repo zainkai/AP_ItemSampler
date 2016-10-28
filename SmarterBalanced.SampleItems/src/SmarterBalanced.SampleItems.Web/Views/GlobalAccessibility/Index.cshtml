@@ -1,5 +1,9 @@
 ﻿@model SmarterBalanced.SampleItems.Core.Repos.Models.GlobalAccessibilityViewModel
 
+<h1>Accessibility Options</h1>
+
+<b>NOTE:</b> Not all accessibility options can be applied to all items. <br /><br />
+
 @using (Html.BeginForm())
 {
     @Html.EditorFor(m => m.AccessibilityResourceViewModels)
