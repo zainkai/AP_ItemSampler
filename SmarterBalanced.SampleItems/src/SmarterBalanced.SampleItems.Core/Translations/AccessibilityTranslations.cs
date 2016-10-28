@@ -99,7 +99,6 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                 if(accListItem != null)
                 {
                     var selectedCode = accListItem.Value;
-                    
                     accResourceViewModel.SelectedCode = selectedCode;
                     codes.Remove(selectedCode);
                 }

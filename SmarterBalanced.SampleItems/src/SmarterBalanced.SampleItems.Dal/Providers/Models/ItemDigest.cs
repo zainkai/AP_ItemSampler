@@ -81,7 +81,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 }
             }
             return resource;
-        }
+        } 
 
         private List<AccessibilityResource> BuildApplicableAccessibilityResources(IList<AccessibilityResource> globalResources, IList<AccessibilityResourceFamily> resourceFamilies)
         {

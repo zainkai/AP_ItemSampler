@@ -84,7 +84,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="itemDigest"></param>
         /// <returns>List of accessibility resource family</returns>
-        /// TODO: Implement method, each item needs to have the selected code set to the default if not specified. 
         private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModel(ItemDigest itemDigest, string iSSAPCode)
         {
             var accessibilityResources = itemDigest.ApplicableAccessibilityResources.Value.ToAccessibilityResourceViewModels(iSSAPCode);
@@ -140,7 +139,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
             return itemView;
         }
-
 
     }
 }
