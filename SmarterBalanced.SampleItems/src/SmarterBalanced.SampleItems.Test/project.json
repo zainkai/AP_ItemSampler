@@ -14,7 +14,10 @@
     "SmarterBalanced.SampleItems.Web": "1.0.0-*",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "xunit": "2.2.0-beta3-build3402",
-    "Microsoft.NETCore.App": "1.0.1"
+    "Microsoft.NETCore.App": {
+      "version": "1.0.1",
+      "type": "platform"
+    }
   },
   "testRunner": "xunit",
   "frameworks": {
