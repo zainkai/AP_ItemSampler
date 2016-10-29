@@ -1,13 +1,11 @@
-﻿using System;
+﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Translations;
+using SmarterBalanced.SampleItems.Dal.Xml.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
-using SmarterBalanced.SampleItems.Dal.Exceptions;
-using SmarterBalanced.SampleItems.Dal.Models;
-using SmarterBalanced.SampleItems.Dal.Translations;
-using SmarterBalanced.SampleItems.Dal.Infrastructure;
-using System.IO;
 
 namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 {
@@ -25,8 +23,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-            contents.Item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = testItemKey;
             metadata.Metadata.Grade = testGrade;
             metadata.Metadata.Target = "Test target string";
@@ -56,8 +54,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-            contents.Item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = 1;
             metadata.Metadata.Grade = "7";
             metadata.Metadata.Target = "Test target string";
@@ -100,8 +98,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 ItemMetadata metadata = new ItemMetadata();
                 ItemContents contents = new ItemContents();
 
-                metadata.Metadata = new Dal.Models.XMLRepresentations.SmarterAppMetadataXmlRepresentation();
-                contents.Item = new Dal.Models.XMLRepresentations.ItemXmlFieldRepresentation();
+                metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+                contents.Item = new ItemXmlFieldRepresentation();
 
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];

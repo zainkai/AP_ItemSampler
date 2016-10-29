@@ -1,1 +1,16 @@
-﻿
+﻿@model IList<SmarterBalanced.SampleItems.Dal.Providers.Models.ItemDigest>
+<h1>Items</h1>
+<hr />
+<div class="container">
+    @foreach (var item in Model)
+    {
+        @Html.DisplayFor(model => item, "ItemDigestCard")
+        <br />
+    }
+</div>
+
+<script>
+    function itemPageLink(bankKey, itemKey) {
+        window.location = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
+    }
+</script>
