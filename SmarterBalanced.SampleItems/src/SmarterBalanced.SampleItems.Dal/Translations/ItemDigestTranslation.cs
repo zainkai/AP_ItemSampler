@@ -22,7 +22,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static ItemDigest ItemToItemDigest(
             ItemMetadata itemMetadata,
             ItemContents itemContents,
-            IList<AccessibilityResource> globalResources,
             IList<AccessibilityResourceFamily> resourceFamilies)
         {
             if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
@@ -30,7 +29,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 throw new SampleItemsContextException("Cannot digest items with different ItemKey values.");
             }
 
-            ItemDigest digest = new ItemDigest(globalResources, resourceFamilies);
+            ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
             digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
@@ -39,6 +38,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             digest.InteractionType = itemMetadata.Metadata.InteractionType;
             digest.Claim = itemMetadata.Metadata.Claim;
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
+            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources; 
 
             return digest;
         }
@@ -53,7 +53,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static IEnumerable<ItemDigest> ItemsToItemDigests(
             IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents,
-            IList<AccessibilityResource> globalResources,
             IList<AccessibilityResourceFamily> resourceFamilies)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
@@ -64,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), globalResources, resourceFamilies));
+                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies));
                 }
                 else if (itemsCount > 1)
                 {

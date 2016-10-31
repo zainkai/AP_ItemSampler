@@ -51,7 +51,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             selectListItems = accessibilitySelections.OrderBy(t => t.Order).Select(t => new SelectListItem
             {
-                Disabled = (t.Disabled.HasValue) ? t.Disabled.Value : false,
+                Disabled = t.Disabled,
                 Value = t.Code,
                 Text = t.Label
             }).ToList();
@@ -74,7 +74,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                 Label = t.Label,
                 Description = t.Description,
                 AccessibilityListItems = ToSelectListItems(t?.Selections),
-                Disabled = (t.Disabled.HasValue) ? t.Disabled.Value : false
+                Disabled = t.Disabled
             }).ToList();
 
             return accessibilityResourceViewModels;

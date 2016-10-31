@@ -84,7 +84,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 .ItemsToItemDigests(
                     itemMetadata,
                     itemContents,
-                    GlobalAccessibilityResources,
                     AccessibilityResourceFamilies)
                 .ToList();
         }
