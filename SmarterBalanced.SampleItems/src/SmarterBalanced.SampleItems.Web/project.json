@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.0.1",
+      "type": "platform"
+    },
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
@@ -45,7 +49,10 @@
     "include": [
       "wwwroot",
       "web.config",
+      "**/*.cshtml",
+      "../../AccessibilityAccommodationConfigurations/",
       "docker-compose.yml",
+      "appsettings.json",
       "Dockerfile",
       ".dockerignore"
     ]

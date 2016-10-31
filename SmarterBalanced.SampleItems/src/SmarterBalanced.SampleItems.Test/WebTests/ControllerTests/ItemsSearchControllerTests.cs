@@ -23,25 +23,25 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 {
                     BankKey = goodBankKey,
                     ItemKey = goodItemKey,
-                    Grade = "6"
+                    Grade = GradeLevels.Grade6
                 },
                 new ItemDigest
                 {
                     BankKey = goodBankKey,
                     ItemKey = badItemKey,
-                    Grade = "High School"
+                    Grade = GradeLevels.High
                 },
                 new ItemDigest
                 {
                     BankKey = badBankKey,
                     ItemKey = goodItemKey,
-                    Grade = "9"
+                    Grade = GradeLevels.Grade9
                 },
                 new ItemDigest
                 {
                     BankKey = badBankKey,
                     ItemKey = badItemKey,
-                    Grade = "4"
+                    Grade = GradeLevels.Grade4
                 }
             };
 

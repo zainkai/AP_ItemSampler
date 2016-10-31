@@ -24,7 +24,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             {
                 BankKey = bankKey,
                 ItemKey = itemKey,
-                Grade = "6"
+                Grade = GradeLevels.Grade6
             };
 
             ISSAP = "TDS_test;TDS_test2;";
