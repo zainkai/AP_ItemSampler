@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Core.Repos;
-using SmarterBalanced.SampleItems.Core.Repos.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Core.Interfaces;
+using SmarterBalanced.SampleItems.Core.Infrastructure;
+using SmarterBalanced.SampleItems.Dal.Models;
+using SmarterBalanced.SampleItems.Core.Models;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 

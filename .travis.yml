@@ -1,13 +1,6 @@
 language: csharp
 sudo: required
 
-services:
-  - docker
-
-before_script:
-  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-
 script: 
   - dotnet restore
   - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
@@ -19,19 +12,69 @@ matrix:
     sudo: required
     dotnet: 1.0.0-preview2-003121
     mono: none
-
-#Docker section
-after_success:
-  - docker --version
-  - pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
-  - eval $(aws ecr get-login --region us-west-2)
-  - dotnet restore /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/
-  - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/project.json
-  - cd /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/bin/Debug/netcoreapp1.0/publish
-  - docker build -t sampleitemswebsite .
-  - docker tag sampleitemswebsite:latest 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$BRANCH
-  - docker push 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemswebsite:$BRANCH
-  - cd /home/travis/build/osu-cass/SampleItemsWebsite
-  - chmod ugo+x DeployScripts/runEcsBuild.sh
-  - ./DeployScripts/runEcsBuild.sh
+deploy:
+#Dev branch deployment
+- provider: s3
+  access_key_id: AKIAJVEIOK5TBQ2K5NEA
+  secret_access_key: &1
+    secure: oedx2fQZtcwnj7aIkoao24hPmVLp07s/BweWyPyGk7jLQJ/ojb/pcYMMR9M5ki9MLAvDFkMp2g1g7DuWkBDK68y91Q4WADl2F2P0jJa+7V3fM/KxdJLtAYxYLlePVi9h+wqFXFqE489X9WOfF7PmB/n90usGCNQVL39SIdppgk+eWH++ftpMrHDxHsXsSBBu1xTE7k7NvC8iYm4+3C7JM8gZ66nwj6qd/pApYq9vh0dbFSXpKCTgpgHfhafDVcIX7T16YegrKtx8oyObwwWCgtwzlsIJ4VjIlP1WSjJem4+L/0PCcRwEgeZFdRkfudnMtvH2AtLkM7eHUD6gVb9o4Z7NdFoSHZvOTDtqmp3tnmDOIXEPe3EyTPWoiWWFxSoLgEvoxsC0HQ2CjxjRPAcW6lv4JwPdpm+CVJ8erKqf3WVh4W3mnZ04XunVKClVP+58JlQ7mANmbuxZ8WOiLspF9OeXMg0peUnAdR2bq1+eMqOrhehrT54VjjQ/hyN6+zlgtPZjh1X1ylIQ1QLAnWQGDFLD9tppRvoBnWfCdqSW3q6JskU18NTEODq6to9H8AQkB7KrAh68oriBRLHexekIgJAccFepM457O5a4NtDQ7KqPyCjFsxYLInPLPI/wjidxccnC8Iufcn4yi5WBQkwYNG913MiWfd5oztCQokUPn1Q=
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  region: us-west-2
+  on: &2
+    branch: dev
+  bucket: cass-sampleitemswebsite-dev-codedeploy
+- provider: codedeploy
+  region: us-west-2
+  access_key_id: AKIAJVEIOK5TBQ2K5NEA
+  secret_access_key: *1
+  bucket: cass-sampleitemswebsite-dev-codedeploy
+  key: sampleitemswebsite-dev-latest.zip
+  bundle_type: zip
+  application: SampleItemsWebsite-Dev
+  deployment_group: SampleItemsWebsite-Dev-CodeDeploy
+  on: *2
+#Stage branch deployment
+- provider: s3
+  access_key_id: AKIAJVEIOK5TBQ2K5NEA
+  secret_access_key: *1
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  region: us-west-2
+  on: &3
+    branch: stage
+  bucket: cass-sampleitemswebsite-stage-codedeploy
+- provider: codedeploy
+  region: us-west-2
+  access_key_id: AKIAJVEIOK5TBQ2K5NEA
+  secret_access_key: *1
+  bucket: cass-sampleitemswebsite-stage-codedeploy
+  key: sampleitemswebsite-stage-latest.zip
+  bundle_type: zip
+  application: SampleItemsWebsite-Stage
+  deployment_group: SampleItemsWebsite-Stage-CodeDeploy
+  on: *3
+#Master/Production branch deployment
+- provider: s3
+  access_key_id: AKIAJVEIOK5TBQ2K5NEA
+  secret_access_key: *1
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  region: us-west-2
+  on: &4
+    branch: master
+  bucket: cass-sampleitemswebsite-production-codedeploy
+- provider: codedeploy
+  region: us-west-2
+  access_key_id: AKIAJVEIOK5TBQ2K5NEA
+  secret_access_key: *1
+  bucket: cass-sampleitemswebsite-production-codedeploy
+  key: sampleitemswebsite-production-latest.zip
+  bundle_type: zip
+  application: SampleItemsWebsite-Production
+  deployment_group: SampleItemsWebsite-Production-CodeDeploy
+  on: *4
+before_deploy: 
+- cp ./CodeDeploy/BeforeDeploy.sh ./BeforeDeploy.sh
+- chmod ugo+x BeforeDeploy.sh
+- ./BeforeDeploy.sh

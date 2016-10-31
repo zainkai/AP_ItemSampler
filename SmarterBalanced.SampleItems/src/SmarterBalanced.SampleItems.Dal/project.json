@@ -2,6 +2,7 @@
   "version": "1.0.0-*",
 
   "dependencies": {
+    "AutoMapper": "5.1.1",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
@@ -11,9 +12,7 @@
     "System.Threading.Tasks.Parallel": "4.0.1",
     "System.Xml.XmlSerializer": "4.0.11",
     "System.Runtime.Serialization.Xml": "4.1.1",
-    "System.Xml.XmlDocument": "4.0.1",
-    "AWSSDK.S3": "3.3.0.1",
-    "System.ComponentModel.Primitives": "4.1.0"
+    "System.Xml.XmlDocument": "4.0.1"
   },
 
   "frameworks": {

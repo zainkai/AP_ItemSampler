@@ -1,5 +1,5 @@
-﻿using SmarterBalanced.SampleItems.Dal.Providers.Models;
-using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
+﻿using SmarterBalanced.SampleItems.Dal.Models;
+using Gen = SmarterBalanced.SampleItems.Dal.Models.Generated;
 using System;
 using System.Collections.Generic;
 using System.Linq;
