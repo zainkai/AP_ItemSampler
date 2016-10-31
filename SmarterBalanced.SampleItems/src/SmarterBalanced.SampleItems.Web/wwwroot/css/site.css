@@ -187,3 +187,12 @@ hr {
     width:300px;
     padding: 10px;
 }
+
+.tag {
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.selected {
+    background-color: #eeffff;
+}

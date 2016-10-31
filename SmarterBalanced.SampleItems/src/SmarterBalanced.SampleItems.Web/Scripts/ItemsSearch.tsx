@@ -2,13 +2,6 @@
 // for more information see the following page on the TypeScript wiki:
 // https://github.com/Microsoft/TypeScript/wiki/JSX
 
-interface SearchParams {
-    terms: string;
-    gradeLevels: GradeLevels;
-    subjects: string[];
-    claimType: string;
-}
-
 interface ItemDigest {
     bankKey: number;
     itemKey: number;
@@ -22,6 +15,97 @@ interface ItemDigest {
 
 function itemPageLink(bankKey: number, itemKey: number) {
     window.location.href = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
+}
+
+interface SearchParams {
+    terms?: string;
+    gradeLevels?: GradeLevels;
+    subjects?: string[];
+    claimType?: string;
+}
+
+class ItemsSearchForm extends React.Component<{}, SearchParams> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            terms: "",
+            gradeLevels: GradeLevels.All,
+            subjects: [],
+            claimType: ""
+        };
+    }
+
+    toggleGrades(grades: GradeLevels) {
+        this.setState({
+            // Exclusive OR to flip just the bits for the input grades
+            gradeLevels: this.state.gradeLevels ^ grades
+        });
+    }
+
+    toggleElementary() {
+    }
+
+    render() {
+        const elementarySelected = (this.state.gradeLevels & GradeLevels.Elementary) == GradeLevels.Elementary;
+        const middleSelected = (this.state.gradeLevels & GradeLevels.Middle) == GradeLevels.Middle;
+        const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
+
+        return (
+            <form>
+                <label htmlFor="terms">Terms</label>
+                <input name="terms"
+                    value={this.state.terms}
+                    onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
+
+                <label htmlFor="grade-levels">Grade Levels</label>
+                <div className={(elementarySelected ? "selected" : "") + " tag"}
+                    onClick={() => this.toggleGrades(GradeLevels.Elementary)}>
+
+                    Elementary School
+                </div>
+
+                <div className={(middleSelected ? "selected" : "") + " tag"}
+                    onClick={() => this.toggleGrades(GradeLevels.Middle)}>
+
+                    Middle School
+                </div>
+
+                <div className={(highSelected ? "selected" : "") + " tag"}
+                    onClick={() => this.toggleGrades(GradeLevels.High)}>
+
+                    High School
+                </div>
+
+                <label htmlFor="subjects">Subjects</label>
+                <input name="terms"
+                    value={this.state.terms}
+                    onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
+
+                <label htmlFor="interaction-types">Interaction Types</label>
+                <input name="terms"
+                    value={this.state.terms}
+                    onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
+
+
+            </form>
+        );
+    }
+}
+
+interface ItemsSearchProps {
+    searchResults: ItemDigest[]
+}
+
+class ItemsSearch extends React.Component<ItemsSearchProps, {}> {
+    render() {
+        const itemCards = this.props.searchResults.map(digest => <ItemCard {...digest} />);
+        return (
+            <div>
+                <ItemsSearchForm />
+                {itemCards}
+            </div>
+        );
+    }
 }
 
 class ItemCard extends React.Component<ItemDigest, Object> {
@@ -53,5 +137,5 @@ $.ajax({
 
 function onSearch(data: ItemDigest[]) {
     const itemCards = data.map(digest => <ItemCard {...digest} />);
-    ReactDOM.render(<div className="container">{itemCards}</div>, document.getElementById("container") as HTMLElement);
+    ReactDOM.render(<ItemsSearch searchResults={data} />, document.getElementById("container") as HTMLElement);
 }
