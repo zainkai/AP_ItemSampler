@@ -47,6 +47,6 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return RedirectToAction("Index");
         }
 
-
     }
+
 }
