@@ -54,14 +54,19 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static AccessibilityResourceFamily ToAccessibilityResourceFamily(this Gen.AccessibilityResourceFamily generatedFamily, IList<AccessibilityResource> globalResources)
         {
-            var resources = generatedFamily.SingleSelectResource
-                .Select(r => r.ToAccessibilityResource(globalResources.FirstOrDefault(gr => gr.Code == r.Code)))
-                .ToList();
+            var resources = globalResources.Select(globalResource =>
+            {
+                var familyResource = generatedFamily.SingleSelectResource.FirstOrDefault(fr => fr.Code == globalResource.Code);
+                if (familyResource == null)
+                    return globalResource;
+                else
+                    return familyResource.ToAccessibilityResource(globalResource);
+            }).ToList();
 
             var selection = new AccessibilityResourceFamily
             {
-                Codes = generatedFamily.Subject.Select(s => s.Code).ToList(),
-                Grades = generatedFamily.Grade,
+                Subjects = generatedFamily.Subject.Select(s => s.Code).ToList(),
+                Grades = generatedFamily.Grade.ToGradeLevels(),
                 Resources = resources
             };
 
@@ -73,30 +78,30 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             if (globalResource == null)
                 throw new ArgumentNullException(nameof(globalResource));
 
-            List<AccessibilitySelection> familySelections;
-            if (generatedResource.Disabled == null)
+            // <Disabled /> means the entire resource is disabled
+            bool isResourceDisabled = generatedResource.Disabled != null;
+            AccessibilityResource resource = globalResource.DeepClone();
+
+            resource.DefaultSelection = generatedResource.DefaultSelection as string;
+            resource.Disabled = isResourceDisabled;
+
+            if (isResourceDisabled)
             {
-                familySelections = globalResource.Selections
-                    .Where(s => generatedResource.Selection.Any(gens => gens.Code == s.Code))
-                    .ToList();
+                foreach (var selection in resource.Selections)
+                {
+                    selection.Disabled = true;
+                }
             }
             else
             {
-                familySelections = globalResource.Selections
-                    .Where(s => generatedResource.Selection != null && generatedResource.Selection.All(gens => gens.Code != s.Code))
-                    .ToList();
+                // Individual selections are disabled by not being included in family resource selections
+                // If the family's selections contains this selection, enable the selection. Otherwise disable it.
+                resource.Selections = globalResource.Selections.Select(s =>
+                    s.CloneWithDisabled(
+                        generatedResource.Selection.Any(fs => fs.Code == s.Code))).ToList();
             }
 
-            var completeResource = new AccessibilityResource
-            {
-                Code = globalResource.Code,
-                DefaultSelection = generatedResource.DefaultSelection as string,
-                Description = globalResource.Description,
-                Label = globalResource.Label,
-                Order = globalResource.Order,
-                Selections = familySelections
-            };
-            return completeResource;
+            return resource;
         }
     }
 }

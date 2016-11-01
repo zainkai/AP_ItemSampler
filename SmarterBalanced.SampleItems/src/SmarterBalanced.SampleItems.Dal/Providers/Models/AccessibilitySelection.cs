@@ -14,7 +14,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         public string Label { get; set; }
 
-        public bool? Disabled { get; set; }
+        public bool Disabled { get; set; }
 
         public AccessibilitySelection Clone()
         {
@@ -25,6 +25,13 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 Label = Label,
                 Disabled = Disabled
             };
+        }
+
+        public AccessibilitySelection CloneWithDisabled(bool disabled)
+        {
+            var selection = this.Clone();
+            selection.Disabled = disabled;
+            return selection;
         }
     }
 }

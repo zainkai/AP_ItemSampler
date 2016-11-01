@@ -19,7 +19,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         public string Description { get; set; }
 
-        public bool? Disabled { get; set; }
+        public bool Disabled { get; set; }
 
         public AccessibilityResource DeepClone()
         {

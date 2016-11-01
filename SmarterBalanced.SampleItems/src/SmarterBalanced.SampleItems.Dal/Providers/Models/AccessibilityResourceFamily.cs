@@ -6,9 +6,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public class AccessibilityResourceFamily
     {
-        public List<string> Codes { get; set; }
+        public List<string> Subjects { get; set; }
 
-        public GradeType[] Grades { get; set; }
+        public GradeLevels Grades { get; set; }
 
         public List<AccessibilityResource> Resources { get; set; }
     }

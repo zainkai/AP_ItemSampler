@@ -86,7 +86,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <returns>List of accessibility resource family</returns>
         private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModel(ItemDigest itemDigest, string iSSAPCode)
         {
-            var accessibilityResources = itemDigest.ApplicableAccessibilityResources.Value.ToAccessibilityResourceViewModels(iSSAPCode);
+            var accessibilityResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSSAPCode);
             return accessibilityResources;
         }
 

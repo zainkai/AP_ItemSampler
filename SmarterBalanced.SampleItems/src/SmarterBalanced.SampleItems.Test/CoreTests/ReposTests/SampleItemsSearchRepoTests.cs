@@ -27,19 +27,19 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
                 {
                     BankKey = goodBankKey,
                     ItemKey = badItemKey,
-                    Grade = "High School"
+                    Grade = GradeLevels.High
                 },
                 new ItemDigest
                 {
                     BankKey = badBankKey,
                     ItemKey = goodItemKey,
-                    Grade = "9"
+                    Grade = GradeLevels.Grade9
                 },
                 new ItemDigest
                 {
                     BankKey = badBankKey,
                     ItemKey = badItemKey,
-                    Grade = "4"
+                    Grade = GradeLevels.Grade4
                 }
             };
 
@@ -47,7 +47,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             {
                 BankKey = goodBankKey,
                 ItemKey = goodItemKey,
-                Grade = "6"
+                Grade = GradeLevels.Grade6
             };
 
             itemDigests.Add(goodItemDigest);
