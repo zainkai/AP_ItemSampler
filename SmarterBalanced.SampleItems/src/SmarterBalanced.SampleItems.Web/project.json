@@ -48,7 +48,7 @@
       "**/*.cshtml",
       "../../AccessibilityAccommodationConfigurations/",
       "docker-compose.yml",
-      "appsettings.json",
+      "appsettings.*.json",
       "Dockerfile",
       ".dockerignore"
     ]
@@ -57,5 +57,8 @@
     "postpublish": [
       "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"
     ]
+  },
+  "configurations": {
+    "Stage": {}
   }
 }
