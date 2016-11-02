@@ -1,141 +1,85 @@
-﻿// A '.tsx' file enables JSX support in the TypeScript compiler, 
-// for more information see the following page on the TypeScript wiki:
-// https://github.com/Microsoft/TypeScript/wiki/JSX
-
-interface ItemDigest {
-    bankKey: number;
-    itemKey: number;
-    subject: string;
-    grade: GradeLevels;
-    claim: string | null;
-    target: string;
-    interactionType: string;
-    associatedStimulus: number | null;
+﻿
+interface SubjectClaims {
+    [subject: string]: { text: string; value: string }[]
 }
 
-function itemPageLink(bankKey: number, itemKey: number) {
-    window.location.href = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
-}
-
-interface SearchParams {
-    terms?: string;
-    gradeLevels?: GradeLevels;
-    subjects?: string[];
-    claimType?: string;
-}
-
-class ItemsSearchForm extends React.Component<{}, SearchParams> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            terms: "",
-            gradeLevels: GradeLevels.All,
-            subjects: [],
-            claimType: ""
-        };
+namespace ItemsSearch {
+    export interface Props {
+        subjectClaims: SubjectClaims
+        apiClient: ItemsSearchClient
     }
 
-    toggleGrades(grades: GradeLevels) {
-        this.setState({
-            // Exclusive OR to flip just the bits for the input grades
-            gradeLevels: this.state.gradeLevels ^ grades
+    export interface State {
+        searchResults: ItemDigest[]
+    }
+    
+    export class Component extends React.Component<Props, State> {
+        constructor(props: Props) {
+            super(props);
+            this.state = { searchResults: [] };
+
+            const defaultParams: SearchAPIParams = { terms: "", gradeLevels: GradeLevels.All, subjects: [], interactionTypes: [] };
+            this.beginSearch(defaultParams);
+        }
+
+        beginSearch(params: SearchAPIParams) {
+            this.props.apiClient.itemsSearch(params, this.onSearch.bind(this), this.onError.bind(this));
+        }
+
+        onSearch(results: ItemDigest[]) {
+            this.setState({ searchResults: results });
+        }
+
+        onError(err: any) {
+            console.log(err);
+        }
+
+        render() {
+            const itemCards = this.state.searchResults.map(digest => <ItemCard {...digest} />);
+            return (
+                <div className="search-container">
+                    <ItemSearchParams.Component subjectInteractionTypes={this.props.subjectClaims} onChange={(params) => this.beginSearch(params)} />
+                    <div className="search-results">
+                        {itemCards}
+                    </div>
+                </div>
+            );
+        }
+    }
+}
+
+interface ItemsSearchClient {
+    itemsSearch(params: SearchAPIParams,
+        onSuccess: (data: ItemDigest[]) => void,
+        onError?: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => any): any;
+}
+
+const client: ItemsSearchClient = {
+    itemsSearch: (params, onSuccess, onError) => {
+        $.ajax({
+            dataType: "json",
+            url: "/ItemsSearch/search",
+            traditional: true, // causes arrays to be serialized in a way supported by MVC
+            data: params,
+            success: onSuccess,
+            error: onError
         });
     }
+};
 
-    toggleElementary() {
-    }
-
-    render() {
-        const elementarySelected = (this.state.gradeLevels & GradeLevels.Elementary) == GradeLevels.Elementary;
-        const middleSelected = (this.state.gradeLevels & GradeLevels.Middle) == GradeLevels.Middle;
-        const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
-
-        return (
-            <form>
-                <label htmlFor="terms">Terms</label>
-                <input name="terms"
-                    value={this.state.terms}
-                    onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
-
-                <label htmlFor="grade-levels">Grade Levels</label>
-                <div className={(elementarySelected ? "selected" : "") + " tag"}
-                    onClick={() => this.toggleGrades(GradeLevels.Elementary)}>
-
-                    Elementary School
-                </div>
-
-                <div className={(middleSelected ? "selected" : "") + " tag"}
-                    onClick={() => this.toggleGrades(GradeLevels.Middle)}>
-
-                    Middle School
-                </div>
-
-                <div className={(highSelected ? "selected" : "") + " tag"}
-                    onClick={() => this.toggleGrades(GradeLevels.High)}>
-
-                    High School
-                </div>
-
-                <label htmlFor="subjects">Subjects</label>
-                <input name="terms"
-                    value={this.state.terms}
-                    onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
-
-                <label htmlFor="interaction-types">Interaction Types</label>
-                <input name="terms"
-                    value={this.state.terms}
-                    onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
-
-
-            </form>
-        );
-    }
+interface SearchAPIParams {
+    terms: string;
+    gradeLevels: GradeLevels;
+    subjects: string[];
+    interactionTypes: string[];
 }
 
-interface ItemsSearchProps {
-    searchResults: ItemDigest[]
-}
+const subjectInteractionTypes = {
+    "ELA": [{ text: "Reading", value: "R" }],
+    "MATH": []
+};
 
-class ItemsSearch extends React.Component<ItemsSearchProps, {}> {
-    render() {
-        const itemCards = this.props.searchResults.map(digest => <ItemCard {...digest} />);
-        return (
-            <div>
-                <ItemsSearchForm />
-                {itemCards}
-            </div>
-        );
-    }
-}
-
-class ItemCard extends React.Component<ItemDigest, Object> {
-    render() {
-        const { bankKey, itemKey } = this.props;
-        return (
-            <div className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
-                <div className="card-contents">
-                    <h4 className="card-title">{bankKey}-{itemKey}</h4>
-                    <p className="card-text">Claim: {this.props.claim}</p>
-                    <p className="card-text">Grade: {this.props.grade}</p>
-                    <p className="card-text">Subject: {this.props.subject}</p>
-                    <p className="card-text">Interaction Type: {this.props.interactionType}</p>
-                </div>
-            </div>
-        );
-    }
-}
-
-const data = { terms: "foo", gradeLevels: GradeLevels.Elementary, subjects: ["ELA"], claimType: "" };
-
-$.ajax({
-    dataType: "json",
-    url: "/ItemsSearch/search",
-    traditional: true, // causes arrays to be serialized in a way supported by MVC
-    data: data,
-    success: onSearch
-});
-
-function onSearch(data: ItemDigest[]) {
-    const itemCards = data.map(digest => <ItemCard {...digest} />);
-    ReactDOM.render(<ItemsSearch searchResults={data} />, document.getElementById("container") as HTMLElement);
-}
+ReactDOM.render(
+    <ItemsSearch.Component apiClient={client}
+        subjectClaims={subjectInteractionTypes} />,
+    document.getElementById("search-container") as HTMLElement);

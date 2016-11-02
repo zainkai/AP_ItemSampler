@@ -15,3 +15,22 @@
     High = Grade9 | Grade10 | Grade11 | Grade12,
     All = Elementary | Middle | High
 }
+
+namespace GradeLevels {
+    export function toString(grades: GradeLevels) {
+        // If a GradeLevels value exactly matches one of the declared enum members, it can be obtained by indexing into the enum.
+        const gradeString = GradeLevels[grades];
+        if (gradeString) {
+            return gradeString;
+        }
+
+        let gradeStrings: string[] = []
+        // If a GradeLevels value has several grades in it that don't match Elementary/Middle/High, we have to go through and add them up.
+        for (let i = 0; i < 10; i++) {
+            if ((grades & 1 << i) === 1 << i) {
+                gradeStrings.push(GradeLevels[1 << i]);
+            }
+        }
+        return gradeStrings.join(", ");
+    }
+}

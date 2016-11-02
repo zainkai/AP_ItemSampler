@@ -17,8 +17,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            IList<ItemDigest> items = sampleItemsSearchRepo.GetItemDigests();
-            return View(items);
+            return View();
         }
 
         [HttpGet]
