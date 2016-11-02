@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
-
+using System;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -50,5 +50,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             return View(item);
         }
+
+
+        public IActionResult ResetLocalAccessibility()
+        {
+            throw new NotImplementedException();
+        }
+
     }
+
 }

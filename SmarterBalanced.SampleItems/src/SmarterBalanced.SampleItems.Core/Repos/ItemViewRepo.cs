@@ -120,7 +120,35 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         /// <summary>
-        /// Constructs an ItemViewModel with an ItemViewerService URL.
+        /// Sets applicable accessibility resources and non-applicable
+        /// accessibility resource string on the given ItemViewModel.
+        /// </summary>
+        /// <param name="accResourceViewModels"></param>
+        private void ApplicableAccessibilityResources(List<AccessibilityResourceViewModel> accResourceViewModels, ItemViewModel itemViewModel)
+        {
+            List<AccessibilityResourceViewModel> nonApplicableResources = accResourceViewModels
+                .Where(t => t.Disabled || t.AccessibilityListItems.TrueForAll(s => s.Disabled)).ToList();
+
+            itemViewModel.AccessibilityResourceViewModels = accResourceViewModels
+                .Where(t => !nonApplicableResources.Contains(t))
+                .ToList();
+
+            itemViewModel.NonApplicableAccessibilityResources = ConcatAccessibilityResources(nonApplicableResources);
+        }
+
+        /// <summary>
+        /// Joins accessibility resource view model labels into 
+        /// a semicolon-separated string
+        /// </summary>
+        /// <param name="accResourceViewModels"></param>
+        private string ConcatAccessibilityResources(List<AccessibilityResourceViewModel> accResourceViewModels)
+        {
+            List<string> labels = accResourceViewModels.Select(t => t.Label).ToList();
+            return string.Join(", ", labels);
+        }
+
+        /// <summary>
+        /// Constructs an ItemViewModel with an ItemViewerService URL and Accessibility.
         /// </summary>
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
@@ -134,7 +162,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 itemView = new ItemViewModel();
                 itemView.ItemDigest = itemDigest;
                 itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSSAPCode);
-                itemView.AccessibilityResourceViewModels = GetAccessibilityResourceViewModel(itemDigest, iSSAPCode);
+
+                var accResourceVMs = GetAccessibilityResourceViewModel(itemDigest, iSSAPCode);
+                ApplicableAccessibilityResources(accResourceVMs, itemView);
             }
 
             return itemView;

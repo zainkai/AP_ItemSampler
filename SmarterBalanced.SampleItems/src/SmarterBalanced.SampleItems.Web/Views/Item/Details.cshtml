@@ -70,7 +70,20 @@
                 <h4 class="modal-title">Item Accessibility</h4>
             </div>
             <div class="modal-body">
-                <p>Accessibility options will be displayed here.</p>
+                @using (Html.BeginForm())
+                {
+                    @Html.EditorFor(m => m.AccessibilityResourceViewModels)
+                    <button class="btn btn-success" type="submit">Submit</button>
+                }
+                <br />
+                <button class="btn btn-info" type="button"
+                        onclick="location.href='@Url.Action("ResetLocalAccessibility", "Item")'">
+                    Reset
+                </button>
+                <br />
+                <br />
+                <b>The following accessibility resource(s) are not available:</b><br />
+                @Model.NonApplicableAccessibilityResources
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
