@@ -3,6 +3,23 @@ interface SubjectClaims {
     [subject: string]: { text: string; value: string }[]
 }
 
+interface Success<T> {
+    kind: "success";
+    content: T;
+}
+
+interface Failure<T> {
+    kind: "failure";
+    content: string;
+}
+
+interface Loading {
+    kind: "loading";
+}
+
+/** Represents the state of an asynchronously obtained resource at a particular time. */
+type Resource<T> = Loading | Success<T> | Failure<T>
+
 namespace ItemsSearch {
     export interface Props {
         subjectClaims: SubjectClaims
@@ -10,13 +27,13 @@ namespace ItemsSearch {
     }
 
     export interface State {
-        searchResults: ItemDigest[]
+        searchResults: Resource<ItemDigest[]>;
     }
     
     export class Component extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
-            this.state = { searchResults: [] };
+            this.state = { searchResults: { kind: "loading" } };
 
             const defaultParams: SearchAPIParams = { terms: "", gradeLevels: GradeLevels.All, subjects: [], interactionTypes: [] };
             this.beginSearch(defaultParams);
@@ -27,20 +44,33 @@ namespace ItemsSearch {
         }
 
         onSearch(results: ItemDigest[]) {
-            this.setState({ searchResults: results });
+            this.setState({ searchResults: { kind: "success", content: results } });
         }
 
         onError(err: any) {
             console.log(err);
+            this.setState({ searchResults: { kind: "failure", content: err } });
         }
 
         render() {
-            const itemCards = this.state.searchResults.map(digest => <ItemCard {...digest} />);
+            const searchResults = this.state.searchResults;
+
+            let resultsElement: JSX.Element[] | JSX.Element
+            if (searchResults.kind === "success") {
+                resultsElement = searchResults.content.length === 0
+                    ? <span className="placeholder-text">No results found for the given search terms.</span>
+                    : searchResults.content.map(digest => <ItemCard {...digest} />);
+            } else if (searchResults.kind === "failure") {
+                resultsElement = <span className="placeholder-text">An error occurred. Please try again later.</span>;
+            } else {
+                resultsElement = <span></span>;
+            }
+             
             return (
                 <div className="search-container">
                     <ItemSearchParams.Component subjectInteractionTypes={this.props.subjectClaims} onChange={(params) => this.beginSearch(params)} />
                     <div className="search-results">
-                        {itemCards}
+                        {resultsElement}
                     </div>
                 </div>
             );
@@ -74,6 +104,8 @@ interface SearchAPIParams {
     interactionTypes: string[];
 }
 
+// TODO: this is used to support showing/hiding or enabling/disabling tags based on whether they are associated with other tags.
+// Would it be better to just give an empty result set for a mutually exclusive set of tags?
 const subjectInteractionTypes = {
     "ELA": [{ text: "Reading", value: "R" }],
     "MATH": []

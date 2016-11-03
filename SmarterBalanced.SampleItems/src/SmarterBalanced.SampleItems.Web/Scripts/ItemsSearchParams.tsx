@@ -11,10 +11,12 @@ namespace ItemSearchParams {
         gradeLevels?: GradeLevels;
         subjects?: string[];
         interactionTypes?: string[];
-        timerID?: number;
     }
 
     export class Component extends React.Component<Props, State> {
+        // TODO: since the callback property exists on setState, should this be in the state interface instead of the component class?
+        timeoutToken?: number;
+
         constructor(props: Props) {
             super(props);
             this.state = {
@@ -25,9 +27,12 @@ namespace ItemSearchParams {
             };
         }
 
-        /** This is a blatant race condition on component state, but will do for now. */
-        beginChangeTimeout(): number {
-            return setTimeout(() => {
+        beginChangeTimeout() {
+            if (this.timeoutToken !== undefined) {
+                clearTimeout(this.timeoutToken);
+            }
+
+            this.timeoutToken = setTimeout(() => {
                 const params: SearchAPIParams = {
                     gradeLevels: this.state.gradeLevels || GradeLevels.All,
                     interactionTypes: this.state.interactionTypes || [],
@@ -35,55 +40,46 @@ namespace ItemSearchParams {
                     terms: this.state.terms || ""
                 };
                 this.props.onChange(params);
-            }, 100);
+            }, 200);
         }
 
         toggleGrades(grades: GradeLevels) {
-            if (this.state.timerID != null) {
-                clearTimeout(this.state.timerID);
-            }
-
             this.setState({
                 // Exclusive OR to flip just the bits for the input grades
-                gradeLevels: this.state.gradeLevels ^ grades,
-                timerID: this.beginChangeTimeout()
-            });
+                gradeLevels: this.state.gradeLevels ^ grades
+            }, () => this.beginChangeTimeout());
 
         }
 
         toggleSubject(subject: string) {
-            if (this.state.timerID != null) {
-                clearTimeout(this.state.timerID);
-            }
-
             const subjects = this.state.subjects || [];
             const containsSubject = subjects.indexOf(subject) !== -1;
             this.setState({
-                subjects: containsSubject ? subjects.filter(s => s !== subject) : subjects.concat([subject]),
-                timerID: this.beginChangeTimeout()
-            });
+                subjects: containsSubject ? subjects.filter(s => s !== subject) : subjects.concat([subject])
+            }, () => this.beginChangeTimeout());
         }
 
         render() {
             return (
-                <div className="search-params">
-                    <div>
-                        <p>Terms</p>
+                <form className="search-params">
+                    <div className="form-group">
+                        <label htmlFor="searchTerms">Terms</label>
                         <input
+                            name="searchTerms"
+                            className="form-control"
                             value={this.state.terms}
                             onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
                     </div>
 
-                    <p>Grade Levels</p>
+                    <label>Grade Levels</label>
                     {this.renderGrades()}
 
-                    <p>Subjects</p>
+                    <label>Subjects</label>
                     {this.renderSubjects()}
 
-                    <p>Interaction Types</p>
+                    <label>Interaction Types</label>
                     {this.renderInteractionTypes()}
-
-                </div>
+                </form>
             );
         }
 
@@ -93,24 +89,24 @@ namespace ItemSearchParams {
             const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
 
             return (
-                <div className="search-tags">
+                <div className="search-tags form-group">
                     <span className={(elementarySelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.Elementary)}>
 
                         Elementary School
-                </span>
+                    </span>
 
                     <span className={(middleSelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.Middle)}>
 
                         Middle School
-                </span>
+                    </span>
 
                     <span className={(highSelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.High)}>
 
                         High School
-                </span>
+                    </span>
                 </div>
             );
         }
@@ -118,17 +114,17 @@ namespace ItemSearchParams {
         renderSubjects() {
             const subjects = this.state.subjects || [];
             return (
-                <div className="search-tags">
+                <div className="search-tags form-group">
                     <span className={(subjects.indexOf("ELA") === -1 ? "" : "selected") + " tag"}
                         onClick={() => this.toggleSubject("ELA")}>
 
                         English Language Arts
-                </span>
+                    </span>
                     <span className={(subjects.indexOf("MATH") === -1 ? "" : "selected") + " tag"}
                         onClick={() => this.toggleSubject("MATH")}>
 
                         Math
-                </span>
+                    </span>
                 </div>
             );
         }
@@ -153,7 +149,7 @@ namespace ItemSearchParams {
             }
 
             return (
-                <div className="search-tags">
+                <div className="search-tags form-group">
                     {elements}
                 </div>
             );
