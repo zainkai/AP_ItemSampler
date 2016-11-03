@@ -24,7 +24,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
         public GlobalAccessibilityControllerTests()
         {
-            string ISSAP = "TDS_test;TDS_test2;";
+            string iSSAP = "TDS_test;TDS_test2;";
             accCookieName = "accessibilitycookie";
 
 
@@ -56,16 +56,16 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
 
             var globalAccessibilityRepoMock = new Mock<IGlobalAccessibilityRepo>();
-            globalAccessibilityRepoMock.Setup(x => x.GetGlobalAccessibilityViewModel(ISSAP)).Returns(globalAccViewModel);
+            globalAccessibilityRepoMock.Setup(x => x.GetGlobalAccessibilityViewModel(iSSAP)).Returns(globalAccViewModel);
             globalAccessibilityRepoMock.Setup(x => x.GetISSAPCode(globalAccViewModel)).Returns("Test1;Test2;");
 
             globalAccessibilityRepoMock.Setup(x => x.GetSettings()).Returns(appSettings);
 
             var request = new Mock<HttpRequest>();
-            request.Setup(x => x.Cookies[accCookieName]).Returns(ISSAP);
+            request.Setup(x => x.Cookies[accCookieName]).Returns(iSSAP);
 
             var response = new Mock<HttpResponse>();
-            response.Setup(x => x.Cookies.Append(accCookieName, ISSAP));
+            response.Setup(x => x.Cookies.Append(accCookieName, iSSAP));
             response.Setup(x => x.Cookies.Delete(accCookieName));
 
             var context = new Mock<HttpContext>();

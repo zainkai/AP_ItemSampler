@@ -14,7 +14,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         ItemDigest itemDigest;
         int bankKey;
         int itemKey;
-        string ISSAP;
+        string iSSAP;
 
         public ItemControllerTests()
         {
@@ -27,7 +27,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 Grade = GradeLevels.Grade6
             };
 
-            ISSAP = "TDS_test;TDS_test2;";
+            iSSAP = "TDS_test;TDS_test2;";
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
             itemViewRepoMock.Setup(x => x.GetItemDigest(bankKey, itemKey)).Returns(itemDigest);
@@ -38,7 +38,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}"
             };
             itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, ISSAP)).Returns(itemViewModel);
+            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, iSSAP)).Returns(itemViewModel);
 
             controller = new ItemController(itemViewRepoMock.Object);
         }
@@ -49,7 +49,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestDetailsSuccess()
         {
-            var result = controller.Details(bankKey, itemKey, ISSAP);
+            var result = controller.Details(bankKey, itemKey, iSSAP);
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
@@ -61,7 +61,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestDetailsNullParam()
         {
-            var result = controller.Details(null, itemKey, ISSAP);
+            var result = controller.Details(null, itemKey, iSSAP);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -72,7 +72,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestDetailsBadId()
         {
-            var result = controller.Details(bankKey + 1, itemKey + 1, ISSAP);
+            var result = controller.Details(bankKey + 1, itemKey + 1, iSSAP);
 
             Assert.IsType<BadRequestResult>(result);
         }

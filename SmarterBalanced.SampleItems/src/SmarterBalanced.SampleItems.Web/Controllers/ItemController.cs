@@ -27,21 +27,21 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         /// </summary>
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
-        /// <param name="ISSAP"></param>
-        public IActionResult Details(int? bankKey, int? itemKey, string ISSAP)
+        /// <param name="iSSAP"></param>
+        public IActionResult Details(int? bankKey, int? itemKey, string iSSAP)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(ISSAP))
+            if (string.IsNullOrEmpty(iSSAP))
             {
                 string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
-                ISSAP = Request.Cookies[cookieName];
+                iSSAP = Request.Cookies[cookieName];
             }
 
-            ItemViewModel item = repo.GetItemViewModel(bankKey.Value, itemKey.Value, ISSAP);
+            ItemViewModel item = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSSAP);
 
             if (item == null)
             {
@@ -54,6 +54,12 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         public IActionResult ResetLocalAccessibility()
         {
+            
+            string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+            var iSSAP = Request.Cookies[cookieName];
+            
+            // TODO: udpate model accessibility with issap
+
             throw new NotImplementedException();
         }
 

@@ -67,7 +67,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="digest"></param>
         /// <returns>a string URL.</returns>
-        private string GetItemViewerUrl(ItemDigest digest, string ISSAPcode)
+        private string GetItemViewerUrl(ItemDigest digest, string iSSAPcode)
         {
             if (digest == null)
             {
@@ -75,7 +75,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
 
             string baseUrl = context.AppSettings().SettingsConfig.ItemViewerServiceURL;
-            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={ISSAPcode}";
+            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={iSSAPcode}";
         }
 
 
@@ -88,35 +88,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             var accessibilityResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSSAPCode);
             return accessibilityResources;
-        }
-
-
-        /// <summary>
-        /// Constructs an ItemViewModel with an ItemViewerService URL.
-        /// </summary>
-        /// <param name="bankKey"></param>
-        /// <param name="itemKey"></param>
-        /// <returns>an ItemViewModel.</returns>
-        public ItemViewModel GetItemViewModel(int bankKey, int itemKey)
-        {
-            return GetItemViewModel(bankKey, itemKey, string.Empty);
-        }
-
-        /// <summary>
-        /// Constructs an ItemViewModel with an ItemViewerService URL with accessibility resources
-        /// </summary>
-        /// <param name="bankKey"></param>
-        /// <param name="itemKey"></param>
-        /// <returns>an ItemViewModel.</returns>
-        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, List<AccessibilityResourceViewModel> accessibilityResourceViewModel)
-        {
-            if (accessibilityResourceViewModel == null)
-            {
-                throw new Exception("Invalid accessibility");
-            }
-
-            string ISSAPcode = accessibilityResourceViewModel.ToISSAP();
-            return GetItemViewModel(bankKey, itemKey, ISSAPcode);
         }
 
         /// <summary>
@@ -145,6 +116,34 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             List<string> labels = accResourceViewModels.Select(t => t.Label).ToList();
             return string.Join(", ", labels);
+        }
+
+        /// <summary>
+        /// Constructs an ItemViewModel with an ItemViewerService URL.
+        /// </summary>
+        /// <param name="bankKey"></param>
+        /// <param name="itemKey"></param>
+        /// <returns>an ItemViewModel.</returns>
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey)
+        {
+            return GetItemViewModel(bankKey, itemKey, string.Empty);
+        }
+
+        /// <summary>
+        /// Constructs an ItemViewModel with an ItemViewerService URL with accessibility resources
+        /// </summary>
+        /// <param name="bankKey"></param>
+        /// <param name="itemKey"></param>
+        /// <returns>an ItemViewModel.</returns>
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, List<AccessibilityResourceViewModel> accessibilityResourceViewModel)
+        {
+            if (accessibilityResourceViewModel == null)
+            {
+                throw new Exception("Invalid accessibility");
+            }
+
+            string iSSAPcode = accessibilityResourceViewModel.ToISSAP();
+            return GetItemViewModel(bankKey, itemKey, iSSAPcode);
         }
 
         /// <summary>

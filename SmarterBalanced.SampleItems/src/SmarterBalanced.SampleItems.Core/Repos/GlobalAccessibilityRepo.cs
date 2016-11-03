@@ -31,16 +31,16 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs a GlobalAccessibilityViewModel with ISSAP codes
         /// as the default selected values if ISSAPCode has a value.
         /// </summary>
-        /// <param name="ISSAPCode"></param>
+        /// <param name="iSSAPCode"></param>
         /// <returns></returns>
-        public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string ISSAPCode)
+        public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSSAPCode)
         {
             List<AccessibilityResource> globalAccResources = new List<AccessibilityResource>(context.GlobalAccessibilityResources);
 
             List<AccessibilityResourceViewModel> accResourceViewModels;
-            if (!string.IsNullOrEmpty(ISSAPCode))
+            if (!string.IsNullOrEmpty(iSSAPCode))
             {
-                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources, ISSAPCode);
+                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources, iSSAPCode);
             }
             else
             {
