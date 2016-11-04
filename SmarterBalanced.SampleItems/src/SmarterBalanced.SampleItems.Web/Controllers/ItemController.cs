@@ -20,7 +20,6 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return View();
         }
 
-
         /// <summary>
         /// Returns an ItemDigest given a bankKey and itemKey, setting
         /// ISSAP based on URL or cookie if URL ISSAP not specified.
@@ -33,7 +32,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
                 return BadRequest();
-            }
+            } 
 
             if (string.IsNullOrEmpty(iSSAP))
             {
@@ -52,15 +51,17 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
 
-        public IActionResult ResetLocalAccessibility()
+        // TODO: refactor to only take in bank key and itemkey, create all new localaccessibilitymodal
+        [HttpPost]
+        public IActionResult ResetToGlobalAccessibility(LocalAccessibilityViewModel localAccessibilityViewModel)
         {
-            
             string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
             var iSSAP = Request.Cookies[cookieName];
-            
-            // TODO: udpate model accessibility with issap
+            var localAccViewModel = repo.UpdateAccessibility(localAccessibilityViewModel, iSSAP);
 
-            throw new NotImplementedException();
+            ActionResult actionResult = PartialView("LocalAccessibilityPartial", localAccViewModel);
+
+            return actionResult;
         }
 
     }

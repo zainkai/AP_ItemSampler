@@ -16,16 +16,16 @@
 <hr/>
 
 <div class="row">
+
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <iframe class="itemviewer-iframe" src="@Model.ItemViewerServiceUrl"></iframe>
+        <iframe id="itemviewer-iframe" class="itemviewer-iframe" src="@Model.ItemViewerServiceUrl"></iframe>
     </div>
 </div>
-
 
 <div id="viewMore" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        <!-- Modal content-->
+        <!-- "View More" Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -44,7 +44,7 @@
 <div id="aboutThisItem" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        <!-- Modal content-->
+        <!-- "About This Item" Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -63,27 +63,14 @@
 <div id="accessibility" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        <!-- Modal content-->
+        <!-- Local Accessibility Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Item Accessibility</h4>
             </div>
-            <div class="modal-body">
-                @using (Html.BeginForm())
-                {
-                    @Html.EditorFor(m => m.AccessibilityResourceViewModels)
-                    <button class="btn btn-success" type="submit">Submit</button>
-                }
-                <br />
-                <button class="btn btn-info" type="button"
-                        onclick="location.href='@Url.Action("ResetLocalAccessibility", "Item")'">
-                    Reset
-                </button>
-                <br />
-                <br />
-                <b>The following accessibility resource(s) are not available:</b><br />
-                @Model.NonApplicableAccessibilityResources
+            <div id="accessibilityContent" class="modal-body">
+                @Html.Partial("LocalAccessibilityPartial", Model.LocalAccessibilityViewModel)
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -91,3 +78,90 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    function resetToGlobalAcc() {
+        $.ajax({
+            url: '@Url.Action("ResetToGlobalAccessibility", "Item")',
+            type: "POST",
+            data: modelData,
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (result) {
+                var id = "accessibilityContent";
+                manager.ReplaceAccessibilityContent(id, result);
+            },
+            failure: function (result){
+                console.log("SERVER RESET FAILURE");
+            },
+            error: function (result){
+                console.log("SERVER RESET ERROR");
+            }
+        });
+    }
+    
+    
+    function setIframeURL(val){
+        //todo
+    }
+
+
+    function ItemPageManager() {
+        var manager = this;
+        var accessibilityDict = { };
+
+        this.Setup = function () {
+            manager.BindAccessibilityChange();
+            manager.BindAccessibilityUpdateBtn();
+        }
+
+        this.ToISSAP = function () {
+            var keys = Object.values(accessibilityDict);
+            return keys.join(";");
+        }
+        
+        this.OnAccessibilityChange = function(eventData){
+            manager.SetAccessibilityDictItem(eventData.target);
+        }
+
+        this.SetAccessibilityDictItem = function(item){
+            var id = item.id;
+            var key = item.options[item.selectedIndex].value;
+            accessibilityDict[id] = key;
+        }
+
+        this.ReplaceAccessibilityContent = function(id, content){
+            var content = document.getElementById(id);
+            content.innerHTML = newContent;
+            manager.BindAccessibilityChange();
+        }
+
+        this.UpdateISSAP = function(eventData){
+            var iframe = document.getElementById("itemviewer-iframe");
+            var url = iframe.src;
+            var urlparts = url.split("issap");
+            var newurl = urlparts[0] + "issap=" + manager.ToISSAP();
+            iframe.src = newurl;
+            iframe.contentWindow.location.reload();
+        }
+
+        this.BindAccessibilityChange = function() {
+            var accessibilityElements = [].slice.call(document.getElementsByClassName("accessibilityResources"));
+
+            accessibilityElements.forEach(function(element) {
+                element.addEventListener("change", manager.OnAccessibilityChange);
+                manager.SetAccessibilityDictItem(element);
+            });
+        }
+
+        this.BindAccessibilityUpdateBtn = function () {
+            var btn = document.getElementById("accessibilityUpdateBtn");
+            btn.addEventListener("click", manager.UpdateISSAP);
+        }
+       
+    }
+
+    var manager = new ItemPageManager();
+    manager.Setup();
+   
+</script>

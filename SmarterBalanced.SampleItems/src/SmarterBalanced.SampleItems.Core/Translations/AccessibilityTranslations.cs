@@ -71,6 +71,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             accessibilityResourceViewModels = accessibilityResources.Select(t => new AccessibilityResourceViewModel
             {
                 SelectedCode = t.DefaultSelection,
+                DefaultCode = t.DefaultSelection,
                 Label = t.Label,
                 Description = t.Description,
                 AccessibilityListItems = ToSelectListItems(t?.Selections),
@@ -81,30 +82,53 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         }
 
         /// <summary>
+        /// Updates a List of AccessibilityResourceVIewModels 
+        /// with defaults or ISSAP code values.
+        /// </summary>
+        /// <param name="accResourceViewModels"></param>
+        /// <param name="iSSAP"></param>
+        /// <returns>a List of AccessibilityResourceViewModels.</returns>
+        public static List<AccessibilityResourceViewModel> UpdateAccessibilityResourceViewModels(List<AccessibilityResourceViewModel> accResourceViewModels, string iSSAP)
+        {
+            if (accResourceViewModels == null)
+            {
+                return accResourceViewModels;
+            }
+
+            var codes = ToISSAPList(iSSAP);
+
+            foreach (var accResourceViewModel in accResourceViewModels)
+            {
+                var accListItems = accResourceViewModel.AccessibilityListItems;
+                var accListItem = accListItems.SingleOrDefault(t => codes.Contains(t.Value));
+                if (accListItem != null)
+                {
+                    var selectedCode = accListItem.Value;
+                    accResourceViewModel.SelectedCode = selectedCode;
+                }
+                else
+                {
+                    accResourceViewModel.SelectedCode = accResourceViewModel.DefaultCode;
+                }
+            }
+
+            return accResourceViewModels;
+        }
+
+        /// <summary>
         /// Translates a List of AccessibilityResources into a List of 
         /// AccessibilityResourceVIewModels with defaults set from the ISSAP code.
         /// </summary>
         /// <param name="accessibilityResources"></param>
         /// <param name="iSSAPCode"></param>
-        /// <returns></returns>
+        /// <returns>a List of AccessibilityResources.</returns>
         public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSSAPCode)
         {
-            var accResourcesViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
-            var codes = ToISSAPList(iSSAPCode);
-
-            foreach(var accResourceViewModel in accResourcesViewModels)
-            {
-                var accListItems = accResourceViewModel.AccessibilityListItems;
-                var accListItem = accListItems.SingleOrDefault(t => codes.Contains(t.Value));
-                if(accListItem != null)
-                {
-                    var selectedCode = accListItem.Value;
-                    accResourceViewModel.SelectedCode = selectedCode;
-                }
-            }
-
-            return accResourcesViewModels;
+            var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
+            return UpdateAccessibilityResourceViewModels(accResourceViewModels, iSSAPCode);
         }
 
+
     }
+    
 }

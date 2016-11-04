@@ -10,6 +10,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
     {
         public string SelectedCode { get; set; }
 
+        public string DefaultCode { get; set; }
+
         public string Label { get; set; }
 
         public string Description { get; set; }

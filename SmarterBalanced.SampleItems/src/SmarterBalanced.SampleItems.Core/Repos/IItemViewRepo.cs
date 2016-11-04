@@ -18,8 +18,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         ItemViewModel GetItemViewModel(int bankKey, int itemKey);
 
-        ItemViewModel GetItemViewModel(int bankKey, int itemKey, List<AccessibilityResourceViewModel> accessibilityResourceViewModel);
-
         ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSSAPCode);
+
+        LocalAccessibilityViewModel UpdateAccessibility(LocalAccessibilityViewModel localAccViewModel, string iSSAP);
     }
 }

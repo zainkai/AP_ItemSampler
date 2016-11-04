@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmarterBalanced.SampleItems.Core.Translations;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
@@ -78,38 +77,39 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={iSSAPcode}";
         }
 
-
         /// <summary>
         /// Gets the item digest's accessibility resources as a viewmodel
         /// </summary>
         /// <param name="itemDigest"></param>
         /// <returns>List of accessibility resource family</returns>
-        private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModel(ItemDigest itemDigest, string iSSAPCode)
+        private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModels(List<AccessibilityResource> accResources, string iSSAPCode)
         {
-            var accessibilityResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSSAPCode);
-            return accessibilityResources;
+            return accResources.ToAccessibilityResourceViewModels(iSSAPCode);
         }
 
         /// <summary>
-        /// Sets applicable accessibility resources and non-applicable
-        /// accessibility resource string on the given ItemViewModel.
+        /// Constructs a LocalAccessibilityViewModel using AccessiblityResourceViewModels
         /// </summary>
         /// <param name="accResourceViewModels"></param>
-        private void ApplicableAccessibilityResources(List<AccessibilityResourceViewModel> accResourceViewModels, ItemViewModel itemViewModel)
+        private LocalAccessibilityViewModel GetLocalAccessibilityResources(List<AccessibilityResourceViewModel> accResourceViewModels)
         {
+            LocalAccessibilityViewModel localAccViewModel = new LocalAccessibilityViewModel();
+
             List<AccessibilityResourceViewModel> nonApplicableResources = accResourceViewModels
                 .Where(t => t.Disabled || t.AccessibilityListItems.TrueForAll(s => s.Disabled)).ToList();
 
-            itemViewModel.AccessibilityResourceViewModels = accResourceViewModels
+            localAccViewModel.AccessibilityResourceViewModels = accResourceViewModels
                 .Where(t => !nonApplicableResources.Contains(t))
                 .ToList();
 
-            itemViewModel.NonApplicableAccessibilityResources = ConcatAccessibilityResources(nonApplicableResources);
+            localAccViewModel.NonApplicableAccessibilityResources = ConcatAccessibilityResources(nonApplicableResources);
+
+            return localAccViewModel;
         }
 
         /// <summary>
         /// Joins accessibility resource view model labels into 
-        /// a semicolon-separated string
+        /// a comma-separated string
         /// </summary>
         /// <param name="accResourceViewModels"></param>
         private string ConcatAccessibilityResources(List<AccessibilityResourceViewModel> accResourceViewModels)
@@ -130,44 +130,45 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         /// <summary>
-        /// Constructs an ItemViewModel with an ItemViewerService URL with accessibility resources
+        /// Constructs an ItemViewModel with an ItemDigest, ItemViewerServiceURL,
+        /// and accessibiltiyResources
         /// </summary>
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns>an ItemViewModel.</returns>
-        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, List<AccessibilityResourceViewModel> accessibilityResourceViewModel)
-        {
-            if (accessibilityResourceViewModel == null)
-            {
-                throw new Exception("Invalid accessibility");
-            }
-
-            string iSSAPcode = accessibilityResourceViewModel.ToISSAP();
-            return GetItemViewModel(bankKey, itemKey, iSSAPcode);
-        }
-
-        /// <summary>
-        /// Constructs an ItemViewModel with an ItemViewerService URL and Accessibility.
-        /// </summary>
-        /// <param name="bankKey"></param>
-        /// <param name="itemKey"></param>
-        /// <returns>an ItemViewModel.</returns>
-        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSSAPCode)
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSSAP)
         {
             ItemViewModel itemView = null;
             ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
+
             if (itemDigest != null)
             {
                 itemView = new ItemViewModel();
                 itemView.ItemDigest = itemDigest;
-                itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSSAPCode);
+                itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSSAP);
 
-                var accResourceVMs = GetAccessibilityResourceViewModel(itemDigest, iSSAPCode);
-                ApplicableAccessibilityResources(accResourceVMs, itemView);
+                var accResourceVMs = GetAccessibilityResourceViewModels(itemDigest?.AccessibilityResources, iSSAP);
+                itemView.LocalAccessibilityViewModel = GetLocalAccessibilityResources(accResourceVMs);
             }
 
             return itemView;
         }
+        
+        /// <summary>
+        /// Updates a LocalAccessibilityViewModel with the given ISSAP code.
+        /// </summary>
+        /// <param name="localAccViewModel"></param>
+        /// <param name="iSSAP"></param>
+        /// <returns>a LocalAccessibilityViewModel.</returns>
+        public LocalAccessibilityViewModel UpdateAccessibility(LocalAccessibilityViewModel localAccViewModel, string iSSAP)
+        {
+            localAccViewModel.AccessibilityResourceViewModels = AccessibilityTranslations
+                .UpdateAccessibilityResourceViewModels(
+                localAccViewModel?.AccessibilityResourceViewModels, iSSAP);
+
+            return localAccViewModel;
+        }
 
     }
+
 }
