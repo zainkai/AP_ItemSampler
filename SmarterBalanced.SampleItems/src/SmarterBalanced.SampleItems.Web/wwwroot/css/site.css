@@ -175,8 +175,7 @@ hr {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin: 10px;
 }
 
 .card:hover {

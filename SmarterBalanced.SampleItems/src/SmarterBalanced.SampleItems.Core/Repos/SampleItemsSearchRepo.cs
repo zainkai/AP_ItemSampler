@@ -21,7 +21,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return context.ItemDigests.Where(i => i.Grade != GradeLevels.NA).ToList();
         }
 
-        public IList<ItemDigest> GetItemDigests(string terms, GradeLevels grades, IList<string> subjects, string claimType)
+        public IList<ItemDigest> GetItemDigests(string terms, GradeLevels grades, IList<string> subjects, string[] interactionTypes)
         {
             var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
 
@@ -33,22 +33,17 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             if (subjects != null && subjects.Any())
                 query = query.Where(i => subjects.Contains(i.Subject));
 
-            if (!string.IsNullOrEmpty(claimType))
-                query = query.Where(i => i.InteractionType == claimType);
+            if (interactionTypes.Any())
+                query = query.Where(i => interactionTypes.Contains(i.InteractionType));
 
             return query.ToList();
-        }
-
-        private IList<InteractionType> GetInteractionTypes()
-        {
-            return context.InteractionTypes;
         }
 
         public ItemsSearchViewModel GetItemsSearchViewModel()
         {
             return new ItemsSearchViewModel
             {
-                InteractionTypes = GetInteractionTypes().ToList()
+                InteractionTypes = context.InteractionTypes
             };
         }
 

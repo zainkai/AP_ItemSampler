@@ -17,13 +17,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            var model = sampleItemsSearchRepo.GetItemsSearchViewModel();
+            return View(model);
         }
 
         [HttpGet]
-        public IActionResult Search(string terms, GradeLevels gradeLevels, string[] subjects, string claimType)
+        public IActionResult Search(string terms, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
         {
-            var items = sampleItemsSearchRepo.GetItemDigests(terms, gradeLevels, subjects, claimType);
+            var items = sampleItemsSearchRepo.GetItemDigests(terms, gradeLevels, subjects, interactionTypes);
 
             return Json(items);
         }

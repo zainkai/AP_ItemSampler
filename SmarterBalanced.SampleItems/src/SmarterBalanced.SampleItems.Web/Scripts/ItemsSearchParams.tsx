@@ -2,7 +2,7 @@
 namespace ItemSearchParams {
 
     export interface Props {
-        subjectInteractionTypes: SubjectClaims;
+        interactionTypes: InteractionType[];
         onChange: (params: SearchAPIParams) => void;
     }
 
@@ -56,6 +56,14 @@ namespace ItemSearchParams {
             const containsSubject = subjects.indexOf(subject) !== -1;
             this.setState({
                 subjects: containsSubject ? subjects.filter(s => s !== subject) : subjects.concat([subject])
+            }, () => this.beginChangeTimeout());
+        }
+
+        toggleInteractionType(code: string) {
+            const interactionTypes = this.state.interactionTypes || [];
+            const containsSubject = interactionTypes.indexOf(code) !== -1;
+            this.setState({
+                interactionTypes: containsSubject ? interactionTypes.filter(s => s !== code) : interactionTypes.concat([code])
             }, () => this.beginChangeTimeout());
         }
 
@@ -131,27 +139,18 @@ namespace ItemSearchParams {
         }
 
         renderInteractionTypes() {
-            const selectedSubjects = this.state.subjects || [];
-            if (selectedSubjects.length === 0) {
-                return <div><p className="placeholder-text">Select a subject to show interaction types</p></div>;
-            }
-
             const selectedInteractionTypes = this.state.interactionTypes || [];
 
-            let elements: JSX.Element[] = [];
-            for (const subject of selectedSubjects) {
-                for (const interactionType of this.props.subjectInteractionTypes[subject]) {
-                    const element =
-                        <span className={(selectedInteractionTypes.indexOf(interactionType.value) === -1 ? "" : "selected") + " tag"}>
-                            {interactionType.text}
-                        </span>;
-                    elements.push(element);
-                }
-            }
+            const makeClass = (it: InteractionType) => (selectedInteractionTypes.indexOf(it.code) === -1 ? "" : "selected") + " tag";
+            const renderInteractionType = (it: InteractionType) =>
+                <span className={makeClass(it)}
+                    onClick={() => this.toggleInteractionType(it.code)}>
+                    {it.label}
+                </span>;
 
             return (
                 <div className="search-tags form-group">
-                    {elements}
+                    {this.props.interactionTypes.map(renderInteractionType)}
                 </div>
             );
         }

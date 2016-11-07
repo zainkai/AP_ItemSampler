@@ -8,6 +8,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
     public class ItemsSearchViewModel
     {
-        public List<InteractionType> InteractionTypes { get; set; }
+        public IList<InteractionType> InteractionTypes { get; set; }
     }
 }

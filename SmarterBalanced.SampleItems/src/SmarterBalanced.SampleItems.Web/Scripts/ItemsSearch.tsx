@@ -8,7 +8,7 @@ interface Success<T> {
     content: T;
 }
 
-interface Failure<T> {
+interface Failure {
     kind: "failure";
     content: string;
 }
@@ -18,11 +18,16 @@ interface Loading {
 }
 
 /** Represents the state of an asynchronously obtained resource at a particular time. */
-type Resource<T> = Loading | Success<T> | Failure<T>
+type Resource<T> = Loading | Success<T> | Failure
+
+interface InteractionType {
+    code: string;
+    label: string;
+}
 
 namespace ItemsSearch {
     export interface Props {
-        subjectClaims: SubjectClaims
+        interactionTypes: InteractionType[]
         apiClient: ItemsSearchClient
     }
 
@@ -68,7 +73,7 @@ namespace ItemsSearch {
              
             return (
                 <div className="search-container">
-                    <ItemSearchParams.Component subjectInteractionTypes={this.props.subjectClaims} onChange={(params) => this.beginSearch(params)} />
+                    <ItemSearchParams.Component interactionTypes={this.props.interactionTypes} onChange={(params) => this.beginSearch(params)} />
                     <div className="search-results">
                         {resultsElement}
                     </div>
@@ -104,14 +109,9 @@ interface SearchAPIParams {
     interactionTypes: string[];
 }
 
-// TODO: this is used to support showing/hiding or enabling/disabling tags based on whether they are associated with other tags.
-// Would it be better to just give an empty result set for a mutually exclusive set of tags?
-const subjectInteractionTypes = {
-    "ELA": [{ text: "Reading", value: "R" }],
-    "MATH": []
-};
-
-ReactDOM.render(
-    <ItemsSearch.Component apiClient={client}
-        subjectClaims={subjectInteractionTypes} />,
-    document.getElementById("search-container") as HTMLElement);
+function initializeItemsSearch(interactionTypes: any) {
+    ReactDOM.render(
+        <ItemsSearch.Component apiClient={client}
+            interactionTypes={interactionTypes} />,
+        document.getElementById("search-container") as HTMLElement);
+}
