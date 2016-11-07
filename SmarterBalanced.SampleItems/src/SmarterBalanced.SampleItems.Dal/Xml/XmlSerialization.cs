@@ -23,15 +23,14 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         /// <returns></returns>
         public static T DeserializeXml<T>(FileInfo file)
         {
-            T xml = default(T);
+            if (!file.Exists)
+                throw new FileNotFoundException(message: $"File does not exist: {file.FullName}", fileName: file.FullName);
 
-            if (file.Exists)
+            T xml = default(T);
+            var serializer = new XmlSerializer(typeof(T));
+            using (var reader = file.OpenRead())
             {
-                var serializer = new XmlSerializer(typeof(T));
-                using (var reader = file.OpenRead())
-                {
-                    xml = (T)serializer.Deserialize(reader);
-                }
+                xml = (T)serializer.Deserialize(reader);
             }
 
             return xml;
