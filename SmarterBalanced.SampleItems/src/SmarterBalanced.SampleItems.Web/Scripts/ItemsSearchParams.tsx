@@ -63,14 +63,15 @@ namespace ItemSearchParams {
             return (
                 <form className="search-params">
                     <div className="form-group">
-                        <label htmlFor="searchTerms">Terms</label>
                         <input
                             name="searchTerms"
                             className="form-control"
                             value={this.state.terms}
+                            placeholder="Search"
                             onChange={e => this.setState({ terms: (e.target as HTMLInputElement).value })} />
                     </div>
 
+                    <h4>Filter Tags</h4>
                     <label>Grade Levels</label>
                     {this.renderGrades()}
 
