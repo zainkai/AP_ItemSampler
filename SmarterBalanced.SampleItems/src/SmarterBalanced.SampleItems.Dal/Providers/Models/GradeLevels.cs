@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmarterBalanced.SampleItems.Dal.Xml.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,9 +47,37 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             }
         }
 
-        public static bool Contains(GradeLevels haystack, GradeLevels needle)
+        public static bool Contains(this GradeLevels haystack, GradeLevels needle)
         {
             return (haystack & needle) != GradeLevels.NA;
+        }
+
+        public static GradeLevels ToGradeLevels(this GradeType grade)
+        {
+            switch (grade)
+            {
+                case GradeType.Item03: return GradeLevels.Grade3;
+                case GradeType.Item04: return GradeLevels.Grade4;
+                case GradeType.Item05: return GradeLevels.Grade5;
+                case GradeType.Item06: return GradeLevels.Grade6;
+                case GradeType.Item07: return GradeLevels.Grade7;
+                case GradeType.Item08: return GradeLevels.Grade8;
+                case GradeType.Item09: return GradeLevels.Grade9;
+                case GradeType.Item10: return GradeLevels.Grade10;
+                case GradeType.Item11: return GradeLevels.Grade11;
+                case GradeType.Item12: return GradeLevels.Grade12;
+                default: throw new ArgumentException($"GradeLevel \"{grade}\" is not a valid grade type.");
+            }
+        }
+
+        public static GradeLevels ToGradeLevels(this GradeType[] grades)
+        {
+
+            GradeLevels gradeLevels = GradeLevels.NA;
+            foreach (GradeType grade in grades)
+                gradeLevels |= grade.ToGradeLevels();
+
+            return gradeLevels;
         }
     }
 }

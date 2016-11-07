@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SmarterBalanced.SampleItems.Dal.Xml.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     /// <summary>
@@ -8,7 +11,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     /// </summary>
     public class ItemDigest : IEquatable<ItemDigest>
     {
-        [Display(Name="Bank")]
+        [Display(Name = "Bank")]
         public int BankKey { get; set; }
 
         [Display(Name = "Item Key")]
@@ -32,7 +35,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         [Display(Name = "AssociatedStimulus")]
         public int? AssociatedStimulus { get; set; }
 
-        #region Helper Methods
+        public List<AccessibilityResource> AccessibilityResources { get; set; }
+
+        
 
         public override string ToString()
         {
@@ -47,8 +52,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         {
             return ($"{BankKey}-{ItemKey}").GetHashCode();
         }
-
-        #endregion
 
     }
 

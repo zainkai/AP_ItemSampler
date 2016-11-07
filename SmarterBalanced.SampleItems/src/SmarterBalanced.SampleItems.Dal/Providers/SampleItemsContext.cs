@@ -14,9 +14,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 {
     public class SampleItemsContext
     {
-        // TODO: lazy loading
         public virtual IList<ItemDigest> ItemDigests { get; set; }
-
+        public virtual IList<InteractionType> InteractionTypes { get; set; }
         public virtual IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public virtual IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
@@ -73,14 +72,84 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
             IEnumerable<ItemContents> itemContents = deserializeContents.Result;
 
-            ItemDigests = ItemDigestTranslation.ItemsToItemDigests(itemMetadata, itemContents).ToList();
-
             Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
             GlobalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
 
             AccessibilityResourceFamilies = generatedAccessibility.ResourceFamily
                 .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
                 .ToList();
+
+            ItemDigests = ItemDigestTranslation
+                .ItemsToItemDigests(
+                    itemMetadata,
+                    itemContents,
+                    AccessibilityResourceFamilies)
+                .ToList();
+
+            SetInteractionTypes();
+        }
+
+        // TODO: Get from XML
+        private void SetInteractionTypes()
+        {
+            InteractionTypes = new List<InteractionType>
+            {
+                new InteractionType
+                {
+                    Code = "GI",
+                    Label = "Grid Item"
+                },
+                new InteractionType
+                {
+                    Code = "MI",
+                    Label = "Match Interaction"
+                },
+                new InteractionType
+                {
+                    Code = "HTQ",
+                    Label = "Hot Text"
+                },
+                new InteractionType
+                {
+                    Code = "MC",
+                    Label = "Multiple Choice"
+                },
+                new InteractionType
+                {
+                    Code = "WER",
+                    Label = "Writing Extended Response"
+                },
+                new InteractionType
+                {
+                    Code = "SA",
+                    Label = "Short Answer"
+                },
+                new InteractionType
+                {
+                    Code = "MS",
+                    Label = "Multi-Select"
+                },
+                new InteractionType
+                {
+                    Code = "EBSR",
+                    Label = "Evidence Based Selected Response"
+                },
+                new InteractionType
+                {
+                    Code = "TI",
+                    Label = "Table Interaction"
+                },
+                new InteractionType
+                {
+                    Code = "ER",
+                    Label = "Extended Response"
+                },
+                new InteractionType
+                {
+                    Code = "EQ",
+                    Label = "Equation"
+                }
+            };
         }
 
         public AppSettings AppSettings()

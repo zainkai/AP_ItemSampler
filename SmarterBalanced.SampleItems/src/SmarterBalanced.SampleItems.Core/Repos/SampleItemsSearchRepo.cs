@@ -1,4 +1,5 @@
-﻿using SmarterBalanced.SampleItems.Dal.Providers;
+﻿using SmarterBalanced.SampleItems.Core.Repos.Models;
+using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,19 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 query = query.Where(i => i.InteractionType == claimType);
 
             return query.ToList();
+        }
+
+        private IList<InteractionType> GetInteractionTypes()
+        {
+            return context.InteractionTypes;
+        }
+
+        public ItemsSearchViewModel GetItemsSearchViewModel()
+        {
+            return new ItemsSearchViewModel
+            {
+                InteractionTypes = GetInteractionTypes().ToList()
+            };
         }
 
     }

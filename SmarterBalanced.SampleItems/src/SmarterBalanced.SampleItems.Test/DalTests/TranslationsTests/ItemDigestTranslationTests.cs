@@ -1,7 +1,7 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Translations;
-using SmarterBalanced.SampleItems.Dal.Xml.Models;
+using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +23,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
-            contents.Item = new ItemXmlFieldRepresentation();
+            metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
+            contents.Item = new Gen.ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = testItemKey;
             metadata.Metadata.Grade = testGrade;
             metadata.Metadata.Target = "Test target string";
@@ -35,7 +35,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents);
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>());
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -54,8 +54,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
-            contents.Item = new ItemXmlFieldRepresentation();
+            metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
+            contents.Item = new Gen.ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = 1;
             metadata.Metadata.Grade = "7";
             metadata.Metadata.Target = "Test target string";
@@ -65,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>()));
             Assert.Equal("Cannot digest items with different ItemKey values.", exception.Message);
         }
 
@@ -98,8 +98,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 ItemMetadata metadata = new ItemMetadata();
                 ItemContents contents = new ItemContents();
 
-                metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
-                contents.Item = new ItemXmlFieldRepresentation();
+                metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
+                contents.Item = new Gen.ItemXmlFieldRepresentation();
 
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];
@@ -116,7 +116,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
             }
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList);
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>());
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

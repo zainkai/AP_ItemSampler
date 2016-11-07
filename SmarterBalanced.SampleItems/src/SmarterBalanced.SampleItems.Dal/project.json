@@ -1,6 +1,5 @@
 {
   "version": "1.0.0-*",
-
   "dependencies": {
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
@@ -12,13 +11,15 @@
     "System.Xml.XmlSerializer": "4.0.11",
     "System.Runtime.Serialization.Xml": "4.1.1",
     "System.Xml.XmlDocument": "4.0.1",
-    "AWSSDK.S3": "3.3.0.1",
-    "System.ComponentModel.Primitives": "4.1.0"
+    "System.ComponentModel.Primitives": "4.1.0",
+    "AWSSDK.S3": "3.3.1"
   },
-
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
+  },
+  "configurations": {
+    "Stage": {}
   }
 }
