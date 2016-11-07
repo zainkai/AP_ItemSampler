@@ -34,7 +34,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 query = query.Where(i => subjects.Contains(i.Subject));
 
             if (interactionTypes.Any())
-                query = query.Where(i => interactionTypes.Contains(i.InteractionType));
+                query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
 
             return query.ToList();
         }

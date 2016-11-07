@@ -30,19 +30,17 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Target { get; set; }
 
         [Display(Name = "Interaction Type")]
-        public string InteractionType { get; set; }
+        public string InteractionTypeCode { get; set; }
+
+        [Display(Name = "Interaction Type")]
+        public string InteractionTypeLabel { get; set; }
 
         [Display(Name = "AssociatedStimulus")]
         public int? AssociatedStimulus { get; set; }
 
         public List<AccessibilityResource> AccessibilityResources { get; set; }
 
-        
-
-        public override string ToString()
-        {
-            return $"{BankKey}-{ItemKey}";
-        }
+        public string Name { get; set; }
         public bool Equals(ItemDigest obj)
         {
             return GetHashCode() == obj.GetHashCode();

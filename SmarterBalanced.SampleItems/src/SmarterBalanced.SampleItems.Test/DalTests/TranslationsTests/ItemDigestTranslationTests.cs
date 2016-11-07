@@ -35,14 +35,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>());
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), new List<InteractionType>());
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
             Assert.Equal("Test target string", digest.Target);
             Assert.Equal("Test claim string", digest.Claim);
             Assert.Equal("MATH", digest.Subject);
-            Assert.Equal("EQ", digest.InteractionType);
+            Assert.Equal("EQ", digest.InteractionTypeCode);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>()));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), new List<InteractionType>()));
             Assert.Equal("Cannot digest items with different ItemKey values.", exception.Message);
         }
 
@@ -116,7 +116,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
             }
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>());
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), new List<InteractionType>());
 
             Assert.Equal(itemKeys.Length, digests.Count());
 
@@ -127,7 +127,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), digest.Grade);
                 Assert.Equal(testTarget + id, digest.Target);
                 Assert.Equal(testClaim + id, digest.Claim);
-                Assert.Equal(testInteractionType + id, digest.InteractionType);
+                Assert.Equal(testInteractionType + id, digest.InteractionTypeCode);
                 Assert.Equal(testSubject + id, digest.Subject);
             }
         }
