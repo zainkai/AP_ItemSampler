@@ -22,8 +22,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         public IActionResult Index()
         {
             string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
-            var iSSAP = Request.Cookies[cookieName];
-            GlobalAccessibilityViewModel viewmodel = repo.GetGlobalAccessibilityViewModel(iSSAP);
+            var iSAAP = Request.Cookies[cookieName];
+            GlobalAccessibilityViewModel viewmodel = repo.GetGlobalAccessibilityViewModel(iSAAP);
 
             return View(viewmodel);
         }
@@ -32,8 +32,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         public IActionResult Index(GlobalAccessibilityViewModel model)
         {
             string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
-            string iSSAPCode = repo.GetISSAPCode(model);
-            Response.Cookies.Append(cookieName, iSSAPCode);
+            string iSAAP = repo.GetISAAPCode(model);
+            Response.Cookies.Append(cookieName, iSAAP);
 
             return RedirectToAction("Index");
         }

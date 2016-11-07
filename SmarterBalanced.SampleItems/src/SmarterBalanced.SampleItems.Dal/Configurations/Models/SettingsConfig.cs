@@ -13,6 +13,6 @@
         public string AwsInstanceTag { get; set; }
         public string StatusUrl { get; set; }
         public string AccessibilityCookie { get; set; }
-        public string ISSAPUrlParam { get; set; }
+        public string ISAAPUrlParam { get; set; }
     }
 }

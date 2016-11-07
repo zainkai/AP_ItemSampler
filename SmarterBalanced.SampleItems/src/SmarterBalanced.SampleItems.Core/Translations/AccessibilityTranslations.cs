@@ -12,27 +12,27 @@ namespace SmarterBalanced.SampleItems.Core.Translations
     {
         /// <summary>
         /// Translates a list of AccessibilityResourceViewModels into
-        /// a comma-separated string of ISSAP codes.
+        /// a comma-separated string of ISAAP codes.
         /// </summary>
         /// <param name="items"></param>
-        /// <returns>a comma-separated string of ISSAP codes.</returns>
-        public static string ToISSAP(this List<AccessibilityResourceViewModel> items)
+        /// <returns>a comma-separated string of ISAAP codes.</returns>
+        public static string ToISAAP(this List<AccessibilityResourceViewModel> items)
         {
             return string.Join(";", items.Select(t => t.SelectedCode));
         }
 
         /// <summary>
-        /// Converts ISSAP format to list of strings
+        /// Converts ISAAP format to list of strings
         /// </summary>
-        /// <param name="iSSAPCode"></param>
+        /// <param name="iSAAPCode"></param>
         /// <returns>List of strings</returns>
-        public static List<string> ToISSAPList(string iSSAPCode)
+        public static List<string> ToISAAPList(string iSAAPCode)
         {
-            if (string.IsNullOrEmpty(iSSAPCode))
+            if (string.IsNullOrEmpty(iSAAPCode))
             {
                 return new List<string>();
             }
-            return iSSAPCode.Split(';').ToList();
+            return iSAAPCode.Split(';').ToList();
         }
 
         /// <summary>
@@ -81,21 +81,23 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             return accessibilityResourceViewModels;
         }
 
+
         /// <summary>
-        /// Updates a List of AccessibilityResourceVIewModels 
-        /// with defaults or ISSAP code values.
+        /// Translates a List of AccessibilityResources into a List of 
+        /// AccessibilityResourceVIewModels with defaults set from the ISAAP code.
         /// </summary>
-        /// <param name="accResourceViewModels"></param>
-        /// <param name="iSSAP"></param>
-        /// <returns>a List of AccessibilityResourceViewModels.</returns>
-        public static List<AccessibilityResourceViewModel> UpdateAccessibilityResourceViewModels(List<AccessibilityResourceViewModel> accResourceViewModels, string iSSAP)
+        /// <param name="accessibilityResources"></param>
+        /// <param name="iSAAPCode"></param>
+        /// <returns>a List of AccessibilityResources.</returns>
+        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSAAPCode)
         {
+            var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
             if (accResourceViewModels == null)
             {
                 return accResourceViewModels;
             }
 
-            var codes = ToISSAPList(iSSAP);
+            var codes = ToISAAPList(iSAAPCode);
 
             foreach (var accResourceViewModel in accResourceViewModels)
             {
@@ -113,19 +115,6 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             }
 
             return accResourceViewModels;
-        }
-
-        /// <summary>
-        /// Translates a List of AccessibilityResources into a List of 
-        /// AccessibilityResourceVIewModels with defaults set from the ISSAP code.
-        /// </summary>
-        /// <param name="accessibilityResources"></param>
-        /// <param name="iSSAPCode"></param>
-        /// <returns>a List of AccessibilityResources.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSSAPCode)
-        {
-            var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
-            return UpdateAccessibilityResourceViewModels(accResourceViewModels, iSSAPCode);
         }
 
 

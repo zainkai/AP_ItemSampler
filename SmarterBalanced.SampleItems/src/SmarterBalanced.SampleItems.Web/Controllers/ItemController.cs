@@ -22,46 +22,57 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         /// <summary>
         /// Returns an ItemDigest given a bankKey and itemKey, setting
-        /// ISSAP based on URL or cookie if URL ISSAP not specified.
+        /// ISAAP based on URL or cookie if URL ISAAP not specified.
         /// </summary>
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
-        /// <param name="iSSAP"></param>
-        public IActionResult Details(int? bankKey, int? itemKey, string iSSAP)
+        /// <param name="iSAAP"></param>
+        public IActionResult Details(int? bankKey, int? itemKey, string iSAAP)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
                 return BadRequest();
             } 
 
-            if (string.IsNullOrEmpty(iSSAP))
+            if (string.IsNullOrEmpty(iSAAP))
             {
                 string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
-                iSSAP = Request.Cookies[cookieName];
+                iSAAP = Request.Cookies[cookieName];
             }
 
-            ItemViewModel item = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSSAP);
-
-            if (item == null)
+            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
+            if (itemViewModel == null)
             {
                 return BadRequest();
             }
 
-            return View(item);
+            return View(itemViewModel);
         }
 
-
-        // TODO: refactor to only take in bank key and itemkey, create all new localaccessibilitymodal
-        [HttpPost]
-        public IActionResult ResetToGlobalAccessibility(LocalAccessibilityViewModel localAccessibilityViewModel)
+        /// <summary>
+        /// Resets item accessibility to global accessibility settings
+        /// or default if global cookie does not exist.
+        /// </summary>
+        /// <param name="bankKey"></param>
+        /// <param name="itemKey"></param>
+        /// <returns></returns>
+        public IActionResult ResetToGlobalAccessibility(int? bankKey, int? itemKey)
         {
+            if (!bankKey.HasValue || !itemKey.HasValue)
+            {
+                return BadRequest();
+            }
+
             string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
-            var iSSAP = Request.Cookies[cookieName];
-            var localAccViewModel = repo.UpdateAccessibility(localAccessibilityViewModel, iSSAP);
+            string iSAAP = Request.Cookies[cookieName];
 
-            ActionResult actionResult = PartialView("LocalAccessibilityPartial", localAccViewModel);
+            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
+            if (itemViewModel == null)
+            {
+                return BadRequest();
+            }
 
-            return actionResult;
+            return PartialView("_LocalAccessibility", itemViewModel.LocalAccessibilityViewModel);
         }
 
     }

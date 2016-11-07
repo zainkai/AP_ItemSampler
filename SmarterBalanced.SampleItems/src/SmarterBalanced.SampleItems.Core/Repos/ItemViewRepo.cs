@@ -66,7 +66,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="digest"></param>
         /// <returns>a string URL.</returns>
-        private string GetItemViewerUrl(ItemDigest digest, string iSSAPcode)
+        private string GetItemViewerUrl(ItemDigest digest, string iSAAPcode)
         {
             if (digest == null)
             {
@@ -74,7 +74,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
 
             string baseUrl = context.AppSettings().SettingsConfig.ItemViewerServiceURL;
-            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={iSSAPcode}";
+            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={iSAAPcode}";
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="itemDigest"></param>
         /// <returns>List of accessibility resource family</returns>
-        private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModels(List<AccessibilityResource> accResources, string iSSAPCode)
+        private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModels(List<AccessibilityResource> accResources, string iSAAPCode)
         {
-            return accResources.ToAccessibilityResourceViewModels(iSSAPCode);
+            return accResources.ToAccessibilityResourceViewModels(iSAAPCode);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns>an ItemViewModel.</returns>
-        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSSAP)
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSAAP)
         {
             ItemViewModel itemView = null;
             ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
@@ -145,28 +145,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             {
                 itemView = new ItemViewModel();
                 itemView.ItemDigest = itemDigest;
-                itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSSAP);
+                itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSAAP);
 
-                var accResourceVMs = GetAccessibilityResourceViewModels(itemDigest?.AccessibilityResources, iSSAP);
+                var accResourceVMs = GetAccessibilityResourceViewModels(itemDigest?.AccessibilityResources, iSAAP);
                 itemView.LocalAccessibilityViewModel = GetLocalAccessibilityResources(accResourceVMs);
             }
 
             return itemView;
-        }
-        
-        /// <summary>
-        /// Updates a LocalAccessibilityViewModel with the given ISSAP code.
-        /// </summary>
-        /// <param name="localAccViewModel"></param>
-        /// <param name="iSSAP"></param>
-        /// <returns>a LocalAccessibilityViewModel.</returns>
-        public LocalAccessibilityViewModel UpdateAccessibility(LocalAccessibilityViewModel localAccViewModel, string iSSAP)
-        {
-            localAccViewModel.AccessibilityResourceViewModels = AccessibilityTranslations
-                .UpdateAccessibilityResourceViewModels(
-                localAccViewModel?.AccessibilityResourceViewModels, iSSAP);
-
-            return localAccViewModel;
         }
 
     }

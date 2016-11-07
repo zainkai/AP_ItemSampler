@@ -88,13 +88,13 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         }
 
         [Fact(Skip = "Not implemented")]
-        public void TestItemsToISSAP()
+        public void TestItemsToISAAP()
         {
             throw new NotImplementedException();
         }
 
         [Fact(Skip = "Not implemented")]
-        public void TestISSAPtoItems()
+        public void TestISAAPtoItems()
         {
             throw new NotImplementedException();
         }
@@ -123,18 +123,18 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         }
 
         [Fact]
-        public void TestAccessibilityResourceToViewModelWithISSAP()
+        public void TestAccessibilityResourceToViewModelWithISAAP()
         {
             AccessibilityResource accResource = accessibilityResources[0];
             List<AccessibilityResource> accResources = new List<AccessibilityResource>
             {
                 accResource
             };
-            string ISSAP = "TDS_TEST3;";
-            string ExpectedCode = ISSAP.Split(';')[0];
+            string ISAAP = "TDS_TEST3;";
+            string ExpectedCode = ISAAP.Split(';')[0];
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
-                .ToAccessibilityResourceViewModels(accResources, ISSAP);
+                .ToAccessibilityResourceViewModels(accResources, ISAAP);
 
             Assert.Equal(accResources.Count(), accResourceViewModels.Count());
 
@@ -146,12 +146,12 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         }
 
         [Fact]
-        public void TestAccessibilityResourceToViewModelsWithISSAP()
+        public void TestAccessibilityResourceToViewModelsWithISAAP()
         {
-            string ISSAP = "TDS_TEST3;";
+            string ISAAP = "TDS_TEST3;";
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
-                .ToAccessibilityResourceViewModels(accessibilityResources, ISSAP);
+                .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
 
             Assert.Equal(accessibilityResources.Count(), accResourceViewModels.Count());
         }

@@ -28,19 +28,19 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         /// <summary>
-        /// Constructs a GlobalAccessibilityViewModel with ISSAP codes
-        /// as the default selected values if ISSAPCode has a value.
+        /// Constructs a GlobalAccessibilityViewModel with ISAAP codes
+        /// as the default selected values if ISAAPCode has a value.
         /// </summary>
-        /// <param name="iSSAPCode"></param>
+        /// <param name="iSAAPCode"></param>
         /// <returns></returns>
-        public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSSAPCode)
+        public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSAAPCode)
         {
             List<AccessibilityResource> globalAccResources = new List<AccessibilityResource>(context.GlobalAccessibilityResources);
 
             List<AccessibilityResourceViewModel> accResourceViewModels;
-            if (!string.IsNullOrEmpty(iSSAPCode))
+            if (!string.IsNullOrEmpty(iSAAPCode))
             {
-                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources, iSSAPCode);
+                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources, iSAAPCode);
             }
             else
             {
@@ -54,18 +54,18 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         /// <summary>
-        /// Generates an ISSAP code from a GlobalAccessibilityViewModel
+        /// Generates an ISAAP code from a GlobalAccessibilityViewModel
         /// </summary>
         /// <param name="globalAccessibilityViewModel"></param>
-        /// <returns>a ISSAP code string.</returns>
-        public string GetISSAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel)
+        /// <returns>a ISAAP code string.</returns>
+        public string GetISAAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel)
         {
             if(globalAccessibilityViewModel?.AccessibilityResourceViewModels == null)
             {
                 throw new Exception("Invalid accessibility");
             }
 
-            return globalAccessibilityViewModel?.AccessibilityResourceViewModels.ToISSAP();
+            return globalAccessibilityViewModel?.AccessibilityResourceViewModels.ToISAAP();
         }
     }
 }

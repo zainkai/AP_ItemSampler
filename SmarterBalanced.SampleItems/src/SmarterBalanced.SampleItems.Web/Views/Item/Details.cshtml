@@ -1,11 +1,6 @@
 ﻿@model SmarterBalanced.SampleItems.Core.Repos.Models.ItemViewModel
 
 <div class="local-nav">
-    <ol class="breadcrumb">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Library</a></li>
-        <li class="active">Data</li>
-    </ol>
     <ul class="list-inline">
         <li><a href="" data-toggle="modal" data-target="#viewMore">View More</a></li>
         <li><a href="" data-toggle="modal" data-target="#aboutThisItem">About This Item</a></li>
@@ -70,7 +65,7 @@
                 <h4 class="modal-title">Item Accessibility</h4>
             </div>
             <div id="accessibilityContent" class="modal-body">
-                @Html.Partial("LocalAccessibilityPartial", Model.LocalAccessibilityViewModel)
+                @Html.Partial("_LocalAccessibility", Model.LocalAccessibilityViewModel)
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -81,28 +76,25 @@
 
 <script>
 
+    // Resets item accessibility to global accessibility.
     function resetToGlobalAcc() {
+        var url = '@Html.Raw(Url.Action("ResetToGlobalAccessibility", "Item",
+                 new { bankKey = Model.ItemDigest.BankKey, itemKey = Model.ItemDigest.ItemKey }))';
         $.ajax({
-            url: '@Url.Action("ResetToGlobalAccessibility", "Item")',
-            type: "POST",
-            data: modelData,
+            url: url, 
+            type: "GET",
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             success: function (result) {
                 var id = "accessibilityContent";
                 manager.ReplaceAccessibilityContent(id, result);
             },
             failure: function (result){
-                console.log("SERVER RESET FAILURE");
+                console.log("RESET ACCESSIBILITY SERVER FAILURE");
             },
             error: function (result){
-                console.log("SERVER RESET ERROR");
+                console.log("RESET ACCESSIBILITY SERVER ERROR");
             }
         });
-    }
-    
-    
-    function setIframeURL(val){
-        //todo
     }
 
 
@@ -115,7 +107,7 @@
             manager.BindAccessibilityUpdateBtn();
         }
 
-        this.ToISSAP = function () {
+        this.ToISAAP = function () {
             var keys = Object.values(accessibilityDict);
             return keys.join(";");
         }
@@ -130,33 +122,37 @@
             accessibilityDict[id] = key;
         }
 
-        this.ReplaceAccessibilityContent = function(id, content){
-            var content = document.getElementById(id);
-            content.innerHTML = newContent;
+        this.ReplaceAccessibilityContent = function(id, newContent){
+            var modalContent = document.getElementById(id);
+            modalContent.innerHTML = newContent;
+
             manager.BindAccessibilityChange();
+            manager.BindAccessibilityUpdateBtn();
+            manager.UpdateISAAP();
         }
 
-        this.UpdateISSAP = function(eventData){
+        this.UpdateISAAP = function(eventData){
             var iframe = document.getElementById("itemviewer-iframe");
             var url = iframe.src;
-            var urlparts = url.split("issap");
-            var newurl = urlparts[0] + "issap=" + manager.ToISSAP();
-            iframe.src = newurl;
+            var urlparts = url.split("isaap");
+            console.log(urlparts);
+            console.log(manager.ToISAAP());
+            iframe.src = urlparts[0] + "isaap=" + manager.ToISAAP();
             iframe.contentWindow.location.reload();
         }
 
-        this.BindAccessibilityChange = function() {
+        this.BindAccessibilityUpdateBtn = function () {
+            var btn = document.getElementById("accessibilityUpdateBtn");
+            btn.addEventListener("click", manager.UpdateISAAP);
+        }
+
+        this.BindAccessibilityChange = function () {
             var accessibilityElements = [].slice.call(document.getElementsByClassName("accessibilityResources"));
 
             accessibilityElements.forEach(function(element) {
                 element.addEventListener("change", manager.OnAccessibilityChange);
                 manager.SetAccessibilityDictItem(element);
             });
-        }
-
-        this.BindAccessibilityUpdateBtn = function () {
-            var btn = document.getElementById("accessibilityUpdateBtn");
-            btn.addEventListener("click", manager.UpdateISSAP);
         }
        
     }

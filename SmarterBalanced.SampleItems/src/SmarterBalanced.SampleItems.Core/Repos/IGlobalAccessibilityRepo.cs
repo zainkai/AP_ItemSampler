@@ -6,9 +6,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public interface IGlobalAccessibilityRepo
     {
-        GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSSAPCode);
+        GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSAAPCode);
 
-        string GetISSAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel);
+        string GetISAAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel);
 
         AppSettings GetSettings();
     }
