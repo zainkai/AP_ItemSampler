@@ -37,7 +37,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             if (string.IsNullOrEmpty(ISSAP))
             {
-                string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+                string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
                 ISSAP = Request.Cookies[cookieName];
             }
 

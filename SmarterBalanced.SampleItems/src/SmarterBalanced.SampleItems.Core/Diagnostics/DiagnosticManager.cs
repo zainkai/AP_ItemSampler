@@ -50,7 +50,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
             }
             catch (AmazonServiceException)
             {
-                string msg = context.AppSettings().ExceptionMessages.ErrorDiagnosticApiAwsAccess;
+                string msg = context.AppSettings.ExceptionMessages.ErrorDiagnosticApiAwsAccess;
                 diagnosticRoot.AddErrorMessage(msg);
             }
 
@@ -67,7 +67,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
             }
             catch(Exception)
             {
-                string msg = context.AppSettings().ExceptionMessages.ErrorDiagnosticApiAwsNode;
+                string msg = context.AppSettings.ExceptionMessages.ErrorDiagnosticApiAwsNode;
                 diagnosticRoot.AddErrorMessage(msg);
             }
 
@@ -92,8 +92,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>a List<String> of IP addresses.</returns>
         private async Task<List<string>> GetAwsIps()
         {
-            string awsTagKey = context.AppSettings().SettingsConfig.AwsInstanceTag;
-            string awsRegion = context.AppSettings().SettingsConfig.AwsRegion;
+            string awsTagKey = context.AppSettings.SettingsConfig.AwsInstanceTag;
+            string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
             AmazonEC2Client ec2 = new AmazonEC2Client(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
 
             DescribeInstancesRequest request = new DescribeInstancesRequest();
@@ -127,7 +127,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>a Task<DiagnosticStatus>.</returns>
         private async Task<DiagnosticStatus> QueryAwsNode(string ipAddress, int level)
         {
-            string statusUrl = context.AppSettings().SettingsConfig.StatusUrl;
+            string statusUrl = context.AppSettings.SettingsConfig.StatusUrl;
             string uri = $"http://{ipAddress}{statusUrl}{level}";
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(uri);
@@ -300,8 +300,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         {
             ConfigurationStatus configurationStatus = new ConfigurationStatus
             {
-                ContentBucket = context.AppSettings().SettingsConfig.AwsS3Bucket,
-                AWSRegion = context.AppSettings().SettingsConfig.AwsRegion
+                ContentBucket = context.AppSettings.SettingsConfig.AwsS3Bucket,
+                AWSRegion = context.AppSettings.SettingsConfig.AwsRegion
             };
 
             if (string.IsNullOrEmpty(configurationStatus.ContentBucket))
@@ -337,7 +337,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>an AccessStatus object.</returns>
         private void GetReadStatus(AccessStatus accessStatus)
         {
-            string filepath = context.AppSettings().SettingsConfig.ContentRootDirectory;
+            string filepath = context.AppSettings.SettingsConfig.ContentRootDirectory;
 
             accessStatus.Readable = false;
             try
@@ -363,7 +363,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>an AccessStatus object.</returns>
         private void GetWriteStatus(AccessStatus accessStatus)
         {
-            string filepath = context.AppSettings().SettingsConfig.ContentRootDirectory;
+            string filepath = context.AppSettings.SettingsConfig.ContentRootDirectory;
 
             filepath = Path.Combine(filepath, Path.GetRandomFileName());
             while (File.Exists(filepath))
@@ -434,7 +434,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         {
             DependencyStatus dependencyStatus = new DependencyStatus();
 
-            string url = context.AppSettings().SettingsConfig.ItemViewerServiceURL;
+            string url = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
 
             HttpClient client = new HttpClient();
             HttpResponseMessage response;

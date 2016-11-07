@@ -23,9 +23,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Gets AppSettings
         /// </summary>
         /// <returns></returns>
-        public AppSettings GetSettings()
+        public AppSettings AppSettings
         {
-            return context.AppSettings();
+            get
+            {
+                return context.AppSettings;
+            }
         }
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return string.Empty;
             }
 
-            string baseUrl = context.AppSettings().SettingsConfig.ItemViewerServiceURL;
+            string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
             return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}?isaap={ISSAPcode}";
         }
 
