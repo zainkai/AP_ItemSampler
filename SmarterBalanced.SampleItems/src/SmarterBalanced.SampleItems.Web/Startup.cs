@@ -36,19 +36,13 @@ namespace SmarterBalanced.SampleItems.Web
         {
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc();
-            var appSettings = new AppSettings(Configuration); 
-            //Build configuration from appsettings.json
-            SampleItemsContext.RegisterSettings(appSettings);
-            SampleItemsContext.UpdateContent(appSettings);
-
-            // Injecting Singleton SampleItemsRepo into each Controller Repository
-            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
-
-            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(SampleItemsContext.Default));
-
-            services.AddScoped<IGlobalAccessibilityRepo>(provider => new GlobalAccessibilityRepo(SampleItemsContext.Default));
-
-            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(SampleItemsContext.Default));
+            AppSettings appSettings = new AppSettings(Configuration);
+            SampleItemsContext context = SampleItemsProvider.LoadContext(appSettings).Result;
+            
+            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(context));
+            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(context));
+            services.AddScoped<IGlobalAccessibilityRepo>(provider => new GlobalAccessibilityRepo(context));
+            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(context));
 
             services.AddRouting();
         }

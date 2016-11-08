@@ -8,7 +8,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public interface IItemViewRepo
     {
-        AppSettings GetSettings();
+        AppSettings AppSettings { get; }
 
         ItemDigest GetItemDigest(Func<ItemDigest, bool> predicate);
 

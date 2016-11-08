@@ -46,8 +46,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         {
             BlockingCollection<T> fileData = new BlockingCollection<T>();
 
-            await Task.Run(() => Parallel.ForEach<FileInfo>(files, (file) => { fileData.Add(DeserializeXml<T>(file)); }
-            ));
+            // TODO: do these Task.Runs improve performance?
+            await Task.Run(() => Parallel.ForEach(files, (file) => fileData.Add(DeserializeXml<T>(file))));
             return fileData;
         }
 
@@ -74,13 +74,13 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         /// <returns></returns>
         public static async Task<IEnumerable<FileInfo>> FindContentXmlFiles(string directory)
         {
-            IEnumerable<FileInfo> files;
             Regex filePattern = new Regex(@"item-\d+-\d+.xml");
             var getFiles = Task.Run(() =>
             {
                 return new DirectoryInfo(directory).GetFiles("*.xml", SearchOption.AllDirectories).Where(file => filePattern.IsMatch(file.Name));
             });
-            files = await getFiles;
+
+            IEnumerable<FileInfo> files = await getFiles;
             return files;
         }
     }

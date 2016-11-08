@@ -22,9 +22,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Gets AppSettings
         /// </summary>
         /// <returns></returns>
-        public AppSettings GetSettings()
+        public AppSettings AppSettings
         {
-            return context.AppSettings();
+            get
+            {
+                return context.AppSettings;
+            }
         }
 
         /// <summary>
