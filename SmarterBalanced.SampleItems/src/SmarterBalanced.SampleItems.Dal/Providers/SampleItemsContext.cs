@@ -14,9 +14,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 {
     public class SampleItemsContext
     {
-        // TODO: lazy loading
         public virtual IList<ItemDigest> ItemDigests { get; set; }
-
+        public virtual IList<InteractionType> InteractionTypes { get; set; }
         public virtual IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public virtual IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
 
@@ -59,12 +58,23 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
         private SampleItemsContext()
         {
+            SetAccessibility();
+            SetInteractionTypes();
+            SetItemDigests();
+        }
+
+        private void SetItemDigests()
+        {
+            if (AccessibilityResourceFamilies == null || InteractionTypes == null)
+            {
+                throw new Exception("Please load accessibility resources and interaction types");
+            }
             string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
             //Find xml files
             Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             Task<IEnumerable<FileInfo>> fetchContentsFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-            IEnumerable <FileInfo> metadataFiles = fetchMetadataFiles.Result;
+            IEnumerable<FileInfo> metadataFiles = fetchMetadataFiles.Result;
             IEnumerable<FileInfo> contentsFiles = fetchContentsFiles.Result;
 
             //Parse Xml Files
@@ -73,6 +83,19 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IEnumerable<ItemMetadata> itemMetadata = deserializeMetadata.Result;
             IEnumerable<ItemContents> itemContents = deserializeContents.Result;
 
+
+            ItemDigests = ItemDigestTranslation
+                .ItemsToItemDigests(
+                    itemMetadata,
+                    itemContents,
+                    AccessibilityResourceFamilies,
+                    InteractionTypes)
+                .ToList();
+        }
+
+        private void SetAccessibility()
+        {
+
             Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(new FileInfo(settings.SettingsConfig.AccommodationsXMLPath));
             GlobalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
 
@@ -80,12 +103,68 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 .Select(f => f.ToAccessibilityResourceFamily(GlobalAccessibilityResources))
                 .ToList();
 
-            ItemDigests = ItemDigestTranslation
-                .ItemsToItemDigests(
-                    itemMetadata,
-                    itemContents,
-                    AccessibilityResourceFamilies)
-                .ToList();
+        }
+        // TODO: Get from XML
+        private void SetInteractionTypes()
+        {
+            InteractionTypes = new List<InteractionType>
+            {
+                new InteractionType
+                {
+                    Code = "GI",
+                    Label = "Grid Item"
+                },
+                new InteractionType
+                {
+                    Code = "MI",
+                    Label = "Match Interaction"
+                },
+                new InteractionType
+                {
+                    Code = "HTQ",
+                    Label = "Hot Text"
+                },
+                new InteractionType
+                {
+                    Code = "MC",
+                    Label = "Multiple Choice"
+                },
+                new InteractionType
+                {
+                    Code = "WER",
+                    Label = "Writing Extended Response"
+                },
+                new InteractionType
+                {
+                    Code = "SA",
+                    Label = "Short Answer"
+                },
+                new InteractionType
+                {
+                    Code = "MS",
+                    Label = "Multi-Select"
+                },
+                new InteractionType
+                {
+                    Code = "EBSR",
+                    Label = "Evidence Based Selected Response"
+                },
+                new InteractionType
+                {
+                    Code = "TI",
+                    Label = "Table Interaction"
+                },
+                new InteractionType
+                {
+                    Code = "ER",
+                    Label = "Extended Response"
+                },
+                new InteractionType
+                {
+                    Code = "EQ",
+                    Label = "Equation"
+                }
+            };
         }
 
         public AppSettings AppSettings()

@@ -1,16 +1,16 @@
-﻿@model IList<SmarterBalanced.SampleItems.Dal.Providers.Models.ItemDigest>
-<h1>Items</h1>
-<hr />
-<div class="container">
-    @foreach (var item in Model)
-    {
-        @Html.DisplayFor(model => item, "ItemDigestCard")
-        <br />
-    }
-</div>
+﻿@using SmarterBalanced.SampleItems.Core.Repos.Models
+@model ItemsSearchViewModel
 
+<h1>Sample Items Search</h1>
+<hr />
+<div id="search-container"></div>
+
+@section Scripts {
+<script src="~/scripts/GradeLevels.js"></script>
+<script src="~/scripts/ItemsSearchParams.js"></script>
+<script src="~/scripts/ItemCard.js"></script>
+<script src="~/scripts/ItemsSearch.js"></script>
 <script>
-    function itemPageLink(bankKey, itemKey) {
-        window.location = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
-    }
+    initializeItemsSearch(@Json.Serialize(Model.InteractionTypes));
 </script>
+}

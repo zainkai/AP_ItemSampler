@@ -22,7 +22,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static ItemDigest ItemToItemDigest(
             ItemMetadata itemMetadata,
             ItemContents itemContents,
-            IList<AccessibilityResourceFamily> resourceFamilies)
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            IList<InteractionType> interactionTypes)
         {
             if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
             {
@@ -33,13 +34,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
             digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
-            digest.Target = itemMetadata.Metadata.Target;
+            digest.Target = itemMetadata.Metadata.Target; 
             digest.Subject = itemMetadata.Metadata.Subject;
-            digest.InteractionType = itemMetadata.Metadata.InteractionType;
+            digest.InteractionTypeCode = itemMetadata.Metadata.InteractionType;
             digest.Claim = itemMetadata.Metadata.Claim;
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
-            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources; 
-
+            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources;
+            digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
+            digest.Name = $"{digest.Subject} {digest.Grade.ToString()} {digest.InteractionTypeCode}";
             return digest;
         }
 
@@ -53,7 +55,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static IEnumerable<ItemDigest> ItemsToItemDigests(
             IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents,
-            IList<AccessibilityResourceFamily> resourceFamilies)
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            IList<InteractionType> interactionTypes)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
@@ -63,7 +66,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies));
+                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies, interactionTypes));
                 }
                 else if (itemsCount > 1)
                 {

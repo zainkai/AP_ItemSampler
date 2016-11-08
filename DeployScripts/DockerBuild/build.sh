@@ -16,4 +16,4 @@ docker tag $IMAGE_NAME:$TAG $REPO$IMAGE_NAME:$TAG
 docker push $REPO$IMAGE_NAME:$TAG
 
 #Update running ECS tasks
-aws ecs update-service --region us-west-2 --service $SERVICE_NAME --cluster $ECS_CLUSTER
+#aws ecs update-service --region us-west-2 --service $SERVICE_NAME --cluster $ECS_CLUSTER
