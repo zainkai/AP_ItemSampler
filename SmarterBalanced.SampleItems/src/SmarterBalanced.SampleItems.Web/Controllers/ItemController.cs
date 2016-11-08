@@ -36,7 +36,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             if (string.IsNullOrEmpty(iSAAP))
             {
-                string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+                string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
                 iSAAP = Request.Cookies[cookieName];
             }
 
@@ -63,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 return BadRequest();
             }
 
-            string cookieName = repo.GetSettings().SettingsConfig.AccessibilityCookie;
+            string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
             string iSAAP = Request.Cookies[cookieName];
 
             ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);

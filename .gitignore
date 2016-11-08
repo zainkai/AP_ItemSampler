@@ -253,3 +253,4 @@ paket-files/
 
 # whatever _references.js is, I don't think I want it
 _references.js
+/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/wwwroot/scripts
