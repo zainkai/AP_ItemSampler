@@ -74,90 +74,11 @@
     </div>
 </div>
 
+<script src="~/scripts/ItemAccessibility.js"></script>
+
 <script>
+    var url = '@Html.Raw(Url.Action("ResetToGlobalAccessibility", "Item",
+        new { bankKey = Model.ItemDigest.BankKey, itemKey = Model.ItemDigest.ItemKey }))';
 
-    // Resets item accessibility to global accessibility.
-    function resetToGlobalAcc() {
-        var url = '@Html.Raw(Url.Action("ResetToGlobalAccessibility", "Item",
-                 new { bankKey = Model.ItemDigest.BankKey, itemKey = Model.ItemDigest.ItemKey }))';
-        $.ajax({
-            url: url, 
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            success: function (result) {
-                var id = "accessibilityContent";
-                manager.ReplaceAccessibilityContent(id, result);
-            },
-            failure: function (result){
-                console.log("RESET ACCESSIBILITY SERVER FAILURE");
-            },
-            error: function (result){
-                console.log("RESET ACCESSIBILITY SERVER ERROR");
-            }
-        });
-    }
-
-
-    function ItemPageManager() {
-        var manager = this;
-        var accessibilityDict = { };
-
-        this.Setup = function () {
-            manager.BindAccessibilityChange();
-            manager.BindAccessibilityUpdateBtn();
-        }
-
-        this.ToISAAP = function () {
-            var keys = Object.values(accessibilityDict);
-            return keys.join(";");
-        }
-        
-        this.OnAccessibilityChange = function(eventData){
-            manager.SetAccessibilityDictItem(eventData.target);
-        }
-
-        this.SetAccessibilityDictItem = function(item){
-            var id = item.id;
-            var key = item.options[item.selectedIndex].value;
-            accessibilityDict[id] = key;
-        }
-
-        this.ReplaceAccessibilityContent = function(id, newContent){
-            var modalContent = document.getElementById(id);
-            modalContent.innerHTML = newContent;
-
-            manager.BindAccessibilityChange();
-            manager.BindAccessibilityUpdateBtn();
-            manager.UpdateISAAP();
-        }
-
-        this.UpdateISAAP = function(eventData){
-            var iframe = document.getElementById("itemviewer-iframe");
-            var url = iframe.src;
-            var urlparts = url.split("isaap");
-            console.log(urlparts);
-            console.log(manager.ToISAAP());
-            iframe.src = urlparts[0] + "isaap=" + manager.ToISAAP();
-            iframe.contentWindow.location.reload();
-        }
-
-        this.BindAccessibilityUpdateBtn = function () {
-            var btn = document.getElementById("accessibilityUpdateBtn");
-            btn.addEventListener("click", manager.UpdateISAAP);
-        }
-
-        this.BindAccessibilityChange = function () {
-            var accessibilityElements = [].slice.call(document.getElementsByClassName("accessibilityResources"));
-
-            accessibilityElements.forEach(function(element) {
-                element.addEventListener("change", manager.OnAccessibilityChange);
-                manager.SetAccessibilityDictItem(element);
-            });
-        }
-       
-    }
-
-    var manager = new ItemPageManager();
-    manager.Setup();
-   
+    initializeItemAccessibility(url);
 </script>

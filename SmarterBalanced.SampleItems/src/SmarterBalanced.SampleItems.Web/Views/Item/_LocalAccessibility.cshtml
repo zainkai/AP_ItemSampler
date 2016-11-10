@@ -3,12 +3,11 @@
 @Html.EditorFor(m => m.AccessibilityResourceViewModels)
 <br />
 
-<button id="accessibilityUpdateBtn" class="btn btn-success" type="button">
+<button id="btn-accessibility-update" class="btn btn-success" type="button" data-dismiss="modal">
     Update
 </button>
 
-<button class="btn btn-info" type="button"
-        onclick="resetToGlobalAcc()">
+<button id="btn-accessibility-reset" class="btn btn-info" type="button" data-dismiss="modal">
     Reset
 </button>
 
