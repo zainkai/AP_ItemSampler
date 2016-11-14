@@ -48,7 +48,7 @@
       "**/*.cshtml",
       "../../AccessibilityAccommodationConfigurations/",
       "docker-compose.yml",
-      "appsettings.*.json",
+      "appsettings*.json",
       "Dockerfile",
       ".dockerignore"
     ]
