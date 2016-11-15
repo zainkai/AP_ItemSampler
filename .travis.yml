@@ -27,9 +27,10 @@ after_success:
   - export PATH=$PATH:$HOME/.local/bin
   - eval $(aws ecr get-login --region us-west-2)
   - dotnet restore /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/
-  - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/project.json
-  - cd /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/bin/Debug/netcoreapp1.0/publish
-  - ls -pla
+  - dotnet build
+  - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o /home/travis/build/osu-cass/SampleItemsWebsite/publish/
+  - cd /home/travis/build/osu-cass/SampleItemsWebsite/publish/
+  - ls -pla wwwroot/
   - docker build -t sampleitemscode .
   - docker tag sampleitemscode:latest 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:$BRANCH
   - docker push 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:$BRANCH
