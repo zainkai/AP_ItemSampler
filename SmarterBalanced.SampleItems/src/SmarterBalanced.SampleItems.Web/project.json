@@ -44,14 +44,17 @@
   "publishOptions": {
     "include": [
       "wwwroot",
+      "wwwroot/scripts/*.js",
       "web.config",
       "**/*.cshtml",
       "../../AccessibilityAccommodationConfigurations/",
       "docker-compose.yml",
-      "appsettings.*.json",
+      "appsettings*.json",
       "Dockerfile",
       ".dockerignore"
-    ]
+
+    ],
+    "exclude": [ "wwwroot/scripts/*.js.map" ]
   },
   "scripts": {
     "postpublish": [
