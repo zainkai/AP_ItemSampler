@@ -27,7 +27,7 @@ after_success:
   - export PATH=$PATH:$HOME/.local/bin
   - eval $(aws ecr get-login --region us-west-2)
   - dotnet restore /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/
-  - dotnet build
+  - dotnet build /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
   - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o /home/travis/build/osu-cass/SampleItemsWebsite/publish/
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/publish/
   - ls -pla wwwroot/
