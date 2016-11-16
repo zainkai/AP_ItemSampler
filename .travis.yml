@@ -13,9 +13,8 @@ before_script:
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - cd ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
 
-
 script: 
-  - dotnet restore
+  - dotnet restore ../
   - dotnet build #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
   - 
   - npm install #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/package.json
