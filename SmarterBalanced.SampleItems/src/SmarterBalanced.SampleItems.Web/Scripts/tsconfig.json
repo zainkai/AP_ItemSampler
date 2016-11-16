@@ -4,7 +4,7 @@
     "noEmitOnError": false,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es2015",
+    "target": "es6",
     "outDir": "../wwwroot/scripts",
     "jsx": "react",
     "strictNullChecks": true
