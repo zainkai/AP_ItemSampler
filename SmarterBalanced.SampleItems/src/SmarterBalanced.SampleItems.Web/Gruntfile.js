@@ -6,12 +6,13 @@ module.exports = function (grunt) {
     grunt.initConfig({
         clean: ["wwwroot/scripts/*", "temp/"],
 
-        uglify: {
-            all: {
-                src: ["wwwroot/scripts/*.js"],
-                dest: "wwwroot/scripts/*.min.js"
-            }
-        },
+        // TODO: Minify JS eventually
+        //uglify: {
+        //    all: {
+        //        src: ["wwwroot/scripts/*.js"],
+        //        dest: "wwwroot/scripts/*.min.js"
+        //    }
+        //},
 
         cssmin: {
             options: {
@@ -46,7 +47,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-ts');
 
-    grunt.registerTask("all", ['clean', 'ts', 'cssmin', 'uglify']);
+    grunt.registerTask("all", ['clean', 'ts', 'cssmin']); //,'uglify']); // TODO: Minify JS eventually
     grunt.registerTask("tsrecompile", ['clean', 'ts']);
 
 };
