@@ -15,11 +15,11 @@ before_script:
 
 script: 
   - dotnet restore ../
-  - dotnet build #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-  - 
-  - npm install #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/package.json
-  - grunt all #/home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/ all
-  - dotnet test ../SmarterBalanced.SampleItems.Test/project.json #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
+  - dotnet build 
+  - npm install 
+  - grunt all
+  - cd /home/travis/build/osu-cass/SampleItemsWebsite/
+  - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
   # TODO: Run typescript tests
 
 matrix:
