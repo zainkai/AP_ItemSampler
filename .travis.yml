@@ -11,14 +11,16 @@ services:
 before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+  - cd ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
 
 
 script: 
   - dotnet restore
-  - dotnet build ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-  - npm install ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/package.json
-  - grunt /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/ all
-  - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
+  - dotnet build #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+  - 
+  - npm install #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/package.json
+  - grunt all #/home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/ all
+  - dotnet test ../SmarterBalanced.SampleItems.Test/project.json #./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
   # TODO: Run typescript tests
 
 matrix:
