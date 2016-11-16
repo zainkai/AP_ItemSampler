@@ -2,7 +2,7 @@ language: csharp
 sudo: required
 
 install:
-  - sudo apt-get install npm && sudo apt-get install nodejs
+  - sudo apt-get update && sudo apt-get install npm && sudo apt-get install nodejs
   - ln -s /usr/bin/nodejs /usr/bin/node
 
 services:
