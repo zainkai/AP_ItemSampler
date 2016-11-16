@@ -1,6 +1,10 @@
 language: csharp
 sudo: required
 
+install:
+  - apt-get install npm && apt-get install nodejs
+  - ln -s /usr/bin/nodejs /usr/bin/node
+
 services:
   - docker
 
@@ -8,9 +12,14 @@ before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
 
+
 script: 
   - dotnet restore
+  - dotnet build ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+  - npm install ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/package.json
+  - grunt /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/ all
   - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
+  # TODO: Run typescript tests
 
 matrix:
   include:
@@ -26,7 +35,6 @@ after_success:
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
   - eval $(aws ecr get-login --region us-west-2)
-  - dotnet restore /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/
   - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/project.json
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/bin/Debug/netcoreapp1.0/publish
   - docker build -t sampleitemscode .
