@@ -1,13 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Core.Interfaces;
-using SmarterBalanced.SampleItems.Core.Models.DiagnosticModels;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using SmarterBalanced.SampleItems.Core.Diagnostics;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -21,7 +14,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             diagnosticManager = manager;
         }
 
-        public async Task<ContentResult> Index(int level = 0)
+        public async Task<IActionResult> Index(int level = 0)
         {
             var xmlString = await diagnosticManager.GetDiagnosticStatusesAsync(level);
 
@@ -31,7 +24,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             };
         }
 
-        public async Task<ContentResult> StatusLocal(int level = 0)
+        public async Task<IActionResult> StatusLocal(int level = 0)
         {
             var xmlString = await diagnosticManager.GetDiagnosticStatusAsync(level);
 

@@ -1,5 +1,5 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
-using SmarterBalanced.SampleItems.Dal.Models;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,23 +20,41 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <param name="itemMetadata"></param>
         /// <param name="itemContents"></param>
         /// <returns></returns>
-        public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata, ItemContents itemContents)
+        public static ItemDigest ItemToItemDigest(
+            ItemMetadata itemMetadata,
+            ItemContents itemContents,
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            IList<InteractionType> interactionTypes)
         {
+            if(itemMetadata?.Metadata == null)
+            {
+                throw new ArgumentNullException(nameof(itemMetadata.Metadata));
+            }
+
+            if (itemContents?.Item == null)
+            {
+                throw new ArgumentNullException(nameof(itemMetadata.Metadata));
+            }
+
             if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
             {
-                throw new SampleItemsContextException("Cannot digest items with different ItemKey values.");
+                throw new SampleItemsContextException("Cannot digest items with different ItemKey values.\n"
+                    + $"Content Item Key: {itemContents.Item.ItemKey} Metadata Item Key:{itemMetadata.Metadata.ItemKey}");
             }
 
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
-            digest.Grade = itemMetadata.Metadata.Grade;
-            digest.Target = itemMetadata.Metadata.Target;
+            digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
+            digest.ItemType = itemContents.Item.ItemType;
+            digest.Target = itemMetadata.Metadata.Target; 
             digest.Subject = itemMetadata.Metadata.Subject;
-            digest.InteractionType = itemMetadata.Metadata.InteractionType;
+            digest.InteractionTypeCode = itemMetadata.Metadata.InteractionType;
             digest.Claim = itemMetadata.Metadata.Claim;
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
-
+            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources;
+            digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
+            digest.Name = $"{digest.Subject} {digest.Grade.ToString()} {digest.InteractionTypeCode}";
             return digest;
         }
 
@@ -47,23 +65,29 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <param name="itemMetadata"></param>
         /// <param name="itemContents"></param>
         /// <returns></returns>
-        public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata, IEnumerable<ItemContents> itemContents)
+        public static IEnumerable<ItemDigest> ItemsToItemDigests(
+            IEnumerable<ItemMetadata> itemMetadata,
+            IEnumerable<ItemContents> itemContents,
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            IList<InteractionType> interactionTypes)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
-            Parallel.ForEach<ItemMetadata>(itemMetadata, (metadata) =>
+            Parallel.ForEach(itemMetadata, metadata =>
             {
-                var countitems = itemContents.Where(c => c.Item.ItemKey == metadata.Metadata.ItemKey);
+                var matchingItems = itemContents.Where(c => c.Item.ItemKey == metadata.Metadata.ItemKey);
+                var itemsCount = matchingItems.Count();
 
-                if (countitems.Count() == 1)
+                if (itemsCount == 1)
                 {
-                    digests.Add(ItemToItemDigest(metadata, countitems.First()));
+                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies, interactionTypes));
                 }
-                else if (countitems.Count() > 1)
+                else if (itemsCount > 1)
                 {
                     throw new SampleItemsContextException("Multiple ItemContents wih ItemKey: " + metadata.Metadata.ItemKey + " found.");
                 }
+                // TODO: log a warning if item count is 0
             });
-            return digests as IEnumerable<ItemDigest>;
+            return digests;
         }
     }
 }

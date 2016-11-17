@@ -251,5 +251,10 @@ paket-files/
 .idea/
 *.sln.iml
 
-# whatever _references.js is, I don't think I want it
+#Javascript/Typescript
 _references.js
+/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/wwwroot/scripts
+/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/.tscache/*
+
+# minified css
+**/*.min.css

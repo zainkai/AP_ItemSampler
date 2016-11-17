@@ -1,0 +1,19 @@
+﻿@model SmarterBalanced.SampleItems.Core.Repos.Models.LocalAccessibilityViewModel
+
+<div id="local-accessibility-content">
+    @Html.EditorFor(m => m.AccessibilityResourceViewModels)
+    <br />
+
+    <button id="btn-accessibility-update" class="btn btn-success" type="button" data-dismiss="modal">
+        Update
+    </button>
+
+    <button id="btn-accessibility-reset" class="btn btn-info" type="button" data-dismiss="modal">
+        Reset
+    </button>
+
+    <br /><br />
+    <b>The following accessibility resource(s) are not available:</b>
+    <br />
+    @Model.NonApplicableAccessibilityResources
+</div>

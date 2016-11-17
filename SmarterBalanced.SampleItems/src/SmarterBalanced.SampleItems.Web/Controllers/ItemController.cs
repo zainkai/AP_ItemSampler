@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Core.Interfaces;
-using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Dal.Models;
-using SmarterBalanced.SampleItems.Core.Models;
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
+using System;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemController : Controller
     {
-        private IItemViewRepo itemViewRepo;
+        private IItemViewRepo repo;
 
-        public ItemController(IItemViewRepo repo)
+        public ItemController(IItemViewRepo itemViewRepo)
         {
-            itemViewRepo = repo;
+            repo = itemViewRepo;
         }
 
         // GET: /<controller>/
@@ -28,26 +21,60 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         /// <summary>
-        /// Returns an ItemDigest given a bankKey and itemKey
+        /// Returns an ItemDigest given a bankKey and itemKey, setting
+        /// ISAAP based on URL or cookie if URL ISAAP not specified.
+        /// </summary>
+        /// <param name="bankKey"></param>
+        /// <param name="itemKey"></param>
+        /// <param name="iSAAP"></param>
+        public IActionResult Details(int? bankKey, int? itemKey, string iSAAP)
+        {
+            if (!bankKey.HasValue || !itemKey.HasValue)
+            {
+                return BadRequest();
+            } 
+
+            if (string.IsNullOrEmpty(iSAAP))
+            {
+                string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
+                iSAAP = Request.Cookies[cookieName];
+            }
+
+            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
+            if (itemViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            return View(itemViewModel);
+        }
+
+        /// <summary>
+        /// Resets item accessibility to global accessibility settings
+        /// or default if global cookie does not exist.
         /// </summary>
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns></returns>
-        public IActionResult Details(int? bankKey, int? itemKey)
+        public IActionResult ResetToGlobalAccessibility(int? bankKey, int? itemKey)
         {
-            if(!bankKey.HasValue || !itemKey.HasValue)
+            if (!bankKey.HasValue || !itemKey.HasValue)
             {
                 return BadRequest();
             }
 
-            ItemViewModel item = itemViewRepo.GetItemViewModel(bankKey.Value, itemKey.Value);
+            string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
+            string iSAAP = Request.Cookies[cookieName];
 
-            if (item == null)
+            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
+            if (itemViewModel == null)
             {
                 return BadRequest();
             }
 
-            return View(item);
+            return PartialView("_LocalAccessibility", itemViewModel.LocalAccessibilityViewModel);
         }
+
     }
+
 }

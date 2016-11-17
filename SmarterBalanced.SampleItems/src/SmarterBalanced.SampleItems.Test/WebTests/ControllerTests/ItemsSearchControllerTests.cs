@@ -1,11 +1,8 @@
 ﻿using Moq;
-using SmarterBalanced.SampleItems.Core.Interfaces;
-using SmarterBalanced.SampleItems.Dal.Models;
+using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Web.Controllers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -26,25 +23,25 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 {
                     BankKey = goodBankKey,
                     ItemKey = goodItemKey,
-                    Grade = "6"
+                    Grade = GradeLevels.Grade6
                 },
                 new ItemDigest
                 {
                     BankKey = goodBankKey,
                     ItemKey = badItemKey,
-                    Grade = "High School"
+                    Grade = GradeLevels.High
                 },
                 new ItemDigest
                 {
                     BankKey = badBankKey,
                     ItemKey = goodItemKey,
-                    Grade = "9"
+                    Grade = GradeLevels.Grade9
                 },
                 new ItemDigest
                 {
                     BankKey = badBankKey,
                     ItemKey = badItemKey,
-                    Grade = "4"
+                    Grade = GradeLevels.Grade4
                 }
             };
 

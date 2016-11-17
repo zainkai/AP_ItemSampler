@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SmarterBalanced.SampleItems.Dal.Infrastructure;
-using Microsoft.Extensions.Configuration;
-using SmarterBalanced.SampleItems.Core.Interfaces;
-using SmarterBalanced.SampleItems.Core.Infrastructure;
-using SmarterBalanced.SampleItems.Dal.Models;
-using SmarterBalanced.SampleItems.Dal.Context;
-using SmarterBalanced.SampleItems.Dal.Models.Configurations;
+using SmarterBalanced.SampleItems.Core.Diagnostics;
+using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using SmarterBalanced.SampleItems.Dal.Providers;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -43,16 +36,13 @@ namespace SmarterBalanced.SampleItems.Web
         {
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc();
-            var appSettings = new AppSettings(Configuration); 
-            //Build configuration from appsettings.json
-            SampleItemsContext.RegisterSettings(appSettings);
+            AppSettings appSettings = new AppSettings(Configuration);
+            SampleItemsContext context = SampleItemsProvider.LoadContext(appSettings).Result;
             
-            // Injecting Singleton SampleItemsRepo into each Controller Repository
-            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(SampleItemsContext.Default));
-
-            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(SampleItemsContext.Default));
-
-            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(SampleItemsContext.Default));
+            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(context));
+            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(context));
+            services.AddScoped<IGlobalAccessibilityRepo>(provider => new GlobalAccessibilityRepo(context));
+            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(context));
 
             services.AddRouting();
         }
@@ -60,9 +50,6 @@ namespace SmarterBalanced.SampleItems.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            Core.Infrastructure.AutoMapperConfig.Configure();
-            Dal.Infrastructure.AutoMapperConfig.Configure();
-
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -86,7 +73,7 @@ namespace SmarterBalanced.SampleItems.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}");
 
                 routes.MapRoute(
                     name: "diagnostic",
