@@ -58,9 +58,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             {
                 var familyResource = generatedFamily.SingleSelectResource.FirstOrDefault(fr => fr.Code == globalResource.Code);
                 if (familyResource == null)
+                {
                     return globalResource;
+                }
                 else
+                {
                     return familyResource.ToAccessibilityResource(globalResource);
+                }
             }).ToList();
 
             var selection = new AccessibilityResourceFamily
@@ -98,7 +102,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 // If the family's selections contains this selection, enable the selection. Otherwise disable it.
                 resource.Selections = globalResource.Selections.Select(s =>
                     s.CloneWithDisabled(
-                        generatedResource.Selection.Any(fs => fs.Code == s.Code))).ToList();
+                        !generatedResource.Selection.Any(fs => fs.Code == s.Code))).ToList();
             }
 
             return resource;
