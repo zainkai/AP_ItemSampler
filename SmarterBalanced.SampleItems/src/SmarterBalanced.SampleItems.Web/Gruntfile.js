@@ -1,7 +1,5 @@
-﻿/// <binding AfterBuild='all' />
+/// <binding ProjectOpened='all' />
 'use strict';
-var childProcess = require("child_process");
-
 module.exports = function (grunt) {
     grunt.initConfig({
         clean: ["wwwroot/scripts/*", "temp/"],
@@ -38,6 +36,7 @@ module.exports = function (grunt) {
             files: ["Scripts/*"],
             tasks: ["tsrecompile"]
         }
+        //TODO: add watch for css.min, issue with watch.
 
     });
 
@@ -49,5 +48,4 @@ module.exports = function (grunt) {
 
     grunt.registerTask("all", ['clean', 'ts', 'cssmin']); //,'uglify']); // TODO: Minify JS eventually
     grunt.registerTask("tsrecompile", ['clean', 'ts']);
-
 };
