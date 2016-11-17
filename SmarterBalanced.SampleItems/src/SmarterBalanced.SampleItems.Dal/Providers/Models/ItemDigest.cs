@@ -39,6 +39,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int? AssociatedStimulus { get; set; }
 
         public List<AccessibilityResource> AccessibilityResources { get; set; }
+        [Display(Name = "Item Type")]
+        public string ItemType { get; set; }
 
         public string Name { get; set; }
         public bool Equals(ItemDigest obj)

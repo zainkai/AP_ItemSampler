@@ -1,5 +1,6 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,15 +26,27 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<AccessibilityResourceFamily> resourceFamilies,
             IList<InteractionType> interactionTypes)
         {
+            if(itemMetadata?.Metadata == null)
+            {
+                throw new ArgumentNullException(nameof(itemMetadata.Metadata));
+            }
+
+            if (itemContents?.Item == null)
+            {
+                throw new ArgumentNullException(nameof(itemMetadata.Metadata));
+            }
+
             if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
             {
-                throw new SampleItemsContextException("Cannot digest items with different ItemKey values.");
+                throw new SampleItemsContextException("Cannot digest items with different ItemKey values.\n"
+                    + $"Content Item Key: {itemContents.Item.ItemKey} Metadata Item Key:{itemMetadata.Metadata.ItemKey}");
             }
 
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
             digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
+            digest.ItemType = itemContents.Item.ItemType;
             digest.Target = itemMetadata.Metadata.Target; 
             digest.Subject = itemMetadata.Metadata.Subject;
             digest.InteractionTypeCode = itemMetadata.Metadata.InteractionType;
