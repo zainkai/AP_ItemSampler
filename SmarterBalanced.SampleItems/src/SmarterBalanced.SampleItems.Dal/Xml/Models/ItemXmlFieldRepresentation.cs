@@ -16,5 +16,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
         [XmlAttribute("id")]
         public int ItemKey { get; set; }
+
+        [XmlAttribute("type")]
+        public string ItemType { get; set; }
     }
 }
