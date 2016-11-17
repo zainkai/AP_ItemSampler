@@ -255,6 +255,8 @@ paket-files/
 _references.js
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/wwwroot/scripts/*
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/.tscache/*
+/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/Scripts/.baseDir.ts
+
 
 # minified css
 **/*.min.css
