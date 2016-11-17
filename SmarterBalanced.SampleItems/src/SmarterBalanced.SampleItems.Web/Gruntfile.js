@@ -1,4 +1,4 @@
-﻿/// <binding AfterBuild='all' />
+/// <binding ProjectOpened='all' />
 'use strict';
 var childProcess = require("child_process");
 
@@ -38,6 +38,8 @@ module.exports = function (grunt) {
             files: ["Scripts/*"],
             tasks: ["tsrecompile"]
         }
+        //TODO: add watch for css.min, issue with watch.
+
 
     });
 
