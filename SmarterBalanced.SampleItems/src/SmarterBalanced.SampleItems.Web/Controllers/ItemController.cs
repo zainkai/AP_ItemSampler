@@ -9,7 +9,6 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
     public class ItemController : Controller
     {
         private IItemViewRepo repo;
-
         public ItemController(IItemViewRepo itemViewRepo)
         {
             repo = itemViewRepo;
@@ -38,7 +37,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             if (string.IsNullOrEmpty(iSAAP))
             {
                 string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-                iSAAP = Request.Cookies[cookieName];
+                iSAAP = CookieManager.GetCookie(Request, cookieName);
             }
 
             ItemViewModel itemViewModel = await repo.GetItemViewModelAsync(bankKey.Value, itemKey.Value, iSAAP);
@@ -65,7 +64,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             }
 
             string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-            string iSAAP = Request.Cookies[cookieName];
+            string iSAAP = CookieManager.GetCookie(Request, cookieName);
 
             ItemViewModel itemViewModel = await repo.GetItemViewModelAsync(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
