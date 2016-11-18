@@ -65,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// </summary>
         /// <param name="accessibilityResources"></param>
         /// <returns>a List of AccessibilityResourceViewModels.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(List<AccessibilityResource> accessibilityResources)
+        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources)
         {
             List<AccessibilityResourceViewModel> accessibilityResourceViewModels = new List<AccessibilityResourceViewModel>();
             accessibilityResourceViewModels = accessibilityResources.Select(t => new AccessibilityResourceViewModel

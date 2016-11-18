@@ -30,15 +30,14 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             iSAAP = "TDS_test;TDS_test2;";
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
-            itemViewRepoMock.Setup(x => x.GetItemDigest(bankKey, itemKey)).Returns(itemDigest);
 
             var itemViewModel = new ItemViewModel()
             {
                 ItemDigest = itemDigest,
                 ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}"
             };
-            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, iSAAP)).Returns(itemViewModel);
+            itemViewRepoMock.Setup(x => x.GetItemViewModelAsync(bankKey, itemKey)).ReturnsAsync(itemViewModel);
+            itemViewRepoMock.Setup(x => x.GetItemViewModelAsync(bankKey, itemKey, iSAAP)).ReturnsAsync(itemViewModel);
 
             controller = new ItemController(itemViewRepoMock.Object);
         }
@@ -47,9 +46,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that an ItemViewModel is returned given a vaid id.
         /// </summary>
         [Fact]
-        public void TestDetailsSuccess()
+        public async void TestDetailsSuccess()
         {
-            var result = controller.Details(bankKey, itemKey, iSAAP);
+            var result = await controller.Details(bankKey, itemKey, iSAAP);
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
@@ -59,9 +58,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a null key
         /// </summary>
         [Fact]
-        public void TestDetailsNullParam()
+        public async void TestDetailsNullParam()
         {
-            var result = controller.Details(null, itemKey, iSAAP);
+            var result = await controller.Details(null, itemKey, iSAAP);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -70,9 +69,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a nonexistent key
         /// </summary>
         [Fact]
-        public void TestDetailsBadId()
+        public async void TestDetailsBadId()
         {
-            var result = controller.Details(bankKey + 1, itemKey + 1, iSAAP);
+            var result = await controller.Details(bankKey + 1, itemKey + 1, iSAAP);
 
             Assert.IsType<BadRequestResult>(result);
         }

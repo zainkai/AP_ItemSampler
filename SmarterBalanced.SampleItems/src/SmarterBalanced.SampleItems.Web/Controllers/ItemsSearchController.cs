@@ -2,6 +2,7 @@
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -15,16 +16,16 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = sampleItemsSearchRepo.GetItemsSearchViewModel();
+            var model = await sampleItemsSearchRepo.GetItemsSearchViewModelAsync();
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Search(string terms, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
+        public async Task<IActionResult> Search(string terms, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
         {
-            var items = sampleItemsSearchRepo.GetItemDigests(terms, gradeLevels, subjects, interactionTypes);
+            var items = await sampleItemsSearchRepo.GetItemDigestsAsync(terms, gradeLevels, subjects, interactionTypes);
 
             return Json(items);
         }

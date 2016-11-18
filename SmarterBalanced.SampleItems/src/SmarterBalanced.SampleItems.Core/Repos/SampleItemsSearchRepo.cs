@@ -3,49 +3,62 @@ using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
 
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public class SampleItemsSearchRepo : ISampleItemsSearchRepo
-     {
+    {
         private SampleItemsContext context;
         public SampleItemsSearchRepo(SampleItemsContext context)
         {
             this.context = context;
         }
 
-        public IList<ItemDigest> GetItemDigests()
+        public Task<IList<ItemDigest>> GetItemDigestsAsync()
         {
-            return context.ItemDigests.Where(i => i.Grade != GradeLevels.NA).ToList();
-        }
-
-        public IList<ItemDigest> GetItemDigests(string terms, GradeLevels grades, IList<string> subjects, string[] interactionTypes)
-        {
-            var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
-
-            // TODO: what should terms search on?
-
-            if (grades != GradeLevels.All && grades != GradeLevels.NA)
-                query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
-
-            if (subjects != null && subjects.Any())
-                query = query.Where(i => subjects.Contains(i.Subject));
-
-            if (interactionTypes.Any())
-                query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
-
-            return query.ToList();
-        }
-
-        public ItemsSearchViewModel GetItemsSearchViewModel()
-        {
-            return new ItemsSearchViewModel
+            return Task.Run(() =>
             {
-                InteractionTypes = context.InteractionTypes
-            };
+                return (IList<ItemDigest>)context.ItemDigests.Where(i => i.Grade != GradeLevels.NA).ToList();
+            });
         }
 
+        // TODO: what should terms search on?
+        public Task<IList<ItemDigest>> GetItemDigestsAsync(string terms, GradeLevels grades, IList<string> subjects, string[] interactionTypes)
+        {
+            return Task.Run(() =>
+            {
+                var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
+                if (grades != GradeLevels.All && grades != GradeLevels.NA)
+                {
+                    query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
+                }
+
+                if (subjects != null && subjects.Any())
+                {
+                    query = query.Where(i => subjects.Contains(i.Subject));
+                }
+
+                if (interactionTypes.Any())
+                {
+                    query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
+                }
+
+                return (IList<ItemDigest>)query.ToList();
+            });
+        }
+
+        public Task<ItemsSearchViewModel> GetItemsSearchViewModelAsync()
+        {
+           return Task.Run(() =>
+            {
+                return new ItemsSearchViewModel
+                {
+                    InteractionTypes = context.InteractionTypes
+                };
+            });
+        }
     }
 }

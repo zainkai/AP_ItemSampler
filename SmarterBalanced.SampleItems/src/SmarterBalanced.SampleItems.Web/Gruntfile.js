@@ -1,4 +1,4 @@
-/// <binding ProjectOpened='all' />
+/// <binding AfterBuild='tsrecompile' ProjectOpened='all' />
 'use strict';
 module.exports = function (grunt) {
     grunt.initConfig({

@@ -1,7 +1,6 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Providers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Core.Translations;
@@ -17,7 +16,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             this.context = context;
         }
-        
+
         /// <summary>
         /// Gets AppSettings
         /// </summary>
@@ -33,24 +32,27 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="iSAAPCode"></param>
         /// <returns></returns>
-        public GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSAAPCode)
+        public Task<GlobalAccessibilityViewModel> GetGlobalAccessibilityViewModelAsync(string iSAAPCode)
         {
-            List<AccessibilityResource> globalAccResources = new List<AccessibilityResource>(context.GlobalAccessibilityResources);
+            return Task.Run(() =>
+            {
+                List<AccessibilityResource> globalAccResources = new List<AccessibilityResource>(context.GlobalAccessibilityResources);
 
-            List<AccessibilityResourceViewModel> accResourceViewModels;
-            if (!string.IsNullOrEmpty(iSAAPCode))
-            {
-                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources, iSAAPCode);
-            }
-            else
-            {
-                accResourceViewModels = AccessibilityTranslations.ToAccessibilityResourceViewModels(globalAccResources);
-            }
+                List<AccessibilityResourceViewModel> accResourceViewModels;
+                if (!string.IsNullOrEmpty(iSAAPCode))
+                {
+                    accResourceViewModels = globalAccResources.ToAccessibilityResourceViewModels(iSAAPCode);
+                }
+                else
+                {
+                    accResourceViewModels = globalAccResources.ToAccessibilityResourceViewModels();
+                }
 
-            return new GlobalAccessibilityViewModel()
-            {
-                AccessibilityResourceViewModels = accResourceViewModels
-            };
+                return new GlobalAccessibilityViewModel()
+                {
+                    AccessibilityResourceViewModels = accResourceViewModels
+                };
+            });
         }
 
         /// <summary>
@@ -58,14 +60,17 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="globalAccessibilityViewModel"></param>
         /// <returns>a ISAAP code string.</returns>
-        public string GetISAAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel)
+        public Task<string> GetISAAPCodeAsync(GlobalAccessibilityViewModel globalAccessibilityViewModel)
         {
-            if(globalAccessibilityViewModel?.AccessibilityResourceViewModels == null)
+            if (globalAccessibilityViewModel?.AccessibilityResourceViewModels == null)
             {
                 throw new Exception("Invalid accessibility");
             }
 
-            return globalAccessibilityViewModel?.AccessibilityResourceViewModels.ToISAAP();
+            return Task.Run(() =>
+            {
+                return globalAccessibilityViewModel?.AccessibilityResourceViewModels.ToISAAP();
+            });
         }
     }
 }
