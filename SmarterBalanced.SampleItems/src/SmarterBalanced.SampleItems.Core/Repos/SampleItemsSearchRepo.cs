@@ -26,7 +26,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         // TODO: what should terms search on?
-        public Task<IList<ItemDigest>> GetItemDigestsAsync(string terms, GradeLevels grades, IList<string> subjects, string[] interactionTypes)
+        public Task<IList<ItemDigest>> GetItemDigestsAsync(GradeLevels grades, IList<string> subjects, string[] interactionTypes)
         {
             return Task.Run(() =>
             {

@@ -23,9 +23,9 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search(string terms, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
+        public async Task<IActionResult> Search(GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
         {
-            var items = await sampleItemsSearchRepo.GetItemDigestsAsync(terms, gradeLevels, subjects, interactionTypes);
+            var items = await sampleItemsSearchRepo.GetItemDigestsAsync(gradeLevels, subjects, interactionTypes);
 
             return Json(items);
         }
