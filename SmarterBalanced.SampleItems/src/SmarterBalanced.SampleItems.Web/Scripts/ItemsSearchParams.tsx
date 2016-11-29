@@ -161,60 +161,60 @@ namespace ItemSearchParams {
             const middleSelected = (this.state.gradeLevels & GradeLevels.Middle) == GradeLevels.Middle;
             const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
 
-            const tags = (
-                <div className="search-tags form-group" style={{ flexGrow: 3 }}>
+            const tags = [
                     <span className={(elementarySelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.Elementary)}>
 
                         Grades 3-5
-                    </span>
+                    </span>,
 
                     <span className={(middleSelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.Middle)}>
 
                         Grades 6-8
-                    </span>
+                    </span>,
 
                     <span className={(highSelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.High)}>
 
                         High School
                     </span>
-                </div>
-            );
+            ];
 
             return (
-                <div className="search-category">
+                <div className="search-category" style={{ flexGrow: 3 }}>
                     <label onClick={() => this.toggleExpandGradeLevels()}>
                         {this.state.expandGradeLevels ? "▼" : "▶"} Grade Levels
                     </label>
-                    {this.state.expandGradeLevels ? tags : undefined}
+                    <div className="search-tags form-group">
+                        {this.state.expandGradeLevels ? tags : undefined}
+                    </div>
                 </div>
             );
         }
 
         renderSubjects() {
             const subjects = this.state.subjects || [];
-            const tags = (
-                <div className="search-tags form-group" style={{ flexGrow: 2 }}>
+            const tags = [
                     <span className={(subjects.indexOf("ELA") === -1 ? "" : "selected") + " tag"}
                         onClick={() => this.toggleSubject("ELA")}>
 
                         English Language Arts
-                    </span>
+                    </span>,
                     <span className={(subjects.indexOf("MATH") === -1 ? "" : "selected") + " tag"}
                         onClick={() => this.toggleSubject("MATH")}>
 
                         Math
                     </span>
-                </div>
-            );
+            ];
             return (
-                <div className="search-category">
+                <div className="search-category" style={{ flexGrow: 2 }}>
                     <label onClick={() => this.toggleExpandSubjects()}>
                         {this.state.expandSubjects ? "▼" : "▶"} Subjects
                     </label>
-                    {this.state.expandSubjects ? tags : undefined}
+                    <div className="search-tags form-group">
+                        {this.state.expandSubjects ? tags : undefined}
+                    </div>
                 </div>
             );
         }
