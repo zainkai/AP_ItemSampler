@@ -16,17 +16,16 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var model = await sampleItemsSearchRepo.GetItemsSearchViewModelAsync();
+            var model = sampleItemsSearchRepo.GetItemsSearchViewModel();
             return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search(GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
+        public IActionResult Search(GradeLevels gradeLevels, string[] subjects, string[] interactionTypes)
         {
-            var items = await sampleItemsSearchRepo.GetItemDigestsAsync(gradeLevels, subjects, interactionTypes);
-
+            var items = sampleItemsSearchRepo.GetItemDigests(gradeLevels, subjects, interactionTypes);
             return Json(items);
         }
     }

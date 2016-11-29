@@ -17,48 +17,40 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             this.context = context;
         }
 
-        public Task<IList<ItemDigest>> GetItemDigestsAsync()
+        public IList<ItemDigest> GetItemDigests()
         {
-            return Task.Run(() =>
-            {
-                return (IList<ItemDigest>)context.ItemDigests.Where(i => i.Grade != GradeLevels.NA).ToList();
-            });
+            return context.ItemDigests.Where(i => i.Grade != GradeLevels.NA).ToList();
         }
 
         // TODO: what should terms search on?
-        public Task<IList<ItemDigest>> GetItemDigestsAsync(GradeLevels grades, IList<string> subjects, string[] interactionTypes)
+        public IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes)
         {
-            return Task.Run(() =>
+            var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
+            if (grades != GradeLevels.All && grades != GradeLevels.NA)
             {
-                var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
-                if (grades != GradeLevels.All && grades != GradeLevels.NA)
-                {
-                    query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
-                }
+                query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
+            }
 
-                if (subjects != null && subjects.Any())
-                {
-                    query = query.Where(i => subjects.Contains(i.Subject));
-                }
+            if (subjects != null && subjects.Any())
+            {
+                query = query.Where(i => subjects.Contains(i.Subject));
+            }
 
-                if (interactionTypes.Any())
-                {
-                    query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
-                }
+            if (interactionTypes.Any())
+            {
+                query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
+            }
 
-                return (IList<ItemDigest>)query.ToList();
-            });
+            return query.ToList();
         }
 
-        public Task<ItemsSearchViewModel> GetItemsSearchViewModelAsync()
+        public ItemsSearchViewModel GetItemsSearchViewModel()
         {
-           return Task.Run(() =>
+           return new ItemsSearchViewModel
             {
-                return new ItemsSearchViewModel
-                {
-                    InteractionTypes = context.InteractionTypes
-                };
-            });
+                InteractionTypes = context.InteractionTypes,
+                Claims = context.Claims
+            };
         }
     }
 }

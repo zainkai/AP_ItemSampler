@@ -29,9 +29,15 @@ interface InteractionType {
     label: string;
 }
 
+interface Claim {
+    code: string;
+    label: string;
+}
+
 namespace ItemsSearch {
     export interface Props {
         interactionTypes: InteractionType[]
+        claims: Claim[]
         apiClient: ItemsSearchClient
     }
 
@@ -44,7 +50,7 @@ namespace ItemsSearch {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
 
-            const defaultParams: SearchAPIParams = { gradeLevels: GradeLevels.All, subjects: [], interactionTypes: [] };
+            const defaultParams: SearchAPIParams = { gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
             this.beginSearch(defaultParams);
         }
 
@@ -96,6 +102,7 @@ namespace ItemsSearch {
                 <div className="search-container">
                     <ItemSearchParams.Component
                         interactionTypes={this.props.interactionTypes}
+                        claims={this.props.claims}
                         onChange={(params) => this.beginSearch(params)}
                         isLoading={isLoading} />
                     <div className="search-results">
@@ -129,12 +136,12 @@ const client: ItemsSearchClient = {
 interface SearchAPIParams {
     gradeLevels: GradeLevels;
     subjects: string[];
+    claims: string[];
     interactionTypes: string[];
 }
 
-function initializeItemsSearch(interactionTypes: any) {
+function initializeItemsSearch(viewModel: { interactionTypes: InteractionType[], claims: Claim[] }) {
     ReactDOM.render(
-        <ItemsSearch.Component apiClient={client}
-            interactionTypes={interactionTypes} />,
+        <ItemsSearch.Component apiClient={client} {...viewModel} />,
         document.getElementById("search-container") as HTMLElement);
 }

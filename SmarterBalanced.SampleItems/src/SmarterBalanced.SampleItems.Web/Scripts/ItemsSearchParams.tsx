@@ -3,6 +3,7 @@ namespace ItemSearchParams {
 
     export interface Props {
         interactionTypes: InteractionType[];
+        claims: Claim[];
         onChange: (params: SearchAPIParams) => void;
         isLoading: boolean;
     }
@@ -17,7 +18,6 @@ namespace ItemSearchParams {
         expandSubjects?: boolean;
         expandClaims?: boolean;
         expandInteractionTypes?: boolean;
-
     }
 
     export class Component extends React.Component<Props, State> {
@@ -44,8 +44,9 @@ namespace ItemSearchParams {
             this.timeoutToken = setTimeout(() => {
                 const params: SearchAPIParams = {
                     gradeLevels: this.state.gradeLevels || GradeLevels.All,
-                    interactionTypes: this.state.interactionTypes || [],
-                    subjects: this.state.subjects || []
+                    subjects: this.state.subjects || [],
+                    claims: this.state.claims || [],
+                    interactionTypes: this.state.interactionTypes || []
                 };
                 this.props.onChange(params);
             }, 200);
@@ -64,6 +65,14 @@ namespace ItemSearchParams {
             const containsSubject = subjects.indexOf(subject) !== -1;
             this.setState({
                 subjects: containsSubject ? subjects.filter(s => s !== subject) : subjects.concat([subject])
+            }, () => this.beginChangeTimeout());
+        }
+
+        toggleClaim(claim: string) {
+            const claims = this.state.claims || [];
+            const containsClaim = claims.indexOf(claim) !== -1;
+            this.setState({
+                claims: containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim])
             }, () => this.beginChangeTimeout());
         }
 
@@ -93,6 +102,12 @@ namespace ItemSearchParams {
         toggleExpandSubjects() {
             this.setState({
                 expandSubjects: !this.state.expandSubjects
+            });
+        }
+
+        toggleExpandClaims() {
+            this.setState({
+                expandClaims: !this.state.expandClaims
             });
         }
 
@@ -134,6 +149,7 @@ namespace ItemSearchParams {
                     <div className="search-categories">
                         {this.renderGrades()}
                         {this.renderSubjects()}
+                        {this.renderClaims()}
                         {this.renderInteractionTypes()}
                     </div>
                 </div>
@@ -199,6 +215,29 @@ namespace ItemSearchParams {
                         {this.state.expandSubjects ? "▼" : "▶"} Subjects
                     </label>
                     {this.state.expandSubjects ? tags : undefined}
+                </div>
+            );
+        }
+
+        renderClaims() {
+            const selectedClaims = this.state.claims || [];
+
+            const makeClass = (claim: Claim) => (selectedClaims.indexOf(claim.code) === -1 ? "" : "selected") + " tag";
+            const renderClaim = (claim: Claim) =>
+                <span className={makeClass(claim)}
+                    onClick={() => this.toggleClaim(claim.code)}>
+                    {claim.label}
+                </span>;
+            const tags = this.props.claims.map(renderClaim);
+
+            return (
+                <div className="search-category" style={{ flexGrow: tags.length }}>
+                    <label onClick={() => this.toggleExpandClaims()}>
+                        {this.state.expandClaims ? "▼" : "▶"} Claims
+                    </label>
+                    <div className="search-tags form-group">
+                        {this.state.expandClaims ? tags : undefined}
+                    </div>
                 </div>
             );
         }

@@ -204,9 +204,6 @@ hr {
     color: white;
 }
 
-.search-container {
-}
-
 .search-params {
     display: flex;
     flex-direction: column;
@@ -258,7 +255,7 @@ hr {
     display: inline-block;
     padding: 8px;
     border: 2px solid white;
-    flex: 1 1 250px;
+    flex: 1 1 180px;
 }
 
 .search-category > label {
