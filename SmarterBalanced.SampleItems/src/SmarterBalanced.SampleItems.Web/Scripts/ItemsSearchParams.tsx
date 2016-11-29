@@ -21,17 +21,19 @@ namespace ItemSearchParams {
     }
 
     export class Component extends React.Component<Props, State> {
+        readonly initialState: State = {
+            gradeLevels: GradeLevels.NA,
+            subjects: [],
+            claims: [],
+            interactionTypes: []
+        };
+
         // TODO: since the callback property exists on setState, should this be in the state interface instead of the component class?
         timeoutToken?: number;
 
         constructor(props: Props) {
             super(props);
-            this.state = {
-                gradeLevels: GradeLevels.NA,
-                subjects: [],
-                claims: [],
-                interactionTypes: []
-            };
+            this.state = this.initialState;
         }
 
         beginChangeTimeout() {
@@ -112,22 +114,27 @@ namespace ItemSearchParams {
             });
         }
 
+        resetFilters() {
+            this.setState(this.initialState, () => this.beginChangeTimeout());
+        }
+
         render() {
             return (
                 <div className="search-params">
-                    <div className="search-status">
-                        {this.props.isLoading ? <img src="images/spin.gif" className="spin"/> : undefined}
-                        <div><a href="">Reset filters</a></div>
-                        <div onClick={() => this.toggleExpandAll()}>
-                            {this.getExpandAll() ? "▼" : "▶"} Show all
+                    <div className="search-header">
+                        <div className="search-title">Sample Items Search</div>
+                        <div className="search-status">
+                            {this.props.isLoading ? <img src="images/spin.gif" className="spin"/> : undefined}
+                            <div><a onClick={() => this.resetFilters()}>Reset filters</a></div>
+                            <div onClick={() => this.toggleExpandAll()}>
+                                {this.getExpandAll() ? "▼" : "▶"} Show all
+                            </div>
                         </div>
                     </div>
                     <div className="search-categories">
-                    {this.renderGrades()}
-
-                    {this.renderSubjects()}
-
-                    {this.renderInteractionTypes()}
+                        {this.renderGrades()}
+                        {this.renderSubjects()}
+                        {this.renderInteractionTypes()}
                     </div>
                 </div>
             );
@@ -139,18 +146,18 @@ namespace ItemSearchParams {
             const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
 
             const tags = (
-                <div className="search-tags form-group">
+                <div className="search-tags form-group" style={{ flexGrow: 3 }}>
                     <span className={(elementarySelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.Elementary)}>
 
-                        Elementary School
-                            </span>
+                        Grades 3-5
+                    </span>
 
                     <span className={(middleSelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.Middle)}>
 
-                        Middle School
-                            </span>
+                        Grades 6-8
+                    </span>
 
                     <span className={(highSelected ? "selected" : "") + " tag"}
                         onClick={() => this.toggleGrades(GradeLevels.High)}>
@@ -173,7 +180,7 @@ namespace ItemSearchParams {
         renderSubjects() {
             const subjects = this.state.subjects || [];
             const tags = (
-                <div className="search-tags form-group">
+                <div className="search-tags form-group" style={{ flexGrow: 2 }}>
                     <span className={(subjects.indexOf("ELA") === -1 ? "" : "selected") + " tag"}
                         onClick={() => this.toggleSubject("ELA")}>
 
@@ -208,7 +215,7 @@ namespace ItemSearchParams {
             const tags = this.props.interactionTypes.map(renderInteractionType);
 
             return (
-                <div className="search-category">
+                <div className="search-category" style={{ flexGrow: tags.length }}>
                     <label onClick={() => this.toggleExpandInteractionTypes()}>
                         {this.state.expandInteractionTypes ? "▼" : "▶"} Interaction Types
                     </label>

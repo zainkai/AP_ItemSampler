@@ -14,7 +14,6 @@ interface Success<T> {
 
 interface Failure {
     kind: "failure";
-    content: string;
 }
 
 interface Reloading<T> {
@@ -72,8 +71,7 @@ namespace ItemsSearch {
         }
 
         onError(err: any) {
-            console.log(err);
-            this.setState({ searchResults: { kind: "failure", content: err } });
+            this.setState({ searchResults: { kind: "failure" } });
         }
 
         isLoading() {
