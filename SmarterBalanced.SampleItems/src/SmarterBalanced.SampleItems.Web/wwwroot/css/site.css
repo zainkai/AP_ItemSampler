@@ -174,7 +174,7 @@ hr {
     background-color: #0077b3;
     color: white;
     width: 300px;
-    box-shadow: inset 0 0 0 transparent,0 1px 5px rgba(0,0,0,0.6);
+    box-shadow: initial transparent,0 1px 5px #cceeff;
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
@@ -183,7 +183,7 @@ hr {
 }
 
 .card:hover {
-    box-shadow: inset 0 0 0 transparent,0 1px 20px rgba(0,0,0,0.6);
+    box-shadow: inset 0 0 0 transparent,0 10px 25px #00334d;
 }
 
 .card-contents {
