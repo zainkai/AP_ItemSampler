@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -10,14 +11,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
     {
         AppSettings AppSettings { get; }
 
-        ItemDigest GetItemDigest(Func<ItemDigest, bool> predicate);
+        Task<ItemViewModel> GetItemViewModelAsync(int bankKey, int itemKey);
 
-        ItemDigest GetItemDigest(int bankKey, int itemKey);
-
-        IEnumerable<ItemDigest> GetItemDigests();
-
-        ItemViewModel GetItemViewModel(int bankKey, int itemKey);
-
-        ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSAAPCode);
+        Task<ItemViewModel> GetItemViewModelAsync(int bankKey, int itemKey, string iSAAPCode);
     }
 }

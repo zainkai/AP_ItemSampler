@@ -18,6 +18,10 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <returns>a comma-separated string of ISAAP codes.</returns>
         public static string ToISAAP(this List<AccessibilityResourceViewModel> items)
         {
+            if(items == null)
+            {
+                throw new ArgumentNullException();
+            }
             return string.Join(";", items.Select(t => t.SelectedCode));
         }
 
@@ -65,7 +69,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// </summary>
         /// <param name="accessibilityResources"></param>
         /// <returns>a List of AccessibilityResourceViewModels.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(List<AccessibilityResource> accessibilityResources)
+        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources)
         {
             List<AccessibilityResourceViewModel> accessibilityResourceViewModels = new List<AccessibilityResourceViewModel>();
             accessibilityResourceViewModels = accessibilityResources.Select(t => new AccessibilityResourceViewModel
@@ -81,7 +85,6 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             return accessibilityResourceViewModels;
         }
 
-
         /// <summary>
         /// Translates a List of AccessibilityResources into a List of 
         /// AccessibilityResourceVIewModels with defaults set from the ISAAP code.
@@ -91,6 +94,11 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <returns>a List of AccessibilityResources.</returns>
         public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSAAPCode)
         {
+            if (accessibilityResources == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
             if (accResourceViewModels == null)
             {

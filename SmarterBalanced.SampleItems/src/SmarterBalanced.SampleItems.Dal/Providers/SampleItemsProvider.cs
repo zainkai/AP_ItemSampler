@@ -26,13 +26,27 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IList<InteractionType> interactionTypes = LoadInteractionTypes();
             IList<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes);
 
+            // TODO: get actual claims
+            IList<Claim> claims = new List<Claim>
+            {
+                new Claim { Code = "MATH1", Label = "Concepts and Procedures" },
+                new Claim { Code = "MATH2", Label = "Problem Solving and Modeling" },
+                new Claim { Code = "MATH3", Label = "Communicating Reasoning" },
+                new Claim { Code = "MATH4", Label = "Data Analysis" },
+                new Claim { Code = "ELA1", Label = "Reading" },
+                new Claim { Code = "ELA2", Label = "Writing" },
+                new Claim { Code = "ELA3", Label = "Listening" },
+                new Claim { Code = "ELA4", Label = "Research/Inquiry" }
+            };
+
             SampleItemsContext context = new SampleItemsContext
             {
                 AccessibilityResourceFamilies = accessibilityResourceFamilies,
                 GlobalAccessibilityResources = globalAccessibilityResources,
                 InteractionTypes = interactionTypes,
                 ItemDigests = itemDigests,
-                AppSettings = appSettings
+                AppSettings = appSettings,
+                Claims = claims
             };
 
             return context;

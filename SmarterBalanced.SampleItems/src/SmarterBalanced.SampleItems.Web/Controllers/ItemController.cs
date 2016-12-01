@@ -2,13 +2,13 @@
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemController : Controller
     {
         private IItemViewRepo repo;
-
         public ItemController(IItemViewRepo itemViewRepo)
         {
             repo = itemViewRepo;
@@ -27,7 +27,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <param name="iSAAP"></param>
-        public IActionResult Details(int? bankKey, int? itemKey, string iSAAP)
+        public async Task<IActionResult> Details(int? bankKey, int? itemKey, string iSAAP)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
@@ -37,10 +37,10 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             if (string.IsNullOrEmpty(iSAAP))
             {
                 string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-                iSAAP = Request.Cookies[cookieName];
+                iSAAP = CookieManager.GetCookie(Request, cookieName);
             }
 
-            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
+            ItemViewModel itemViewModel = await repo.GetItemViewModelAsync(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
             {
                 return BadRequest();
@@ -56,7 +56,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns></returns>
-        public IActionResult ResetToGlobalAccessibility(int? bankKey, int? itemKey)
+        public async Task<IActionResult> ResetToGlobalAccessibility(int? bankKey, int? itemKey)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
@@ -64,9 +64,9 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             }
 
             string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-            string iSAAP = Request.Cookies[cookieName];
+            string iSAAP = CookieManager.GetCookie(Request, cookieName);
 
-            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
+            ItemViewModel itemViewModel = await repo.GetItemViewModelAsync(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
             {
                 return BadRequest();

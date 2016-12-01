@@ -9,5 +9,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
     public class ItemsSearchViewModel
     {
         public IList<InteractionType> InteractionTypes { get; set; }
+        public IList<Claim> Claims { get; set; }
     }
 }
