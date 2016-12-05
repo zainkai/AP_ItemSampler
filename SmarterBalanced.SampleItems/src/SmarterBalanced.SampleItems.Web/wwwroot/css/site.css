@@ -170,11 +170,11 @@ hr {
 .card {
     border: 1px solid;
     border-radius: 6px;
-    border-color: #0077b3;
-    background-color: #0077b3;
-    color: white;
+    border-color: #cdcdcd;
+    background-color: #cdcdcd;
+    color: #444444;
     width: 300px;
-    box-shadow: initial transparent,0 1px 5px #cceeff;
+    box-shadow: initial transparent,0 1px 5px #444444;
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
@@ -183,7 +183,7 @@ hr {
 }
 
 .card:hover {
-    box-shadow: inset 0 0 0 transparent,0 10px 25px #00334d;
+    box-shadow: inset 0 0 0 transparent,0 10px 25px #444444;
 }
 
 .card-contents {
