@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="InteractionTypes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Items">
+                    <xs:complexType>
+                        <xs:sequence>
+                                <xs:element name="Item" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="Code" type="xs:string"></xs:element>
+                                            <xs:element name="Label" type="xs:string"></xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                <xs:element name="Families">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Family" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Code" type="xs:string"></xs:element>
+                                        <xs:element name="Items">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="Item" maxOccurs="unbounded">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:element name="Code" type="xs:string"></xs:element>
+                                                                    <xs:element name="Order" type="xs:int"></xs:element>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+</xs:schema>

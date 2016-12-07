@@ -1,6 +1,4 @@
-﻿using SmarterBalanced.SampleItems.Dal.Xml.Models;
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {

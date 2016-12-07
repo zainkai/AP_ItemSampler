@@ -1,0 +1,130 @@
+<InteractionTypes>
+    <Items>
+        <Item>
+            <Code>EBSR</Code>
+            <Label>Evidence-Based Selected Response</Label>
+        </Item>
+            <Item>
+            <Code>EQ</Code>
+            <Label>Equation</Label>
+        </Item>
+        <Item>
+            <Code>ER</Code>
+            <Label>Extended Response</Label>
+        </Item>
+        <Item>
+            <Code>SA</Code>
+            <Label>Short Answer</Label>
+        </Item>
+        <Item>
+            <Code>GI</Code>
+            <Label>Grid Item</Label>
+        </Item>
+        <Item>
+            <Code>HTQ</Code>
+            <Label>Hot Text</Label>
+        </Item>
+        <Item>
+            <Code>MC</Code>
+            <Label>Multiple Choice</Label>
+        </Item>
+        <Item>
+            <Code>MI</Code>
+            <Label>Match Interaction</Label>
+        </Item>
+        <Item>
+            <Code>MS</Code>
+            <Label>Multi Select</Label>
+        </Item>
+        <Item>
+            <Code>TI</Code>
+            <Label>Table Interaction</Label>
+        </Item>
+        <Item>
+            <Code>WER</Code>
+            <Label>Writing Extended Response</Label>
+        </Item>
+    </Items>
+
+    <Families>
+        <Family>
+            <Code>ELA</Code>
+            <Items>
+                <Item>
+                    <Code>EBSR</Code>
+                    <Order>1</Order>
+                </Item>
+                <Item>
+                    <Code>ER</Code>
+                    <Order>2</Order>
+                </Item>
+                <Item>
+                    <Code>SA</Code>
+                    <Order>3</Order>
+                </Item>
+                <Item>
+                    <Code>HTQ</Code>
+                    <Order>4</Order>
+                </Item>
+                <Item>
+                    <Code>MC</Code>
+                    <Order>5</Order>
+                </Item>
+                <Item>
+                    <Code>MS</Code>
+                    <Order>6</Order>
+                </Item>
+                <Item>
+                    <Code>MI</Code>
+                    <Order>7</Order>
+                </Item>
+                <Item>
+                    <Code>WER</Code>
+                    <Order>8</Order>
+                </Item>
+                <Item>
+                    <Code>PASS</Code>
+                    <Order>9</Order>
+                </Item>
+            </Items>
+        </Family>
+
+        <Family>
+            <Code>MATH</Code>
+            <Items>
+                <Item>
+                    <Code>EBSR</Code>
+                    <Order>1</Order>
+                </Item>
+                <Item>
+                    <Code>EQ</Code>
+                    <Order>2</Order>
+                </Item>
+                <Item>
+                    <Code>GI</Code>
+                    <Order>3</Order>
+                </Item>
+                <Item>
+                    <Code>MC</Code>
+                    <Order>4</Order>
+                </Item>
+                <Item>
+                    <Code>MI</Code>
+                    <Order>5</Order>
+                </Item>
+                <Item>
+                    <Code>MS</Code>
+                    <Order>6</Order>
+                </Item>
+                <Item>
+                    <Code>TI</Code>
+                    <Order>7</Order>
+                </Item>
+                <Item>
+                    <Code>???</Code>
+                    <Order>8</Order>
+                </Item>
+            </Items>
+        </Family>
+    </Families>
+</InteractionTypes>
