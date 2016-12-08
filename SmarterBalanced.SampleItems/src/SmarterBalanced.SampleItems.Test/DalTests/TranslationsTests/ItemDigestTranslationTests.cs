@@ -27,10 +27,16 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item = new Gen.ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = testItemKey;
             metadata.Metadata.Grade = testGrade;
-            metadata.Metadata.Target = "Test target string";
-            metadata.Metadata.Claim = "Test claim string";
+            metadata.Metadata.TargetAssessmentType = "Test target string";
+            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
             metadata.Metadata.Subject = "MATH";
+            metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+            metadata.Metadata.StandardPublications.Add(
+                new Gen.StandardPublication
+                {
+                    PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
+                });
 
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
@@ -39,8 +45,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
-            Assert.Equal("Test target string", digest.Target);
-            Assert.Equal("Test claim string", digest.Claim);
+            Assert.Equal("Test target string", digest.TargetAssessmentType);
+            Assert.Equal("Test claim string", digest.SufficentEvidenceOfClaim);
             Assert.Equal("MATH", digest.Subject);
             Assert.Equal("EQ", digest.InteractionTypeCode);
         }
@@ -58,10 +64,16 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item = new Gen.ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = 1;
             metadata.Metadata.Grade = "7";
-            metadata.Metadata.Target = "Test target string";
-            metadata.Metadata.Claim = "Test claim string";
+            metadata.Metadata.TargetAssessmentType = "Test target string";
+            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
             metadata.Metadata.Subject = "MATH";
+            metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+            metadata.Metadata.StandardPublications.Add(
+                new Gen.StandardPublication
+                {
+                    PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
+                });
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
@@ -103,10 +115,16 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];
                 metadata.Metadata.Grade = (itemKeys[i] % 9 + 3).ToString();
-                metadata.Metadata.Target = testTarget + itemKeys[i];
-                metadata.Metadata.Claim = testClaim + itemKeys[i];
+                metadata.Metadata.TargetAssessmentType = testTarget + itemKeys[i];
+                metadata.Metadata.SufficientEvidenceOfClaim = testClaim + itemKeys[i];
                 metadata.Metadata.InteractionType = testInteractionType + itemKeys[i];
                 metadata.Metadata.Subject = testSubject + itemKeys[i];
+                metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+                metadata.Metadata.StandardPublications.Add(
+                    new Gen.StandardPublication
+                    {
+                        PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
+                       });
 
                 //Test contents attributes
                 contents.Item.ItemKey = itemKeys[i];
@@ -124,8 +142,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 int id = digest.ItemKey;
                 Assert.Equal(digest.ItemKey, digest.BankKey);
                 Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), digest.Grade);
-                Assert.Equal(testTarget + id, digest.Target);
-                Assert.Equal(testClaim + id, digest.Claim);
+                Assert.Equal(testTarget + id, digest.TargetAssessmentType);
+                Assert.Equal(testClaim + id, digest.SufficentEvidenceOfClaim);
                 Assert.Equal(testInteractionType + id, digest.InteractionTypeCode);
                 Assert.Equal(testSubject + id, digest.Subject);
             }
