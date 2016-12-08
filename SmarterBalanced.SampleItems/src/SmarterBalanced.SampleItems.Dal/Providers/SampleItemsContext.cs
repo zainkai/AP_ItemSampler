@@ -13,7 +13,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
     {
         public IList<ItemDigest> ItemDigests { get; set; }
         public IList<InteractionType> InteractionTypes { get; set; }
-        public IList<Claim> Claims { get; set; }
+        public IList<ClaimSubject> ClaimSubjects { get; set; }
         public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
         public AppSettings AppSettings { get; set; }

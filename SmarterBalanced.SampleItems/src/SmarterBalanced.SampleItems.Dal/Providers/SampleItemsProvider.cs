@@ -30,7 +30,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                                                           .Elements("ResourceFamily")
                                                           .ToAccessibilityResourceFamilies(globalResources).ToList();
 
-
             // TODO: Refactor to method. is List<InteractionType> needed in the context?
             XElement interactionTypesDoc = XDocument
                 .Load(appSettings.SettingsConfig.InteractionTypesXMLPath)
@@ -40,18 +39,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
             IList<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes);
 
-            // TODO: get actual claims
-            IList<Claim> claims = new List<Claim>
-            {
-                new Claim { Code = "MATH1", Label = "Concepts and Procedures" },
-                new Claim { Code = "MATH2", Label = "Problem Solving and Modeling" },
-                new Claim { Code = "MATH3", Label = "Communicating Reasoning" },
-                new Claim { Code = "MATH4", Label = "Data Analysis" },
-                new Claim { Code = "ELA1", Label = "Reading" },
-                new Claim { Code = "ELA2", Label = "Writing" },
-                new Claim { Code = "ELA3", Label = "Listening" },
-                new Claim { Code = "ELA4", Label = "Research/Inquiry" }
-            };
+            IList <ClaimSubject> claimSubjects = XDocument.Load(appSettings.SettingsConfig.ClaimsXMLPath).ToClaimSubjects();
 
             SampleItemsContext context = new SampleItemsContext
             {
@@ -60,7 +48,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 InteractionTypes = interactionTypes,
                 ItemDigests = itemDigests,
                 AppSettings = appSettings,
-                Claims = claims
+                ClaimSubjects = claimSubjects
             };
 
             return context;

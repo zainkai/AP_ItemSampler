@@ -49,6 +49,7 @@
       "**/*.cshtml",
       "../../AccessibilityAccommodationConfigurations/",
       "../../InteractionTypeConfigurations/",
+      "../../ClaimConfigurations/",
       "docker-compose.yml",
       "appsettings*.json",
       "Dockerfile",

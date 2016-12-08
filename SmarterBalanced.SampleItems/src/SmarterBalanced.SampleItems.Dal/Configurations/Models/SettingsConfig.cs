@@ -6,6 +6,7 @@
         public string ContentRootDirectory { get; set; }
         public string AccommodationsXMLPath { get; set; }
         public string InteractionTypesXMLPath { get; set; }
+        public string ClaimsXMLPath { get; set; }
         public string AwsRegion { get; set; }
         public string AwsS3Bucket { get; set; }
         public string AwsS3ContentFilename { get; set; }
