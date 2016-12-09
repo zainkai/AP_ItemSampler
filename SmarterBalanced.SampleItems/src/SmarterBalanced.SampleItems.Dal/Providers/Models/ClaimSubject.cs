@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public class Claim
+    public class ClaimSubject
     {
         public string Code { get; set; }
-        public string ClaimNumber { get; set; }
-        public string Label { get; set; }
+        public List<Claim> Claims { get; set; }
     }
 }

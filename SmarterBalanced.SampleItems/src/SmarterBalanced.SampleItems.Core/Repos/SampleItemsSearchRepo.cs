@@ -46,10 +46,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         public ItemsSearchViewModel GetItemsSearchViewModel()
         {
-           return new ItemsSearchViewModel
+            return new ItemsSearchViewModel
             {
                 InteractionTypes = context.InteractionTypes,
-                Claims = context.Claims
+                Claims = context.ClaimSubjects.SelectMany(s => s.Claims).ToList()
             };
         }
     }

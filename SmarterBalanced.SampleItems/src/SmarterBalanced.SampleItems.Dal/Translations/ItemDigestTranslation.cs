@@ -1,5 +1,6 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using XmlModels = SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -41,20 +42,35 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 throw new SampleItemsContextException("Cannot digest items with different ItemKey values.\n"
                     + $"Content Item Key: {itemContents.Item.ItemKey} Metadata Item Key:{itemMetadata.Metadata.ItemKey}");
             }
+            XmlModels.StandardIdentifier identifier = null;
+            try
+            {
+                identifier =
+                    StandardIdentifierTranslation.StandardStringtoStandardIdentifier
+                        (itemMetadata.Metadata.StandardPublications.First().PrimaryStandard);
+            } catch(InvalidOperationException)
+            {
+                throw new SampleItemsContextException($"Publication field for item {itemContents.Item.ItemBank}-{itemContents.Item.ItemKey} is empty.");
+            }
+
 
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
             digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
             digest.ItemType = itemContents.Item.ItemType;
-            digest.Target = itemMetadata.Metadata.Target; 
+            digest.TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType; 
             digest.Subject = itemMetadata.Metadata.Subject;
             digest.InteractionTypeCode = itemMetadata.Metadata.InteractionType;
-            digest.Claim = itemMetadata.Metadata.Claim;
+            digest.SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim;
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
             digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources;
             digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
             digest.Name = $"{digest.Subject} {digest.Grade.ToString()} {digest.InteractionTypeCode}";
+            digest.ClaimId = identifier.Claim;
+            digest.TargetId = identifier.Target;
+            digest.CommonCoreStandardsId = identifier.CommonCoreStandard;
+
             return digest;
         }
 

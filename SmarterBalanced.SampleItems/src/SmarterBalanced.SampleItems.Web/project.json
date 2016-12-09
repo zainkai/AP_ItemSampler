@@ -48,11 +48,12 @@
       "web.config",
       "**/*.cshtml",
       "../../AccessibilityAccommodationConfigurations/",
+      "../../InteractionTypeConfigurations/",
+      "../../ClaimConfigurations/",
       "docker-compose.yml",
       "appsettings*.json",
       "Dockerfile",
       ".dockerignore"
-
     ],
     "exclude": [ "wwwroot/scripts/*.js.map" ]
   },

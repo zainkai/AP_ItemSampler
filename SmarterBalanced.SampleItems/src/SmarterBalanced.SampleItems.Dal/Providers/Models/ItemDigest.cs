@@ -23,11 +23,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         [Display(Name = "Grade")]
         public GradeLevels Grade { get; set; }
 
-        [Display(Name = "Claim")]
-        public string Claim { get; set; }
+        [Display(Name = "Sufficent Evidence of Claim")]
+        public string SufficentEvidenceOfClaim { get; set; }
 
         [Display(Name = "Target Assessment Type")]
-        public string Target { get; set; }
+        public string TargetAssessmentType { get; set; }
 
         [Display(Name = "Interaction Type")]
         public string InteractionTypeCode { get; set; }
@@ -41,6 +41,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public List<AccessibilityResource> AccessibilityResources { get; set; }
         [Display(Name = "Item Type")]
         public string ItemType { get; set; }
+
+        public string ClaimId { get; set; }
+
+        public string TargetId { get; set; }
+
+        public string CommonCoreStandardsId {get; set;}
 
         public string Name { get; set; }
         public bool Equals(ItemDigest obj)
