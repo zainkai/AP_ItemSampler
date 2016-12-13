@@ -34,12 +34,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             XElement interactionTypesDoc = XDocument
                 .Load(appSettings.SettingsConfig.InteractionTypesXMLPath)
                 .Element("InteractionTypes");
-            IList<InteractionType> interactionTypes = interactionTypesDoc.Element("Items").Elements("Item").ToInteractionTypes();
-            IList<InteractionFamily> interactionFamily = interactionTypesDoc.ToInteractionFamilies(interactionTypes);
+            List<InteractionType> interactionTypes = interactionTypesDoc.Element("Items").Elements("Item").ToInteractionTypes();
+            List<InteractionFamily> interactionFamily = interactionTypesDoc.ToInteractionFamilies();
 
-            IList<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes);
+            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes);
 
-            IList <ClaimSubject> claimSubjects = XDocument.Load(appSettings.SettingsConfig.ClaimsXMLPath).ToClaimSubjects();
+            List<Subject> subjects = XDocument.Load(appSettings.SettingsConfig.ClaimsXMLPath).ToSubjects(interactionFamily);
 
             SampleItemsContext context = new SampleItemsContext
             {
@@ -48,13 +48,13 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 InteractionTypes = interactionTypes,
                 ItemDigests = itemDigests,
                 AppSettings = appSettings,
-                ClaimSubjects = claimSubjects
+                Subjects = subjects
             };
 
             return context;
         }
 
-        private static async Task<IList<ItemDigest>> LoadItemDigests(
+        private static async Task<List<ItemDigest>> LoadItemDigests(
             AppSettings settings,
             IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
             IList<InteractionType> interactionTypes)
@@ -74,7 +74,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IEnumerable<ItemContents> itemContents = await deserializeContents;
 
 
-            IList<ItemDigest> itemDigests = ItemDigestTranslation
+            var itemDigests = ItemDigestTranslation
                 .ItemsToItemDigests(
                     itemMetadata,
                     itemContents,

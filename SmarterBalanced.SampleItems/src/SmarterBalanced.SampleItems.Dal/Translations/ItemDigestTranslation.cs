@@ -34,7 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             if (itemContents?.Item == null)
             {
-                throw new ArgumentNullException(nameof(itemMetadata.Metadata));
+                throw new ArgumentNullException(nameof(itemContents.Item));
             }
 
             if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
@@ -99,7 +99,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
                 else if (itemsCount > 1)
                 {
-                    throw new SampleItemsContextException("Multiple ItemContents wih ItemKey: " + metadata.Metadata.ItemKey + " found.");
+                    throw new SampleItemsContextException("Multiple ItemContents with ItemKey: " + metadata.Metadata.ItemKey + " found.");
                 }
                 // TODO: log a warning if item count is 0
             });

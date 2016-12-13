@@ -49,7 +49,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return new ItemsSearchViewModel
             {
                 InteractionTypes = context.InteractionTypes,
-                Claims = context.ClaimSubjects.SelectMany(s => s.Claims).ToList()
+                Subjects = context.Subjects
             };
         }
     }

@@ -7,7 +7,13 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public class InteractionFamily
     {
-        public string Code { get; set; }
-        public List<InteractionType> InteractionTypes { get; set; }
+        public string SubjectCode { get; }
+        public List<string> InteractionTypeCodes { get; }
+
+        public InteractionFamily(string subjectCode, List<string> interactionTypeCodes)
+        {
+            SubjectCode = subjectCode;
+            InteractionTypeCodes = interactionTypeCodes;
+        }
     }
 }

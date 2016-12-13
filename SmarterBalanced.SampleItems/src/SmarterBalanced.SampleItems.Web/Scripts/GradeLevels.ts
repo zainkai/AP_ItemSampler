@@ -17,18 +17,37 @@
 }
 
 namespace GradeLevels {
+    function caseToString(grade: GradeLevels): string {
+        switch (grade) {
+            case GradeLevels.NA: return "NA";
+            case GradeLevels.Grade3: return "Grade 3";
+            case GradeLevels.Grade4: return "Grade 4";
+            case GradeLevels.Grade5: return "Grade 5";
+            case GradeLevels.Grade6: return "Grade 6";
+            case GradeLevels.Grade7: return "Grade 7";
+            case GradeLevels.Grade8: return "Grade 8";
+            case GradeLevels.Grade9: return "Grade 9";
+            case GradeLevels.Grade10: return "Grade 10";
+            case GradeLevels.Grade11: return "Grade 11";
+            case GradeLevels.Grade12: return "Grade 12";
+            case GradeLevels.Elementary: return "Elementary";
+            case GradeLevels.Middle: return "Middle";
+            case GradeLevels.High: return "High";
+            default: return "";
+        }
+    }
+
     export function toString(grades: GradeLevels) {
-        // If a GradeLevels value exactly matches one of the declared enum members, it can be obtained by indexing into the enum.
-        const gradeString = GradeLevels[grades];
-        if (gradeString) {
-            return gradeString;
+        const caseString = caseToString(grades);
+        if (caseString !== "") {
+            return caseString;
         }
 
-        let gradeStrings: string[] = []
-        // If a GradeLevels value has several grades in it that don't match Elementary/Middle/High, we have to go through and add them up.
+        let gradeStrings: string[] = [];
         for (let i = 0; i < 10; i++) {
             if ((grades & 1 << i) === 1 << i) {
-                gradeStrings.push(GradeLevels[1 << i]);
+
+                gradeStrings.push(caseToString(1 << i));
             }
         }
         return gradeStrings.join(", ");

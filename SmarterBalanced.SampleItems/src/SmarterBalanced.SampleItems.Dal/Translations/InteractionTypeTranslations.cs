@@ -9,74 +9,50 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class InteractionTypeTranslations
     {
-
-        /// <summary>
-        /// Translates IEnumerable of XElement into a list of InteractionTypes.
-        /// </summary>
-        /// <param name="itemElements"></param>
-        /// <returns></returns>
-        public static IList<InteractionType> ToInteractionTypes(this IEnumerable<XElement> itemElements)
+        public static InteractionType ToInteractionType(this XElement elem)
         {
-            IList<InteractionType> interactionTypes = itemElements
-                .Select(i => new InteractionType
-                {
-                    Code = (string)i.Element("Code"),
-                    Label = (string)i.Element("Label"),
-                    Order = (i.Element("Order") == null) ? 0 : (int)i.Element("Order")
-                }).ToList();
+            var interactionType = new InteractionType(
+                code: (string)elem.Element("Code"),
+                label: (string)elem.Element("Label"),
+                order: elem.Element("Order") == null ? 0 : (int)elem.Element("Order"));
+
+            return interactionType;
+        }
+
+        public static List<InteractionType> ToInteractionTypes(this IEnumerable<XElement> itemElements)
+        {
+            var interactionTypes = itemElements
+                .Select(i => i.ToInteractionType())
+                .ToList();
 
             return interactionTypes;
         }
 
-        /// <summary>
-        /// Given a list of InteractionTypes, translates XElement of InteractionFamilies
-        /// into InteractionFamilies with InteractionTypes.
-        /// </summary>
-        /// <param name="typesDoc"></param>
-        /// <param name="interactionTypes"></param>
-        /// <returns></returns>
-        public static IList<InteractionFamily> ToInteractionFamilies(this XElement typesDoc, IList<InteractionType> interactionTypes)
+        public static List<InteractionFamily> ToInteractionFamilies(this XElement interactionTypesDoc)
         {
-            IList<InteractionFamily> interactionFamilies = typesDoc
+            var interactionFamilies = interactionTypesDoc
                 .Element("Families")
                 .Elements("Family")
-                .Select(i => new InteractionFamily
-                {
-                    Code = (string)i.Element("Code"),
-                    InteractionTypes = i.Elements("Items")
-                        .ToInteractionTypes()
-                        .MergeInteractionTypes(interactionTypes)
-                }).ToList();
+                .Select(e => e.ToInteractionFamily())
+                .ToList();
 
             return interactionFamilies;
         }
 
-        /// <summary>
-        /// Merges two ILists of InteractionTypes. 
-        /// </summary>
-        /// <param name="familyTypes"></param>
-        /// <param name="fullTypes"></param>
-        /// <returns></returns>
-        public static List<InteractionType> MergeInteractionTypes(this IList<InteractionType> familyTypes, IList<InteractionType> fullTypes)
+        public static InteractionFamily ToInteractionFamily(this XElement familyElement)
         {
-            List<InteractionType> interactionTypes = new List<InteractionType>();
+            var interactionTypeCodes = familyElement
+                    .Element("InteractionTypeCodes")
+                    .Elements("Code")
+                    .Select(e => (string)e)
+                    .ToList();
 
-            foreach(InteractionType famType in familyTypes)
-            {
-                InteractionType it = fullTypes.SingleOrDefault(i => i.Code == famType.Code);
-                InteractionType newInteractionType = new InteractionType
-                {
-                    Code = famType.Code,
-                    Order = famType.Order,
-                    Label = it?.Label
-                };
+            var interactionFamily = new InteractionFamily(
+                subjectCode: (string)familyElement.Element("SubjectCode"),
+                interactionTypeCodes: interactionTypeCodes);
 
-                interactionTypes.Add(newInteractionType);
-            }
-
-            return interactionTypes;
+            return interactionFamily;
         }
-
     }
 
 }

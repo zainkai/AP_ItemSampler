@@ -1,53 +1,53 @@
-<Claims>
+<Subjects>
+	<Subject>
+		<Code>MATH</Code>
+		<Label>Math</Label>
+		<ShortLabel>Math</ShortLabel>
+		<Claim>
+			<Code>MATH1</Code>
+			<ClaimNumber>Claim1</ClaimNumber>
+			<Label>Concepts and Procedures</Label>
+		</Claim>
+			<Claim>
+			<Code>MATH2</Code>
+			<ClaimNumber>Claim2</ClaimNumber>
+			<Label>Problem Solving and Modeling</Label>
+		</Claim>
+		<Claim>
+			<Code>MATH3</Code>
+			<ClaimNumber>Claim3</ClaimNumber>
+			<Label>Communicating and Reasoning</Label>
+		</Claim>
+		<Claim>
+			<Code>MATH4</Code>
+			<ClaimNumber>Claim4</ClaimNumber>
+			<Label>Data Analysis</Label>
+		</Claim>
+	</Subject>
 
-    <Subjects>
-        <Subject>
-            <Code>MATH</Code>
-            <Claim>
-                <Code>MATH1</Code>
-                <ClaimNumber>Claim1</ClaimNumber>
-                <Label>Concepts and Procedures</Label>
-            </Claim>
-                <Claim>
-                <Code>MATH2</Code>
-                <ClaimNumber>Claim2</ClaimNumber>
-                <Label>Problem Solving and Modeling</Label>
-            </Claim>
-            <Claim>
-                <Code>MATH3</Code>
-                <ClaimNumber>Claim3</ClaimNumber>
-                <Label>Communicating and Reasoning</Label>
-            </Claim>
-            <Claim>
-                <Code>MATH4</Code>
-                <ClaimNumber>Claim4</ClaimNumber>
-                <Label>Data Analysis</Label>
-            </Claim>
-        </Subject>
-
-        <Subject>
-            <Code>ELA</Code>
-                <Claim>
-            <Code>ELA1</Code>
-            <ClaimNumber>Claim1</ClaimNumber>
-            <Label>Reading</Label>
-        </Claim>
-        <Claim>
-            <Code>ELA2</Code>
-            <ClaimNumber>Claim2</ClaimNumber>
-            <Label>Writing</Label>
-        </Claim>
-        <Claim>
-            <Code>ELA3</Code>
-            <ClaimNumber>Claim3</ClaimNumber>
-            <Label>Listening</Label>
-        </Claim>
-        <Claim>
-            <Code>ELA4</Code>
-            <ClaimNumber>Claim4</ClaimNumber>
-            <Label>Research/Inquiry</Label>
-        </Claim>
-        </Subject>
-    </Subjects>
-
-</Claims>
+	<Subject>
+		<Code>ELA</Code>
+		<Label>English language arts/literacy</Label>
+		<ShortLabel>ELA/literacy</ShortLabel>
+		<Claim>
+			<Code>ELA1</Code>
+			<ClaimNumber>Claim1</ClaimNumber>
+			<Label>Reading</Label>
+		</Claim>
+		<Claim>
+			<Code>ELA2</Code>
+			<ClaimNumber>Claim2</ClaimNumber>
+			<Label>Writing</Label>
+		</Claim>
+		<Claim>
+			<Code>ELA3</Code>
+			<ClaimNumber>Claim3</ClaimNumber>
+			<Label>Listening</Label>
+		</Claim>
+		<Claim>
+			<Code>ELA4</Code>
+			<ClaimNumber>Claim4</ClaimNumber>
+			<Label>Research/Inquiry</Label>
+		</Claim>
+	</Subject>
+</Subjects>

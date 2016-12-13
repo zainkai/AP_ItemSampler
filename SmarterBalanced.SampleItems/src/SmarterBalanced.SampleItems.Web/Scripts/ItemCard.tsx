@@ -19,7 +19,7 @@ class ItemCard extends React.Component<ItemDigest, {}> {
     render() {
         const { bankKey, itemKey } = this.props;
         return (
-            <div key={bankKey.toString() + "-" + itemKey.toString()} className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
+            <div className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
                     <h4 className="card-title">{this.props.name}</h4>
                     <p className="card-text">Claim: {this.props.claim}</p>
