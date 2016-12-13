@@ -1,4 +1,5 @@
-﻿using SmarterBalanced.SampleItems.Core.Repos.Models;
+﻿using Microsoft.Extensions.Logging;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
@@ -11,10 +12,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public class SampleItemsSearchRepo : ISampleItemsSearchRepo
     {
-        private SampleItemsContext context;
-        public SampleItemsSearchRepo(SampleItemsContext context)
+        private readonly SampleItemsContext context;
+        private readonly ILogger logger;
+
+        public SampleItemsSearchRepo(SampleItemsContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
+            logger = loggerFactory.CreateLogger<SampleItemsSearchRepo>();
         }
 
         public IList<ItemDigest> GetItemDigests()

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
@@ -8,11 +9,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemsSearchController : Controller
     {
-        private ISampleItemsSearchRepo sampleItemsSearchRepo;
+        private readonly ISampleItemsSearchRepo sampleItemsSearchRepo;
+        private readonly ILogger logger;
 
-        public ItemsSearchController(ISampleItemsSearchRepo repo)
+        public ItemsSearchController(ISampleItemsSearchRepo repo, ILoggerFactory loggerFactory )
         {
             sampleItemsSearchRepo = repo;
+            logger = loggerFactory.CreateLogger<ItemsSearchController>();
         }
 
         // GET: /<controller>/

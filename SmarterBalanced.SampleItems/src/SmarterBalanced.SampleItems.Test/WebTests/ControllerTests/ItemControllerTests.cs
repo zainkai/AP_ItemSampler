@@ -7,6 +7,7 @@ using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -63,21 +64,25 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
-            itemViewRepoMock.Setup(x => x.GetItemViewModelAsync(bankKey, itemKey)).ReturnsAsync(itemViewModel);
-            itemViewRepoMock.Setup(x => x.GetItemViewModelAsync(bankKey, itemKey, iSAAP)).ReturnsAsync(itemViewModel);
-            itemViewRepoMock.Setup(x => x.GetItemViewModelAsync(bankKey, itemKey, null)).ReturnsAsync(itemViewModelCookie);
+            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey)).Returns(itemViewModel);
+            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, iSAAP)).Returns(itemViewModel);
+            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, null)).Returns(itemViewModelCookie);
             itemViewRepoMock.Setup(x => x.AppSettings).Returns(appSettings);
 
-            controller = new ItemController(itemViewRepoMock.Object);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var logger = new Mock<ILogger>();
+            loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            controller = new ItemController(itemViewRepoMock.Object, loggerFactory.Object);
         }
 
         /// <summary>
         /// Tests that an ItemViewModel is returned given a vaid id.
         /// </summary>
         [Fact]
-        public async void TestDetailsSuccess()
+        public void TestDetailsSuccess()
         {
-            var result = await controller.Details(bankKey, itemKey, iSAAP);
+            var result = controller.Details(bankKey, itemKey, iSAAP);
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
@@ -90,9 +95,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a null key
         /// </summary>
         [Fact]
-        public async void TestDetailsNullParam()
+        public void TestDetailsNullParam()
         {
-            var result = await controller.Details(null, itemKey, iSAAP);
+            var result = controller.Details(null, itemKey, iSAAP);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -101,9 +106,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a nonexistent key
         /// </summary>
         [Fact]
-        public async void TestDetailsBadId()
+        public void TestDetailsBadId()
         {
-            var result = await controller.Details(bankKey + 1, itemKey + 1, iSAAP);
+            var result = controller.Details(bankKey + 1, itemKey + 1, iSAAP);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -112,9 +117,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a cookie ISSAP is returned instead of param
         /// </summary>
         [Fact]
-        public async void TestDetailsNoISAAP()
+        public void TestDetailsNoISAAP()
         {
-            var result = await controller.Details(bankKey, itemKey, string.Empty);
+            var result = controller.Details(bankKey, itemKey, string.Empty);
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
@@ -126,9 +131,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a null bank key
         /// </summary>
         [Fact]
-        public async void ResetToGlobalAccessibilityNullBankKey()
+        public void ResetToGlobalAccessibilityNullBankKey()
         {
-            var result = await controller.Details(null, itemKey, iSAAP);
+            var result = controller.Details(null, itemKey, iSAAP);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -137,9 +142,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a null item  key
         /// </summary>
         [Fact]
-        public async void ResetToGlobalAccessibilityNullItemKey()
+        public void ResetToGlobalAccessibilityNullItemKey()
         {
-            var result = await controller.ResetToGlobalAccessibility(bankKey, null);
+            var result = controller.ResetToGlobalAccessibility(bankKey, null);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -148,9 +153,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a bad key
         /// </summary>
         [Fact]
-        public async void ResetToGlobalAccessibilityBadKey()
+        public void ResetToGlobalAccessibilityBadKey()
         {
-            var result = await controller.ResetToGlobalAccessibility(bankKey + 1, itemKey + 1);
+            var result = controller.ResetToGlobalAccessibility(bankKey + 1, itemKey + 1);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -159,9 +164,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         /// Tests that a BadRequestResult is returned given a bad key
         /// </summary>
         [Fact]
-        public async void ResetToGlobalAccessibilityHappy()
+        public void ResetToGlobalAccessibilityHappy()
         {
-            var result = await controller.ResetToGlobalAccessibility(bankKey, itemKey);
+            var result = controller.ResetToGlobalAccessibility(bankKey, itemKey);
 
             var viewResult = Assert.IsType<PartialViewResult>(result);
             Assert.Equal("_LocalAccessibility", viewResult.ViewName);

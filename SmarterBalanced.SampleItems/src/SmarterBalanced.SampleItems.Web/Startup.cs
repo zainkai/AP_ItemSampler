@@ -38,11 +38,11 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddMvc();
             AppSettings appSettings = new AppSettings(Configuration);
             SampleItemsContext context = SampleItemsProvider.LoadContext(appSettings).Result;
-            
-            services.AddScoped<IItemViewRepo>(provider => new ItemViewRepo(context));
-            services.AddScoped<ISampleItemsSearchRepo>(provider => new SampleItemsSearchRepo(context));
-            services.AddScoped<IGlobalAccessibilityRepo>(provider => new GlobalAccessibilityRepo(context));
-            services.AddScoped<IDiagnosticManager>(provider => new DiagnosticManager(context));
+            services.AddSingleton(context);
+            services.AddScoped<IItemViewRepo, ItemViewRepo>();
+            services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
+            services.AddScoped<IGlobalAccessibilityRepo, GlobalAccessibilityRepo>();
+            services.AddScoped<IDiagnosticManager, DiagnosticManager>();
 
             services.AddRouting();
         }
@@ -53,21 +53,20 @@ namespace SmarterBalanced.SampleItems.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
+            app.UseStaticFiles();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
                 app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithRedirects("/Home/StatusCodeError?code={0}");
             }
-
-            app.UseApplicationInsightsExceptionTelemetry();
-
-            app.UseStaticFiles();
 
             app.UseMvc(routes =>
             {
