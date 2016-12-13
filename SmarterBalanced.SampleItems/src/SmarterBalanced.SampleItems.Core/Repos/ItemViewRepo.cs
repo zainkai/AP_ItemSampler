@@ -37,9 +37,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns>an ItemDigest object.</returns>
-        public Task<ItemDigest> GetItemDigestAsync(int bankKey, int itemKey)
+        public ItemDigest GetItemDigest(int bankKey, int itemKey)
         {
-            return Task.Run(() => context.ItemDigests.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey));
+            return context.ItemDigests.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
         }
 
         /// <summary>
@@ -64,33 +64,29 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="itemDigest"></param>
         /// <returns>List of accessibility resource family</returns>
-        private Task<List<AccessibilityResourceViewModel>> GetAccessibilityResourceViewModels(List<AccessibilityResource> accResources, string iSAAPCode)
+        private List<AccessibilityResourceViewModel> GetAccessibilityResourceViewModels(List<AccessibilityResource> accResources, string iSAAPCode)
         {
-            return Task.Run(() =>  accResources.ToAccessibilityResourceViewModels(iSAAPCode));
+            return accResources.ToAccessibilityResourceViewModels(iSAAPCode);
         }
 
         /// <summary>
         /// Constructs a LocalAccessibilityViewModel using AccessiblityResourceViewModels
         /// </summary>
         /// <param name="accResourceViewModels"></param>
-        private Task<LocalAccessibilityViewModel> GetLocalAccessibilityResourcesAsync(List<AccessibilityResourceViewModel> accResourceViewModels)
+        private LocalAccessibilityViewModel GetLocalAccessibilityResourcesAsync(List<AccessibilityResourceViewModel> accResourceViewModels)
         {
-            return Task.Run(() =>
-            {
-                LocalAccessibilityViewModel localAccViewModel = new LocalAccessibilityViewModel();
+            LocalAccessibilityViewModel localAccViewModel = new LocalAccessibilityViewModel();
 
-                List<AccessibilityResourceViewModel> nonApplicableResources = accResourceViewModels
-                                         .Where(t => t.Disabled || t.AccessibilityListItems.TrueForAll(s => s.Disabled)).ToList();
+            List<AccessibilityResourceViewModel> nonApplicableResources = accResourceViewModels
+                                        .Where(t => t.Disabled || t.AccessibilityListItems.TrueForAll(s => s.Disabled)).ToList();
 
-                localAccViewModel.AccessibilityResourceViewModels = accResourceViewModels
-                                        .Where(t => !nonApplicableResources.Contains(t))
-                                        .ToList();
+            localAccViewModel.AccessibilityResourceViewModels = accResourceViewModels
+                                    .Where(t => !nonApplicableResources.Contains(t))
+                                    .ToList();
 
-                localAccViewModel.NonApplicableAccessibilityResources = ConcatAccessibilityResources(nonApplicableResources);
+            localAccViewModel.NonApplicableAccessibilityResources = ConcatAccessibilityResources(nonApplicableResources);
 
-                return localAccViewModel;
-            });
-
+            return localAccViewModel;
         }
 
         /// <summary>
@@ -110,9 +106,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns>an ItemViewModel.</returns>
-        public Task<ItemViewModel> GetItemViewModelAsync(int bankKey, int itemKey)
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey)
         {
-            return GetItemViewModelAsync(bankKey, itemKey, string.Empty);
+            return GetItemViewModel(bankKey, itemKey, string.Empty);
         }
 
         /// <summary>
@@ -122,10 +118,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <returns>an ItemViewModel.</returns>
-        public async Task<ItemViewModel> GetItemViewModelAsync(int bankKey, int itemKey, string iSAAP)
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSAAP)
         {
             ItemViewModel itemView = null;
-            ItemDigest itemDigest = await GetItemDigestAsync(bankKey, itemKey);
+            ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
 
             if (itemDigest != null)
             {
@@ -133,8 +129,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 itemView.ItemDigest = itemDigest;
                 itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSAAP);
 
-                var accResourceVMs = await GetAccessibilityResourceViewModels(itemDigest?.AccessibilityResources, iSAAP);
-                itemView.LocalAccessibilityViewModel = await GetLocalAccessibilityResourcesAsync(accResourceVMs);
+                var accResourceVMs = GetAccessibilityResourceViewModels(itemDigest?.AccessibilityResources, iSAAP);
+                itemView.LocalAccessibilityViewModel = GetLocalAccessibilityResourcesAsync(accResourceVMs);
             }
 
             return itemView;
