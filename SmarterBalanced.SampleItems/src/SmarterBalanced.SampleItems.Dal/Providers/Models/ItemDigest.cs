@@ -9,56 +9,22 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     /// <summary>
     /// Flattened digest of an ItemMetadata object and an ItemContents object
     /// </summary>
-    public class ItemDigest : IEquatable<ItemDigest>
+    public class ItemDigest
     {
-        [Display(Name = "Bank")]
         public int BankKey { get; set; }
-
-        [Display(Name = "Item Key")]
         public int ItemKey { get; set; }
-
-        [Display(Name = "Subject")]
         public string Subject { get; set; }
-
-        [Display(Name = "Grade")]
         public GradeLevels Grade { get; set; }
-
-        [Display(Name = "Sufficent Evidence of Claim")]
         public string SufficentEvidenceOfClaim { get; set; }
-
-        [Display(Name = "Target Assessment Type")]
         public string TargetAssessmentType { get; set; }
-
-        [Display(Name = "Interaction Type")]
         public string InteractionTypeCode { get; set; }
-
-        [Display(Name = "Interaction Type")]
         public string InteractionTypeLabel { get; set; }
-
-        [Display(Name = "AssociatedStimulus")]
         public int? AssociatedStimulus { get; set; }
-
         public List<AccessibilityResource> AccessibilityResources { get; set; }
-        [Display(Name = "Item Type")]
         public string ItemType { get; set; }
-
         public string ClaimId { get; set; }
-
         public string TargetId { get; set; }
-
-        public string CommonCoreStandardsId {get; set;}
-
+        public string CommonCoreStandardsId { get; set;}
         public string Name { get; set; }
-        public bool Equals(ItemDigest obj)
-        {
-            return GetHashCode() == obj.GetHashCode();
-        }
-
-        public override int GetHashCode()
-        {
-            return ($"{BankKey}-{ItemKey}").GetHashCode();
-        }
-
     }
-
 }

@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Threading.Tasks;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class ClaimTranslations
     {
-        public static List<Claim> ToClaims(this IEnumerable<XElement> claimElements)
+        public static ImmutableArray<Claim> ToClaims(this IEnumerable<XElement> claimElements)
         {
             var claims = claimElements
                 .Select(ToClaim)
-                .ToList();
+                .ToImmutableArray();
 
             return claims;
         }

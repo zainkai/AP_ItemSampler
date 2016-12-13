@@ -46,7 +46,6 @@ namespace GradeLevels {
         let gradeStrings: string[] = [];
         for (let i = 0; i < 10; i++) {
             if ((grades & 1 << i) === 1 << i) {
-
                 gradeStrings.push(caseToString(1 << i));
             }
         }

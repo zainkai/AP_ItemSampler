@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
@@ -45,7 +46,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     .Element("InteractionTypeCodes")
                     .Elements("Code")
                     .Select(e => (string)e)
-                    .ToList();
+                    .ToImmutableArray();
 
             var interactionFamily = new InteractionFamily(
                 subjectCode: (string)familyElement.Element("SubjectCode"),

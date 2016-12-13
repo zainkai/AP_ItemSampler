@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,10 +11,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Code { get; }
         public string Label { get; }
         public string ShortLabel { get; }
-        public List<Claim> Claims { get; }
-        public List<string> InteractionTypeCodes { get; }
+        public ImmutableArray<Claim> Claims { get; }
+        public ImmutableArray<string> InteractionTypeCodes { get; }
 
-        public Subject(string code, string label, string shortLabel, List<Claim> claims, List<string> interactionTypeCodes)
+        public Subject(string code, string label, string shortLabel, ImmutableArray<Claim> claims, ImmutableArray<string> interactionTypeCodes)
         {
             Code = code;
             Label = label;
