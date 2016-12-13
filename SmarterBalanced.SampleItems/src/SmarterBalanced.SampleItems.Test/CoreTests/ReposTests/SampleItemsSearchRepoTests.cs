@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
@@ -54,7 +55,12 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
             var sampleContextMock = new Mock<SampleItemsContext>();
             sampleContextMock.Setup(x => x.ItemDigests).Returns(itemDigests);
-            sampleItemsSearchRepo = new SampleItemsSearchRepo(sampleContextMock.Object);
+
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var logger = new Mock<ILogger>();
+            loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            sampleItemsSearchRepo = new SampleItemsSearchRepo(sampleContextMock.Object, loggerFactory.Object);
         }
 
     }

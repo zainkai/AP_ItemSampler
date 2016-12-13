@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using System;
@@ -8,16 +9,21 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemController : Controller
     {
-        private IItemViewRepo repo;
-        public ItemController(IItemViewRepo itemViewRepo)
+        private readonly IItemViewRepo repo;
+        private readonly ILogger logger;
+
+        public ItemController(IItemViewRepo itemViewRepo, ILoggerFactory loggerFactory)
         {
             repo = itemViewRepo;
+            logger = loggerFactory.CreateLogger<ItemController>();
         }
 
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            logger.LogDebug($"{nameof(Index)} redirect to itemssearch");
+
+            return RedirectToActionPermanent("Index", "itemsSearch");
         }
 
         /// <summary>
@@ -31,6 +37,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
+                logger.LogWarning($"{nameof(Details)} null param(s) for {bankKey} {itemKey}");
                 return BadRequest();
             } 
 
@@ -43,6 +50,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
             {
+                logger.LogWarning($"{nameof(Details)} invalid item {bankKey} {itemKey}");
                 return BadRequest();
             }
 
@@ -60,6 +68,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
+                logger.LogWarning($"{nameof(ResetToGlobalAccessibility)} null param(s) for {bankKey} {itemKey}");
                 return BadRequest();
             }
 
@@ -69,6 +78,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
             {
+                logger.LogWarning($"{nameof(ResetToGlobalAccessibility)} invalid item {bankKey} {itemKey}");
                 return BadRequest();
             }
 

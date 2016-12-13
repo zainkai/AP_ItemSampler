@@ -7,6 +7,7 @@ using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -68,7 +69,11 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, null)).Returns(itemViewModelCookie);
             itemViewRepoMock.Setup(x => x.AppSettings).Returns(appSettings);
 
-            controller = new ItemController(itemViewRepoMock.Object);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var logger = new Mock<ILogger>();
+            loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            controller = new ItemController(itemViewRepoMock.Object, loggerFactory.Object);
         }
 
         /// <summary>

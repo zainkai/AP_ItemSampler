@@ -7,16 +7,19 @@ using System.Linq;
 using SmarterBalanced.SampleItems.Core.Translations;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public class ItemViewRepo : IItemViewRepo
     {
-        private SampleItemsContext context;
+        private readonly SampleItemsContext context;
+        private readonly ILogger logger;
 
-        public ItemViewRepo(SampleItemsContext context)
+        public ItemViewRepo(SampleItemsContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
+            logger = loggerFactory.CreateLogger<ItemViewRepo>();
         }
 
         /// <summary>

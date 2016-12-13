@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "asp.net",
+  "name": "sampleitemsapp",
   "private": true,
   "devDependencies": {
     "grunt": "1.0.1",

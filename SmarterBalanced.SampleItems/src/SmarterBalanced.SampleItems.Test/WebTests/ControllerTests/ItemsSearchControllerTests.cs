@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
@@ -57,16 +58,21 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
 
             var sampleItemsSearchRepoMock = new Mock<ISampleItemsSearchRepo>();
+
             sampleItemsSearchRepoMock.Setup(x => x.GetItemDigests()).Returns(itemDigests);
             sampleItemsSearchRepoMock.Setup(x => x.
-                GetItemDigests(GradeLevels.High, mathSubjectList, interactionCodeList))
-                .Returns(new List<ItemDigest> { itemDigests[1] });
+                                        GetItemDigests(GradeLevels.High, mathSubjectList, interactionCodeList))
+                                        .Returns(new List<ItemDigest> { itemDigests[1] });
 
             sampleItemsSearchRepoMock.Setup(x => x.
-                GetItemDigests(GradeLevels.High, new string[] { "ELA" }, interactionCodeList))
-                .Returns(new List<ItemDigest> { });
+                                        GetItemDigests(GradeLevels.High, new string[] { "ELA" }, interactionCodeList))
+                                        .Returns(new List<ItemDigest> { });
 
-            controller = new ItemsSearchController(sampleItemsSearchRepoMock.Object);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var logger = new Mock<ILogger>();
+            loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            controller = new ItemsSearchController(sampleItemsSearchRepoMock.Object, loggerFactory.Object);
         }
 
 
