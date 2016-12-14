@@ -19,6 +19,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         List<ItemDigest> itemDigests;
         string[] mathSubjectList;
         string[] interactionCodeList;
+        string[] claimList;
 
         public ItemsSearchControllerTests()
         {
@@ -26,7 +27,8 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             mathSubjectList = new string[] { subject };
             string interactionTypeCode = "TC2";
             interactionCodeList = new string[] { interactionTypeCode };
-
+            string claimCode = "1";
+            claimList = new string[] { claimCode };
 
             itemDigests = new List<ItemDigest>() {
                 new ItemDigest
@@ -61,11 +63,11 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             sampleItemsSearchRepoMock.Setup(x => x.GetItemDigests()).Returns(itemDigests);
             sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemDigests(GradeLevels.High, mathSubjectList, interactionCodeList))
+                                        GetItemDigests(GradeLevels.High, mathSubjectList, interactionCodeList, claimList))
                                         .Returns(new List<ItemDigest> { itemDigests[1] });
 
             sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemDigests(GradeLevels.High, new string[] { "ELA" }, interactionCodeList))
+                                        GetItemDigests(GradeLevels.High, new string[] { "ELA" }, interactionCodeList, claimList))
                                         .Returns(new List<ItemDigest> { });
 
             var loggerFactory = new Mock<ILoggerFactory>();
@@ -79,7 +81,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestSearchHappyCase()
         {
-            var result = controller.Search(GradeLevels.High, mathSubjectList, interactionCodeList) as JsonResult;
+            var result = controller.Search(GradeLevels.High, mathSubjectList, interactionCodeList, claimList) as JsonResult;
             List<ItemDigest> resultList = result.Value as List<ItemDigest>;
 
             Assert.Equal(1, resultList.Count);
@@ -91,7 +93,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestSearchNoResult()
         {
-            var result = controller.Search(GradeLevels.High, new string[] { "ELA" }, interactionCodeList) as JsonResult;
+            var result = controller.Search(GradeLevels.High, new string[] { "ELA" }, interactionCodeList, claimList) as JsonResult;
             List<ItemDigest> resultList = result.Value as List<ItemDigest>;
 
             Assert.Equal(0, resultList.Count);
