@@ -37,6 +37,7 @@ class ItemCard extends React.Component<ItemDigest, {}> {
             <div className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
                     <h4 className="card-title">{this.props.title}</h4>
+                    <p className="card-text">Item Id: {this.props.bankKey + "-" + this.props.itemKey}</p>
                     <p className="card-text">Claim: {this.props.claim.label}</p>
                     <p className="card-text">Grade: {this.props.displayGrade}</p>
                     <p className="card-text">Subject: {this.props.subject.shortLabel}</p>
