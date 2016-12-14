@@ -50,7 +50,7 @@ class ItemCard extends React.Component<ItemDigest, {}> {
                         <span className="card-text-value"> {this.props.claim.label}</span>
                     </p>
                     <p className="card-text target">
-                        <span>Target:</span>
+                        <span className="card-text-label">Target:</span>
                         <span className="card-text-value"> {this.props.targetId}</span>
                     </p>
                     <p className="card-text interaction-type">
