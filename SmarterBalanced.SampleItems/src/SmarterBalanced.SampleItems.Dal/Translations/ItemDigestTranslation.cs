@@ -25,51 +25,57 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             ItemMetadata itemMetadata,
             ItemContents itemContents,
             IList<AccessibilityResourceFamily> resourceFamilies,
-            IList<InteractionType> interactionTypes)
+            IList<InteractionType> interactionTypes,
+            IList<Subject> subjects
+            )
         {
             if(itemMetadata?.Metadata == null)
-            {
                 throw new ArgumentNullException(nameof(itemMetadata.Metadata));
-            }
 
             if (itemContents?.Item == null)
-            {
-                throw new ArgumentNullException(nameof(itemMetadata.Metadata));
-            }
+                throw new ArgumentNullException(nameof(itemContents.Item));
 
             if (itemContents.Item.ItemKey != itemMetadata.Metadata.ItemKey)
             {
                 throw new SampleItemsContextException("Cannot digest items with different ItemKey values.\n"
                     + $"Content Item Key: {itemContents.Item.ItemKey} Metadata Item Key:{itemMetadata.Metadata.ItemKey}");
             }
-            XmlModels.StandardIdentifier identifier = null;
+
+            XmlModels.StandardIdentifier identifier;
             try
             {
-                identifier =
-                    StandardIdentifierTranslation.StandardStringtoStandardIdentifier
-                        (itemMetadata.Metadata.StandardPublications.First().PrimaryStandard);
-            } catch(InvalidOperationException)
-            {
-                throw new SampleItemsContextException($"Publication field for item {itemContents.Item.ItemBank}-{itemContents.Item.ItemKey} is empty.");
+                identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(
+                    itemMetadata.Metadata.StandardPublications.First().PrimaryStandard);
             }
-
+            catch (InvalidOperationException ex)
+            {
+                throw new SampleItemsContextException(
+                    $"Publication field for item {itemContents.Item.ItemBank}-{itemContents.Item.ItemKey} is empty.", ex);
+            }
 
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
-            digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
             digest.ItemType = itemContents.Item.ItemType;
             digest.TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType; 
-            digest.Subject = itemMetadata.Metadata.Subject;
+            digest.SubjectId = itemMetadata.Metadata.Subject;
             digest.InteractionTypeCode = itemMetadata.Metadata.InteractionType;
             digest.SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim;
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
-            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources;
-            digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
-            digest.Name = $"{digest.Subject} {digest.Grade.ToString()} {digest.InteractionTypeCode}";
-            digest.ClaimId = identifier.Claim;
+         
+            //TODO: do we need claim with identifier? 3-L?
+            digest.ClaimId = (string.IsNullOrEmpty(identifier.Claim)) ? string.Empty : identifier.Claim.Substring(0, 1);
             digest.TargetId = identifier.Target;
             digest.CommonCoreStandardsId = identifier.CommonCoreStandard;
+
+            digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
+            digest.DisplayGrade = digest.Grade.ToDisplayString();
+            digest.Subject = subjects.FirstOrDefault(s => s.Code == digest.SubjectId);
+            digest.Claim = digest.Subject?.Claims.FirstOrDefault(t => t.ClaimNumber == digest.ClaimId);
+            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.SubjectId) && t.Grades.Contains(digest.Grade))?.Resources;
+            digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
+            string claimTitle = (string.IsNullOrEmpty(digest.Claim?.ClaimNumber)) ? string.Empty : $"Claim {digest.Claim.ClaimNumber}";
+            digest.Title = $"{digest.Subject?.ShortLabel} {digest.DisplayGrade} {claimTitle}";
 
             return digest;
         }
@@ -85,7 +91,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents,
             IList<AccessibilityResourceFamily> resourceFamilies,
-            IList<InteractionType> interactionTypes)
+            IList<InteractionType> interactionTypes,
+            IList<Subject> subjects)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
@@ -95,11 +102,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies, interactionTypes));
+                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies, interactionTypes, subjects));
                 }
                 else if (itemsCount > 1)
                 {
-                    throw new SampleItemsContextException("Multiple ItemContents wih ItemKey: " + metadata.Metadata.ItemKey + " found.");
+                    throw new SampleItemsContextException("Multiple ItemContents with ItemKey: " + metadata.Metadata.ItemKey + " found.");
                 }
                 // TODO: log a warning if item count is 0
             });

@@ -1,14 +1,29 @@
 ﻿
 interface ItemDigest {
-    name: string;
+    title: string;
     bankKey: number;
     itemKey: number;
-    subject: string;
+    subjectId: string;
     grade: GradeLevels;
-    claim: string | null;
+    displayGrade: string;
+    claimId: string;
     target: string;
     interactionTypeLabel: string;
     associatedStimulus: number | null;
+    subject: Subject;
+    claim: Claim;
+}
+
+interface Subject {
+    code: string;
+    shortLabel: string;
+    label: string;
+}
+
+interface Claim {
+    code: string;
+    claimNumber: string;
+    label: string;
 }
 
 function itemPageLink(bankKey: number, itemKey: number) {
@@ -19,12 +34,12 @@ class ItemCard extends React.Component<ItemDigest, {}> {
     render() {
         const { bankKey, itemKey } = this.props;
         return (
-            <div key={bankKey.toString() + "-" + itemKey.toString()} className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
+            <div className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
-                    <h4 className="card-title">{this.props.name}</h4>
-                    <p className="card-text">Claim: {this.props.claim}</p>
-                    <p className="card-text">Grade: {GradeLevels.toString(this.props.grade)}</p>
-                    <p className="card-text">Subject: {this.props.subject}</p>
+                    <h4 className="card-title">{this.props.title}</h4>
+                    <p className="card-text">Claim: {this.props.claim.label}</p>
+                    <p className="card-text">Grade: {this.props.displayGrade}</p>
+                    <p className="card-text">Subject: {this.props.subject.shortLabel}</p>
                     <p className="card-text">Interaction Type: {this.props.interactionTypeLabel}</p>
                 </div>
             </div>

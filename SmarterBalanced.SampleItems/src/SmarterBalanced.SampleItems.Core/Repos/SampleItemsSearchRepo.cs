@@ -27,23 +27,20 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         // TODO: what should terms search on?
-        public IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes)
+        public IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes, string[] claimIds)
         {
             var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
             if (grades != GradeLevels.All && grades != GradeLevels.NA)
-            {
                 query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
-            }
 
             if (subjects != null && subjects.Any())
-            {
-                query = query.Where(i => subjects.Contains(i.Subject));
-            }
+                query = query.Where(i => subjects.Contains(i.SubjectId));
 
             if (interactionTypes.Any())
-            {
                 query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
-            }
+
+            if (claimIds.Any())
+                query = query.Where(i => claimIds.Contains(i.Claim.Code));
 
             return query.ToList();
         }
@@ -53,7 +50,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return new ItemsSearchViewModel
             {
                 InteractionTypes = context.InteractionTypes,
-                Claims = context.ClaimSubjects.SelectMany(s => s.Claims).ToList()
+                Subjects = context.Subjects
             };
         }
     }
