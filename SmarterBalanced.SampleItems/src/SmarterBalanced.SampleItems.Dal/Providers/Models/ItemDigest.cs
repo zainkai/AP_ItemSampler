@@ -14,7 +14,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int BankKey { get; set; }
         public int ItemKey { get; set; }
         public string Subject { get; set; }
+        public string SubjectShortLabel { get; set; }
         public GradeLevels Grade { get; set; }
+        public string DisplayGrade { get; set; }
         public string SufficentEvidenceOfClaim { get; set; }
         public string TargetAssessmentType { get; set; }
         public string InteractionTypeCode { get; set; }
@@ -23,8 +25,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public List<AccessibilityResource> AccessibilityResources { get; set; }
         public string ItemType { get; set; }
         public string ClaimId { get; set; }
+        public string DisplayClaim { get; set; }
         public string TargetId { get; set; }
         public string CommonCoreStandardsId { get; set;}
-        public string Name { get; set; }
+        public string Title { get; set; }
     }
 }

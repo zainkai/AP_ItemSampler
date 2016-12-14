@@ -37,9 +37,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             List<InteractionType> interactionTypes = interactionTypesDoc.Element("Items").Elements("Item").ToInteractionTypes();
             List<InteractionFamily> interactionFamily = interactionTypesDoc.ToInteractionFamilies();
 
-            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes);
-
             List<Subject> subjects = XDocument.Load(appSettings.SettingsConfig.ClaimsXMLPath).ToSubjects(interactionFamily);
+
+            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes, subjects);
 
             SampleItemsContext context = new SampleItemsContext
             {
@@ -57,7 +57,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         private static async Task<List<ItemDigest>> LoadItemDigests(
             AppSettings settings,
             IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
-            IList<InteractionType> interactionTypes)
+            IList<InteractionType> interactionTypes,
+            IList<Subject> subjects)
         {
             string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
@@ -79,7 +80,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                     itemMetadata,
                     itemContents,
                     accessibilityResourceFamilies,
-                    interactionTypes)
+                    interactionTypes,
+                    subjects)
                 .ToList();
 
             return itemDigests;

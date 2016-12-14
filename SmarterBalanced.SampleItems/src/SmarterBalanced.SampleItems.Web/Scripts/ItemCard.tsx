@@ -1,11 +1,14 @@
 ﻿
 interface ItemDigest {
-    name: string;
+    title: string;
     bankKey: number;
     itemKey: number;
     subject: string;
+    subjectShortLabel: string;
     grade: GradeLevels;
-    claim: string | null;
+    displayGrade: string;
+    claimId: string;
+    displayClaim: string;
     target: string;
     interactionTypeLabel: string;
     associatedStimulus: number | null;
@@ -21,10 +24,10 @@ class ItemCard extends React.Component<ItemDigest, {}> {
         return (
             <div className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
-                    <h4 className="card-title">{this.props.name}</h4>
-                    <p className="card-text">Claim: {this.props.claim}</p>
-                    <p className="card-text">Grade: {GradeLevels.toString(this.props.grade)}</p>
-                    <p className="card-text">Subject: {this.props.subject}</p>
+                    <h4 className="card-title">{this.props.title}</h4>
+                    <p className="card-text">Claim: {this.props.displayClaim}</p>
+                    <p className="card-text">Grade: {this.props.displayGrade}</p>
+                    <p className="card-text">Subject: {this.props.subjectShortLabel}</p>
                     <p className="card-text">Interaction Type: {this.props.interactionTypeLabel}</p>
                 </div>
             </div>
