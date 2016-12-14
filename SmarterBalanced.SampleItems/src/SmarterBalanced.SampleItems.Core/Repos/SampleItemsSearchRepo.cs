@@ -34,13 +34,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
 
             if (subjects != null && subjects.Any())
-                query = query.Where(i => subjects.Contains(i.Subject));
+                query = query.Where(i => subjects.Contains(i.SubjectId));
 
             if (interactionTypes.Any())
                 query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
 
             if (claimIds.Any())
-                query = query.Where(i => claimIds.Contains(i.ClaimId));
+                query = query.Where(i => claimIds.Contains(i.Claim.Code));
 
             return query.ToList();
         }

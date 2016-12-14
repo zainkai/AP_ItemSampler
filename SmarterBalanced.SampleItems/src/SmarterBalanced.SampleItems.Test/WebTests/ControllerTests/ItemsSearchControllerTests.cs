@@ -42,7 +42,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                     BankKey = goodBankKey,
                     ItemKey = badItemKey,
                     Grade = GradeLevels.High,
-                    Subject = subject,
+                    SubjectId = subject,
                     InteractionTypeCode = interactionTypeCode
                 },
                 new ItemDigest

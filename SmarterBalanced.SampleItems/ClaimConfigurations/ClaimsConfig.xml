@@ -5,22 +5,22 @@
 		<ShortLabel>Math</ShortLabel>
 		<Claim>
 			<Code>MATH1</Code>
-			<ClaimNumber>Claim1</ClaimNumber>
+			<ClaimNumber>1</ClaimNumber>
 			<Label>Concepts and Procedures</Label>
 		</Claim>
 			<Claim>
 			<Code>MATH2</Code>
-			<ClaimNumber>Claim2</ClaimNumber>
+			<ClaimNumber>2</ClaimNumber>
 			<Label>Problem Solving and Modeling</Label>
 		</Claim>
 		<Claim>
 			<Code>MATH3</Code>
-			<ClaimNumber>Claim3</ClaimNumber>
+			<ClaimNumber>3</ClaimNumber>
 			<Label>Communicating and Reasoning</Label>
 		</Claim>
 		<Claim>
 			<Code>MATH4</Code>
-			<ClaimNumber>Claim4</ClaimNumber>
+			<ClaimNumber>4</ClaimNumber>
 			<Label>Data Analysis</Label>
 		</Claim>
 	</Subject>
@@ -31,22 +31,22 @@
 		<ShortLabel>ELA/literacy</ShortLabel>
 		<Claim>
 			<Code>ELA1</Code>
-			<ClaimNumber>Claim1</ClaimNumber>
+			<ClaimNumber>1</ClaimNumber>
 			<Label>Reading</Label>
 		</Claim>
 		<Claim>
 			<Code>ELA2</Code>
-			<ClaimNumber>Claim2</ClaimNumber>
+			<ClaimNumber>2</ClaimNumber>
 			<Label>Writing</Label>
 		</Claim>
 		<Claim>
 			<Code>ELA3</Code>
-			<ClaimNumber>Claim3</ClaimNumber>
+			<ClaimNumber>3</ClaimNumber>
 			<Label>Listening</Label>
 		</Claim>
 		<Claim>
 			<Code>ELA4</Code>
-			<ClaimNumber>Claim4</ClaimNumber>
+			<ClaimNumber>4</ClaimNumber>
 			<Label>Research/Inquiry</Label>
 		</Claim>
 	</Subject>

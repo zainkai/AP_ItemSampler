@@ -26,7 +26,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             ItemContents itemContents,
             IList<AccessibilityResourceFamily> resourceFamilies,
             IList<InteractionType> interactionTypes,
-            IList<Subject> subjects)
+            IList<Subject> subjects
+            )
         {
             if(itemMetadata?.Metadata == null)
                 throw new ArgumentNullException(nameof(itemMetadata.Metadata));
@@ -55,22 +56,26 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             ItemDigest digest = new ItemDigest();
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
-            digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
-            digest.DisplayGrade = digest.Grade.ToDisplayString();
             digest.ItemType = itemContents.Item.ItemType;
             digest.TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType; 
-            digest.Subject = itemMetadata.Metadata.Subject;
-            digest.SubjectShortLabel = subjects.FirstOrDefault(s => s.Code == digest.Subject)?.ShortLabel;
+            digest.SubjectId = itemMetadata.Metadata.Subject;
             digest.InteractionTypeCode = itemMetadata.Metadata.InteractionType;
             digest.SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim;
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
-            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.Subject) && t.Grades.Contains(digest.Grade))?.Resources;
-            digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
-            digest.ClaimId = identifier.Claim;
-            digest.DisplayClaim = "Claim " + digest.ClaimId;
-            digest.Title = $"{digest.SubjectShortLabel} {digest.DisplayGrade} {digest.DisplayClaim}";
+         
+            //TODO: do we need claim with identifier? 3-L?
+            digest.ClaimId = (string.IsNullOrEmpty(identifier.Claim)) ? string.Empty : identifier.Claim.Substring(0, 1);
             digest.TargetId = identifier.Target;
             digest.CommonCoreStandardsId = identifier.CommonCoreStandard;
+
+            digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
+            digest.DisplayGrade = digest.Grade.ToDisplayString();
+            digest.Subject = subjects.FirstOrDefault(s => s.Code == digest.SubjectId);
+            digest.Claim = digest.Subject?.Claims.FirstOrDefault(t => t.ClaimNumber == digest.ClaimId);
+            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == digest.SubjectId) && t.Grades.Contains(digest.Grade))?.Resources;
+            digest.InteractionTypeLabel = interactionTypes.FirstOrDefault(t => t.Code == digest.InteractionTypeCode)?.Label;
+            string claimTitle = (string.IsNullOrEmpty(digest.Claim?.ClaimNumber)) ? string.Empty : $"Claim {digest.Claim.ClaimNumber}";
+            digest.Title = $"{digest.Subject?.ShortLabel} {digest.DisplayGrade} {claimTitle}";
 
             return digest;
         }

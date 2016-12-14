@@ -47,7 +47,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
             Assert.Equal("Test target string", digest.TargetAssessmentType);
             Assert.Equal("Test claim string", digest.SufficentEvidenceOfClaim);
-            Assert.Equal("MATH", digest.Subject);
+            Assert.Equal("MATH", digest.SubjectId);
             Assert.Equal("EQ", digest.InteractionTypeCode);
         }
 
@@ -145,7 +145,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 Assert.Equal(testTarget + id, digest.TargetAssessmentType);
                 Assert.Equal(testClaim + id, digest.SufficentEvidenceOfClaim);
                 Assert.Equal(testInteractionType + id, digest.InteractionTypeCode);
-                Assert.Equal(testSubject + id, digest.Subject);
+                Assert.Equal(testSubject + id, digest.SubjectId);
             }
         }
     }

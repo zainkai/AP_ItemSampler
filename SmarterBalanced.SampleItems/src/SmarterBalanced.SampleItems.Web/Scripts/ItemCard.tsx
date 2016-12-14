@@ -3,15 +3,27 @@ interface ItemDigest {
     title: string;
     bankKey: number;
     itemKey: number;
-    subject: string;
-    subjectShortLabel: string;
+    subjectId: string;
     grade: GradeLevels;
     displayGrade: string;
     claimId: string;
-    displayClaim: string;
     target: string;
     interactionTypeLabel: string;
     associatedStimulus: number | null;
+    subject: Subject;
+    claim: Claim;
+}
+
+interface Subject {
+    code: string;
+    shortLabel: string;
+    label: string;
+}
+
+interface Claim {
+    code: string;
+    claimNumber: string;
+    label: string;
 }
 
 function itemPageLink(bankKey: number, itemKey: number) {
@@ -25,9 +37,9 @@ class ItemCard extends React.Component<ItemDigest, {}> {
             <div className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
                     <h4 className="card-title">{this.props.title}</h4>
-                    <p className="card-text">Claim: {this.props.displayClaim}</p>
+                    <p className="card-text">Claim: {this.props.claim.label}</p>
                     <p className="card-text">Grade: {this.props.displayGrade}</p>
-                    <p className="card-text">Subject: {this.props.subjectShortLabel}</p>
+                    <p className="card-text">Subject: {this.props.subject.shortLabel}</p>
                     <p className="card-text">Interaction Type: {this.props.interactionTypeLabel}</p>
                 </div>
             </div>
