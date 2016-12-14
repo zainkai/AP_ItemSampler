@@ -7,8 +7,15 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public class InteractionType
     {
-        public string Code { get; set; }
-        public string Label { get; set; }
-        public int Order { get; set; }
+        public string Code { get; }
+        public string Label { get; }
+        public int Order { get; }
+
+        public InteractionType(string code, string label, int order)
+        {
+            Code = code;
+            Label = label;
+            Order = order;
+        }
     }
 }

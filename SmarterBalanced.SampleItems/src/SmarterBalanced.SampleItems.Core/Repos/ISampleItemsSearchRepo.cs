@@ -8,7 +8,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
     public interface ISampleItemsSearchRepo
     {
         IList<ItemDigest> GetItemDigests();
-        IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes);
+        IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes, string[] claimIds);
         ItemsSearchViewModel GetItemsSearchViewModel();
     }
 }

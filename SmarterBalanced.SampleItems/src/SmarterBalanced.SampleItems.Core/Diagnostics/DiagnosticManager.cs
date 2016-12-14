@@ -1,6 +1,7 @@
 ﻿using Amazon.EC2;
 using Amazon.EC2.Model;
 using Amazon.Runtime;
+using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Diagnostics.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using System;
@@ -17,7 +18,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
 {
     public class DiagnosticManager : IDiagnosticManager
     {
-        private SampleItemsContext context;
+        private readonly SampleItemsContext context;
+        private readonly ILogger logger;
 
         public enum StatusRating
         {
@@ -29,9 +31,10 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         }
 
 
-        public DiagnosticManager(SampleItemsContext sampleContext)
+        public DiagnosticManager(SampleItemsContext sampleContext, ILoggerFactory loggerFactory)
         {
             context = sampleContext;
+            logger = loggerFactory.CreateLogger<DiagnosticManager>();
         }
 
         /// <summary>

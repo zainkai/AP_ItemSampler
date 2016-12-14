@@ -11,8 +11,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
     {
         AppSettings AppSettings { get; }
 
-        Task<ItemViewModel> GetItemViewModelAsync(int bankKey, int itemKey);
+        ItemViewModel GetItemViewModel(int bankKey, int itemKey);
 
-        Task<ItemViewModel> GetItemViewModelAsync(int bankKey, int itemKey, string iSAAPCode);
+        ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSAAPCode);
     }
 }

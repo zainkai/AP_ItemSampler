@@ -1,6 +1,6 @@
 ﻿
 interface SubjectClaims {
-    [subject: string]: { text: string; value: string }[]
+    [subject: string]: { text: string; value: string }[];
 }
 
 interface Loading {
@@ -29,6 +29,13 @@ interface InteractionType {
     label: string;
 }
 
+interface Subject {
+    code: string;
+    label: string;
+    claims: Claim[];
+    interactionTypeCodes: string[];
+}
+
 interface Claim {
     code: string;
     label: string;
@@ -36,9 +43,9 @@ interface Claim {
 
 namespace ItemsSearch {
     export interface Props {
-        interactionTypes: InteractionType[]
-        claims: Claim[]
-        apiClient: ItemsSearchClient
+        interactionTypes: InteractionType[];
+        subjects: Subject[];
+        apiClient: ItemsSearchClient;
     }
 
     export interface State {
@@ -91,7 +98,7 @@ namespace ItemsSearch {
             if (searchResults.kind === "success" || searchResults.kind === "reloading") {
                 resultsElement = searchResults.content.length === 0
                     ? <span className="placeholder-text">No results found for the given search terms.</span>
-                    : searchResults.content.map(digest => <ItemCard {...digest} />);
+                    : searchResults.content.map(digest => <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
                 resultsElement = <div className="placeholder-text">An error occurred. Please try again later.</div>;
             } else {
@@ -102,7 +109,7 @@ namespace ItemsSearch {
                 <div className="search-container">
                     <ItemSearchParams.Component
                         interactionTypes={this.props.interactionTypes}
-                        claims={this.props.claims}
+                        subjects={this.props.subjects}
                         onChange={(params) => this.beginSearch(params)}
                         isLoading={isLoading} />
                     <div className="search-results">
@@ -140,7 +147,12 @@ interface SearchAPIParams {
     interactionTypes: string[];
 }
 
-function initializeItemsSearch(viewModel: { interactionTypes: InteractionType[], claims: Claim[] }) {
+interface ItemsSearchViewModel {
+    interactionTypes: InteractionType[];
+    subjects: Subject[];
+}
+
+function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
     ReactDOM.render(
         <ItemsSearch.Component apiClient={client} {...viewModel} />,
         document.getElementById("search-container") as HTMLElement);

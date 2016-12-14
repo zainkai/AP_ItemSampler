@@ -3,7 +3,7 @@ namespace ItemSearchParams {
 
     export interface Props {
         interactionTypes: InteractionType[];
-        claims: Claim[];
+        subjects: Subject[];
         onChange: (params: SearchAPIParams) => void;
         isLoading: boolean;
     }
@@ -61,10 +61,31 @@ namespace ItemSearchParams {
         }
 
         toggleSubject(subject: string) {
-            const subjects = this.state.subjects || [];
-            const containsSubject = subjects.indexOf(subject) !== -1;
+            const subjectCodes = this.state.subjects || [];
+            const containsSubject = subjectCodes.indexOf(subject) !== -1;
+            const newSubjectCodes = containsSubject ? subjectCodes.filter(s => s !== subject) : subjectCodes.concat([subject]);
+
+            // No filtering needed if no subjects are selected
+            if (newSubjectCodes.length === 0) {
+                this.setState({
+                    subjects: newSubjectCodes
+                }, () => this.beginChangeTimeout());
+                return;
+            }
+
+            const newSubjects = this.props.subjects.filter(s => newSubjectCodes.indexOf(s.code) !== -1);
+            
+            // Remove all claims not contained by the newly selected subjects
+            const subjectClaimCodes = newSubjects.reduce((prev: string[], cur: Subject) => prev.concat(cur.claims.map(c => c.code)), []);
+            const newClaimCodes = (this.state.claims || []).filter(c => subjectClaimCodes.indexOf(c) !== -1);
+
+            const subjectInteractionCodes = newSubjects.reduce((prev: string[], cur: Subject) => prev.concat(cur.interactionTypeCodes), []);
+            const newInteractionCodes = (this.state.interactionTypes || []).filter(i => subjectInteractionCodes.indexOf(i) !== -1);
+
             this.setState({
-                subjects: containsSubject ? subjects.filter(s => s !== subject) : subjects.concat([subject])
+                subjects: newSubjectCodes,
+                claims: newClaimCodes,
+                interactionTypes: newInteractionCodes
             }, () => this.beginChangeTimeout());
         }
 
@@ -142,7 +163,7 @@ namespace ItemSearchParams {
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin"/> : undefined}
                             <div><a onClick={() => this.resetFilters()}>Reset filters</a></div>
                             <div onClick={() => this.toggleExpandAll()}>
-                                {this.getExpandAll() ? "▼" : "▶"} Show all
+                                {this.getExpandAll() ? "▼ Hide" : "▶ Show"} all
                             </div>
                         </div>
                     </div>
@@ -193,27 +214,31 @@ namespace ItemSearchParams {
             );
         }
 
+        renderSubject(subject: Subject) {
+            const subjects = this.state.subjects || [];
+            const className = (subjects.indexOf(subject.code) === -1 ? "" : "selected") + " tag";
+            return (
+                <span className={className}
+                    onClick={() => this.toggleSubject(subject.code)}>
+
+                    {subject.label}
+                </span>
+            );
+        }
+
         renderSubjects() {
             const subjects = this.state.subjects || [];
-            const tags = [
-                    <span className={(subjects.indexOf("ELA") === -1 ? "" : "selected") + " tag"}
-                        onClick={() => this.toggleSubject("ELA")}>
+            const tags = this.state.expandSubjects
+                ? this.props.subjects.map(s => this.renderSubject(s))
+                : undefined;
 
-                        English Language Arts
-                    </span>,
-                    <span className={(subjects.indexOf("MATH") === -1 ? "" : "selected") + " tag"}
-                        onClick={() => this.toggleSubject("MATH")}>
-
-                        Math
-                    </span>
-            ];
             return (
                 <div className="search-category" style={{ flexGrow: 2 }}>
                     <label onClick={() => this.toggleExpandSubjects()}>
                         {this.state.expandSubjects ? "▼" : "▶"} Subjects
                     </label>
                     <div className="search-tags form-group">
-                        {this.state.expandSubjects ? tags : undefined}
+                        {tags}
                     </div>
                 </div>
             );
@@ -228,10 +253,19 @@ namespace ItemSearchParams {
                     onClick={() => this.toggleClaim(claim.code)}>
                     {claim.label}
                 </span>;
-            const tags = this.props.claims.map(renderClaim);
+
+            // If no subjects are selected, use the entire list of subjects
+            const selectedSubjectCodes = this.state.subjects || [];
+            const subjects = selectedSubjectCodes.length !== 0
+                ? this.props.subjects.filter(s => selectedSubjectCodes.indexOf(s.code) !== -1)
+                : this.props.subjects;
+
+            const tags = subjects
+                .reduce((cs: Claim[], s: Subject) => cs.concat(s.claims), [])
+                .map(renderClaim);
 
             return (
-                <div className="search-category" style={{ flexGrow: tags.length }}>
+                <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
                     <label onClick={() => this.toggleExpandClaims()}>
                         {this.state.expandClaims ? "▼" : "▶"} Claims
                     </label>
@@ -251,10 +285,20 @@ namespace ItemSearchParams {
                     onClick={() => this.toggleInteractionType(it.code)}>
                     {it.label}
                 </span>;
-            const tags = this.props.interactionTypes.map(renderInteractionType);
+            
+            const selectedSubjectCodes = this.state.subjects || [];
+            const selectedSubjects = selectedSubjectCodes.length !== 0
+                ? this.props.subjects.filter(subj => selectedSubjectCodes.indexOf(subj.code) !== -1)
+                : [];
+
+            const visibleInteractionTypes = selectedSubjects.length !== 0
+                ? this.props.interactionTypes.filter(it => selectedSubjects.some(subj => subj.interactionTypeCodes.indexOf(it.code) !== -1))
+                : this.props.interactionTypes;
+
+            const tags = visibleInteractionTypes.map(renderInteractionType);
 
             return (
-                <div className="search-category" style={{ flexGrow: tags.length }}>
+                <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
                     <label onClick={() => this.toggleExpandInteractionTypes()}>
                         {this.state.expandInteractionTypes ? "▼" : "▶"} Interaction Types
                     </label>

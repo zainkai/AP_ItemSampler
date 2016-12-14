@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -26,6 +27,18 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         public IActionResult Error()
         {
+            return View();
+        }
+
+        public IActionResult StatusCodeError(int? code)
+        {
+            ViewData["Error"] = "Something went wrong";
+
+            if((int)HttpStatusCode.BadRequest == code.GetValueOrDefault())
+            {
+                ViewData["Error"] = "400 Bad Request";
+            }
+
             return View();
         }
     }

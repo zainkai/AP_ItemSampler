@@ -157,7 +157,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             if (!isResourceDisabled && resource.Selections != null
                 && resource.Selections.Any(s => s.Code == resource.DefaultSelection && s.Disabled))
             {
-                resource.DefaultSelection = resource.Selections?.SingleOrDefault(s => !s.Disabled)?.Code;
+                resource.DefaultSelection = resource.Selections?.FirstOrDefault(s => !s.Disabled)?.Code;
             }
 
             return resource;

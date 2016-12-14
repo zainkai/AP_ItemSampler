@@ -1,4 +1,5 @@
-﻿using SmarterBalanced.SampleItems.Core.Repos.Models;
+﻿using Microsoft.Extensions.Logging;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
@@ -11,10 +12,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public class SampleItemsSearchRepo : ISampleItemsSearchRepo
     {
-        private SampleItemsContext context;
-        public SampleItemsSearchRepo(SampleItemsContext context)
+        private readonly SampleItemsContext context;
+        private readonly ILogger logger;
+
+        public SampleItemsSearchRepo(SampleItemsContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
+            logger = loggerFactory.CreateLogger<SampleItemsSearchRepo>();
         }
 
         public IList<ItemDigest> GetItemDigests()
@@ -23,25 +27,22 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         // TODO: what should terms search on?
-        public IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes)
+        public IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes, string[] claimIds)
         {
             var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
             if (grades != GradeLevels.All && grades != GradeLevels.NA)
-            {
                 query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
-            }
 
             if (subjects != null && subjects.Any())
-            {
-                query = query.Where(i => subjects.Contains(i.Subject));
-            }
+                query = query.Where(i => subjects.Contains(i.SubjectId));
 
             if (interactionTypes.Any())
-            {
                 query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
-            }
 
-            return query.ToList();
+            if (claimIds.Any())
+                query = query.Where(i => claimIds.Contains(i.Claim.Code));
+
+            return query.OrderBy(i => i.SubjectId).ThenBy(i => i.Grade.ToString().Length).ThenBy(i => i.Grade.ToString()).ThenBy(i => i.ClaimId).ToList();
         }
 
         public ItemsSearchViewModel GetItemsSearchViewModel()
@@ -49,7 +50,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return new ItemsSearchViewModel
             {
                 InteractionTypes = context.InteractionTypes,
-                Claims = context.ClaimSubjects.SelectMany(s => s.Claims).ToList()
+                Subjects = context.Subjects
             };
         }
     }
