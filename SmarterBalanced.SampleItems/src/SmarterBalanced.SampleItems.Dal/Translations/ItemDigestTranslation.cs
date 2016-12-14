@@ -64,8 +64,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             digest.AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus;
          
             //TODO: do we need claim with identifier? 3-L?
-            digest.ClaimId = (string.IsNullOrEmpty(identifier.Claim)) ? string.Empty : identifier.Claim.Substring(0, 1);
-            digest.TargetId = identifier.Target;
+            digest.ClaimId = (string.IsNullOrEmpty(identifier.Claim)) ? string.Empty : identifier.Claim.Split('-').FirstOrDefault();
+            digest.TargetId = (string.IsNullOrEmpty(identifier.Target)) ? string.Empty : identifier.Target.Split('-').FirstOrDefault();
             digest.CommonCoreStandardsId = identifier.CommonCoreStandard;
 
             digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);

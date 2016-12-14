@@ -42,7 +42,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             if (claimIds.Any())
                 query = query.Where(i => claimIds.Contains(i.Claim.Code));
 
-            return query.ToList();
+            return query.OrderBy(i => i.SubjectId).ThenBy(i => i.Grade.ToString().Length).ThenBy(i => i.Grade.ToString()).ThenBy(i => i.ClaimId).ToList();
         }
 
         public ItemsSearchViewModel GetItemsSearchViewModel()
