@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public class Claim
+    public sealed class Claim
     {
         /// <summary>
         /// A claim identifier within a subject. e.g. ELA2

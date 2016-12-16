@@ -21,28 +21,28 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             logger = loggerFactory.CreateLogger<SampleItemsSearchRepo>();
         }
 
-        public IList<ItemDigest> GetItemDigests()
+        public IList<ItemCardViewModel> GetItemCards()
         {
-            return context.ItemDigests.Where(i => i.Grade != GradeLevels.NA).ToList();
+            return context.ItemCards.Where(i => i.Grade != GradeLevels.NA).ToList();
         }
 
         // TODO: what should terms search on?
-        public IList<ItemDigest> GetItemDigests(GradeLevels grades, IList<string> subjects, string[] interactionTypes, string[] claimIds)
+        public IList<ItemCardViewModel> GetItemCards(GradeLevels grades, IList<string> subjects, string[] interactionTypes, string[] claimIds)
         {
-            var query = context.ItemDigests.Where(i => i.Grade != GradeLevels.NA);
+            var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA);
             if (grades != GradeLevels.All && grades != GradeLevels.NA)
                 query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
 
             if (subjects != null && subjects.Any())
-                query = query.Where(i => subjects.Contains(i.SubjectId));
+                query = query.Where(i => subjects.Contains(i.SubjectCode));
 
             if (interactionTypes.Any())
                 query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
 
             if (claimIds.Any())
-                query = query.Where(i => claimIds.Contains(i.Claim.Code));
+                query = query.Where(i => claimIds.Contains(i.ClaimCode));
 
-            return query.OrderBy(i => i.SubjectId).ThenBy(i => i.Grade.ToString().Length).ThenBy(i => i.Grade.ToString()).ThenBy(i => i.ClaimId).ToList();
+            return query.OrderBy(i => i.SubjectCode).ThenBy(i => i.Grade).ThenBy(i => i.ClaimCode).ToList();
         }
 
         public ItemsSearchViewModel GetItemsSearchViewModel()
