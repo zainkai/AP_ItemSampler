@@ -40,6 +40,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             List<Subject> subjects = XDocument.Load(appSettings.SettingsConfig.ClaimsXMLPath).ToSubjects(interactionFamily);
 
             List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes, subjects);
+            List<ItemCardViewModel> itemCards = itemDigests.Select(i => i.ToItemCardViewModel()).ToList();
 
             SampleItemsContext context = new SampleItemsContext
             {
@@ -47,6 +48,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 GlobalAccessibilityResources = globalResources, // TODO: Remove with global accessibility refactor
                 InteractionTypes = interactionTypes,
                 ItemDigests = itemDigests,
+                ItemCards = itemCards,
                 AppSettings = appSettings,
                 Subjects = subjects
             };

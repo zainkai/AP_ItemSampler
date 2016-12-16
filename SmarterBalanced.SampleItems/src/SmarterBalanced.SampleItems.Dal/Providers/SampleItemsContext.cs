@@ -12,6 +12,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
     public sealed class SampleItemsContext
     {
         public IList<ItemDigest> ItemDigests { get; set; }
+        public IList<ItemCardViewModel> ItemCards { get; set; }
         public IList<InteractionType> InteractionTypes { get; set; }
         public IList<Subject> Subjects { get; set; }
         public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }

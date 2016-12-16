@@ -28,7 +28,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         [HttpGet]
         public IActionResult Search(GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims)
         {
-            var items = sampleItemsSearchRepo.GetItemDigests(gradeLevels, subjects, interactionTypes, claims);
+            var items = sampleItemsSearchRepo.GetItemCards(gradeLevels, subjects, interactionTypes, claims);
             return Json(items);
         }
     }

@@ -49,7 +49,7 @@ namespace ItemsSearch {
     }
 
     export interface State {
-        searchResults: Resource<ItemDigest[]>;
+        searchResults: Resource<ItemCardViewModel[]>;
     }
     
     export class Component extends React.Component<Props, State> {
@@ -79,7 +79,7 @@ namespace ItemsSearch {
             this.props.apiClient.itemsSearch(params, this.onSearch.bind(this), this.onError.bind(this));
         }
 
-        onSearch(results: ItemDigest[]) {
+        onSearch(results: ItemCardViewModel[]) {
             this.setState({ searchResults: { kind: "success", content: results } });
         }
 
@@ -123,7 +123,7 @@ namespace ItemsSearch {
 
 interface ItemsSearchClient {
     itemsSearch(params: SearchAPIParams,
-        onSuccess: (data: ItemDigest[]) => void,
+        onSuccess: (data: ItemCardViewModel[]) => void,
         onError?: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => any): any;
 }
 

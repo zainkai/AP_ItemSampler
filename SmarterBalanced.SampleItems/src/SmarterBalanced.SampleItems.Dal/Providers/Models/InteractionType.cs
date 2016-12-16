@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public class InteractionType
+    public sealed class InteractionType
     {
         public string Code { get; }
         public string Label { get; }
