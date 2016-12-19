@@ -2,7 +2,7 @@
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public class AccessibilityResource
+    public sealed class AccessibilityResource
     {
         public string Code { get; set; }
 

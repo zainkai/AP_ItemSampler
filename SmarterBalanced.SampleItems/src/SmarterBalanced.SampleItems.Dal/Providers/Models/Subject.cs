@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public class Subject
+    public sealed class Subject
     {
         public string Code { get; }
         public string Label { get; }

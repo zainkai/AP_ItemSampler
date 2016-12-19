@@ -49,15 +49,15 @@ namespace ItemsSearch {
     }
 
     export interface State {
-        searchResults: Resource<ItemDigest[]>;
+        searchResults: Resource<ItemCardViewModel[]>;
     }
     
-    export class Component extends React.Component<Props, State> {
+    export class ISComponent extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
 
-            const defaultParams: SearchAPIParams = { gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
+            const defaultParams: SearchAPIParams = { itemId: '', gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
             this.beginSearch(defaultParams);
         }
 
@@ -79,7 +79,7 @@ namespace ItemsSearch {
             this.props.apiClient.itemsSearch(params, this.onSearch.bind(this), this.onError.bind(this));
         }
 
-        onSearch(results: ItemDigest[]) {
+        onSearch(results: ItemCardViewModel[]) {
             this.setState({ searchResults: { kind: "success", content: results } });
         }
 
@@ -107,7 +107,7 @@ namespace ItemsSearch {
             const isLoading = this.isLoading();
             return (
                 <div className="search-container">
-                    <ItemSearchParams.Component
+                    <ItemSearchParams.ISPComponent
                         interactionTypes={this.props.interactionTypes}
                         subjects={this.props.subjects}
                         onChange={(params) => this.beginSearch(params)}
@@ -123,7 +123,7 @@ namespace ItemsSearch {
 
 interface ItemsSearchClient {
     itemsSearch(params: SearchAPIParams,
-        onSuccess: (data: ItemDigest[]) => void,
+        onSuccess: (data: ItemCardViewModel[]) => void,
         onError?: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => any): any;
 }
 
@@ -141,6 +141,7 @@ const client: ItemsSearchClient = {
 };
 
 interface SearchAPIParams {
+    itemId: string;
     gradeLevels: GradeLevels;
     subjects: string[];
     claims: string[];
@@ -154,6 +155,6 @@ interface ItemsSearchViewModel {
 
 function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
     ReactDOM.render(
-        <ItemsSearch.Component apiClient={client} {...viewModel} />,
+        <ItemsSearch.ISComponent apiClient={client} {...viewModel} />,
         document.getElementById("search-container") as HTMLElement);
 }

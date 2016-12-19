@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 {
@@ -40,15 +41,30 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
+            
+            var interactionTypes = new List<InteractionType>
+            {
+                new InteractionType(code: "EQ", label: "", order: 0)
+            };
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), new List<InteractionType>(), new List<Subject>());
+            var subjects = new List<Subject>
+            {
+                new Subject(
+                    code: "MATH",
+                    label: string.Empty,
+                    shortLabel: string.Empty,
+                    claims: ImmutableArray.Create<Claim>(),
+                    interactionTypeCodes: ImmutableArray.Create<string>())
+            };
+
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), interactionTypes, subjects);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
             Assert.Equal("Test target string", digest.TargetAssessmentType);
             Assert.Equal("Test claim string", digest.SufficentEvidenceOfClaim);
-            Assert.Equal("MATH", digest.SubjectId);
-            Assert.Equal("EQ", digest.InteractionTypeCode);
+            Assert.Equal("MATH", digest.Subject.Code);
+            Assert.Equal("EQ", digest.InteractionType.Code);
         }
 
         /// <summary>
@@ -99,7 +115,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             int[] itemKeys = Enumerable.Range(50, testItemCount).ToArray();
             int[] banksKeys = itemKeys;
             string testTarget = "Test target string";
-            string testClaim = "Test claim string";
+            string testClaimEvidence = "Test claim string";
             string testInteractionType = "EQ";
             string testSubject = "MATH";
 
@@ -116,15 +132,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadata.Metadata.ItemKey = itemKeys[i];
                 metadata.Metadata.Grade = (itemKeys[i] % 9 + 3).ToString();
                 metadata.Metadata.TargetAssessmentType = testTarget + itemKeys[i];
-                metadata.Metadata.SufficientEvidenceOfClaim = testClaim + itemKeys[i];
-                metadata.Metadata.InteractionType = testInteractionType + itemKeys[i];
-                metadata.Metadata.Subject = testSubject + itemKeys[i];
+                metadata.Metadata.SufficientEvidenceOfClaim = testClaimEvidence + itemKeys[i];
+                metadata.Metadata.InteractionType = testInteractionType;
+                metadata.Metadata.Subject = testSubject;
                 metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
                 metadata.Metadata.StandardPublications.Add(
                     new Gen.StandardPublication
                     {
                         PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
-                       });
+                    });
 
                 //Test contents attributes
                 contents.Item.ItemKey = itemKeys[i];
@@ -133,7 +149,23 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
             }
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), new List<InteractionType>(), new List<Subject>());
+
+            var interactionTypes = new List<InteractionType>
+            {
+                new InteractionType(code: testInteractionType, label: "", order: 0)
+            };
+
+            var subjects = new List<Subject>
+            {
+                new Subject(
+                    code: testSubject,
+                    label: string.Empty,
+                    shortLabel: string.Empty,
+                    claims: ImmutableArray.Create<Claim>(),
+                    interactionTypeCodes: ImmutableArray.Create<string>())
+            };
+
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 
@@ -143,9 +175,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 Assert.Equal(digest.ItemKey, digest.BankKey);
                 Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), digest.Grade);
                 Assert.Equal(testTarget + id, digest.TargetAssessmentType);
-                Assert.Equal(testClaim + id, digest.SufficentEvidenceOfClaim);
-                Assert.Equal(testInteractionType + id, digest.InteractionTypeCode);
-                Assert.Equal(testSubject + id, digest.SubjectId);
+                Assert.Equal(testClaimEvidence + id, digest.SufficentEvidenceOfClaim);
+                Assert.Equal(testInteractionType, digest.InteractionType.Code);
+                Assert.Equal(testSubject, digest.Subject.Code);
             }
         }
     }

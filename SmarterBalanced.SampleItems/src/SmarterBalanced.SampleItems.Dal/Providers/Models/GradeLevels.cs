@@ -124,7 +124,5 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
             return gradeLevels;
         }
-
     }
-
 }
