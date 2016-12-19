@@ -11,17 +11,17 @@
 			<Claim>
 			<Code>MATH2</Code>
 			<ClaimNumber>2</ClaimNumber>
-			<Label>Problem Solving and Modeling</Label>
+			<Label>Problem Solving</Label>
 		</Claim>
 		<Claim>
 			<Code>MATH3</Code>
 			<ClaimNumber>3</ClaimNumber>
-			<Label>Communicating and Reasoning</Label>
+			<Label>Modeling/Data Analysis</Label>
 		</Claim>
 		<Claim>
 			<Code>MATH4</Code>
 			<ClaimNumber>4</ClaimNumber>
-			<Label>Data Analysis</Label>
+			<Label>Communicating Reasoning</Label>
 		</Claim>
 	</Subject>
 
