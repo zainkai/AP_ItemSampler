@@ -57,7 +57,7 @@ namespace ItemsSearch {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
 
-            const defaultParams: SearchAPIParams = { gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
+            const defaultParams: SearchAPIParams = { itemId: '', gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
             this.beginSearch(defaultParams);
         }
 
@@ -141,6 +141,7 @@ const client: ItemsSearchClient = {
 };
 
 interface SearchAPIParams {
+    itemId: string;
     gradeLevels: GradeLevels;
     subjects: string[];
     claims: string[];

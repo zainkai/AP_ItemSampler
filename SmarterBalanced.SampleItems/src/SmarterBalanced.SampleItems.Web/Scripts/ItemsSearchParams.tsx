@@ -9,7 +9,7 @@ namespace ItemSearchParams {
     }
     
     export interface State {
-        itemIDInput?: string;
+        itemID?: string;
         gradeLevels?: GradeLevels;
         subjects?: string[];
         claims?: string[];
@@ -24,7 +24,7 @@ namespace ItemSearchParams {
 
     export class ISPComponent extends React.Component<Props, State> {
         readonly initialState: State = {
-            itemIDInput: '',
+            itemID: '',
             gradeLevels: GradeLevels.NA,
             subjects: [],
             claims: [],
@@ -46,6 +46,7 @@ namespace ItemSearchParams {
 
             this.timeoutToken = setTimeout(() => {
                 const params: SearchAPIParams = {
+                    itemId: this.state.itemID || '',
                     gradeLevels: this.state.gradeLevels || GradeLevels.All,
                     subjects: this.state.subjects || [],
                     claims: this.state.claims || [],
@@ -57,12 +58,11 @@ namespace ItemSearchParams {
 
         onItemIDInput(e: React.FormEvent) {
             const newValue = (e.target as HTMLInputElement).value;
-
-            if (!/^\d{0,4}$/.test(newValue)) {
-                return;
-            }
-
-            this.setState({ itemIDInput: newValue });
+            const inputOK = /^\d{0,4}$/.test(newValue);
+            
+            this.setState({
+                itemID: inputOK ? newValue : this.state.itemID
+            }, () => this.beginChangeTimeout());
         }
 
         toggleGrades(grades: GradeLevels) {
@@ -187,23 +187,23 @@ namespace ItemSearchParams {
                         </div>
                     </div>
                     <div className="search-categories">
-                        {this.renderItemIDInput()}
                         {this.renderGrades()}
                         {this.renderSubjects()}
                         {this.renderClaims()}
                         {this.renderInteractionTypes()}
+                        {this.renderItemIDChange()}
                     </div>
                 </div>
             );
         }
 
-        renderItemIDInput() {
+        renderItemIDChange() {
             const input = this.state.expandItemID
                 ?
                     <input type="text" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
-                        value={this.state.itemIDInput}>
+                        value={this.state.itemID}>
                     </input>
                 : undefined;
 

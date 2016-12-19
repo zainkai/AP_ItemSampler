@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,9 +27,10 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims)
+        public IActionResult Search(string itemID, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims)
         {
-            var items = sampleItemsSearchRepo.GetItemCards(gradeLevels, subjects, interactionTypes, claims);
+            var parms = new ItemsSearchParams(itemID, gradeLevels, subjects, interactionTypes, claims);
+            var items = sampleItemsSearchRepo.GetItemCards(parms);
             return Json(items);
         }
     }
