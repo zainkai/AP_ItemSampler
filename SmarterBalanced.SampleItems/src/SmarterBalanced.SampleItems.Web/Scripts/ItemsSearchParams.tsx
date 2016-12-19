@@ -258,11 +258,13 @@ namespace ItemSearchParams {
             const selectedSubjectCodes = this.state.subjects || [];
             const subjects = selectedSubjectCodes.length !== 0
                 ? this.props.subjects.filter(s => selectedSubjectCodes.indexOf(s.code) !== -1)
-                : this.props.subjects;
+                : [];
 
-            const tags = subjects
-                .reduce((cs: Claim[], s: Subject) => cs.concat(s.claims), [])
-                .map(renderClaim);
+            const tags = subjects.length === 0
+                ? <span>Please select a subject.</span>
+                : subjects
+                    .reduce((cs: Claim[], s: Subject) => cs.concat(s.claims), [])
+                    .map(renderClaim);
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
@@ -293,9 +295,11 @@ namespace ItemSearchParams {
 
             const visibleInteractionTypes = selectedSubjects.length !== 0
                 ? this.props.interactionTypes.filter(it => selectedSubjects.some(subj => subj.interactionTypeCodes.indexOf(it.code) !== -1))
-                : this.props.interactionTypes;
+                : [];
 
-            const tags = visibleInteractionTypes.map(renderInteractionType);
+            const tags = visibleInteractionTypes.length === 0
+                ? <span>Please select a subject.</span>
+                : visibleInteractionTypes.map(renderInteractionType);
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
