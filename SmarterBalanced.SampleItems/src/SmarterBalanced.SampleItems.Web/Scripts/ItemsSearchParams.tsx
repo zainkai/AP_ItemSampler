@@ -7,13 +7,15 @@ namespace ItemSearchParams {
         onChange: (params: SearchAPIParams) => void;
         isLoading: boolean;
     }
-
+    
     export interface State {
+        itemIDInput?: string;
         gradeLevels?: GradeLevels;
         subjects?: string[];
         claims?: string[];
         interactionTypes?: string[];
-        
+
+        expandItemID?: boolean;
         expandGradeLevels?: boolean;
         expandSubjects?: boolean;
         expandClaims?: boolean;
@@ -22,6 +24,7 @@ namespace ItemSearchParams {
 
     export class ISPComponent extends React.Component<Props, State> {
         readonly initialState: State = {
+            itemIDInput: '',
             gradeLevels: GradeLevels.NA,
             subjects: [],
             claims: [],
@@ -50,6 +53,16 @@ namespace ItemSearchParams {
                 };
                 this.props.onChange(params);
             }, 200);
+        }
+
+        onItemIDInput(e: React.FormEvent) {
+            const newValue = (e.target as HTMLInputElement).value;
+
+            if (!/^\d{0,4}$/.test(newValue)) {
+                return;
+            }
+
+            this.setState({ itemIDInput: newValue });
         }
 
         toggleGrades(grades: GradeLevels) {
@@ -109,9 +122,15 @@ namespace ItemSearchParams {
          * Returns a value indicating whether all search categories are expanded.
          */
         getExpandAll() {
-            const { expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
-            const expandAll = expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
+            const { expandItemID, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
+            const expandAll = expandItemID && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
             return expandAll;
+        }
+
+        toggleExpandItemIDInput() {
+            this.setState({
+                expandItemID: !this.state.expandItemID
+            });
         }
 
         toggleExpandGradeLevels() {
@@ -139,10 +158,10 @@ namespace ItemSearchParams {
         }
 
         toggleExpandAll() {
-            const { expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
             // If everything is already expanded, then collapse everything. Otherwise, expand everything.
             const expandAll = !this.getExpandAll();
             this.setState({
+                expandItemID: expandAll,
                 expandGradeLevels: expandAll,
                 expandSubjects: expandAll,
                 expandClaims: expandAll,
@@ -168,11 +187,32 @@ namespace ItemSearchParams {
                         </div>
                     </div>
                     <div className="search-categories">
+                        {this.renderItemIDInput()}
                         {this.renderGrades()}
                         {this.renderSubjects()}
                         {this.renderClaims()}
                         {this.renderInteractionTypes()}
                     </div>
+                </div>
+            );
+        }
+
+        renderItemIDInput() {
+            const input = this.state.expandItemID
+                ?
+                    <input type="text" className="form-control"
+                        placeholder="Item ID"
+                        onChange={e => this.onItemIDInput(e)}
+                        value={this.state.itemIDInput}>
+                    </input>
+                : undefined;
+
+            return (
+                <div className="search-category">
+                    <label onClick={() => this.toggleExpandItemIDInput()}>
+                        {this.state.expandItemID ? "▼" : "▶"} Item ID
+                    </label>
+                    {input}
                 </div>
             );
         }

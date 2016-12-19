@@ -308,9 +308,8 @@ h4.card-title{
 }
 
 .search-category > label {
-     cursor: pointer;
+    cursor: pointer;
     padding-top:15px;
-
 }
 
 .search-tags {
