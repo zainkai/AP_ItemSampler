@@ -52,7 +52,7 @@ namespace ItemsSearch {
         searchResults: Resource<ItemCardViewModel[]>;
     }
     
-    export class Component extends React.Component<Props, State> {
+    export class ISComponent extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
@@ -107,7 +107,7 @@ namespace ItemsSearch {
             const isLoading = this.isLoading();
             return (
                 <div className="search-container">
-                    <ItemSearchParams.Component
+                    <ItemSearchParams.ISPComponent
                         interactionTypes={this.props.interactionTypes}
                         subjects={this.props.subjects}
                         onChange={(params) => this.beginSearch(params)}
@@ -154,6 +154,6 @@ interface ItemsSearchViewModel {
 
 function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
     ReactDOM.render(
-        <ItemsSearch.Component apiClient={client} {...viewModel} />,
+        <ItemsSearch.ISComponent apiClient={client} {...viewModel} />,
         document.getElementById("search-container") as HTMLElement);
 }
