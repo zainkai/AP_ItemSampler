@@ -26,21 +26,30 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return context.ItemCards.Where(i => i.Grade != GradeLevels.NA).ToList();
         }
 
-        // TODO: what should terms search on?
-        public IList<ItemCardViewModel> GetItemCards(GradeLevels grades, IList<string> subjects, string[] interactionTypes, string[] claimIds)
+        public IList<ItemCardViewModel> GetItemCards(ItemsSearchParams parms)
         {
+            int itemId;
+            if (int.TryParse(parms.ItemId, out itemId))
+            {
+                var item = context.ItemCards.FirstOrDefault(i => i.ItemKey == itemId);
+                if (item == null)
+                    return new List<ItemCardViewModel>();
+                else
+                    return new List<ItemCardViewModel> { item };
+            }
+
             var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA);
-            if (grades != GradeLevels.All && grades != GradeLevels.NA)
-                query = query.Where(i => GradeLevelsUtils.Contains(grades, i.Grade));
+            if (parms.Grades != GradeLevels.All && parms.Grades != GradeLevels.NA)
+                query = query.Where(i => GradeLevelsUtils.Contains(parms.Grades, i.Grade));
 
-            if (subjects != null && subjects.Any())
-                query = query.Where(i => subjects.Contains(i.SubjectCode));
+            if (parms.Subjects != null && parms.Subjects.Any())
+                query = query.Where(i => parms.Subjects.Contains(i.SubjectCode));
 
-            if (interactionTypes.Any())
-                query = query.Where(i => interactionTypes.Contains(i.InteractionTypeCode));
+            if (parms.InteractionTypes.Any())
+                query = query.Where(i => parms.InteractionTypes.Contains(i.InteractionTypeCode));
 
-            if (claimIds.Any())
-                query = query.Where(i => claimIds.Contains(i.ClaimCode));
+            if (parms.ClaimIds.Any())
+                query = query.Where(i => parms.ClaimIds.Contains(i.ClaimCode));
 
             return query.OrderBy(i => i.SubjectCode).ThenBy(i => i.Grade).ThenBy(i => i.ClaimCode).ToList();
         }

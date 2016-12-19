@@ -42,23 +42,18 @@
         </Item>
         <Item>
             <Code>MI</Code>
-            <Label>Match Interaction</Label>
+            <Label>Matching Item</Label>
 			<Order>9</Order>
         </Item>
         <Item>
             <Code>TI</Code>
-            <Label>Table Interaction</Label>
+            <Label>Table Item</Label>
 			<Order>10</Order>
         </Item>
         <Item>
             <Code>WER</Code>
             <Label>Writing Extended Response</Label>
 			<Order>11</Order>
-        </Item>
-        <Item>
-            <Code>PASS</Code>
-            <Label>Passage</Label>
-			<Order>12</Order>
         </Item>
     </Items>
 
@@ -74,20 +69,20 @@
 				<Code>MS</Code>
 				<Code>MI</Code>
 				<Code>WER</Code>
-				<Code>PASS</Code>
             </InteractionTypeCodes>
         </Family>
 
         <Family>
             <SubjectCode>MATH</SubjectCode>
             <InteractionTypeCodes>
-				<Code>EBSR</Code>
 				<Code>EQ</Code>
 				<Code>GI</Code>
 				<Code>MC</Code>
 				<Code>MI</Code>
 				<Code>MS</Code>
 				<Code>TI</Code>
+				<Code>ER</Code>
+				<Code>SA</Code>
             </InteractionTypeCodes>
         </Family>
     </Families>
