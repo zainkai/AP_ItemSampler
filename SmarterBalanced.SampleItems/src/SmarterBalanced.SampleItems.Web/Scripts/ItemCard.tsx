@@ -22,7 +22,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
     render() {
         const { bankKey, itemKey } = this.props;
         return (
-            <div className={'card card-block ' + this.props.subjectCode.toLowerCase()} onClick={e => itemPageLink(bankKey, itemKey)}>
+            <div className={"card card-block " + this.props.subjectCode.toLowerCase()} onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
                     <h4 className="card-title">{this.props.title}</h4>
                     <p className="card-text subject">

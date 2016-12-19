@@ -17,8 +17,8 @@ interface Failure {
 }
 
 interface Reloading<T> {
-    kind: "reloading",
-    content: T
+    kind: "reloading";
+    content: T;
 }
 
 /** Represents the state of an asynchronously obtained resource at a particular time. */
@@ -51,13 +51,19 @@ namespace ItemsSearch {
     export interface State {
         searchResults: Resource<ItemCardViewModel[]>;
     }
-    
+
     export class ISComponent extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
 
-            const defaultParams: SearchAPIParams = { itemId: '', gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
+            const defaultParams: SearchAPIParams = {
+                itemId: "",
+                gradeLevels: GradeLevels.All,
+                subjects: [],
+                claims: [],
+                interactionTypes: []
+            };
             this.beginSearch(defaultParams);
         }
 
@@ -94,11 +100,12 @@ namespace ItemsSearch {
         render() {
             const searchResults = this.state.searchResults;
 
-            let resultsElement: JSX.Element[] | JSX.Element | undefined
+            let resultsElement: JSX.Element[] | JSX.Element | undefined;
             if (searchResults.kind === "success" || searchResults.kind === "reloading") {
                 resultsElement = searchResults.content.length === 0
                     ? <span className="placeholder-text">No results found for the given search terms.</span>
-                    : searchResults.content.map(digest => <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
+                    : searchResults.content.map(digest =>
+                        <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
                 resultsElement = <div className="placeholder-text">An error occurred. Please try again later.</div>;
             } else {

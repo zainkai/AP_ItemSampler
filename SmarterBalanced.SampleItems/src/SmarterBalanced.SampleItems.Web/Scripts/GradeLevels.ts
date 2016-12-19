@@ -1,4 +1,6 @@
-﻿enum GradeLevels {
+﻿/* tslint:disable:no-bitwise */
+
+enum GradeLevels {
     NA = 0,
     Grade3 = 1 << 0,
     Grade4 = 1 << 1,

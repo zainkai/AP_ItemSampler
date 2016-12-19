@@ -24,7 +24,7 @@ class ItemPageManager {
     }
 
     onAccessibilityChange(eventData: Event): void {
-        this.setAccessibilityMapItem(eventData.target as HTMLSelectElement);        
+        this.setAccessibilityMapItem(eventData.target as HTMLSelectElement);
     }
 
     updateISAAP(): void {
@@ -32,9 +32,8 @@ class ItemPageManager {
         if (iframe != null) {
             const urlParts = iframe.src.split("isaap");
             iframe.src = urlParts[0] + "isaap=" + this.toISAAP();
-        }
-        else {
-            console.error("unable to access iframe")
+        } else {
+            console.error("unable to access iframe");
         }
     }
 
@@ -79,6 +78,7 @@ class ItemPageManager {
     }
 }
 
+/* tslint:disable:no-unused-variable no-unused-expression */
 function initializeItemAccessibility(ajaxURL: string) {
     document.addEventListener("DOMContentLoaded", function () { new ItemPageManager(ajaxURL); });
 }
