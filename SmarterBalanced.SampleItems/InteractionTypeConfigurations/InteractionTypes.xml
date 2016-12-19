@@ -75,13 +75,14 @@
         <Family>
             <SubjectCode>MATH</SubjectCode>
             <InteractionTypeCodes>
-				<Code>EBSR</Code>
 				<Code>EQ</Code>
 				<Code>GI</Code>
 				<Code>MC</Code>
 				<Code>MI</Code>
 				<Code>MS</Code>
 				<Code>TI</Code>
+				<Code>ER</Code>
+				<Code>SA</Code>
             </InteractionTypeCodes>
         </Family>
     </Families>
