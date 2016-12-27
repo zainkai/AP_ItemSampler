@@ -296,7 +296,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         private List<FilesystemStatus> GetFilesystemStatuses()
         {
             var filesystemStatuses = new List<FilesystemStatus>();
-            var drives = DriveInfo.GetDrives().Where(t => t.TotalSize > 0).ToList();
+            var drives = DriveInfo.GetDrives().Where(t => t.TotalSize > 0.000001).ToList();
             foreach (DriveInfo drive in drives)
             {
                 filesystemStatuses.Add(GetFilesystemStatus(drive));
