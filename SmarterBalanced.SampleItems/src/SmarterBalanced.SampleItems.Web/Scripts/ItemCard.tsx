@@ -24,28 +24,28 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
         return (
             <div className={"card card-block " + this.props.subjectCode.toLowerCase()} onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
-                    <h4 className="card-title">{this.props.title}</h4>
-                    <p className="card-text subject">
+                    <h4 className="card-title" tabIndex={0}>{this.props.title}</h4>
+                    <p className="card-text subject" tabIndex={0}>
                         <span className="card-text-label">Subject:</span>
-                        <span className="card-text-value"> {this.props.subjectLabel}</span>
+                        <span className="card-text-value">{this.props.subjectLabel}</span>
                     </p>
-                    <p className="card-text grade">
+                    <p className="card-text grade" tabIndex={0}>
                         <span className="card-text-label">Grade:</span>
                         <span className="card-text-value"> {this.props.gradeLabel}</span>
                     </p>
-                    <p className="card-text claim">
+                    <p className="card-text claim" tabIndex={0}>
                         <span className="card-text-label">Claim:</span>
                         <span className="card-text-value"> {this.props.claimLabel}</span>
                     </p>
-                    <p className="card-text target">
+                    <p className="card-text target" tabIndex={0}>
                         <span className="card-text-label">Target:</span>
                         <span className="card-text-value"> {this.props.target}</span>
                     </p>
-                    <p className="card-text interaction-type">
+                    <p className="card-text interaction-type" tabIndex={0}>
                         <span className="card-text-label">Interaction Type:</span>
                         <span className="card-text-value"> {this.props.interactionTypeLabel}</span>
                     </p>
-                    <p className="card-text item-id">
+                    <p className="card-text item-id" tabIndex={0}>
                         <span className="card-text-label">Item Id:</span>
                         <span className="card-text-value"> {this.props.itemKey}</span>
                     </p>

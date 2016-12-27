@@ -177,11 +177,11 @@ namespace ItemSearchParams {
             return (
                 <div className="search-params">
                     <div className="search-header">
-                        <div className="search-title">Sample Items Search</div>
+                        <h1 className="search-title" tabIndex={0}>Sample Items Search</h1>
                         <div className="search-status">
-                            {this.props.isLoading ? <img src="images/spin.gif" className="spin"/> : undefined}
-                            <div><a onClick={() => this.resetFilters()}>Reset filters</a></div>
-                            <div onClick={() => this.toggleExpandAll()}>
+                            {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
+                            <div><a onClick={() => this.resetFilters()} tabIndex={0}>Reset filters</a></div>
+                            <div onClick={() => this.toggleExpandAll()} tabIndex={0}>
                                 {this.getExpandAll() ? "▼ Hide" : "▶ Show"} all
                             </div>
                         </div>
@@ -209,7 +209,7 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category">
-                    <label onClick={() => this.toggleExpandItemIDInput()}>
+                    <label onClick={() => this.toggleExpandItemIDInput()} tabIndex={0}>
                         {this.state.expandItemID ? "▼" : "▶"} Item ID
                     </label>
                     {input}
@@ -223,28 +223,33 @@ namespace ItemSearchParams {
             const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
 
             const tags = [
-                <span key={GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
-                    onClick={() => this.toggleGrades(GradeLevels.Elementary)}>
+                <a role="button" key={GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
+                    onClick={() => this.toggleGrades(GradeLevels.Elementary)}
+                    tabIndex={0}
+                    aria-label="Grades 3 to 5">
 
                     Grades 3-5
-                </span>,
+                </a>,
 
-                <span key={GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
-                    onClick={() => this.toggleGrades(GradeLevels.Middle)}>
+                <a role="button" key={GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
+                    onClick={() => this.toggleGrades(GradeLevels.Middle)}
+                    tabIndex={0}
+                    aria-label="Grades 6 to 8">
 
                     Grades 6-8
-                </span>,
+                </a>,
 
-                <span key={GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
-                    onClick={() => this.toggleGrades(GradeLevels.High)}>
+                <a role="button" key={GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
+                    onClick={() => this.toggleGrades(GradeLevels.High)}
+                    tabIndex={0}>
 
                     High School
-                </span>
+                </a>
             ];
 
             return (
                 <div className="search-category" style={{ flexGrow: 3 }}>
-                    <label onClick={() => this.toggleExpandGradeLevels()}>
+                    <label onClick={() => this.toggleExpandGradeLevels()} tabIndex={0}>
                         {this.state.expandGradeLevels ? "▼" : "▶"} Grade Levels
                     </label>
                     <div className="search-tags form-group">
@@ -258,11 +263,12 @@ namespace ItemSearchParams {
             const subjects = this.state.subjects || [];
             const className = (subjects.indexOf(subject.code) === -1 ? "" : "selected") + " tag";
             return (
-                <span key={subject.code} className={className}
-                    onClick={() => this.toggleSubject(subject.code)}>
+                <a role="button" key={subject.code} className={className}
+                    onClick={() => this.toggleSubject(subject.code)}
+                    tabIndex={0}>
 
                     {subject.label}
-                </span>
+                </a>
             );
         }
 
@@ -274,7 +280,7 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category" style={{ flexGrow: 2 }}>
-                    <label onClick={() => this.toggleExpandSubjects()}>
+                    <label onClick={() => this.toggleExpandSubjects()} tabIndex={0}>
                         {this.state.expandSubjects ? "▼" : "▶"} Subjects
                     </label>
                     <div className="search-tags form-group">
@@ -289,10 +295,12 @@ namespace ItemSearchParams {
 
             const makeClass = (claim: Claim) => (selectedClaims.indexOf(claim.code) === -1 ? "" : "selected") + " tag";
             const renderClaim = (claim: Claim) =>
-                <span key={claim.code} className={makeClass(claim)}
-                    onClick={() => this.toggleClaim(claim.code)}>
+                <a role="button" key={claim.code} className={makeClass(claim)}
+                    onClick={() => this.toggleClaim(claim.code)}
+                    tabIndex={0}>
+
                     {claim.label}
-                </span>;
+                </a>;
 
             // If no subjects are selected, use the entire list of subjects
             const selectedSubjectCodes = this.state.subjects || [];
@@ -301,14 +309,14 @@ namespace ItemSearchParams {
                 : [];
 
             const tags = subjects.length === 0
-                ? <span>Please select a subject.</span>
+                ? <p tabIndex={0}>Please select a subject.</p>
                 : subjects
                     .reduce((cs: Claim[], s: Subject) => cs.concat(s.claims), [])
                     .map(renderClaim);
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
-                    <label onClick={() => this.toggleExpandClaims()}>
+                    <label onClick={() => this.toggleExpandClaims()} tabIndex={0}>
                         {this.state.expandClaims ? "▼" : "▶"} Claims
                     </label>
                     <div className="search-tags form-group">
@@ -324,7 +332,9 @@ namespace ItemSearchParams {
             const makeClass = (it: InteractionType) => (selectedInteractionTypes.indexOf(it.code) === -1 ? "" : "selected") + " tag";
             const renderInteractionType = (it: InteractionType) =>
                 <span key={it.code} className={makeClass(it)}
-                    onClick={() => this.toggleInteractionType(it.code)}>
+                    onClick={() => this.toggleInteractionType(it.code)}
+                    tabIndex={0}>
+
                     {it.label}
                 </span>;
             
@@ -338,12 +348,12 @@ namespace ItemSearchParams {
                 : [];
 
             const tags = visibleInteractionTypes.length === 0
-                ? <span>Please select a subject.</span>
+                ? <p tabIndex={0}>Please select a subject.</p>
                 : visibleInteractionTypes.map(renderInteractionType);
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
-                    <label onClick={() => this.toggleExpandInteractionTypes()}>
+                    <label onClick={() => this.toggleExpandInteractionTypes()} tabIndex={0}>
                         {this.state.expandInteractionTypes ? "▼" : "▶"} Interaction Types
                     </label>
                     <div className="search-tags form-group">
