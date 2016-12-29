@@ -93,6 +93,14 @@ namespace ItemsSearch {
             this.setState({ searchResults: { kind: "failure" } });
         }
 
+        selectSingleResult() {
+            const searchResults = this.state.searchResults;
+            if (searchResults.kind === "success" && searchResults.content.length === 1) {
+                const searchResult = searchResults.content[0];
+                itemPageLink(searchResult.bankKey, searchResult.itemKey);
+            }
+        }
+
         isLoading() {
             return this.state.searchResults.kind === "loading" || this.state.searchResults.kind === "reloading";
         }
@@ -118,6 +126,7 @@ namespace ItemsSearch {
                         interactionTypes={this.props.interactionTypes}
                         subjects={this.props.subjects}
                         onChange={(params) => this.beginSearch(params)}
+                        selectSingleResult={() => this.selectSingleResult()}
                         isLoading={isLoading} />
                     <div className="search-results">
                         {resultsElement}

@@ -5,6 +5,7 @@ namespace ItemSearchParams {
         interactionTypes: InteractionType[];
         subjects: Subject[];
         onChange: (params: SearchAPIParams) => void;
+        selectSingleResult: () => void;
         isLoading: boolean;
     }
     
@@ -63,6 +64,12 @@ namespace ItemSearchParams {
             this.setState({
                 itemID: inputOK ? newValue : this.state.itemID
             }, () => this.beginChangeTimeout());
+        }
+
+        onItemIDKeyUp(e: React.KeyboardEvent) {
+            if (e.keyCode === 13) {
+                this.props.selectSingleResult();
+            }
         }
 
         toggleGrades(grades: GradeLevels) {
@@ -191,25 +198,26 @@ namespace ItemSearchParams {
                         {this.renderSubjects()}
                         {this.renderClaims()}
                         {this.renderInteractionTypes()}
-                        {this.renderItemIDChange()}
+                        {this.renderItemID()}
                     </div>
                 </div>
             );
         }
 
-        renderItemIDChange() {
+        renderItemID() {
             const input = this.state.expandItemID
                 ?
                     <input type="text" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
+                        onKeyUp={e => this.onItemIDKeyUp(e)}
                         value={this.state.itemID}>
                     </input>
                 : undefined;
 
             return (
                 <div className="search-category">
-                    <label onClick={() => this.toggleExpandItemIDInput()} tabIndex={0}>
+                    <label role="button" onClick= {() => this.toggleExpandItemIDInput()} tabIndex={0}>
                         {this.state.expandItemID ? "▼" : "▶"} Item ID
                     </label>
                     {input}
@@ -223,30 +231,31 @@ namespace ItemSearchParams {
             const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
 
             const tags = [
-                <a role="button" key={GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
+                <button role="button" key={GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
                     onClick={() => this.toggleGrades(GradeLevels.Elementary)}
                     tabIndex={0}
                     aria-label="Grades 3 to 5">
 
                     Grades 3-5
-                </a>,
+                </button>,
 
-                <a role="button" key={GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
+                <button role="button" key={GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
                     onClick={() => this.toggleGrades(GradeLevels.Middle)}
                     tabIndex={0}
                     aria-label="Grades 6 to 8">
 
                     Grades 6-8
-                </a>,
+                </button>,
 
-                <a role="button" key={GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
+                <button role="button" key={GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
                     onClick={() => this.toggleGrades(GradeLevels.High)}
                     tabIndex={0}>
 
                     High School
-                </a>
+                </button>
             ];
 
+            // TODO: convert to use Collapsible element
             return (
                 <div className="search-category" style={{ flexGrow: 3 }}>
                     <label onClick={() => this.toggleExpandGradeLevels()} tabIndex={0}>
@@ -263,12 +272,12 @@ namespace ItemSearchParams {
             const subjects = this.state.subjects || [];
             const className = (subjects.indexOf(subject.code) === -1 ? "" : "selected") + " tag";
             return (
-                <a role="button" key={subject.code} className={className}
+                <button role="button" key={subject.code} className={className}
                     onClick={() => this.toggleSubject(subject.code)}
                     tabIndex={0}>
 
                     {subject.label}
-                </a>
+                </button>
             );
         }
 
@@ -295,12 +304,12 @@ namespace ItemSearchParams {
 
             const makeClass = (claim: Claim) => (selectedClaims.indexOf(claim.code) === -1 ? "" : "selected") + " tag";
             const renderClaim = (claim: Claim) =>
-                <a role="button" key={claim.code} className={makeClass(claim)}
+                <button role="button" key={claim.code} className={makeClass(claim)}
                     onClick={() => this.toggleClaim(claim.code)}
                     tabIndex={0}>
 
                     {claim.label}
-                </a>;
+                </button>;
 
             // If no subjects are selected, use the entire list of subjects
             const selectedSubjectCodes = this.state.subjects || [];
@@ -331,12 +340,12 @@ namespace ItemSearchParams {
 
             const makeClass = (it: InteractionType) => (selectedInteractionTypes.indexOf(it.code) === -1 ? "" : "selected") + " tag";
             const renderInteractionType = (it: InteractionType) =>
-                <span key={it.code} className={makeClass(it)}
+                <button key={it.code} className={makeClass(it)}
                     onClick={() => this.toggleInteractionType(it.code)}
                     tabIndex={0}>
 
                     {it.label}
-                </span>;
+                </button>;
             
             const selectedSubjectCodes = this.state.subjects || [];
             const selectedSubjects = selectedSubjectCodes.length !== 0
