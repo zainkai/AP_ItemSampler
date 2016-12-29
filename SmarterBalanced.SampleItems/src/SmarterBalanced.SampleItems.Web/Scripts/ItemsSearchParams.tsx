@@ -1,4 +1,7 @@
 ﻿
+const hideArrow = [<span className="screen-reader-text">Hide</span>, <span aria-hidden="true">▼</span>];
+const showArrow = [<span className="screen-reader-text">Show</span>, <span aria-hidden="true">▶</span>];
+
 namespace ItemSearchParams {
 
     export interface Props {
@@ -59,11 +62,12 @@ namespace ItemSearchParams {
 
         onItemIDInput(e: React.FormEvent) {
             const newValue = (e.target as HTMLInputElement).value;
-            const inputOK = /^\d{0,4}$/.test(newValue);
-            
-            this.setState({
-                itemID: inputOK ? newValue : this.state.itemID
-            }, () => this.beginChangeTimeout());
+            const isInputOK = /^\d{0,4}$/.test(newValue);
+            if (isInputOK) {
+                this.setState({
+                    itemID: newValue
+                }, () => this.beginChangeTimeout());
+            }
         }
 
         onItemIDKeyUp(e: React.KeyboardEvent) {
@@ -217,8 +221,8 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category">
-                    <label role="button" onClick= {() => this.toggleExpandItemIDInput()} tabIndex={0}>
-                        {this.state.expandItemID ? "▼" : "▶"} Item ID
+                    <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()} tabIndex={0}>
+                        {this.state.expandItemID ? hideArrow : showArrow} Item ID
                     </label>
                     {input}
                 </div>
@@ -226,14 +230,16 @@ namespace ItemSearchParams {
         }
 
         renderGrades() {
-            const elementarySelected = (this.state.gradeLevels & GradeLevels.Elementary) == GradeLevels.Elementary;
-            const middleSelected = (this.state.gradeLevels & GradeLevels.Middle) == GradeLevels.Middle;
-            const highSelected = (this.state.gradeLevels & GradeLevels.High) == GradeLevels.High;
+            const gradeLevels = this.state.gradeLevels || GradeLevels.NA;
+            const elementarySelected = GradeLevels.contains(gradeLevels, GradeLevels.Elementary);
+            const middleSelected = GradeLevels.contains(gradeLevels, GradeLevels.Middle);
+            const highSelected = GradeLevels.contains(gradeLevels, GradeLevels.High);
 
             const tags = [
                 <button role="button" key={GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
                     onClick={() => this.toggleGrades(GradeLevels.Elementary)}
                     tabIndex={0}
+                    aria-pressed={elementarySelected}
                     aria-label="Grades 3 to 5">
 
                     Grades 3-5
@@ -242,6 +248,7 @@ namespace ItemSearchParams {
                 <button role="button" key={GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
                     onClick={() => this.toggleGrades(GradeLevels.Middle)}
                     tabIndex={0}
+                    aria-pressed={middleSelected}
                     aria-label="Grades 6 to 8">
 
                     Grades 6-8
@@ -249,7 +256,8 @@ namespace ItemSearchParams {
 
                 <button role="button" key={GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
                     onClick={() => this.toggleGrades(GradeLevels.High)}
-                    tabIndex={0}>
+                    tabIndex={0}
+                    aria-pressed={highSelected}>
 
                     High School
                 </button>
@@ -258,8 +266,11 @@ namespace ItemSearchParams {
             // TODO: convert to use Collapsible element
             return (
                 <div className="search-category" style={{ flexGrow: 3 }}>
-                    <label onClick={() => this.toggleExpandGradeLevels()} tabIndex={0}>
-                        {this.state.expandGradeLevels ? "▼" : "▶"} Grade Levels
+                    <label aria-expanded={this.state.expandGradeLevels}
+                        onClick={() => this.toggleExpandGradeLevels()}
+                        tabIndex={0}>
+
+                        {this.state.expandGradeLevels ? hideArrow : showArrow} Grade Levels
                     </label>
                     <div className="search-tags form-group">
                         {this.state.expandGradeLevels ? tags : undefined}
@@ -270,11 +281,13 @@ namespace ItemSearchParams {
 
         renderSubject(subject: Subject) {
             const subjects = this.state.subjects || [];
-            const className = (subjects.indexOf(subject.code) === -1 ? "" : "selected") + " tag";
+            const containsSubject = subjects.indexOf(subject.code) !== -1;
+            const className = (containsSubject ? "selected" : "") + " tag";
             return (
                 <button role="button" key={subject.code} className={className}
                     onClick={() => this.toggleSubject(subject.code)}
-                    tabIndex={0}>
+                    tabIndex={0}
+                    aria-pressed={containsSubject}>
 
                     {subject.label}
                 </button>
@@ -289,8 +302,11 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category" style={{ flexGrow: 2 }}>
-                    <label onClick={() => this.toggleExpandSubjects()} tabIndex={0}>
-                        {this.state.expandSubjects ? "▼" : "▶"} Subjects
+                    <label aria-expanded={this.state.expandSubjects}
+                        onClick={() => this.toggleExpandSubjects()}
+                        tabIndex={0}>
+
+                        {this.state.expandSubjects ? hideArrow : showArrow} Subjects
                     </label>
                     <div className="search-tags form-group">
                         {tags}
@@ -301,15 +317,19 @@ namespace ItemSearchParams {
 
         renderClaims() {
             const selectedClaims = this.state.claims || [];
+            
+            const renderClaim = (claim: Claim) => {
+                let containsClaim = selectedClaims.indexOf(claim.code) !== -1;
+                return (
+                    <button role="button" key={claim.code} className={(containsClaim ? "selected" : "") + " tag"}
+                        onClick={() => this.toggleClaim(claim.code)}
+                        tabIndex={0}
+                        aria-pressed={containsClaim}>
 
-            const makeClass = (claim: Claim) => (selectedClaims.indexOf(claim.code) === -1 ? "" : "selected") + " tag";
-            const renderClaim = (claim: Claim) =>
-                <button role="button" key={claim.code} className={makeClass(claim)}
-                    onClick={() => this.toggleClaim(claim.code)}
-                    tabIndex={0}>
-
-                    {claim.label}
-                </button>;
+                        {claim.label}
+                    </button>
+                );
+            }
 
             // If no subjects are selected, use the entire list of subjects
             const selectedSubjectCodes = this.state.subjects || [];
@@ -325,8 +345,11 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
-                    <label onClick={() => this.toggleExpandClaims()} tabIndex={0}>
-                        {this.state.expandClaims ? "▼" : "▶"} Claims
+                    <label aria-expanded={this.state.expandClaims}
+                        onClick={() => this.toggleExpandClaims()}
+                        tabIndex={0}>
+
+                        {this.state.expandClaims ? hideArrow : showArrow} Claims
                     </label>
                     <div className="search-tags form-group">
                         {this.state.expandClaims ? tags : undefined}
@@ -337,15 +360,19 @@ namespace ItemSearchParams {
 
         renderInteractionTypes() {
             const selectedInteractionTypes = this.state.interactionTypes || [];
+            
+            const renderInteractionType = (it: InteractionType) => {
+                let containsInteractionType = selectedInteractionTypes.indexOf(it.code) !== -1;
+                return (
+                    <button key={it.code} className={(containsInteractionType ? "selected" : "") + " tag"}
+                        onClick={() => this.toggleInteractionType(it.code)}
+                        tabIndex={0}
+                        aria-pressed={containsInteractionType}>
 
-            const makeClass = (it: InteractionType) => (selectedInteractionTypes.indexOf(it.code) === -1 ? "" : "selected") + " tag";
-            const renderInteractionType = (it: InteractionType) =>
-                <button key={it.code} className={makeClass(it)}
-                    onClick={() => this.toggleInteractionType(it.code)}
-                    tabIndex={0}>
-
-                    {it.label}
-                </button>;
+                        {it.label}
+                    </button>
+                );
+            }
             
             const selectedSubjectCodes = this.state.subjects || [];
             const selectedSubjects = selectedSubjectCodes.length !== 0
@@ -362,8 +389,11 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
-                    <label onClick={() => this.toggleExpandInteractionTypes()} tabIndex={0}>
-                        {this.state.expandInteractionTypes ? "▼" : "▶"} Interaction Types
+                    <label aria-expanded={this.state.expandInteractionTypes}
+                        onClick={() => this.toggleExpandInteractionTypes()}
+                        tabIndex={0}>
+
+                        {this.state.expandInteractionTypes ? hideArrow : showArrow} Interaction Types
                     </label>
                     <div className="search-tags form-group">
                         {this.state.expandInteractionTypes ? tags : undefined}

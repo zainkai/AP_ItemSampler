@@ -39,7 +39,7 @@ namespace GradeLevels {
         }
     }
 
-    export function toString(grades: GradeLevels) {
+    export function toString(grades: GradeLevels): string {
         const caseString = caseToString(grades);
         if (caseString !== "") {
             return caseString;
@@ -52,5 +52,9 @@ namespace GradeLevels {
             }
         }
         return gradeStrings.join(", ");
+    }
+
+    export function contains(haystack: GradeLevels, needle: GradeLevels): boolean {
+        return (haystack & needle) === needle;
     }
 }
