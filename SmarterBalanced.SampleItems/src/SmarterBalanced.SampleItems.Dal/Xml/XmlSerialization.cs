@@ -83,5 +83,32 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
             IEnumerable<FileInfo> files = await getFiles;
             return files;
         }
+
+        public static XElement GetXDocumentElement(string location, string rootElement)
+        {
+            return XDocument.Load(location).Element(rootElement);
+        }
+
+        public static Task<XElement> GetXDocumentElementAsync(string location, string rootElement)
+        {
+            return Task.Run(() =>
+            {
+                return GetXDocumentElement(location, rootElement);
+            });
+        }
+
+        public static XDocument GetXDocument(string location)
+        {
+            return XDocument.Load(location);
+        }
+
+        public static Task<XDocument> GetXDocumentAsync(string location)
+        {
+            return Task.Run(() =>
+            {
+                return GetXDocument(location);
+            });
+        }
+
     }
 }

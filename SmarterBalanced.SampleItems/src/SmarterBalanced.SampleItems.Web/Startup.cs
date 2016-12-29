@@ -7,12 +7,14 @@ using SmarterBalanced.SampleItems.Core.Diagnostics;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
+using System;
 
 namespace SmarterBalanced.SampleItems.Web
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly ILogger logger;
+        public Startup(IHostingEnvironment env, ILoggerFactory factory)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -26,6 +28,19 @@ namespace SmarterBalanced.SampleItems.Web
             }
 
             Configuration = builder.Build();
+            ConfigureLogging(env, factory);
+
+            logger = factory.CreateLogger<Startup>();
+        }
+
+        private void ConfigureLogging(IHostingEnvironment env, ILoggerFactory factory)
+        {
+            factory.AddConsole(Configuration.GetSection("Logging"));
+            factory.AddDebug();
+            if (!env.IsDevelopment())
+            {
+                factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+            }
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -37,7 +52,17 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc();
             AppSettings appSettings = new AppSettings(Configuration);
-            SampleItemsContext context = SampleItemsProvider.LoadContext(appSettings).Result;
+            SampleItemsContext context;
+            try
+            {
+                context = SampleItemsProvider.LoadContext(appSettings, logger).Result;
+            }
+            catch (Exception e)
+            {
+                logger.LogCritical($"{e.Message} occured when loading the context");
+                throw e;
+            }
+
             services.AddSingleton(context);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
@@ -50,9 +75,6 @@ namespace SmarterBalanced.SampleItems.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             app.UseApplicationInsightsExceptionTelemetry();
             app.UseStaticFiles();
 
@@ -72,11 +94,11 @@ namespace SmarterBalanced.SampleItems.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapRoute(
                     name: "diagnostic",
-                    template: "status/{action}",
+                    template: "status/{level?}",
                     defaults: new { controller = "Diagnostic", action = "Index" });
             });
 
