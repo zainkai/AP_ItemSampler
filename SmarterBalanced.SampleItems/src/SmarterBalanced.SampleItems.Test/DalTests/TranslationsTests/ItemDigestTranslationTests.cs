@@ -57,7 +57,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     interactionTypeCodes: ImmutableArray.Create<string>())
             };
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), interactionTypes, subjects);
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -93,7 +93,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), new List<InteractionType>(), new List<Subject>()));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>()));
         }
 
 

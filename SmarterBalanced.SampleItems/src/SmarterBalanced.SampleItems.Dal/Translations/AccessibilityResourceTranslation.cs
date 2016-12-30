@@ -17,19 +17,27 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             IList<AccessibilityResource> accessibilityResources = singleSelectResources
                 .Select(a =>
-                        new AccessibilityResource
-                        {
-                            Code = (string)a.Element("Code"),
-                            Order = (int)a.Element("Order"),
-                            DefaultSelection = (string)a.Element("DefaultSelection"),
-                            Label = (string)a.Element("Text").Element("Label"),
-                            Description = (string)a.Element("Text").Element("Description"),
-                            Disabled = (a?.Element("Disabled") != null) ? true : false,
-                            Selections = a.Elements("Selection").ToSelections()
-                        })
-                        .Where(a => a.Selections.Any())
-                        .ToList();
+                {
+                    var selections = a.Elements("Selection").ToSelections();
 
+                    var defaultSelection = (string)a.Element("DefaultSelection");
+                    defaultSelection = string.IsNullOrEmpty(defaultSelection) ? 
+                         selections.FirstOrDefault()?.Code : defaultSelection;
+
+                    return new AccessibilityResource
+                    {
+                        Code = (string)a.Element("Code"),
+                        Order = (int)a.Element("Order"),
+                        DefaultSelection = defaultSelection,
+                        Label = (string)a.Element("Text").Element("Label"),
+                        Description = (string)a.Element("Text").Element("Description"),
+                        Disabled = (a?.Element("Disabled") != null) ? true : false,
+                        Selections = selections
+                    };
+                })
+                .Where(a => a.Selections.Any())
+                .ToList(); 
+                        
             return accessibilityResources;
         }
 

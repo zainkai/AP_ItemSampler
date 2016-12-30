@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
+
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     /// <summary>
@@ -21,12 +22,14 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public GradeLevels Grade { get; set; }
         public Subject Subject { get; set; }
         public Claim Claim { get; set; }
+        public List<Rubric> Rubrics { get; set; }
         public InteractionType InteractionType { get; set; }
 
         public List<AccessibilityResource> AccessibilityResources { get; set; }
         public string TargetAssessmentType { get; set; }
         public string SufficentEvidenceOfClaim { get; set; }
         public int? AssociatedStimulus { get; set; }
-
+        public bool AslSupported { get; set; }
+        public bool AllowCalculator { get; set; }
     }
 }

@@ -17,21 +17,21 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         public static async Task<SampleItemsContext> LoadContext(AppSettings appSettings, ILogger logger)
         {
             List<InteractionType> interactionTypes;
-            List<InteractionFamily> interactionFamily;
+            List<InteractionFamily> interactionFamilies;
 
             Task<XElement> interactionTypeDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.InteractionTypesXMLPath, "InteractionTypes");
             Task<XElement> accessibilityDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
             Task<XDocument> subjectDoc = XmlSerialization.GetXDocumentAsync(appSettings.SettingsConfig.ClaimsXMLPath);
 
-            IList<AccessibilityResourceFamily> accessibilityResourceFamily = LoadAccessibility(accessibilityDoc.Result);
-            GetInteractionTypes(interactionTypeDoc.Result, out interactionTypes, out interactionFamily);
-            List<Subject> subjects = subjectDoc.Result.ToSubjects(interactionFamily);
+            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result);
+            GetInteractionTypes(interactionTypeDoc.Result, out interactionTypes, out interactionFamilies);
+            List<Subject> subjects = subjectDoc.Result.ToSubjects(interactionFamilies);
 
-            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamily, interactionTypes, subjects);
+            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes, subjects);
             List<ItemCardViewModel> itemCards = itemDigests.Select(i => i.ToItemCardViewModel()).ToList();
             SampleItemsContext context = new SampleItemsContext
             {
-                AccessibilityResourceFamilies = accessibilityResourceFamily,
+                AccessibilityResourceFamilies = accessibilityResourceFamilies,
                 InteractionTypes = interactionTypes,
                 ItemDigests = itemDigests,
                 ItemCards = itemCards,

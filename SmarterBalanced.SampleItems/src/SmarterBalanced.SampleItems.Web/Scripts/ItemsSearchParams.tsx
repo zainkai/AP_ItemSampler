@@ -245,7 +245,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-category" style={{ flexGrow: 3 }}>
                     <label onClick={() => this.toggleExpandGradeLevels()}>
-                        {this.state.expandGradeLevels ? "▼" : "▶"} Grade Levels
+                        {this.state.expandGradeLevels ? "▼" : "▶"}Grade Levels
                     </label>
                     <div className="search-tags form-group">
                         {this.state.expandGradeLevels ? tags : undefined}

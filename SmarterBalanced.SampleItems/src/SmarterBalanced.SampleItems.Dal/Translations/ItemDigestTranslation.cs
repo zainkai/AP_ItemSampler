@@ -24,7 +24,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static ItemDigest ItemToItemDigest(
             ItemMetadata itemMetadata,
             ItemContents itemContents,
-            IList<AccessibilityResourceFamily> resourceFamilies,
             IList<InteractionType> interactionTypes,
             IList<Subject> subjects
             )
@@ -57,6 +56,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             digest.BankKey = itemContents.Item.ItemBank;
             digest.ItemKey = itemContents.Item.ItemKey;
             digest.ItemType = itemContents.Item.ItemType;
+            
+            digest.Rubrics = itemContents.Item.Contents.ToRubric();
+
             digest.TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType; 
             
             string interactionTypeCode = itemMetadata.Metadata.InteractionType;
@@ -77,9 +79,43 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             digest.Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade);
 
-            digest.AccessibilityResources = resourceFamilies.FirstOrDefault(t => t.Subjects.Any(c => c == subjectId) && t.Grades.Contains(digest.Grade))?.Resources;
+            digest.AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y" ? true : false;
+            digest.AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y" ? true : false;
 
             return digest;
+        }
+
+        /// <summary>
+        /// Converts item XML Contents into Rubrics.
+        /// </summary>
+        /// <param name="contents"></param>
+        /// <returns>List<Rubric>.</returns>
+        public static List<Rubric> ToRubric(this List<XmlModels.Content> contents)
+        {
+            List<Rubric> rubrics = new List<Rubric>();
+            if(contents == null)
+            {
+                return rubrics;
+            }
+
+            foreach(var content in contents)
+            {
+                var rubricEntries = content?.RubricList?.Rubrics?.Where(r => !string.IsNullOrWhiteSpace(r.Value)).ToList();
+                var samples = content?.RubricList?.RubricSamples?.Where(r => r.SampleResponses.Count() > 0).ToList();
+
+                if(rubricEntries?.Count() > 0 || samples?.Count() > 0)
+                {
+                    rubrics.Add(
+                        new Rubric
+                        {
+                            Language = content?.Language,
+                            RubricEntries = rubricEntries,
+                            Samples = samples
+                        });
+                }
+            }
+
+            return rubrics;
         }
 
         /// <summary>
@@ -104,7 +140,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    digests.Add(ItemToItemDigest(metadata, matchingItems.First(), resourceFamilies, interactionTypes, subjects));
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects);
+
+                    AssignAccessibilityResources(itemDigest, resourceFamilies);
+
+                    digests.Add(itemDigest);
                 }
                 else if (itemsCount > 1)
                 {
@@ -112,7 +152,60 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
                 // TODO: log a warning if item count is 0
             });
+            
             return digests;
         }
+
+        /// <summary>
+        /// Assigns a list of AccessibilityResources to an item digest.
+        /// If the item has auxilliary resources disabled, the resources are updated accordingly.
+        /// </summary>
+        /// <param name="itemDigest"></param>
+        /// <param name="resourceFamilies"></param>
+        private static void AssignAccessibilityResources(ItemDigest itemDigest, IList<AccessibilityResourceFamily> resourceFamilies)
+        {
+            List<AccessibilityResource> resources = resourceFamilies
+                .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
+                    && t.Grades.Contains(itemDigest.Grade)
+                )?.Resources;
+
+            if (resources == null)
+            {
+                return;
+            }
+
+            if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
+            {
+                resources = resources.Select(t => t.DeepClone()).ToList();
+
+                if (!itemDigest.AslSupported)
+                {
+                    DisableResource(resources, "AmericanSignLanguage");
+                }
+
+                if (!itemDigest.AllowCalculator)
+                {
+                    DisableResource(resources, "Calculator");
+                }
+            }
+
+            itemDigest.AccessibilityResources = resources;
+        }
+
+        /// <summary>
+        /// Disables a given resource
+        /// </summary>
+        /// <param name="resource"></param>
+        private static void DisableResource(List<AccessibilityResource> resources, string code)
+        {
+            var resource = resources.FirstOrDefault(t => t.Code == code);
+            if (resource != null)
+            {
+                resource.Disabled = true;
+                resource.Selections.ForEach(s => s.Disabled = true);
+            }
+        }
+
     }
+
 }
