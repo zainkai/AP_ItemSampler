@@ -1,6 +1,29 @@
 ﻿
-const hideArrow = [<span className="screen-reader-text">Hide</span>, <span aria-hidden="true">▼</span>];
-const showArrow = [<span className="screen-reader-text">Show</span>, <span aria-hidden="true">▶</span>];
+const hideArrow = (
+    <span>
+        <span className="screen-reader-text">Hide</span>
+        <span aria-hidden="true">▼</span>
+    </span>
+);
+
+const showArrow = (
+    <span>
+        <span className="screen-reader-text">Show</span>
+        <span aria-hidden="true">▶</span>
+    </span>
+);
+
+function parseQueryString(url: string): { [key: string]: string[] | undefined } {
+    let queryObject: { [key: string]: string[] | undefined } = {};
+    const pairs = url.slice(url.indexOf("?") + 1).split("&");
+    for (const pair of pairs) {
+        const pairParts = pair.split("=");
+        if (pairParts[0] && pairParts[1]) {
+            queryObject[pairParts[0]] = pairParts[1].split(",");
+        }
+    }
+    return queryObject;
+}
 
 namespace ItemSearchParams {
 
@@ -13,7 +36,7 @@ namespace ItemSearchParams {
     }
     
     export interface State {
-        itemID?: string;
+        itemId?: string;
         gradeLevels?: GradeLevels;
         subjects?: string[];
         claims?: string[];
@@ -27,12 +50,8 @@ namespace ItemSearchParams {
     }
 
     export class ISPComponent extends React.Component<Props, State> {
-        readonly initialState: State = {
-            itemID: '',
-            gradeLevels: GradeLevels.NA,
-            subjects: [],
-            claims: [],
-            interactionTypes: []
+        readonly initialState: State {
+            
         };
 
         // TODO: since the callback property exists on setState, should this be in the state interface instead of the component class?
@@ -40,7 +59,58 @@ namespace ItemSearchParams {
 
         constructor(props: Props) {
             super(props);
-            this.state = this.initialState;
+
+            const queryObject = parseQueryString(location.search);
+            const itemId = (queryObject["itemID"] || [])[0] || '';
+
+            const gradeString = (queryObject["gradeLevels"] || [])[0];
+            const gradeLevels: GradeLevels = parseInt(gradeString) || GradeLevels.NA;
+
+            const subjects = queryObject["subjects"] || [];
+            const claims = queryObject["claims"] || [];
+            const interactionTypes = queryObject["interactionTypes"] || [];
+
+            this.state = {
+                itemId: itemId,
+                gradeLevels: gradeLevels,
+                subjects: subjects,
+                claims: claims,
+                interactionTypes: interactionTypes,
+
+                expandItemID: itemId.length !== 0,
+                expandGradeLevels: gradeLevels !== GradeLevels.NA,
+                expandSubjects: subjects.length !== 0,
+                expandClaims: claims.length !== 0,
+                expandInteractionTypes: interactionTypes.length !== 0
+            };
+
+            this.onChange();
+        }
+        
+        encodeQuery(): string {
+            let pairs: string[] = [];
+            if (this.state.claims && this.state.claims.length !== 0) {
+                pairs.push("claims=" + this.state.claims.join(","));
+            }
+            if (this.state.gradeLevels !== GradeLevels.NA) {
+                pairs.push("gradeLevels=" + this.state.gradeLevels);
+            }
+            if (this.state.interactionTypes && this.state.interactionTypes.length !== 0) {
+                pairs.push("interactionTypes=" + this.state.interactionTypes.join(","));
+            }
+            if (this.state.itemId) {
+                pairs.push("itemID=" + this.state.itemId);
+            }
+            if (this.state.subjects && this.state.subjects.length !== 0) {
+                pairs.push("subjects=" + this.state.subjects.join(","));
+            }
+
+            if (pairs.length === 0) {
+                return "/ItemsSearch";
+            }
+
+            const query = "?" + pairs.join("&");
+            return query;
         }
 
         beginChangeTimeout() {
@@ -48,16 +118,18 @@ namespace ItemSearchParams {
                 clearTimeout(this.timeoutToken);
             }
 
-            this.timeoutToken = setTimeout(() => {
-                const params: SearchAPIParams = {
-                    itemId: this.state.itemID || '',
-                    gradeLevels: this.state.gradeLevels || GradeLevels.All,
-                    subjects: this.state.subjects || [],
-                    claims: this.state.claims || [],
-                    interactionTypes: this.state.interactionTypes || []
-                };
-                this.props.onChange(params);
-            }, 200);
+            this.timeoutToken = setTimeout(() => this.onChange(), 200);
+        }
+
+        onChange() {
+            const params: SearchAPIParams = {
+                itemId: this.state.itemId || '',
+                gradeLevels: this.state.gradeLevels || GradeLevels.All,
+                subjects: this.state.subjects || [],
+                claims: this.state.claims || [],
+                interactionTypes: this.state.interactionTypes || []
+            };
+            this.props.onChange(params);
         }
 
         onItemIDInput(e: React.FormEvent) {
@@ -65,7 +137,7 @@ namespace ItemSearchParams {
             const isInputOK = /^\d{0,4}$/.test(newValue);
             if (isInputOK) {
                 this.setState({
-                    itemID: newValue
+                    itemId: newValue
                 }, () => this.beginChangeTimeout());
             }
         }
@@ -88,11 +160,12 @@ namespace ItemSearchParams {
             const subjectCodes = this.state.subjects || [];
             const containsSubject = subjectCodes.indexOf(subject) !== -1;
             const newSubjectCodes = containsSubject ? subjectCodes.filter(s => s !== subject) : subjectCodes.concat([subject]);
-
-            // No filtering needed if no subjects are selected
+            
             if (newSubjectCodes.length === 0) {
                 this.setState({
-                    subjects: newSubjectCodes
+                    subjects: newSubjectCodes,
+                    claims: [],
+                    interactionTypes: []
                 }, () => this.beginChangeTimeout());
                 return;
             }
@@ -185,6 +258,8 @@ namespace ItemSearchParams {
         }
 
         render() {
+            history.replaceState(null, '', this.encodeQuery());
+
             return (
                 <div className="search-params">
                     <div className="search-header">
@@ -215,7 +290,7 @@ namespace ItemSearchParams {
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         onKeyUp={e => this.onItemIDKeyUp(e)}
-                        value={this.state.itemID}>
+                        value={this.state.itemId}>
                     </input>
                 : undefined;
 
