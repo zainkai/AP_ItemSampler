@@ -41,5 +41,23 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             return View();
         }
+
+        public IActionResult BrowserWarning()
+        {
+            string browser;
+            var useragent = Request.Headers["User-Agent"].ToString();
+                        
+            if (useragent.Contains("Trident/7.0") || useragent.Contains("Chrome/55.0") || useragent.Contains("Firefox/50"))
+            {
+                browser = "Internet Explorer 11.0/ Chrome 55.X / Firefox 50.X";
+            }
+            else
+            {
+                browser = "Internet Explorer 10 or an unsupported browser";
+            }
+
+            ViewData["BrowserVersion"] = browser;
+            return View();
+        }
     }
 }

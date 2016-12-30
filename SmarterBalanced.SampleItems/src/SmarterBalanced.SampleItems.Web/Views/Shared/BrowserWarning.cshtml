@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Browser Warning";
+}
+
+<h3 class="text-danger"><strong>Browser Compatibility Warning:</strong></h3>
+
+<p>
+    <strong>Compatible browsers are Internet Explorer 11, Chrome 55.0, and Firefox 50.0 and newer.</strong>
+</p>
+<p>
+    You are are using <strong>@ViewData["BrowserVersion"]</strong> compatibility issues may occur.
+</p>
+
+<div>
+    @Html.ActionLink("Back to Home", "Index")
+</div>
