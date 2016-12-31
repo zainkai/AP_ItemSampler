@@ -1,13 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Net;
+using System.Linq;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppSettings appsettings;
+        public HomeController(AppSettings settings)
+        {
+            appsettings = settings;
+        }
+
 
         public IActionResult Index()
         {
+            string cookieName = appsettings.SettingsConfig.BrowserWarningCookie;
+            var cookie = "true";
+            string browser;
+            var useragent = Request.Headers["User-Agent"].ToString();
+
+            if (useragent.Contains("Trident"))
+            {
+                string regex = 'Trident\/(\d.\d)';
+                if (System.Text.RegularExpressions.Regex.IsMatch(useragent, regex))
+                {
+                    RedirectToAction("BrowserWarning");
+                }
+            }
+            //Response.Cookies.Append(cookieName, cookie);
+            //Response.Cookies[cookieName]
             return View();
         }
 
