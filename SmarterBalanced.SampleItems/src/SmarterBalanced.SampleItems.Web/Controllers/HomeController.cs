@@ -21,14 +21,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             string browser;
             var useragent = Request.Headers["User-Agent"].ToString();
 
-            if (useragent.Contains("Trident"))
-            {
-                string regex = 'Trident\/(\d.\d)';
-                if (System.Text.RegularExpressions.Regex.IsMatch(useragent, regex))
-                {
-                    RedirectToAction("BrowserWarning");
-                }
-            }
+            //if (useragent.Contains("Trident"))
+            //{
+            //    string regex = 'Trident\/(\d.\d)';
+            //    if (System.Text.RegularExpressions.Regex.IsMatch(useragent, regex))
+            //    {
+            //        RedirectToAction("BrowserWarning");
+            //    }
+            //}
             //Response.Cookies.Append(cookieName, cookie);
             //Response.Cookies[cookieName]
             return View();
