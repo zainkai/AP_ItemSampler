@@ -2,6 +2,8 @@
     ViewData["Title"] = "Browser Warning";
 }
 
+@ViewBag.returnUrl
+
 <h3 class="text-danger"><strong>Browser Compatibility Warning:</strong></h3>
 
 <p>
@@ -12,5 +14,5 @@
 </p>
 
 <div>
-    @Html.ActionLink("Back to Home", "Index")
+    @Html.ActionLink("Back to Home", "Index") | @Html.ActionLink("Back to previous page", @ViewData["ReturnUrl"].ToString())
 </div>

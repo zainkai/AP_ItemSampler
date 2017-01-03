@@ -17,5 +17,6 @@
         public string AccessibilityCookie { get; set; }
         public string ISAAPUrlParam { get; set; }
         public string BrowserWarningCookie { get; set; }
+        public string UserAgentRegex { get; set; }
     }
 }

@@ -2,6 +2,8 @@
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Net;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -13,24 +15,36 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             appsettings = settings;
         }
 
-
+        /// <summary>
+        /// Checks useragent string for IE11/Browser compatibility
+        /// redirects to BrowserWarning and adds cookie if not
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
-        {
+       {
             string cookieName = appsettings.SettingsConfig.BrowserWarningCookie;
             var cookie = "true";
-            string browser;
+            double browser;
             var useragent = Request.Headers["User-Agent"].ToString();
+            //Response.Cookies.Delete(cookieName);
 
-            //if (useragent.Contains("Trident"))
-            //{
-            //    string regex = 'Trident\/(\d.\d)';
-            //    if (System.Text.RegularExpressions.Regex.IsMatch(useragent, regex))
-            //    {
-            //        RedirectToAction("BrowserWarning");
-            //    }
-            //}
-            //Response.Cookies.Append(cookieName, cookie);
-            //Response.Cookies[cookieName]
+            if (useragent.Contains("Trident") && CookieManager.GetCookie(Request, cookieName) == null)
+            {
+                string regex = appsettings.SettingsConfig.UserAgentRegex;
+
+                if (Regex.IsMatch(useragent, regex))
+                {
+
+                    browser = Convert.ToDouble(Regex.Match(useragent, regex).Groups[1].ToString());
+
+                    if (browser <= 7.0)
+                    {
+                        Response.Cookies.Append(cookieName, cookie);
+                        return RedirectToAction("BrowserWarning");
+                    }
+                }
+            }
+
             return View();
         }
 
@@ -57,7 +71,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             ViewData["Error"] = "Something went wrong";
 
-            if((int)HttpStatusCode.BadRequest == code.GetValueOrDefault())
+            if ((int)HttpStatusCode.BadRequest == code.GetValueOrDefault())
             {
                 ViewData["Error"] = "400 Bad Request";
             }
@@ -69,17 +83,20 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             string browser;
             var useragent = Request.Headers["User-Agent"].ToString();
-                        
-            if (useragent.Contains("Trident/7.0") || useragent.Contains("Chrome/55.0") || useragent.Contains("Firefox/50"))
+
+            if (useragent.Contains("Trident/7.0"))
             {
                 browser = "Internet Explorer 11.0/ Chrome 55.X / Firefox 50.X";
             }
+
             else
             {
                 browser = "Internet Explorer 10 or an unsupported browser";
             }
 
+            ViewData["ReturnUrl"] = Request.Headers["Referer"].ToString();
             ViewData["BrowserVersion"] = browser;
+
             return View();
         }
     }
