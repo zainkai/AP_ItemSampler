@@ -49,10 +49,10 @@ namespace SmarterBalanced.SampleItems.Web
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry(Configuration);
-            services.AddMvc();
-            AppSettings appSettings = new AppSettings(Configuration);
             SampleItemsContext context;
+            AppSettings appSettings = new AppSettings();
+
+            Configuration.Bind(appSettings);
             try
             {
                 context = SampleItemsProvider.LoadContext(appSettings, logger).Result;
@@ -63,14 +63,15 @@ namespace SmarterBalanced.SampleItems.Web
                 throw e;
             }
 
+            services.AddApplicationInsightsTelemetry(Configuration);
+            services.AddMvc();
+            services.AddRouting();
+
             services.AddSingleton(context);
             services.AddSingleton(appSettings);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
-            services.AddScoped<IGlobalAccessibilityRepo, GlobalAccessibilityRepo>();
             services.AddScoped<IDiagnosticManager, DiagnosticManager>();
-
-            services.AddRouting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,5 +107,4 @@ namespace SmarterBalanced.SampleItems.Web
         }
 
     }
-
 }
