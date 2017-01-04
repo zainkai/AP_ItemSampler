@@ -17,6 +17,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             appsettings = settings;
             logger = loggerFactory.CreateLogger<HomeController>();
         }
+
         /// <summary>
         /// Checks useragent string for IE11/Browser compatibility
         /// redirects to BrowserWarning and adds cookie if not
@@ -42,6 +43,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                     }
                 }
             }
+
             return View();
         }
 
@@ -72,6 +74,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             {
                 ViewData["Error"] = "400 Bad Request";
             }
+            if((int)HttpStatusCode.NotFound == code.GetValueOrDefault())
+            {
+                ViewData["Error"] = "404 Not Found";
+            }
+            if ((int)HttpStatusCode.Forbidden == code.GetValueOrDefault())
+            {
+                ViewData["Error"] = "403 Forbidden";
+            }
 
             return View();
         }
@@ -79,6 +89,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         public IActionResult BrowserWarning()
         {
             ViewData["ReturnUrl"] = Request.Headers["Referer"].ToString();
+
             return View();
         }
     }
