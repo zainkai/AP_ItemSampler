@@ -7,8 +7,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
     {
         public string ItemViewerServiceUrl { get; set; }
 
+        public string AccessibilityCookieName { get; set; }
+
         public ItemDigest ItemDigest { get; set; }
 
-        public LocalAccessibilityViewModel LocalAccessibilityViewModel { get; set; }
+        public List<AccessibilityResourceViewModel> AccResourceVMs { get; set; }
     }
 }

@@ -37,28 +37,10 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             return iSAAPCode.Split(';').ToList();
         }
 
-        /// <summary>
-        /// Translates a List of AccessibilitySelections into a List of SelectListItems,
-        /// setting default values if applicable.
-        /// </summary>
-        /// <param name="accessibilitySelections"></param>
-        /// <returns>a List of SelectListItems.</returns>
-        private static List<SelectListItem> ToSelectListItems(List<AccessibilitySelection> accessibilitySelections)
+        public static AccessibilitySelectionViewModel ToAccessibilitySelectionViewModel(this AccessibilitySelection selection)
         {
-            if (accessibilitySelections == null)
-                accessibilitySelections = new List<AccessibilitySelection>();
-
-            List<SelectListItem> selectListItems = accessibilitySelections
-                .OrderBy(t => t.Order)
-                .Select(t => new SelectListItem
-                {
-                    Disabled = t.Disabled,
-                    Value = t.Code,
-                    Text = t.Label
-                })
-                .ToList();
-
-            return selectListItems;
+            var selectionVM = new AccessibilitySelectionViewModel(selection.Code, selection.Label, selection.Disabled);
+            return selectionVM;
         }
 
         /// <summary>
@@ -69,16 +51,18 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <returns>a List of AccessibilityResourceViewModels.</returns>
         public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources)
         {
-            List<AccessibilityResourceViewModel> accessibilityResourceViewModels = accessibilityResources.Select(t =>
-                new AccessibilityResourceViewModel
-                {
-                    SelectedCode = t.DefaultSelection,
-                    DefaultCode = t.DefaultSelection,
-                    Label = t.Label,
-                    Description = t.Description,
-                    AccessibilityListItems = ToSelectListItems(t?.Selections),
-                    Disabled = t.Disabled
-                }).ToList();
+            var accessibilityResourceViewModels =
+                accessibilityResources
+                    .Select(ar => new AccessibilityResourceViewModel
+                        {
+                            SelectedCode = ar.DefaultSelection,
+                            DefaultCode = ar.DefaultSelection,
+                            Label = ar.Label,
+                            Description = ar.Description,
+                            Selections = ar.Selections.Select(ToAccessibilitySelectionViewModel).ToList(),
+                            Disabled = ar.Disabled
+                        })
+                    .ToList();
 
             return accessibilityResourceViewModels;
         }
@@ -93,7 +77,9 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSAAPCode)
         {
             if (accessibilityResources == null)
+            {
                 throw new ArgumentNullException(nameof(accessibilityResources));
+            }
 
             var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
 
@@ -101,13 +87,11 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
             foreach (var accResourceViewModel in accResourceViewModels)
             {
-                var accListItems = accResourceViewModel.AccessibilityListItems;
-
-                // TODO: how do we handle multiple matching list items?
-                var accListItem = accListItems.FirstOrDefault(t => codes.Contains(t.Value));
+                var accListItems = accResourceViewModel.Selections;
+                var accListItem = accListItems.FirstOrDefault(sel => codes.Contains(sel.Code));
                 if (accListItem != null)
                 {
-                    var selectedCode = accListItem.Value;
+                    var selectedCode = accListItem.Code;
                     accResourceViewModel.SelectedCode = selectedCode;
                 }
                 else

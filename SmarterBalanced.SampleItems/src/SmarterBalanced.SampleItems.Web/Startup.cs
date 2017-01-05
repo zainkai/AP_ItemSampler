@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Diagnostics;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using System;
+using System.IO;
 
 namespace SmarterBalanced.SampleItems.Web
 {
@@ -82,6 +84,14 @@ namespace SmarterBalanced.SampleItems.Web
 
             if (env.IsDevelopment())
             {
+                var options = new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Scripts")),
+                    RequestPath = new Microsoft.AspNetCore.Http.PathString("/Scripts"),
+                    ServeUnknownFileTypes = true
+                };
+                app.UseStaticFiles(options);
+
                 app.UseDeveloperExceptionPage();
                 app.UseStatusCodePages();
                 app.UseBrowserLink();

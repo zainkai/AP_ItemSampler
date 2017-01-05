@@ -1,0 +1,45 @@
+.accessibility-dropdowns {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.accessibility-dropdown {
+    padding: 7px;
+    flex-basis: 250px;
+}
+
+.accessibility-modal {
+    width: auto;
+    max-width: 800px; /* 3 columns of options */
+}
+
+.accessibility-button { 
+    float: right;
+    font-size: 24px;
+    border-radius: 0px;
+}
+
+.accessibility-button-text:before {
+    content: ' Accessibility';
+}
+
+@media screen and (max-width: 600px) {
+    .accessibility-button-text:before {
+        content: '';
+    }
+}
+
+.option-disabled {
+    background: rgb(255, 0, 0); /* Fallback for browsers without support for rgba() */
+    background: rgba(255,0,0,0.4);
+}
+
+.url-display {
+  font-family: monospace;
+  margin-bottom: 10px;
+  overflow: auto;
+  padding: 5px;
+  width: auto;
+  word-wrap:break-word;
+}
