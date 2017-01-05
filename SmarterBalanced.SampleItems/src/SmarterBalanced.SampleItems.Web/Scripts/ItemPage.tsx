@@ -113,12 +113,10 @@ namespace ItemPage {
                             <a className="btn" data-toggle="modal" data-target="#share-modal-container" >Share</a>
                         </li>
                     </ul>
-                    <div className="navbar-fixed-top accessibility-toggle">
-                        <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
-                            <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                            <span className="accessibility-button-text"></span>
-                        </a>
-                    </div>
+                    <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
+                        <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                        <span className="accessibility-button-text"></span>
+                    </a>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
                         accessibilityString={this.state.ivsAccOptions}
                         url={ivsUrl}/>

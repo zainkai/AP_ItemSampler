@@ -40,10 +40,7 @@
   margin-bottom: 10px;
   overflow: auto;
   padding: 5px;
+  padding-top: 75px;
   width: auto;
   word-wrap:break-word;
-}
-
-.accessibility-toggle {
-    padding-top: 75px;
 }
