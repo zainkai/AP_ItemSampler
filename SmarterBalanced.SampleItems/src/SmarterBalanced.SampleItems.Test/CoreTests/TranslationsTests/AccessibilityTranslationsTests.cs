@@ -14,7 +14,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
     {
         List<AccessibilityResource> accessibilityResources;
         List<AccessibilitySelection> accessibilitySelections;
-        List<SelectListItem> accSelectListItems;
+        List<AccessibilitySelectionViewModel> accSelectListItems;
         List<AccessibilityResourceViewModel> accessibilityResourceViewModels;
 
         public AccessibilityTranslationsTests()
@@ -44,27 +44,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 }
             };
 
-            accSelectListItems = new List<SelectListItem>
-            {
-                new SelectListItem()
-                {
-                    Value = "TDS_TEST1",
-                    Text = "TEST 1",
-                    Disabled = false
-                },
-                new SelectListItem()
-                {
-                    Value = "TDS_TEST2",
-                    Text = "TEST 2",
-                    Disabled = false
-                },
-                new SelectListItem()
-                {
-                    Value = "TDS_TEST3",
-                    Text = "TEST 3",
-                    Disabled = false
-                }
-            };
+            accSelectListItems = accessibilitySelections.Select(s => s.ToAccessibilitySelectionViewModel()).ToList();
 
             accessibilityResources = new List<AccessibilityResource>
             {
@@ -92,7 +72,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 {
                     DefaultCode = "TDS_TEST1",
                     SelectedCode = "TDS_TEST1",
-                    AccessibilityListItems = accSelectListItems,
+                    Selections = accSelectListItems,
                     Label = "Resource 1",
                     Disabled = false
                 },
@@ -100,7 +80,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 {
                     DefaultCode = "TDS_TEST2",
                     SelectedCode = "TDS_TEST2",
-                    AccessibilityListItems = accSelectListItems,
+                    Selections = accSelectListItems,
                     Label = "Resource 2",
                     Disabled = false
                 }
