@@ -43,3 +43,7 @@
   width: auto;
   word-wrap:break-word;
 }
+
+.accessibility-toggle {
+    padding-top: 75px;
+}
