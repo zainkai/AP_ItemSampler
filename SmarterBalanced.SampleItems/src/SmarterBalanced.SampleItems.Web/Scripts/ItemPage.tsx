@@ -16,10 +16,10 @@ namespace ItemPage {
     }
 
     function getAccessibilityString(accResourceVM: AccessibilityResource[]): string {
-        let str: string = "";
+        let str = "";
         for (let res of accResourceVM) {
             if (res.selectedCode && !res.disabled) {
-                str = str.concat(res.selectedCode, ";");
+                str += res.selectedCode + ";";
             }
         }
         return str;
@@ -69,12 +69,9 @@ namespace ItemPage {
                 ivsAccOptions: getAccessibilityString(this.props.accResourceVMs),
                 accResourceVMs: accResourceVMs,
             };
-            this.saveOptions = this.saveOptions.bind(this);
-            this.resetOptions = this.resetOptions.bind(this);
-            this.updateResource = this.updateResource.bind(this);
         }
 
-        updateResource(code: string, label: string) {
+        updateResource = (code: string, label: string) => {
             const newResources = this.state.accResourceVMs.map((resource) => {
                 if (resource.label === label) {
                     const newResource = Object.assign({}, resource);
@@ -95,7 +92,7 @@ namespace ItemPage {
             return newModel;
         }
 
-        saveOptions(event: any): void {
+        saveOptions = (event: React.FormEvent): void => {
             //Update Cookie with current options
             event.preventDefault();
             //copy the old accessibility resource view models
@@ -107,7 +104,7 @@ namespace ItemPage {
             document.cookie = this.props.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
         }
 
-        resetOptions(event: any): void {
+        resetOptions = (event: React.FormEvent): void => {
             event.preventDefault();
             document.cookie = this.props.accessibilityCookieName.concat("=", "", "; path=/");
             let newAccResourceVms = this.state.accResourceVMs.map(this.resetModelToDefault);

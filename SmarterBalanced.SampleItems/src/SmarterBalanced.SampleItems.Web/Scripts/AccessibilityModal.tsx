@@ -2,8 +2,8 @@
     interface Props {
         localAccessibility: AccessibilityResource[];
         updateSelection(category: string, code: string): void;
-        onSave(event: any): void;
-        onReset(event: any): void;
+        onSave(event: React.FormEvent): void;
+        onReset(event: React.FormEvent): void;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, {}> {
