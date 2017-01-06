@@ -35,8 +35,8 @@
             </div>
             <div class="navbar-collapse collapse">
                 <div id="navbar-items" class="nav navbar-nav btn-group-lg pull-right">
-                    <button class="btn navbar-btn btn-lg" asp-area="" asp-controller="Home" asp-action="Index">Home</button>
-                    <button class="btn navbar-btn btn-lg" asp-area="" asp-controller="ItemsSearch" asp-action="Index">Search</button>
+                    <button class="btn navbar-btn btn-lg" asp-area="" onclick="location.href='@Url.Action("Index", "Home")'">Home</button>
+                    <button class="btn navbar-btn btn-lg" asp-area="" onclick="location.href='@Url.Action("Index", "ItemsSearch")'">Search</button>
                 </div>
             </div>
         </div>
