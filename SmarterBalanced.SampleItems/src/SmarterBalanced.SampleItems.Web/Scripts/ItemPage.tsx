@@ -18,7 +18,7 @@ namespace ItemPage {
     function getAccessibilityString(accResourceVM: AccessibilityResource[]): string {
         let str: string = "";
         for (let res of accResourceVM) {
-            if (res.selectedCode) {
+            if (res.selectedCode && !res.disabled) {
                 str = str.concat(res.selectedCode, ";");
             }
         }
@@ -37,6 +37,21 @@ namespace ItemPage {
         return JSON.stringify(newPrefs);
     }
 
+    function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
+        if (resource.disabled) {
+            let newSelection = Object.assign(resource, resource);
+            let disabledOption: Dropdown.Selection = {
+                label: "Item is disabled",
+                code: "",
+                disabled: true,
+            };
+            newSelection.selections.push(disabledOption);
+            newSelection.selectedCode = "";
+            return newSelection;
+        }
+        return resource;
+    }
+
     interface State {
         ivsAccOptions: string;
         accResourceVMs: AccessibilityResource[];
@@ -45,9 +60,14 @@ namespace ItemPage {
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
+            let accResourceVMs = this.props.accResourceVMs.map(addDisabledPlaceholder).sort((a, b) => {
+                let aLabel = a.label.toLowerCase();
+                let bLabel = b.label.toLowerCase();
+                return (aLabel < bLabel) ? -1 : (aLabel > bLabel) ? 1 : 0;
+            });
             this.state = {
                 ivsAccOptions: getAccessibilityString(this.props.accResourceVMs),
-                accResourceVMs: this.props.accResourceVMs,
+                accResourceVMs: accResourceVMs,
             };
             this.saveOptions = this.saveOptions.bind(this);
             this.resetOptions = this.resetOptions.bind(this);
