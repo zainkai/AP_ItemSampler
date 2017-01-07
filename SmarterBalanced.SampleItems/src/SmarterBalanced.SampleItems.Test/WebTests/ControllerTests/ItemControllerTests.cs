@@ -8,6 +8,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -32,7 +33,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 Grade = GradeLevels.Grade6
             };
 
-            iSAAP = "TDS_test;TDS_test2;";
+            iSAAP = "TDS_test;TDS_test2";
 
             string accCookieName = "accessibilitycookie";
 
@@ -59,9 +60,19 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
-            itemViewRepoMock.Setup(repo => repo.GetItemViewModel(bankKey, itemKey, string.Empty, null)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(repo => repo.GetItemViewModel(bankKey, itemKey, iSAAP, null)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(repo => repo.GetItemViewModel(bankKey, itemKey, null, null)).Returns(itemViewModelCookie);
+            itemViewRepoMock
+                .Setup(repo =>
+                    repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<string>()))
+                .Returns(itemViewModel);
+
+            itemViewRepoMock
+                .Setup(repo =>
+                    repo.GetItemViewModel(
+                        bankKey,
+                        itemKey,
+                        It.Is<string[]>(ss => Enumerable.SequenceEqual(ss, iSAAP.Split(';'))),
+                        It.IsAny<string>()))
+                .Returns(itemViewModel);
             itemViewRepoMock.Setup(repo => repo.AppSettings).Returns(appSettings);
 
             var loggerFactory = new Mock<ILoggerFactory>();
