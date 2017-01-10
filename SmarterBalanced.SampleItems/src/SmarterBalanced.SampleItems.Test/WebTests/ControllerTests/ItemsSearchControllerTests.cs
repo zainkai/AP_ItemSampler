@@ -93,6 +93,17 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         }
 
         [Fact]
+        public void TestSearchOneResult()
+        {
+            var result = controller.Search("", GradeLevels.High, mathSubjectList, interactionCodeList, claimList) as JsonResult;
+            var resultList = result.Value as List<ItemCardViewModel>;
+
+            Assert.IsType<List<ItemCardViewModel>>(result.Value);
+            Assert.IsType<JsonResult>(result);
+            Assert.Equal(0, resultList.Count);
+        }
+
+        [Fact]
         public void TestIndex()
         {
             var result = controller.Index();
