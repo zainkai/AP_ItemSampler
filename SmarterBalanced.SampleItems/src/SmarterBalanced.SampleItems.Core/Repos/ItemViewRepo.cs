@@ -141,13 +141,20 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             string cookieValue = null)
         {
             iSAAP = iSAAP ?? string.Empty;
-            AccessibilityResourceViewModel[] cookiePreferences = null;
             ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
             if (itemDigest == null)
             {
                 return null;
             }
 
+            var aboutItem = new AboutItemViewModel(
+                itemKey: itemKey,
+                commonCoreStandardsId: itemDigest.CommonCoreStandardsId,
+                targetId: itemDigest.TargetId,
+                grade: itemDigest.Grade,
+                rubrics: itemDigest.Rubrics);
+
+            AccessibilityResourceViewModel[] cookiePreferences = null;
             if (string.IsNullOrEmpty(iSAAP))
             {
                 cookiePreferences = decodeCookie(cookieValue);
@@ -155,18 +162,16 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             
 
             var accResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSAAP);
-            if ( (cookiePreferences != null) && (iSAAP == string.Empty))
+            if (cookiePreferences != null && iSAAP == string.Empty)
             {
                 accResources = setAccessibilityFromCookie(cookiePreferences, accResources);
             }
 
-            var itemView = new ItemViewModel
-            {
-                ItemDigest = itemDigest,
-                ItemViewerServiceUrl = GetItemViewerUrl(itemDigest),
-                AccResourceVMs = accResources,
-                AccessibilityCookieName = AppSettings.SettingsConfig.AccessibilityCookie,
-            };
+            var itemView = new ItemViewModel(
+                itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
+                accessibilityCookieName: AppSettings.SettingsConfig.AccessibilityCookie,
+                aboutItemVM: aboutItem,
+                accResourceVMs: accResources);
 
             return itemView;
         }
