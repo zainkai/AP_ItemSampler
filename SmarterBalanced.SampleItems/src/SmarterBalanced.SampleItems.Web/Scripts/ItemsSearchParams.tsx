@@ -200,7 +200,7 @@ namespace ItemSearchParams {
         renderItemIDChange() {
             const input = this.state.expandItemID
                 ?
-                    <input type="text" className="form-control"
+                    <input inputMode="numeric" type="text" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         value={this.state.itemID}>
