@@ -119,15 +119,24 @@ namespace ItemPage {
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
                 <div>
-                    <ul className="nav navbar-nav">
+                    <ul className="nav navbar-nav mr-auto">
                         <li className="nav-item">
-                            <a className="btn" data-toggle="modal" data-target="#share-modal-container" >About This Item</a>
+                            <a className="btn modal-toggle" data-toggle="modal" data-target="#share-modal-container" >
+                                <span className="glyphicon glyphicon-th-list glyphicon-pad" aria-hidden="true"></span>
+                                About This Item
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="btn" data-target="#share-modal-container" >More Like This</a>
+                            <a className="btn modal-toggle" data-target="#share-modal-container" >
+                                <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
+                                More Like This
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="btn" data-toggle="modal" data-target="#share-modal-container" >Share</a>
+                            <a className="btn modal-toggle" data-toggle="modal" data-target="#share-modal-container" >
+                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
+                                Share
+                            </a>
                         </li>
                     </ul>
                     <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
