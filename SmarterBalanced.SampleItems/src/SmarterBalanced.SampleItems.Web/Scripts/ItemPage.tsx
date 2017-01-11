@@ -13,6 +13,7 @@ namespace ItemPage {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         accResourceVMs: AccessibilityResource[];
+        aboutItemVM: AboutItem.Props;
     }
 
     function getAccessibilityString(accResourceVM: AccessibilityResource[]): string {
@@ -25,11 +26,11 @@ namespace ItemPage {
         return str;
     }
 
-    function trimAccResource(model: AccessibilityResource): {label: string, selectedCode: string} {
-        return ({
+    function trimAccResource(model: AccessibilityResource): { label: string, selectedCode: string } {
+        return {
             label: model.label,
             selectedCode: model.selectedCode,
-        });
+        };
     }
 
     function generateAccCookieValue(accessibilityPrefs: AccessibilityResource[]): string {
@@ -145,7 +146,8 @@ namespace ItemPage {
                     </a>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
                         accessibilityString={this.state.ivsAccOptions}
-                        url={ivsUrl}/>
+                        url={ivsUrl} />
+                    <AboutItem.AIComponent {...this.props.aboutItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} />
                     <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
                 </div>

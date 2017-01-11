@@ -9,6 +9,7 @@ using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -26,14 +27,14 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
-            var itemDigest = new ItemDigest
-            {
-                BankKey = bankKey,
-                ItemKey = itemKey,
-                Grade = GradeLevels.Grade6
-            };
-
-            iSAAP = "TDS_test;TDS_test2";
+            var aboutItem = new AboutItemViewModel(
+                itemKey: itemKey,
+                commonCoreStandardsId: string.Empty,
+                targetId: string.Empty,
+                grade: GradeLevels.Grade6,
+                rubrics: ImmutableArray.Create<Rubric>());
+             
+            iSAAP = "TDS_test;TDS_test2;";
 
             string accCookieName = "accessibilitycookie";
 
@@ -47,17 +48,23 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 }
             };
 
-            itemViewModel = new ItemViewModel()
-            {
-                ItemDigest = itemDigest,
-                ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
-                AccResourceVMs = accessibilityResourceViewModels
-            };
+            itemViewModel = new ItemViewModel(
+                itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
+                accessibilityCookieName: accCookieName,
+                aboutItemVM: aboutItem,
+                accResourceVMs: accessibilityResourceViewModels);
 
-            itemViewModelCookie = new ItemViewModel()
-            {
-                AccResourceVMs = accessibilityResourceViewModels
-            };
+            itemViewModelCookie = new ItemViewModel(
+                itemViewerServiceUrl: string.Empty,
+                accessibilityCookieName: string.Empty,
+                aboutItemVM: new AboutItemViewModel(
+                    itemKey: 0,
+                    commonCoreStandardsId: string.Empty,
+                    targetId: string.Empty,
+                    grade: GradeLevels.NA,
+                    rubrics: ImmutableArray.Create<Rubric>()),
+                accResourceVMs: accessibilityResourceViewModels);
+
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
             itemViewRepoMock
