@@ -167,11 +167,21 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             {
                 return null;
             }
-            
+
+
             var rubricEntries = content.RubricList.Rubrics.Where(r => !string.IsNullOrWhiteSpace(r.Value)
                                                                    && !placeholder.RubricPlaceHolderContains.Any(s => r.Value.Contains(s))
                                                                    && !placeholder.RubricPlaceHolderEquals.Any(s => r.Value.Equals(s))).ToImmutableArray();
-            var samples = content.RubricList.RubricSamples.Where(r => r.SampleResponses.Count() > 0).ToImmutableArray();
+
+       
+
+           Predicate<SampleResponse> pred = (r => string.IsNullOrWhiteSpace(r.SampleContent)
+                                                    || placeholder.RubricPlaceHolderContains.Any(s => r.SampleContent.Contains(s))
+                                                    || placeholder.RubricPlaceHolderEquals.Any(s => r.SampleContent.Equals(s)));
+
+            content.RubricList.RubricSamples.ForEach(t => t.SampleResponses.RemoveAll(pred));
+
+            var samples = content.RubricList.RubricSamples.Where(t => t.SampleResponses.Count() > 0).ToImmutableArray();
             if (rubricEntries.Length == 0 && samples.Length == 0)
             {
                 return null;
