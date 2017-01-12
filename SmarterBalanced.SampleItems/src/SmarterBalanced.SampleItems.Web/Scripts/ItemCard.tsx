@@ -42,7 +42,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
                         <span className="card-text-value"> {this.props.target}</span>
                     </p>
                     <p className="card-text interaction-type">
-                        <span className="card-text-label">Interaction Type:</span>
+                        <span className="card-text-label">Item Type:</span>
                         <span className="card-text-value"> {this.props.interactionTypeLabel}</span>
                     </p>
                     <p className="card-text item-id">

@@ -200,7 +200,7 @@ namespace ItemSearchParams {
         renderItemIDChange() {
             const input = this.state.expandItemID
                 ?
-                    <input type="text" className="form-control"
+                    <input inputMode="numeric" type="text" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         value={this.state.itemID}>
@@ -210,7 +210,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-category">
                     <label onClick={() => this.toggleExpandItemIDInput()}>
-                        {this.state.expandItemID ? "▼" : "▶"} Item ID
+                        {this.state.expandItemID ? "▼" : "▶"} More
                     </label>
                     {input}
                 </div>
@@ -301,7 +301,7 @@ namespace ItemSearchParams {
                 : [];
 
             const tags = subjects.length === 0
-                ? <span>Please select a subject.</span>
+                ? <span>Please first select a subject.</span>
                 : subjects
                     .reduce((cs: Claim[], s: Subject) => cs.concat(s.claims), [])
                     .map(renderClaim);
@@ -338,13 +338,13 @@ namespace ItemSearchParams {
                 : [];
 
             const tags = visibleInteractionTypes.length === 0
-                ? <span>Please select a subject.</span>
+                ? <span>Please first select a subject.</span>
                 : visibleInteractionTypes.map(renderInteractionType);
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
                     <label onClick={() => this.toggleExpandInteractionTypes()}>
-                        {this.state.expandInteractionTypes ? "▼" : "▶"} Interaction Types
+                        {this.state.expandInteractionTypes ? "▼" : "▶"} Item Types
                     </label>
                     <div className="search-tags form-group">
                         {this.state.expandInteractionTypes ? tags : undefined}

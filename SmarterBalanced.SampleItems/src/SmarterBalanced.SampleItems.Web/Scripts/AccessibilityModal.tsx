@@ -2,8 +2,8 @@
     interface Props {
         localAccessibility: AccessibilityResource[];
         updateSelection(category: string, code: string): void;
-        onSave(event: any): void;
-        onReset(event: any): void;
+        onSave(event: React.FormEvent): void;
+        onReset(event: React.FormEvent): void;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, {}> {
@@ -19,6 +19,7 @@
                     label: res.label,
                     selections: res.selections,
                     selectedCode: res.selectedCode,
+                    disabled: res.disabled,
                     updateSelection: this.props.updateSelection,
                 }
                 return <Dropdown.Dropdown{...ddprops} key={res.label} />;
@@ -35,7 +36,7 @@
                                 <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
                             </div>
                             <div className="modal-body">
-                                <p><span className="option-disabled">Options highlighted in red are not avaiable for this question.</span></p>
+                                <p><span className="option-disabled">Options highlighted in grey are not avaiable for this item.</span></p>
                                 <form id="accessibility-form" onSubmit={this.props.onSave}>
                                     <div className="accessibility-dropdowns">
                                         {dropdowns}
