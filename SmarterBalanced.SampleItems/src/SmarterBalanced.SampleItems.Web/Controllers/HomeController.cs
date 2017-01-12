@@ -27,7 +27,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             string cookieName = appsettings.SettingsConfig.BrowserWarningCookie;
             var useragent = Request.Headers["User-Agent"].ToString();
-            if (CookieManager.GetCookie(Request, cookieName) == null && useragent.Contains("Trident"))
+            if (Request.Cookies[cookieName] == null && useragent.Contains("Trident"))
             {
                 string regex = appsettings.SettingsConfig.UserAgentRegex;
                 Match match = Regex.Match(useragent, regex);
