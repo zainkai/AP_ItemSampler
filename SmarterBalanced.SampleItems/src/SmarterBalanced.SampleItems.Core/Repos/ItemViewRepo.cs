@@ -23,7 +23,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             this.context = context;
             logger = loggerFactory.CreateLogger<ItemViewRepo>();
         }
-        
+
         public AppSettings AppSettings
         {
             get
@@ -31,7 +31,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return context.AppSettings;
             }
         }
-        
+
         public ItemDigest GetItemDigest(int bankKey, int itemKey)
         {
             return context.ItemDigests.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
@@ -67,7 +67,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}";
         }
 
-        private List<AccessibilityResourceViewModel> setAccessibilityFromCookie(AccessibilityResourceViewModel[] cookiePreferences, List<AccessibilityResourceViewModel> defaultPreferences)
+        private List<AccessibilityResourceViewModel> SetAccessibilityFromCookie(AccessibilityResourceViewModel[] cookiePreferences, List<AccessibilityResourceViewModel> defaultPreferences)
         {
             List<AccessibilityResourceViewModel> computedResources = new List<AccessibilityResourceViewModel>();
 
@@ -77,7 +77,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var disputedResources = defaultPreferences.Where(r => !r.Disabled);
 
             //Enabled resources
-            foreach(AccessibilityResourceViewModel res in disputedResources)
+            foreach (AccessibilityResourceViewModel res in disputedResources)
             {
                 try
                 {
@@ -88,17 +88,15 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     {
                         res.SelectedCode = userPref.SelectedCode;
                     }
-                } catch(ArgumentNullException e)
+                }
+                catch (Exception e) when (
+                    e is ArgumentNullException ||
+                    e is InvalidOperationException ||
+                    e is NullReferenceException)
+                {
                     //There was a mismatch between the user's supplied preferences and the allowed values, 
                     //or there was duplidate data
                     //Use the default which is already set
-                {
-                    logger.LogInformation(e.ToString());
-                } catch(InvalidOperationException e)
-                {
-                    logger.LogInformation(e.ToString());
-                } catch(NullReferenceException e)
-                {
                     logger.LogInformation(e.ToString());
                 }
 
@@ -113,34 +111,32 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="cookieValue"></param>
         /// <returns></returns>
-        private AccessibilityResourceViewModel[] decodeCookie(string cookieValue)
+        private AccessibilityResourceViewModel[] DecodeCookie(string cookieValue)
         {
-            AccessibilityResourceViewModel[] cookiePreferences = null;
-                if (!string.IsNullOrEmpty(cookieValue))
-                {
-                    try
-                    {
-                        byte[] data = Convert.FromBase64String(cookieValue);
-                        cookieValue = Encoding.UTF8.GetString(data);
-                        cookiePreferences = JsonConvert.DeserializeObject<AccessibilityResourceViewModel[]>(cookieValue);
-                    }
-                    catch (Exception e)
-                    {
-                        logger.LogInformation("Unable to deserialize user accessibility options from cookie. Reason: "
-                            + e.Message);
-                    }
-                }
-            return cookiePreferences;
+            try
+            {
+                byte[] data = Convert.FromBase64String(cookieValue);
+                cookieValue = Encoding.UTF8.GetString(data);
+                AccessibilityResourceViewModel[] cookiePreferences = JsonConvert.DeserializeObject<AccessibilityResourceViewModel[]>(cookieValue);
+                return cookiePreferences;
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation("Unable to deserialize user accessibility options from cookie. Reason: "
+                    + e.Message);
+                return null;
+            }
         }
+
+
 
         /// <returns>
         /// An ItemViewModel instance, or null if no item exists with
         /// the given combination of bankKey and itemKey.
         /// </returns>
-        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string iSAAP = null,
-            string cookieValue = null)
+        public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string[] iSAAPCodes,
+            string cookieValue)
         {
-            iSAAP = iSAAP ?? string.Empty;
             AccessibilityResourceViewModel[] cookiePreferences = null;
             ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
             if (itemDigest == null)
@@ -148,25 +144,31 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            if (string.IsNullOrEmpty(iSAAP))
-            {
-                cookiePreferences = decodeCookie(cookieValue);
-            }
-            
+            var aboutItem = new AboutItemViewModel(
+                itemKey: itemKey,
+                commonCoreStandardsId: itemDigest.CommonCoreStandardsId,
+                targetId: itemDigest.TargetId,
+                grade: itemDigest.Grade,
+                rubrics: itemDigest.Rubrics);
 
-            var accResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSAAP);
-            if ( (cookiePreferences != null) && (iSAAP == string.Empty))
+
+            if (iSAAPCodes.Length == 0)
             {
-                accResources = setAccessibilityFromCookie(cookiePreferences, accResources);
+                cookiePreferences = DecodeCookie(cookieValue);
             }
 
-            var itemView = new ItemViewModel
+
+            var accResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSAAPCodes);
+            if ((cookiePreferences != null) && (iSAAPCodes.Length == 0))
             {
-                ItemDigest = itemDigest,
-                ItemViewerServiceUrl = GetItemViewerUrl(itemDigest),
-                AccResourceVMs = accResources,
-                AccessibilityCookieName = AppSettings.SettingsConfig.AccessibilityCookie,
-            };
+                accResources = SetAccessibilityFromCookie(cookiePreferences, accResources);
+            }
+
+            var itemView = new ItemViewModel(
+                itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
+                accessibilityCookieName: AppSettings.SettingsConfig.AccessibilityCookie,
+                aboutItemVM: aboutItem,
+                accResourceVMs: accResources);
 
             return itemView;
         }

@@ -101,6 +101,31 @@ footer {
     padding-top: 10px;
 }
 
+.nav-flex {
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+}
+@media screen and (max-width: 700px) {
+    .nav-flex {
+        flex-wrap: wrap;
+    }
+}
+
+.nav-inner-flex {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 100%;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.nav-item {
+}
+
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
 select,
@@ -390,4 +415,35 @@ h4.card-title{
 
 #toggle-all-about-item {
     float: right;
+}
+
+.site-title {
+    color: black;
+    width: 100%;
+    margin:0 auto;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.search-button {
+    color: black;
+    width: 100%;
+    margin:0 auto;
+    text-align: right;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 700px){
+    .search-button {
+        text-align: center;
+        padding: 10px;
+    }
+    .site-title {
+        text-align: center;
+        padding: 10px;
+    }
+}
+
+.rescale-glyphicon {
+    font-size: 80%;
 }
