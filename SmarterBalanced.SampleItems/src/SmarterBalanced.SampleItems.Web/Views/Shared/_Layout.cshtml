@@ -21,23 +21,20 @@
 <body>
     <div class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <a href="http://www.smarterbalanced.org/" class="navbar-brand">
-                    <img alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
-                </a> 
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul id="navbar-items" class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="ItemsSearch" asp-action="Index">Search</a></li>
-                </ul>
-            </div>
+            <div class="navbar-header nav-flex">
+                        <a class="nav-inner-flex navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
+                            <img alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
+                        </a>
+                        <a class="nav-inner-flex" asp-controller="Home" asp-action="Index">
+                                <h3 class="site-title">Sample Items Website</h3>
+                        </a>
+                        <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+                                <h3 class="search-button">
+                                    <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
+                                    Search
+                                </h3>
+                        </a>
+                </div>
         </div>
     </div>
     <div class="container body-content">
