@@ -30,7 +30,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             }
 
             string claim, publication;
-            StandardIdentifier standardIdentifier = new StandardIdentifier();
 
             string[] parts = standards.Split('|');
 
@@ -44,9 +43,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             publication = publicationAndClaim[0];
             claim = publicationAndClaim[1];
 
-            if (!string.IsNullOrEmpty(claim))
+            if (string.IsNullOrEmpty(claim))
             {
-                standardIdentifier.Claim = claim;
+                throw new ArgumentException("The standards string does not contain a claim.");
             }
 
             //Depending on the standard there are different fields in different orders
@@ -57,43 +56,82 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     //The ELA string should be split into 3 parts
                     if (parts.Length == 3)
                     {
-                        standardIdentifier.Target = parts[1];
-                        standardIdentifier.CommonCoreStandard = parts[2];
+                        var target = parts[1];
+                        var commonCoreStandard = parts[2];
+                        return new StandardIdentifier(
+                            claim,
+                            target,
+                            commonCoreStandard: commonCoreStandard
+                            );
+                    }
+                    break;
+                case "SBAC-MA-v1":
+                    if(parts.Length == 5)
+                    {
+                        var target = parts[2];
+                        var contentDomain = parts[1];
+                        var commonCoreStandard = parts[4];
+                        return new StandardIdentifier(
+                            claim,
+                            target,
+                            commonCoreStandard: commonCoreStandard,
+                            contentDomain: contentDomain
+                            );
                     }
                     break;
                 case "SBAC-MA-v4":
                     //The math v4 string should be split into 5 parts
                     if (parts.Length == 5)
                     {
-                        standardIdentifier.Target = parts[2];
-                        standardIdentifier.CommonCoreStandard = parts[4];
-                        standardIdentifier.ContentDomain = parts[1];
-                        standardIdentifier.Emphasis = parts[3];
+                        var target = parts[2];
+                        var standard = parts[4];
+                        var contentDomain = parts[1];
+                        var emphasis = parts[3];
+                        return new StandardIdentifier(
+                            claim,
+                            target,
+                            contentDomain,
+                            emphasis: emphasis,
+                            commonCoreStandard: standard
+                            );
                     }
                     break;
                 case "SBAC-MA-v5":
                     //The math v5 string should be split into 5 parts
                     if (parts.Length == 5)
                     {
-                        standardIdentifier.Target = parts[2];
-                        standardIdentifier.CommonCoreStandard = parts[4];
-                        standardIdentifier.ContentDomain = parts[1];
-                        standardIdentifier.Emphasis = parts[3];
+                        var target = parts[2];
+                        var commonCoreStandard = parts[4];
+                        var contentDomain = parts[1];
+                        var emphasis = parts[3];
+                        return new StandardIdentifier(
+                            claim,
+                            target,
+                            contentDomain: contentDomain,
+                            emphasis: emphasis,
+                            commonCoreStandard: commonCoreStandard
+                            );
                     }
                     break;
                 case "SBAC-MA-v6":
                     //The math v6 string should be split into 4 parts
                     if (parts.Length == 4)
                     {
-                        standardIdentifier.Target = parts[3];
-                        standardIdentifier.ContentCategory = parts[1];
-                        standardIdentifier.TargetSet = parts[2];
+                        var target = parts[3];
+                        var category = parts[1];
+                        var targetSet = parts[2];
+                        return new StandardIdentifier(
+                            claim,
+                            target,
+                            contentCategory: category,
+                            targetSet: targetSet
+                            );
                     }
                     break;
                 default:
                     break;
             }
-            return standardIdentifier;
+            return new StandardIdentifier(claim, null);
         }
     }
 }
