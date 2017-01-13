@@ -36,7 +36,7 @@
                                 <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
                             </div>
                             <div className="modal-body">
-                                <p><span className="option-disabled">Options highlighted in grey are not avaiable for this item.</span></p>
+                                <p><span>Options highlighted in grey are not available for this item.</span></p>
                                 <form id="accessibility-form" onSubmit={this.props.onSave}>
                                     <div className="accessibility-dropdowns">
                                         {dropdowns}
@@ -46,6 +46,7 @@
                             <div className="modal-footer">
                                 <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.props.onSave}> Update</button>
                                 <button className="btn btn-primary" data-dismiss="modal" onClick={this.props.onReset} >Reset to Default</button>
+                                <button className="btn btn-primary btn-cancel" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>

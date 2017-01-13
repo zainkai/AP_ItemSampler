@@ -61,3 +61,12 @@
 .glyphicon-pad {
     padding: 5px;
 }
+
+.btn-cancel {
+    background-color: #0085AD;
+    border-color: #106481;
+}
+
+.btn-cancel:hover {
+    background-color: #106481;
+}
