@@ -1,7 +1,6 @@
 ﻿body {
     padding-bottom: 20px;
     margin-bottom: 75px; /* bottom = footer height */
-   
 }
 
 html {
@@ -100,6 +99,31 @@ footer {
     margin: 0px;
     padding-left: 10px;
     padding-top: 10px;
+}
+
+.nav-flex {
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+}
+@media screen and (max-width: 700px) {
+    .nav-flex {
+        flex-wrap: wrap;
+    }
+}
+
+.nav-inner-flex {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 100%;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.nav-item {
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -242,7 +266,6 @@ h4.card-title{
     user-select: none; /* So they can't select text */
     cursor: pointer;
 }
-
 .tag:hover {
     background-color: #efefef;
 }
@@ -359,6 +382,78 @@ h4.card-title{
     border-color: #166626;
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+     -khtml-user-select: none; /* Konqueror */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
+
 .btn-primary:hover {
     background-color: #166626;
+}
+
+.collapsible-body {
+    padding-left: 14px;
+}
+
+.collapsible-children {
+    padding-left: 1px;
+}
+
+.link-button, a.link-button:hover, a.link-button:active, a.link-button:visited {
+    color: black;
+    text-decoration: none !important;
+}
+
+.collapsible-label, a.collapsible-label:hover, a.collapsible-label:active, a.collapsible-label:visited {
+    font-size: 1.2em;
+    text-decoration: none !important;
+}
+
+.sample-response {
+    margin-left: 10px;
+}
+
+.about-item-data {
+    margin: 3px 3px 0px 3px;
+    padding: 5px 5px 0px 5px;
+}
+
+#toggle-all-about-item {
+    float: right;
+}
+
+.site-title {
+    color: black;
+    width: 100%;
+    margin:0 auto;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.search-button {
+    color: black;
+    width: 100%;
+    margin:0 auto;
+    text-align: right;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 700px){
+    .search-button {
+        text-align: center;
+        padding: 10px;
+    }
+    .site-title {
+        text-align: center;
+        padding: 10px;
+    }
+}
+
+.rescale-glyphicon {
+    font-size: 80%;
 }

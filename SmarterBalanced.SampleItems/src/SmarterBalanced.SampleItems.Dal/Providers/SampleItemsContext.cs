@@ -15,7 +15,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         public IList<ItemCardViewModel> ItemCards { get; set; }
         public IList<InteractionType> InteractionTypes { get; set; }
         public IList<Subject> Subjects { get; set; }
-        public IList<AccessibilityResource> GlobalAccessibilityResources { get; set; }
         public IList<AccessibilityResourceFamily> AccessibilityResourceFamilies { get; set; }
         public AppSettings AppSettings { get; set; }
     }

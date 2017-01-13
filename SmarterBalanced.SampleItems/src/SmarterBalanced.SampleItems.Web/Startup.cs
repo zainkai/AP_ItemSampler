@@ -2,17 +2,21 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Diagnostics;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
+using System;
+using System.IO;
 
 namespace SmarterBalanced.SampleItems.Web
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly ILogger logger;
+        public Startup(IHostingEnvironment env, ILoggerFactory factory)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -26,6 +30,19 @@ namespace SmarterBalanced.SampleItems.Web
             }
 
             Configuration = builder.Build();
+            ConfigureLogging(env, factory);
+
+            logger = factory.CreateLogger<Startup>();
+        }
+
+        private void ConfigureLogging(IHostingEnvironment env, ILoggerFactory factory)
+        {
+            factory.AddConsole(Configuration.GetSection("Logging"));
+            factory.AddDebug();
+            if (!env.IsDevelopment())
+            {
+                factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+            }
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -34,30 +51,46 @@ namespace SmarterBalanced.SampleItems.Web
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            SampleItemsContext context;
+            AppSettings appSettings = new AppSettings();
+
+            Configuration.Bind(appSettings);
+            try
+            {
+                context = SampleItemsProvider.LoadContext(appSettings, logger).Result;
+            }
+            catch (Exception e)
+            {
+                logger.LogCritical($"{e.Message} occured when loading the context");
+                throw e;
+            }
+
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc();
-            AppSettings appSettings = new AppSettings(Configuration);
-            SampleItemsContext context = SampleItemsProvider.LoadContext(appSettings).Result;
+            services.AddRouting();
+
             services.AddSingleton(context);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
-            services.AddScoped<IGlobalAccessibilityRepo, GlobalAccessibilityRepo>();
             services.AddScoped<IDiagnosticManager, DiagnosticManager>();
-
-            services.AddRouting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             app.UseApplicationInsightsExceptionTelemetry();
             app.UseStaticFiles();
 
             if (env.IsDevelopment())
             {
+                var options = new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Scripts")),
+                    RequestPath = new Microsoft.AspNetCore.Http.PathString("/Scripts"),
+                    ServeUnknownFileTypes = true
+                };
+                app.UseStaticFiles(options);
+
                 app.UseDeveloperExceptionPage();
                 app.UseStatusCodePages();
                 app.UseBrowserLink();
@@ -72,16 +105,15 @@ namespace SmarterBalanced.SampleItems.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapRoute(
                     name: "diagnostic",
-                    template: "status/{action}",
+                    template: "status/{level?}",
                     defaults: new { controller = "Diagnostic", action = "Index" });
             });
 
         }
 
     }
-
 }

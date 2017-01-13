@@ -51,11 +51,14 @@ namespace ItemsSearch {
     export interface State {
         searchResults: Resource<ItemCardViewModel[]>;
     }
-
+    
     export class ISComponent extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
+
+            const defaultParams: SearchAPIParams = { itemId: '', gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
+            this.beginSearch(defaultParams);
         }
 
         beginSearch(params: SearchAPIParams) {

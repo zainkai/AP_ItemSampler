@@ -50,8 +50,12 @@ namespace ItemSearchParams {
     }
 
     export class ISPComponent extends React.Component<Props, State> {
-        readonly initialState: State {
-            
+        readonly initialState: State = {
+            itemID: '',
+            gradeLevels: GradeLevels.NA,
+            subjects: [],
+            claims: [],
+            interactionTypes: []
         };
 
         // TODO: since the callback property exists on setState, should this be in the state interface instead of the component class?
@@ -459,7 +463,7 @@ namespace ItemSearchParams {
                 : [];
 
             const tags = visibleInteractionTypes.length === 0
-                ? <p tabIndex={0}>Please select a subject.</p>
+                ? <p tabIndex={0}>Please first select a subject.</p>
                 : visibleInteractionTypes.map(renderInteractionType);
 
             return (

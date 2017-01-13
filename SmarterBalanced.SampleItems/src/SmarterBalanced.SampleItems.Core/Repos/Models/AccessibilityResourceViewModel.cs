@@ -16,7 +16,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public string Description { get; set; }
 
-        public List<SelectListItem> AccessibilityListItems { get; set; }
+        public List<AccessibilitySelectionViewModel> Selections { get; set; }
 
         public bool Disabled { get; set; }
     }
