@@ -50,13 +50,6 @@ namespace ItemSearchParams {
     }
 
     export class ISPComponent extends React.Component<Props, State> {
-        readonly initialState: State = {
-            itemID: '',
-            gradeLevels: GradeLevels.NA,
-            subjects: [],
-            claims: [],
-            interactionTypes: []
-        };
 
         // TODO: since the callback property exists on setState, should this be in the state interface instead of the component class?
         timeoutToken?: number;
@@ -267,7 +260,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-params">
                     <div className="search-header">
-                        <h1 className="search-title" tabIndex={0}>Sample Items Search</h1>
+                        <h1 className="search-title" tabIndex={0}>Search</h1>
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                             <div><a onClick={() => this.resetFilters()} tabIndex={0}>Reset filters</a></div>
@@ -301,7 +294,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-category">
                     <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()} tabIndex={0}>
-                        {this.state.expandItemID ? hideArrow : showArrow} Item ID
+                        {this.state.expandItemID ? hideArrow : showArrow} More
                     </label>
                     {input}
                 </div>
@@ -417,7 +410,7 @@ namespace ItemSearchParams {
                 : [];
 
             const tags = subjects.length === 0
-                ? <p tabIndex={0}>Please select a subject.</p>
+                ? <p tabIndex={0}>Please first select a subject.</p>
                 : subjects
                     .reduce((cs: Claim[], s: Subject) => cs.concat(s.claims), [])
                     .map(renderClaim);
@@ -472,7 +465,7 @@ namespace ItemSearchParams {
                         onClick={() => this.toggleExpandInteractionTypes()}
                         tabIndex={0}>
 
-                        {this.state.expandInteractionTypes ? hideArrow : showArrow} Interaction Types
+                        {this.state.expandInteractionTypes ? hideArrow : showArrow} Item Types
                     </label>
                     <div className="search-tags form-group">
                         {this.state.expandInteractionTypes ? tags : undefined}
