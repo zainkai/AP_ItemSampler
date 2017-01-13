@@ -4,6 +4,7 @@
         updateSelection(category: string, code: string): void;
         onSave(event: React.FormEvent): void;
         onReset(event: React.FormEvent): void;
+        onCancel(event: React.FormEvent): void;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, {}> {
@@ -46,7 +47,7 @@
                             <div className="modal-footer">
                                 <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.props.onSave}> Update</button>
                                 <button className="btn btn-primary" data-dismiss="modal" onClick={this.props.onReset} >Reset to Default</button>
-                                <button className="btn btn-primary btn-cancel" data-dismiss="modal">Cancel</button>
+                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.props.onCancel}>Cancel</button>
                             </div>
                         </div>
                     </div>

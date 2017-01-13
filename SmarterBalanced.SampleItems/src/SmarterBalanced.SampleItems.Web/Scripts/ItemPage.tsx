@@ -115,6 +115,15 @@ namespace ItemPage {
             });
         }
 
+        resetAccForm = (event: React.FormEvent): void => {
+            event.preventDefault();
+            let newAccResourceVms = Object.assign({}, this.state.accResourceVMs);
+            this.setState({
+                ivsAccOptions: this.state.ivsAccOptions,
+                accResourceVMs: newAccResourceVms,
+            });
+        }
+
         render() {
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", this.state.ivsAccOptions);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
@@ -148,7 +157,7 @@ namespace ItemPage {
                         accessibilityString={this.state.ivsAccOptions}
                         url={ivsUrl} />
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
-                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} />
+                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
                     <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
                 </div>
             );
