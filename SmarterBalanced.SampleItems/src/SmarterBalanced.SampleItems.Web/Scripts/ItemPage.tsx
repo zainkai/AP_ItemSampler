@@ -4,6 +4,7 @@
     disabled: boolean;
     label: string;
     selectedCode: string;
+    resourceType: string;
     selections: Dropdown.Selection[];
 }
 
@@ -51,6 +52,16 @@ namespace ItemPage {
             return newSelection;
         }
         return resource;
+    }
+
+    export function getResourceTypes(resources: AccessibilityResource[]): string[] {
+        let resourceTypes: string[] = [];
+        for (const res of resources) {
+            if (resourceTypes.indexOf(res.resourceType) === -1) {
+                resourceTypes.push(res.resourceType);
+            }
+        }
+        return resourceTypes;
     }
 
     interface State {

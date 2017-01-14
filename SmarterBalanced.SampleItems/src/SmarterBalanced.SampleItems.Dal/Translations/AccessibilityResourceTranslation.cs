@@ -32,10 +32,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                         Label = (string)a.Element("Text").Element("Label"),
                         Description = (string)a.Element("Text").Element("Description"),
                         Disabled = (a?.Element("Disabled") != null) ? true : false,
-                        Selections = selections
+                        Selections = selections,
+                        ResourceType = (string)a.Element("ResourceType")
                     };
                 })
                 .Where(a => a.Selections.Any())
+                .OrderBy(a => a.Order)
                 .ToList(); 
                         
             return accessibilityResources;
