@@ -251,7 +251,13 @@ namespace ItemSearchParams {
         }
 
         resetFilters() {
-            this.setState(this.initialState, () => this.beginChangeTimeout());
+            this.setState({
+                itemId: '',
+                gradeLevels: GradeLevels.NA,
+                subjects: [],
+                claims: [],
+                interactionTypes: []
+            }, () => this.beginChangeTimeout());
         }
 
         render() {
