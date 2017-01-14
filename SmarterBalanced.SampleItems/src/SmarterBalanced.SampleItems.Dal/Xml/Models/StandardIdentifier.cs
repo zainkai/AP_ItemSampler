@@ -7,12 +7,29 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 {
     public class StandardIdentifier
     {
-        public string Claim { get; set; }
-        public string ContentDomain { get; set; }
-        public string ContentCategory { get; set; }
-        public string Target { get; set; }
-        public string TargetSet { get; set; }
-        public string Emphasis { get; set; }
-        public string CommonCoreStandard { get; set; }
+        public string Claim { get; }
+        public string ContentDomain { get; }
+        public string ContentCategory { get; }
+        public string Target { get; }
+        public string TargetSet { get; }
+        public string Emphasis { get; }
+        public string CommonCoreStandard { get; }
+
+        public StandardIdentifier(string claim,
+            string target,
+            string contentDomain = null,
+            string contentCategory = null,
+            string targetSet = null,
+            string emphasis = null,
+            string commonCoreStandard = null)
+        {
+            Claim = claim;
+            ContentDomain = contentDomain;
+            ContentCategory = contentCategory;
+            Target = target;
+            TargetSet = targetSet;
+            Emphasis = emphasis;
+            CommonCoreStandard = commonCoreStandard;
+        }
     }
 }
