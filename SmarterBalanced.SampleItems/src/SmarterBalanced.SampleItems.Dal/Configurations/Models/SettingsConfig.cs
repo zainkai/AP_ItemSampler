@@ -16,5 +16,8 @@
         public string StatusUrl { get; set; }
         public string AccessibilityCookie { get; set; }
         public string ISAAPUrlParam { get; set; }
+        public string BrowserWarningCookie { get; set; }
+        public string UserAgentRegex { get; set; }
+        public string[] RubricBlankEntries { get; set; }
     }
 }
