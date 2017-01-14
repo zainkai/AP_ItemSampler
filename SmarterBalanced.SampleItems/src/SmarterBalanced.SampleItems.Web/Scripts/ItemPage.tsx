@@ -128,11 +128,7 @@ namespace ItemPage {
 
         resetAccForm = (event: React.FormEvent): void => {
             event.preventDefault();
-            let newAccResourceVms = Object.assign({}, this.state.accResourceVMs);
-            this.setState({
-                ivsAccOptions: this.state.ivsAccOptions,
-                accResourceVMs: newAccResourceVms,
-            });
+            //TODO: reset the accessibility form to the currently set code
         }
 
         render() {
