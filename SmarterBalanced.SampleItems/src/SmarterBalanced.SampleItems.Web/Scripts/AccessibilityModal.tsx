@@ -90,7 +90,7 @@
 
             return (
                 <div>
-                    <h3>{type}</h3>
+                    <h3>{type || "Other"}</h3>
                     <div className="accessibility-dropdowns">
                         {dropdowns}
                     </div>
