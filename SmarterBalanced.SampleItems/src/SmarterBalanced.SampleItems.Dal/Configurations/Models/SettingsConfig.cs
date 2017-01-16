@@ -19,5 +19,8 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public string AccessibilityCookie { get; set; }
         public string ISAAPUrlParam { get; set; }
         public Dictionary<string, string> AccessibilityTypeLabels { get; set; }
+        public string BrowserWarningCookie { get; set; }
+        public string UserAgentRegex { get; set; }
+        public string[] RubricBlankEntries { get; set; }
     }
 }
