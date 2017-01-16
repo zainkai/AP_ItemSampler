@@ -1,7 +1,8 @@
 ﻿namespace Share {
     function getItemUrl(): string {
         let fullUrl = window.location.href;
-        let url = fullUrl.split("&isaap=")[0];
+        //Strip off any exsisting iSAAP codes or anchors/fragments
+        let url = fullUrl.split("#")[0].split("&isaap=")[0];
         return url;
     }
 

@@ -48,6 +48,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             string[] isaapCodes = string.IsNullOrEmpty(iSAAP) ? new string[0] : iSAAP.Split(';');
             
             ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookieValue);
+
             if (itemViewModel == null)
             {
                 logger.LogWarning($"{nameof(Details)} invalid item {bankKey} {itemKey}");

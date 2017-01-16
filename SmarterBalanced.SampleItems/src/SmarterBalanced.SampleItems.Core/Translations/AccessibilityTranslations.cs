@@ -60,7 +60,8 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                             Label = ar.Label,
                             Description = ar.Description,
                             Selections = ar.Selections.Select(ToAccessibilitySelectionViewModel).ToList(),
-                            Disabled = ar.Disabled
+                            Disabled = ar.Disabled,
+                            ResourceTypeLabel = ar.ResourceTypeLabel,
                         })
                     .ToList();
 

@@ -4,6 +4,7 @@
     disabled: boolean;
     label: string;
     selectedCode: string;
+    resourceTypeLabel: string;
     selections: Dropdown.Selection[];
 }
 
@@ -42,7 +43,7 @@ namespace ItemPage {
         if (resource.disabled) {
             let newSelection = Object.assign(resource, resource);
             let disabledOption: Dropdown.Selection = {
-                label: "Item is disabled",
+                label: "Disabled for item",
                 code: "",
                 disabled: true,
             };
@@ -51,6 +52,16 @@ namespace ItemPage {
             return newSelection;
         }
         return resource;
+    }
+
+    export function getResourceTypes(resources: AccessibilityResource[]): string[] {
+        let resourceTypes: string[] = [];
+        for (const res of resources) {
+            if (resourceTypes.indexOf(res.resourceTypeLabel) === -1) {
+                resourceTypes.push(res.resourceTypeLabel);
+            }
+        }
+        return resourceTypes;
     }
 
     interface State {
@@ -115,6 +126,11 @@ namespace ItemPage {
             });
         }
 
+        resetAccForm = (event: React.FormEvent): void => {
+            event.preventDefault();
+            //TODO: reset the accessibility form to the currently set code
+        }
+
         render() {
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", this.state.ivsAccOptions);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
@@ -148,7 +164,7 @@ namespace ItemPage {
                         accessibilityString={this.state.ivsAccOptions}
                         url={ivsUrl} />
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
-                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} />
+                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
                     <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
                 </div>
             );

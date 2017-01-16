@@ -27,7 +27,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             Task<XElement> accessibilityDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
             Task<XDocument> subjectDoc = XmlSerialization.GetXDocumentAsync(appSettings.SettingsConfig.ClaimsXMLPath);
 
-            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result);
+            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result, appSettings);
             GetInteractionTypes(interactionTypeDoc.Result, out interactionTypes, out interactionFamilies);
             List<Subject> subjects = subjectDoc.Result.ToSubjects(interactionFamilies);
 
@@ -78,11 +78,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return itemDigests;
         }
 
-        private static IList<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml)
+        private static IList<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml, AppSettings appSettings)
         {
 
             List<AccessibilityResource> globalResources = accessibilityXml.Element("MasterResourceFamily")
-                                                          .Elements("SingleSelectResource").ToAccessibilityResources().ToList();
+                                                          .Elements("SingleSelectResource").ToAccessibilityResources(appSettings).ToList();
             return accessibilityXml.Elements("ResourceFamily")
                      .ToAccessibilityResourceFamilies(globalResources).ToList();
         }

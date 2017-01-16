@@ -1,3 +1,8 @@
+.accessibility-groups {
+    display: flex;
+    flex-direction: column;
+}
+
 .accessibility-dropdowns {
     display: flex;
     flex-wrap: wrap;
@@ -11,7 +16,7 @@
 
 .accessibility-modal {
     width: auto;
-    max-width: 800px; /* 3 columns of options */
+    max-width: 550px;
 }
 
 .accessibility-button { 
@@ -22,6 +27,10 @@
 
 .accessibility-button-text:before {
     content: ' Accessibility';
+}
+
+.expand-button {
+    cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
@@ -60,4 +69,13 @@
 
 .glyphicon-pad {
     padding: 5px;
+}
+
+.btn-cancel {
+    background-color: #0085AD;
+    border-color: #106481;
+}
+
+.btn-cancel:hover {
+    background-color: #106481;
 }
