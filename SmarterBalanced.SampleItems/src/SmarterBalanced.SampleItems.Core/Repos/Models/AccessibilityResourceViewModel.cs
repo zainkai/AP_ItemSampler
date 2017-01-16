@@ -20,6 +20,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public bool Disabled { get; set; }
 
-        public string ResourceType { get; set; }
+        public string ResourceTypeLabel { get; set; }
     }
 }

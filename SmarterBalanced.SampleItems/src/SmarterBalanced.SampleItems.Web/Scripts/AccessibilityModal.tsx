@@ -40,7 +40,7 @@
         }
 
         renderResourceType(type: string) {
-            let matchingResources = this.props.localAccessibility.filter(res => res.resourceType === type);
+            let matchingResources = this.props.localAccessibility.filter(res => res.resourceTypeLabel === type);
             matchingResources.sort((a, b) => {
                 if (!a.disabled && b.disabled) {
                     return -1;
@@ -90,7 +90,7 @@
 
             return (
                 <div>
-                    <h3>{type || "Other"}</h3>
+                    <h3>{type}</h3>
                     <div className="accessibility-dropdowns">
                         {dropdowns}
                     </div>

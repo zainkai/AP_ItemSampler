@@ -144,19 +144,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var aboutItem = new AboutItemViewModel(
-                itemKey: itemKey,
-                commonCoreStandardsId: itemDigest.CommonCoreStandardsId,
-                targetId: itemDigest.TargetId,
-                grade: itemDigest.Grade,
-                rubrics: itemDigest.Rubrics);
-
+            AboutItemViewModel aboutItem = itemDigest.ToAboutItemViewModel();
 
             if (iSAAPCodes.Length == 0)
             {
                 cookiePreferences = DecodeCookie(cookieValue);
             }
-
 
             var accResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSAAPCodes);
             if ((cookiePreferences != null) && (iSAAPCodes.Length == 0))
@@ -164,13 +157,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 accResources = SetAccessibilityFromCookie(cookiePreferences, accResources);
             }
 
-            var itemView = new ItemViewModel(
-                itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
-                accessibilityCookieName: AppSettings.SettingsConfig.AccessibilityCookie,
-                aboutItemVM: aboutItem,
-                accResourceVMs: accResources);
-
-            return itemView;
+            return new ItemViewModel(
+                            itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
+                            accessibilityCookieName: AppSettings.SettingsConfig.AccessibilityCookie,
+                            aboutItemVM: aboutItem,
+                            accResourceVMs: accResources
+                        );
         }
 
     }

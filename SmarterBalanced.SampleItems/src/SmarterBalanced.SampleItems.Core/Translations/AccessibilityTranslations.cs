@@ -61,7 +61,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                             Description = ar.Description,
                             Selections = ar.Selections.Select(ToAccessibilitySelectionViewModel).ToList(),
                             Disabled = ar.Disabled,
-                            ResourceType = (ar.ResourceType == "DesignatedSupport") ? "Designated Support" : ar.ResourceType,
+                            ResourceTypeLabel = ar.ResourceTypeLabel,
                         })
                     .ToList();
 
