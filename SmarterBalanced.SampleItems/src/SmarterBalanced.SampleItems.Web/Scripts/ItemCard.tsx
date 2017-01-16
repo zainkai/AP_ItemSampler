@@ -12,6 +12,7 @@ interface ItemCardViewModel {
     target: string;
     interactionTypeCode: string;
     interactionTypeLabel: string;
+    commonCoreStandardsId: string;
 }
 
 function itemPageLink(bankKey: number, itemKey: number) {
@@ -27,7 +28,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
                     <h4 className="card-title" tabIndex={0}>{this.props.title}</h4>
                     <p className="card-text subject" tabIndex={0}>
                         <span className="card-text-label">Subject:</span>
-                        <span className="card-text-value">{this.props.subjectLabel}</span>
+                        <span className="card-text-value"> {this.props.subjectLabel}</span>
                     </p>
                     <p className="card-text grade" tabIndex={0}>
                         <span className="card-text-label">Grade:</span>
@@ -54,3 +55,4 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
         );
     }
 }
+

@@ -37,6 +37,11 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return context.ItemDigests.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
         }
 
+        public ItemCardViewModel GetItemCardViewModel(int bankKey, int itemKey)
+        {
+            return context.ItemCards.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
+        }
+
         /// <summary>
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
@@ -138,13 +143,14 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             string cookieValue)
         {
             AccessibilityResourceViewModel[] cookiePreferences = null;
-            ItemDigest itemDigest = GetItemDigest(bankKey, itemKey);
-            if (itemDigest == null)
+            var itemDigest = GetItemDigest(bankKey, itemKey);
+            var itemCardViewModel = GetItemCardViewModel(bankKey, itemKey);
+            if (itemDigest == null || itemCardViewModel == null)
             {
                 return null;
             }
 
-            AboutItemViewModel aboutItem = itemDigest.ToAboutItemViewModel();
+            var aboutItem = new AboutItemViewModel(itemDigest.Rubrics, itemCardViewModel);
 
             if (iSAAPCodes.Length == 0)
             {

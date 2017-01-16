@@ -9,23 +9,14 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
     public class AboutItemViewModel
     {
-        public int ItemKey { get; }
-        public string CommonCoreStandardsId { get; }
-        public string TargetId { get; }
-        public GradeLevels Grade { get;}
+
+        public ItemCardViewModel ItemCardViewModel { get; }
         public ImmutableArray<Rubric> Rubrics { get; }
 
         public AboutItemViewModel(
-            int itemKey,
-            string commonCoreStandardsId,
-            string targetId,
-            GradeLevels grade,
-            ImmutableArray<Rubric> rubrics)
+            ImmutableArray<Rubric> rubrics, ItemCardViewModel itemCard)
         {
-            ItemKey = itemKey;
-            CommonCoreStandardsId = commonCoreStandardsId;
-            TargetId = targetId;
-            Grade = grade;
+            ItemCardViewModel = itemCard;
             Rubrics = rubrics;
         }
     }

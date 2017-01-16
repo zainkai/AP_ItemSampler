@@ -25,7 +25,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 claimLabel: digest.Claim?.Label,
                 target: digest.TargetId,
                 interactionTypeCode: digest.InteractionType?.Code,
-                interactionTypeLabel: digest.InteractionType?.Label);
+                interactionTypeLabel: digest.InteractionType?.Label,
+                commonCoreStandardsId: digest.CommonCoreStandardsId);
 
             return card;
         }
