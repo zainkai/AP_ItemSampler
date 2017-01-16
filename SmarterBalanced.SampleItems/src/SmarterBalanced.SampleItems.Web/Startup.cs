@@ -70,6 +70,7 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddRouting();
 
             services.AddSingleton(context);
+            services.AddSingleton(appSettings);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
             services.AddScoped<IDiagnosticManager, DiagnosticManager>();
