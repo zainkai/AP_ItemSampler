@@ -171,6 +171,14 @@ hr {
     margin-top: 0px;
 }
 
+.screen-reader-text { 
+   clip: rect(1px, 1px, 1px, 1px); 
+   height: 1px; 
+   width: 1px; 
+   overflow: hidden; 
+   position: absolute !important;
+}
+
 .local-nav {
     display: -webkit-flex;
     display: flex;
@@ -252,7 +260,9 @@ h4.card-title{
     background-color: #ffffff;
     color: #000000;
     font-size: 12px;
-    border-radius: 3px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    text-align: left;
     user-select: none; /* So they can't select text */
     cursor: pointer;
 }
