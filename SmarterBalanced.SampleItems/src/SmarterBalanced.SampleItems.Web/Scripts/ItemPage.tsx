@@ -10,14 +10,7 @@
 
 namespace ItemPage {
 
-    export interface Props {
-        itemViewerServiceUrl: string;
-        accessibilityCookieName: string;
-        accResourceVMs: AccessibilityResource[];
-        aboutItemVM: AboutItem.Props;
-    }
-
-    function getAccessibilityString(accResourceVM: AccessibilityResource[]): string {
+    function toiSAAP(accResourceVM: AccessibilityResource[]): string {
         let str = "";
         for (let res of accResourceVM) {
             if (res.selectedCode && !res.disabled) {
@@ -25,6 +18,12 @@ namespace ItemPage {
             }
         }
         return str;
+    }
+
+    function resetResource(model: AccessibilityResource): AccessibilityResource {
+        const newModel = Object.assign({}, model);
+        newModel.selectedCode = model.defaultCode;
+        return newModel;
     }
 
     function trimAccResource(model: AccessibilityResource): { label: string, selectedCode: string } {
@@ -64,10 +63,19 @@ namespace ItemPage {
         return resourceTypes;
     }
 
-    interface State {
-        ivsAccOptions: string;
+    export interface ViewModel {
+        itemViewerServiceUrl: string;
+        accessibilityCookieName: string;
         accResourceVMs: AccessibilityResource[];
+        aboutItemVM: AboutItem.Props;
     }
+
+    export interface Props extends ViewModel {
+        onSave: (selections: AccessibilityModal.ResourceSelections) => void;
+        onReset: () => void;
+    }
+
+    interface State { }
 
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -77,62 +85,26 @@ namespace ItemPage {
                 let bLabel = b.label.toLowerCase();
                 return (aLabel < bLabel) ? -1 : (aLabel > bLabel) ? 1 : 0;
             });
-            this.state = {
-                ivsAccOptions: getAccessibilityString(this.props.accResourceVMs),
-                accResourceVMs: accResourceVMs,
-            };
+            this.state = { selections: {} };
         }
 
-        updateResource = (code: string, label: string) => {
-            const newResources = this.state.accResourceVMs.map((resource) => {
-                if (resource.label === label) {
-                    const newResource = Object.assign({}, resource);
-                    newResource.selectedCode = code;
-                    return newResource;
-                }
-                return resource;
-            });
-            this.setState({
-                ivsAccOptions: this.state.ivsAccOptions,
-                accResourceVMs: newResources,
-            });
-        }
-
-        resetModelToDefault(model: AccessibilityResource): AccessibilityResource {
-            const newModel = Object.assign({}, model);
-            newModel.selectedCode = model.defaultCode;
-            return newModel;
-        }
-
-        saveOptions = (event: React.FormEvent): void => {
-            //Update Cookie with current options
-            event.preventDefault();
-            //copy the old accessibility resource view models
-            let cookieValue = generateAccCookieValue(this.state.accResourceVMs);
-            this.setState({
-                accResourceVMs: this.state.accResourceVMs,
-                ivsAccOptions: getAccessibilityString(this.state.accResourceVMs),
-            });
-            document.cookie = this.props.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
+        saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
+            this.props.onSave(resourceSelections);
         }
 
         resetOptions = (event: React.FormEvent): void => {
             event.preventDefault();
-            document.cookie = this.props.accessibilityCookieName.concat("=", "", "; path=/");
-            let newAccResourceVms = this.state.accResourceVMs.map(this.resetModelToDefault);
-            this.setState({
-                ivsAccOptions: getAccessibilityString(newAccResourceVms),
-                accResourceVMs: newAccResourceVms,
-            });
+            this.props.onReset();
         }
 
-        resetAccForm = (event: React.FormEvent): void => {
+        cancelChanges = (event: React.FormEvent): void => {
             event.preventDefault();
-            //TODO: reset the accessibility form to the currently set code
+            this.setState({ selections: {} });
         }
 
         render() {
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", this.state.ivsAccOptions);
+            let isaap = toiSAAP(this.props.accResourceVMs);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
                 <div>
@@ -161,20 +133,60 @@ namespace ItemPage {
                         <span className="accessibility-button-text"></span>
                     </a>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
-                        accessibilityString={this.state.ivsAccOptions}
-                        url={ivsUrl} />
+                        accessibilityString={isaap}
+                        url={ivsUrl} /> {/* TODO: remove redundant prop */}
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
-                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
-                    <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
+                    <AccessibilityModal.ItemAccessibilityModal
+                        localAccessibility={this.props.accResourceVMs}
+                        onSave={this.props.onSave}
+                        onReset={this.props.onReset} />
+                    <Share.ShareModal iSAAP={isaap}/>
                 </div>
             );
         }
     }
 
+    export class Controller {
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
 
+        onSave = (selections: AccessibilityModal.ResourceSelections) => {
+
+            const newVMs: AccessibilityResource[] = [];
+            for (let vm of this.itemProps.accResourceVMs) {
+                const newVM = Object.assign({}, vm);
+                newVM.selectedCode = selections[newVM.label] || newVM.selectedCode;
+                newVMs.push(newVM);
+            }
+            this.itemProps = Object.assign({}, this.itemProps);
+            this.itemProps.accResourceVMs = newVMs;
+
+            let cookieValue = generateAccCookieValue(this.itemProps.accResourceVMs);
+            document.cookie = this.itemProps.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
+
+            this.render();
+        }
+
+        onReset = () => {
+            document.cookie = this.itemProps.accessibilityCookieName.concat("=", "", "; path=/");
+
+            const newAccResourceVms = this.itemProps.accResourceVMs.map(resetResource);
+            this.itemProps = Object.assign({}, this.itemProps);
+            this.itemProps.accResourceVMs = newAccResourceVms;
+            
+            this.render();
+        }
+
+        render() {
+            ReactDOM.render(
+                <Page {...this.itemProps} onSave={this.onSave} onReset={this.onReset} />,
+                this.rootDiv);
+        }
+    }
 }
 
-function initializeItemPage(viewModel: ItemPage.Props) {
-    ReactDOM.render(<ItemPage.Page {...viewModel} />,
-        document.getElementById("item-container") as HTMLElement);
+function initializeItemPage(itemProps: ItemPage.ViewModel) {
+    const controller = new ItemPage.Controller(
+        itemProps,
+        document.getElementById("item-container") as HTMLDivElement);
+    controller.render();
 }

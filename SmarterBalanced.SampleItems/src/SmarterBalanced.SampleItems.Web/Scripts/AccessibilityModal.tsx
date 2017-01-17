@@ -1,10 +1,12 @@
 ﻿namespace AccessibilityModal {
     interface Props {
         localAccessibility: AccessibilityResource[];
-        updateSelection(category: string, code: string): void;
-        onSave(event: React.FormEvent): void;
-        onReset(event: React.FormEvent): void;
-        onCancel(event: React.FormEvent): void;
+        onSave(selections: ResourceSelections): void;
+        onReset(): void;
+    }
+
+    export interface ResourceSelections {
+        [resourceName: string]: string;
     }
 
     interface IsResourceExpanded {
@@ -12,7 +14,8 @@
     }
 
     interface State {
-        resourceTypeExpanded: IsResourceExpanded;
+        resourceTypeExpanded?: IsResourceExpanded;
+        resourceSelections?: ResourceSelections;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, State> {
@@ -26,17 +29,35 @@
                 expandeds[key] = false;
             }
             this.state = {
-                resourceTypeExpanded: expandeds
+                resourceTypeExpanded: expandeds,
+                resourceSelections: {}
             };
         }
 
         toggleResourceType(resourceType: string) {
-            const expandeds = Object.assign({}, this.state.resourceTypeExpanded);
+            const expandeds = Object.assign({}, this.state.resourceTypeExpanded || {});
             expandeds[resourceType] = !expandeds[resourceType];
 
             this.setState({
                 resourceTypeExpanded: expandeds
             });
+        }
+
+        updateSelection = (code: string, label: string) => {
+            const newSelections = Object.assign({}, this.state.resourceSelections || {});
+            newSelections[label] = code;
+
+            this.setState({ resourceSelections: newSelections });
+        }
+
+        onSave = (e: React.FormEvent) => {
+            e.preventDefault();
+            this.props.onSave(this.state.resourceSelections || {});
+        }
+
+        onCancel = (e: React.FormEvent) => {
+            e.preventDefault();
+            this.setState({ resourceSelections: {} });
         }
 
         renderResourceType(type: string) {
@@ -52,19 +73,20 @@
             });
 
             const resCount = matchingResources.length;
-            const isExpanded = this.state.resourceTypeExpanded[type];
+            const isExpanded = (this.state.resourceTypeExpanded || {})[type];
             if (!isExpanded) {
                 matchingResources = matchingResources.slice(0, 4);
             }
 
             let dropdowns = matchingResources.map(res => {
+                let selectedCode = (this.state.resourceSelections || {})[res.label] || res.selectedCode;
                 let ddprops: Dropdown.Props = {
                     defaultSelection: res.selectedCode,
                     label: res.label,
                     selections: res.selections,
-                    selectedCode: res.selectedCode,
+                    selectedCode: selectedCode,
                     disabled: res.disabled,
-                    updateSelection: this.props.updateSelection,
+                    updateSelection: this.updateSelection,
                 }
                 return <Dropdown.Dropdown{...ddprops} key={res.label} />;
             });
@@ -107,23 +129,23 @@
                     <div className="modal-dialog accessibility-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.onCancel}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
                             </div>
                             <div className="modal-body">
                                 <p><span>Options highlighted in grey are not available for this item.</span></p>
-                                <form id="accessibility-form" onSubmit={this.props.onSave}>
+                                <form id="accessibility-form" onSubmit={this.onSave}>
                                     <div className="accessibility-groups">
                                         {groups}
                                     </div>
                                 </form>
                             </div>
                             <div className="modal-footer">
-                                <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.props.onSave}> Update</button>
+                                <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
                                 <button className="btn btn-primary" data-dismiss="modal" onClick={this.props.onReset} >Reset to Default</button>
-                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.props.onCancel}>Cancel</button>
+                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                             </div>
                         </div>
                     </div>
