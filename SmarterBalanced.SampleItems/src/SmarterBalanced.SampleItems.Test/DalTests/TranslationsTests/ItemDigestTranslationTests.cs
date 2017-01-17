@@ -65,7 +65,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, placeholderText);
+            AppSettings appSettings = new AppSettings
+                                {
+                                    SettingsConfig = new SettingsConfig(),
+                                    RubricPlaceHolderText = placeholderText
+                                };
+
+
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, appSettings);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -102,7 +109,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
             contents.Item.Contents = new List<Gen.Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), new RubricPlaceHolderText()));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), new AppSettings()));
         }
 
 
@@ -175,7 +182,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     interactionTypeCodes: ImmutableArray.Create<string>())
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, new RubricPlaceHolderText());
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, new AppSettings());
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

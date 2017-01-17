@@ -22,7 +22,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
-            IList<InteractionType> interactionTypes, IList<Subject> subjects, RubricPlaceHolderText rubricPlaceHolder)
+            IList<InteractionType> interactionTypes, IList<Subject> subjects, AppSettings appSettings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
@@ -32,7 +32,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, rubricPlaceHolder);
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, appSettings);
 
                     AssignAccessibilityResources(itemDigest, resourceFamilies);
 
@@ -55,9 +55,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, RubricPlaceHolderText rubricPlaceHolder)
+                                    IList<Subject> subjects, AppSettings appSettings)
         {
-            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(rubricPlaceHolder)).Where(r => r != null).ToImmutableArray();
+            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
             return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics);
         }
 
@@ -156,9 +156,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <summary>
         /// Returns a Single Rubric from content and filters out any placeholder text
         /// </summary>
-        public static Rubric ToRubric(this Content content, RubricPlaceHolderText placeholder)
+        public static Rubric ToRubric(this Content content, AppSettings appSettings)
         {
-            if (placeholder == null) { throw new ArgumentNullException(nameof(placeholder)); }
+            if (appSettings == null || appSettings.RubricPlaceHolderText == null || appSettings.SettingsConfig == null)
+                { throw new ArgumentNullException(nameof(appSettings)); }
+
+            var placeholder = appSettings.RubricPlaceHolderText;
+            var languageToLabel = appSettings.SettingsConfig.LanguageToLabel;
 
             if (content == null ||
                 content.RubricList == null ||
@@ -185,7 +189,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 return null;
             }
 
-            var rubric = new Rubric(content.Language, rubricEntries, samples);
+            string languangeLabel = (string.IsNullOrEmpty(content.Language)) ? string.Empty: 
+                                                languageToLabel[content.Language.ToUpper()];
+
+            var rubric = new Rubric(languangeLabel, rubricEntries, samples);
             return rubric;
         }
 

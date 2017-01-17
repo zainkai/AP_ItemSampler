@@ -32,7 +32,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             List<Subject> subjects = subjectDoc.Result.ToSubjects(interactionFamilies);
 
             List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes,
-                                                                subjects, metaDataFilesTask.Result, contentFilesTask.Result, appSettings.RubricPlaceHolderText);
+                                                                subjects, metaDataFilesTask.Result, contentFilesTask.Result, appSettings);
 
             List<ItemCardViewModel> itemCards = itemDigests.Select(i => i.ToItemCardViewModel()).ToList();
             SampleItemsContext context = new SampleItemsContext
@@ -58,7 +58,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IList<Subject> subjects,
             IEnumerable<FileInfo> metaDataFilesTask,
             IEnumerable<FileInfo> contentFilesTask,
-            RubricPlaceHolderText rubricPlaceHolder)
+            AppSettings appSettings)
         {
     
             //Parse Xml Files
@@ -72,7 +72,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                     accessibilityResourceFamilies,
                     interactionTypes,
                     subjects,
-                    rubricPlaceHolder)
+                    appSettings)
                 .Where(i => i.Grade != GradeLevels.NA).ToList();
 
             return itemDigests;
