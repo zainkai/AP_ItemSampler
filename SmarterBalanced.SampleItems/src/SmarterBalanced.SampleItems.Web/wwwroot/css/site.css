@@ -457,3 +457,14 @@ h4.card-title{
 .rescale-glyphicon {
     font-size: 80%;
 }
+
+.item-nav-btn {
+    font-size: 14px !important;
+    padding: 0px 10px 0px 10px !important;
+}
+
+.accessibility-button {
+    font-size: 18px !important;
+    margin-bottom: 5px !important;
+
+}

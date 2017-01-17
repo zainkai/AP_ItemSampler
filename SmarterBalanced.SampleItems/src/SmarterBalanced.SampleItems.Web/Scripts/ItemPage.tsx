@@ -138,19 +138,20 @@ namespace ItemPage {
                 <div>
                     <ul className="nav navbar-nav mr-auto">
                         <li className="nav-item">
-                            <a className="btn modal-toggle" data-toggle="modal" data-target="#about-item-modal-container" >
-                                <span className="glyphicon glyphicon-th-list glyphicon-pad" aria-hidden="true"></span>
+                            <a className="btn modal-toggle item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container" >
+                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
                                 About This Item
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="btn modal-toggle" data-target="#share-modal-container" >
+
+                            <a className="btn modal-toggle item-nav-btn" data-target="#share-modal-container" >
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
                                 More Like This
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="btn modal-toggle" data-toggle="modal" data-target="#share-modal-container" >
+                            <a className="btn modal-toggle item-nav-btn" data-toggle="modal" data-target="#share-modal-container" >
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
                                 Share
                             </a>
