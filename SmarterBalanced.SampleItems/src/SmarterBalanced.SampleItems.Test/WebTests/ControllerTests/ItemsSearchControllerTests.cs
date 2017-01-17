@@ -25,9 +25,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemsSearchViewModelBadReq = null;
             var sampleItemsSearchRepoMock = new Mock<ISampleItemsSearchRepo>();
             var sampleItemsSearchRepoBadRequestMock = new Mock<ISampleItemsSearchRepo>();
-            sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemCards(It.IsAny<ItemsSearchParams>()))
-                                        .Returns(new List<ItemCardViewModel>());
+            sampleItemsSearchRepoMock.Setup(x => x
+                .GetItemCards(It.Is<ItemsSearchParams>(p => p.ItemId == "42")))
+                .Returns(new List<ItemCardViewModel> { ItemCardViewModel.Create(itemKey: 42) });
 
             sampleItemsSearchRepoMock.Setup(x => x.GetItemsSearchViewModel()).Returns(itemsSearchViewModel);
             sampleItemsSearchRepoBadRequestMock.Setup(x => x.GetItemsSearchViewModel()).Returns(itemsSearchViewModelBadReq);
@@ -76,6 +76,18 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             var result = controllerBadReq.Index();
 
             Assert.IsType<BadRequestResult>(result);
+        }
+
+        /// <summary>
+        /// Tests that a BadRequestResult is returned by Index
+        /// </summary>
+        [Fact]
+        public void TestMatchingKey()
+        {
+            var result = controller.Search("42", GradeLevels.High, null, null, null) as JsonResult;
+            var cards = result.Value as List<ItemCardViewModel>;
+            Assert.Equal(cards.Count, 1);
+            Assert.Equal(cards[0].ItemKey, 42);
         }
     }
 }
