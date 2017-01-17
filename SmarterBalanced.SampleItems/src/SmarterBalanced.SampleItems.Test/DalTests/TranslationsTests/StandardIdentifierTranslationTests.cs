@@ -17,6 +17,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
     public class StandardIdentifierTranslationTests
     {
         string elaStandardString;
+        string mathv1StandardString;
         string mathV4StandardString;
         string mathV5StandardString;
         string mathV6StandardString;
@@ -26,6 +27,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public StandardIdentifierTranslationTests()
         {
             elaStandardString = "SBAC-ELA-v1:3-L|4-6|6.SL.2";
+            mathv1StandardString = "SBAC-MA-v1:1|NBT|E-3|a/s|3.NBT.2";
             mathV4StandardString = "SBAC-MA-v4:1|NS|D-6|m|6.NS.6c";
             mathV5StandardString = "SBAC-MA-v5:2|NS|D-6|m|6.NS.6c";
             mathV6StandardString = "SBAC-MA-v6:3|P|TS04|D-6";
@@ -40,6 +42,16 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal("3-L", identifier.Claim);
             Assert.Equal("4-6", identifier.Target);
             Assert.Equal("6.SL.2", identifier.CommonCoreStandard);
+        }
+
+        [Fact]
+        public void TestMathV1Translation()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(mathv1StandardString);
+            Assert.Equal("1", identifier.Claim);
+            Assert.Equal("NBT", identifier.ContentDomain);
+            Assert.Equal("E-3", identifier.Target);
+            Assert.Equal("3.NBT.2", identifier.CommonCoreStandard);
         }
 
         [Fact]

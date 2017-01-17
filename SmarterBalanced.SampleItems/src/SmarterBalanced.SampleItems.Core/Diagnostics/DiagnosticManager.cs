@@ -13,6 +13,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Amazon.ECS;
+using ecsModel = Amazon.ECS.Model;
 
 namespace SmarterBalanced.SampleItems.Core.Diagnostics
 {
@@ -29,7 +31,6 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
             Recovering = 3,
             Ideal = 4
         }
-
 
         public DiagnosticManager(SampleItemsContext sampleContext, ILoggerFactory loggerFactory)
         {
@@ -49,14 +50,14 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
             List<string> ipAddresses = new List<string>();
             try
             {
-                ipAddresses = await GetAwsIps();
+                ipAddresses = await GetAwsClusterIps();
             }
-            catch (AmazonServiceException)
+            catch (AmazonServiceException ase)
             {
-                string msg = context.AppSettings.ExceptionMessages.ErrorDiagnosticApiAwsAccess;
+                string msg = context.AppSettings.ExceptionMessages.ErrorDiagnosticApiAws;
+                logger.LogError($"Error Code {ase.ErrorCode} Error Message {ase.Message}");
                 diagnosticRoot.AddErrorMessage(msg);
             }
-
             List<Task<DiagnosticStatus>> awsNodeResultTasks = new List<Task<DiagnosticStatus>>();
             foreach (string ipAddress in ipAddresses)
             {
@@ -68,9 +69,10 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
                 Task.WaitAll(awsNodeResultTasks.ToArray());
                 diagnosticRoot.DiagnosticStatuses = awsNodeResultTasks.Select(t => t.Result).ToList();
             }
-            catch(Exception)
+            catch (Exception e)
             {
                 string msg = context.AppSettings.ExceptionMessages.ErrorDiagnosticApiAwsNode;
+                logger.LogError(e.Message);
                 diagnosticRoot.AddErrorMessage(msg);
             }
 
@@ -90,36 +92,71 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         }
 
         /// <summary>
-        /// Retrieves public IP adresses all AWS nodes with a specific tag key. 
+        /// Gets a list of AWS cluster ips based on cluster name
         /// </summary>
-        /// <returns>a List<String> of IP addresses.</returns>
-        private async Task<List<string>> GetAwsIps()
+        /// <returns></returns>
+        private async Task<List<string>> GetAwsClusterIps()
         {
-            string awsTagKey = context.AppSettings.SettingsConfig.AwsInstanceTag;
+            var arns = await GetAwsClusterInstancesArns();
+
+            var clusterIds = await GetAwsClusterInstancesIds(arns);
+            var ips = await GetAwsArnsIps(clusterIds);
+            return ips;
+        }
+
+        /// <summary>
+        /// Gets cluster instances AWS arns
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<string>> GetAwsClusterInstancesArns()
+        {
+            string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
+            string awsCluster = context.AppSettings.SettingsConfig.AwsClusterName;
+            AmazonECSClient ecs = new AmazonECSClient(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
+
+            ecsModel.ListContainerInstancesRequest clusterRequest = new ecsModel.ListContainerInstancesRequest();
+            clusterRequest.Cluster = awsCluster;
+            var items = await ecs.ListContainerInstancesAsync(clusterRequest);
+
+            return items.ContainerInstanceArns;
+        }
+
+        /// <summary>
+        /// Gets a list of instance ids from a cluster and instance arns
+        /// </summary>
+        /// <param name="arns"></param>
+        /// <returns></returns>
+        private async Task<List<string>> GetAwsClusterInstancesIds(List<string> arns)
+        {
+            string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
+            string awsCluster = context.AppSettings.SettingsConfig.AwsClusterName;
+            AmazonECSClient ecs = new AmazonECSClient(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
+
+            ecsModel.DescribeContainerInstancesRequest clusterRequest = new ecsModel.DescribeContainerInstancesRequest();
+            clusterRequest.Cluster = awsCluster;
+            clusterRequest.ContainerInstances = arns;
+            var items = await ecs.DescribeContainerInstancesAsync(clusterRequest);
+
+            return items.ContainerInstances.Where(t => t.RunningTasksCount > 0).Select(t => t.Ec2InstanceId).ToList();
+
+        }
+
+        /// <summary>
+        /// Gets a list of Instances Ips from list of AWS instance ids
+        /// </summary>
+        /// <param name="instancesIds"></param>
+        /// <returns></returns>
+        private async Task<List<string>> GetAwsArnsIps(List<string> instancesIds)
+        {
             string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
             AmazonEC2Client ec2 = new AmazonEC2Client(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
 
             DescribeInstancesRequest request = new DescribeInstancesRequest();
-            request.Filters = new List<Filter>
-            {
-                new Filter("tag-key", new List<string> { awsTagKey })
-            };
-           var result = await ec2.DescribeInstancesAsync(request);
+            request.InstanceIds = instancesIds;
+            var result = await ec2.DescribeInstancesAsync(request);
 
-            List<string> ipAdresses = new List<string>();
-            foreach (Reservation res in result.Reservations)
-            {
-                if (res.Instances.Any())
-                {
-                    string publicIp = res.Instances[0].PublicIpAddress?.ToString();
-                    if (!string.IsNullOrEmpty(publicIp))
-                    {
-                        ipAdresses.Add(publicIp);
-                    }
-                }
-            }
-
-            return ipAdresses;
+            return result.Reservations.SelectMany(t => t.Instances.Where(i => !string.IsNullOrEmpty(i.PublicIpAddress))
+                                                    .Select(i => i.PublicIpAddress)).ToList();
         }
 
         /// <summary>
@@ -131,7 +168,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         private async Task<DiagnosticStatus> QueryAwsNode(string ipAddress, int level)
         {
             string statusUrl = context.AppSettings.SettingsConfig.StatusUrl;
-            string uri = $"http://{ipAddress}{statusUrl}{level}";
+            string uri = $"http://{ipAddress}/{statusUrl}{level}";
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(uri);
             XmlSerializer serializer = new XmlSerializer(typeof(DiagnosticStatus));
@@ -213,7 +250,6 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
             }
         }
 
-
         /// <summary>
         /// Formats bytes returned by drive info as "x.x GiB".
         /// </summary>
@@ -232,7 +268,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         private FilesystemStatus GetFilesystemStatus(DriveInfo driveInfo)
         {
             FilesystemStatus fsStatus = new FilesystemStatus();
-            fsStatus.StatusRating = (int )StatusRating.Ideal;
+            fsStatus.StatusRating = (int)StatusRating.Ideal;
             fsStatus.FilesystemType = driveInfo.DriveType.ToString();
 
             float freeSpace = driveInfo.AvailableFreeSpace;
@@ -260,7 +296,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         private List<FilesystemStatus> GetFilesystemStatuses()
         {
             var filesystemStatuses = new List<FilesystemStatus>();
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            var drives = DriveInfo.GetDrives().Where(t => t.TotalSize > 0.000001).ToList();
+            foreach (DriveInfo drive in drives)
             {
                 filesystemStatuses.Add(GetFilesystemStatus(drive));
             }

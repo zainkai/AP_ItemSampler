@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
@@ -13,23 +14,38 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         /// <param name="singleSelectResources"></param>
         /// <returns></returns>
-        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources)
+        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources, AppSettings appSettings)
         {
             IList<AccessibilityResource> accessibilityResources = singleSelectResources
                 .Select(a =>
-                        new AccessibilityResource
-                        {
-                            Code = (string)a.Element("Code"),
-                            Order = (int)a.Element("Order"),
-                            DefaultSelection = (string)a.Element("DefaultSelection"),
-                            Label = (string)a.Element("Text").Element("Label"),
-                            Description = (string)a.Element("Text").Element("Description"),
-                            Disabled = (a?.Element("Disabled") != null) ? true : false,
-                            Selections = a.Elements("Selection").ToSelections()
-                        })
-                        .Where(a => a.Selections.Any())
-                        .ToList();
+                {
+                    var selections = a.Elements("Selection").ToSelections();
 
+                    var defaultSelection = (string)a.Element("DefaultSelection");
+                    defaultSelection = string.IsNullOrEmpty(defaultSelection) ? 
+                                        selections.FirstOrDefault()?.Code : defaultSelection;
+
+                    string resourceType = string.IsNullOrEmpty((string)a.Element("ResourceType")) ? 
+                                            string.Empty : (string)a.Element("ResourceType");
+
+                    string resourceTypeLabel = appSettings.SettingsConfig.AccessibilityTypeLabels[resourceType];
+                    return new AccessibilityResource
+                    {
+                        Code = (string)a.Element("Code"),
+                        Order = (int)a.Element("Order"),
+                        DefaultSelection = defaultSelection,
+                        Label = (string)a.Element("Text").Element("Label"),
+                        Description = (string)a.Element("Text").Element("Description"),
+                        Disabled = (a?.Element("Disabled") != null) ? true : false,
+                        Selections = selections,
+                        ResourceType = resourceType,
+                        ResourceTypeLabel = resourceTypeLabel
+                    };
+                })
+                .Where(a => a.Selections.Any())
+                .OrderBy(a => a.Order)
+                .ToList(); 
+                        
             return accessibilityResources;
         }
 

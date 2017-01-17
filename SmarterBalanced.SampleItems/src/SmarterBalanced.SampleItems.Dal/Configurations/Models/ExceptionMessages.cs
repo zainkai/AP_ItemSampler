@@ -6,6 +6,7 @@
         public string WarningDuplicateItem { get; set; }
         public string ErrorDiagnosticApi { get; set; }
         public string ErrorDiagnosticApiAwsAccess { get; set; }
+        public string ErrorDiagnosticApiAws { get; set; }
         public string ErrorDiagnosticApiAwsNode { get; set; }
     }
 }

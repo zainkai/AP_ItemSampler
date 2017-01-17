@@ -17,8 +17,8 @@ interface Failure {
 }
 
 interface Reloading<T> {
-    kind: "reloading",
-    content: T
+    kind: "reloading";
+    content: T;
 }
 
 /** Represents the state of an asynchronously obtained resource at a particular time. */
@@ -87,6 +87,14 @@ namespace ItemsSearch {
             this.setState({ searchResults: { kind: "failure" } });
         }
 
+        selectSingleResult() {
+            const searchResults = this.state.searchResults;
+            if (searchResults.kind === "success" && searchResults.content.length === 1) {
+                const searchResult = searchResults.content[0];
+                itemPageLink(searchResult.bankKey, searchResult.itemKey);
+            }
+        }
+
         isLoading() {
             return this.state.searchResults.kind === "loading" || this.state.searchResults.kind === "reloading";
         }
@@ -94,11 +102,12 @@ namespace ItemsSearch {
         render() {
             const searchResults = this.state.searchResults;
 
-            let resultsElement: JSX.Element[] | JSX.Element | undefined
+            let resultsElement: JSX.Element[] | JSX.Element | undefined;
             if (searchResults.kind === "success" || searchResults.kind === "reloading") {
                 resultsElement = searchResults.content.length === 0
                     ? <span className="placeholder-text">No results found for the given search terms.</span>
-                    : searchResults.content.map(digest => <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
+                    : searchResults.content.map(digest =>
+                        <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
                 resultsElement = <div className="placeholder-text">An error occurred. Please try again later.</div>;
             } else {
@@ -111,6 +120,7 @@ namespace ItemsSearch {
                         interactionTypes={this.props.interactionTypes}
                         subjects={this.props.subjects}
                         onChange={(params) => this.beginSearch(params)}
+                        selectSingleResult={() => this.selectSingleResult()}
                         isLoading={isLoading} />
                     <div className="search-results">
                         {resultsElement}

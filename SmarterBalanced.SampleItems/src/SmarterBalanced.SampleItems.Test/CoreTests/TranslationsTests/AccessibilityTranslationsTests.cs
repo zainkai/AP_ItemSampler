@@ -14,7 +14,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
     {
         List<AccessibilityResource> accessibilityResources;
         List<AccessibilitySelection> accessibilitySelections;
-        List<SelectListItem> accSelectListItems;
+        List<AccessibilitySelectionViewModel> accSelectListItems;
         List<AccessibilityResourceViewModel> accessibilityResourceViewModels;
 
         public AccessibilityTranslationsTests()
@@ -44,27 +44,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 }
             };
 
-            accSelectListItems = new List<SelectListItem>
-            {
-                new SelectListItem()
-                {
-                    Value = "TDS_TEST1",
-                    Text = "TEST 1",
-                    Disabled = false
-                },
-                new SelectListItem()
-                {
-                    Value = "TDS_TEST2",
-                    Text = "TEST 2",
-                    Disabled = false
-                },
-                new SelectListItem()
-                {
-                    Value = "TDS_TEST3",
-                    Text = "TEST 3",
-                    Disabled = false
-                }
-            };
+            accSelectListItems = accessibilitySelections.Select(s => s.ToAccessibilitySelectionViewModel()).ToList();
 
             accessibilityResources = new List<AccessibilityResource>
             {
@@ -92,7 +72,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 {
                     DefaultCode = "TDS_TEST1",
                     SelectedCode = "TDS_TEST1",
-                    AccessibilityListItems = accSelectListItems,
+                    Selections = accSelectListItems,
                     Label = "Resource 1",
                     Disabled = false
                 },
@@ -100,7 +80,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 {
                     DefaultCode = "TDS_TEST2",
                     SelectedCode = "TDS_TEST2",
-                    AccessibilityListItems = accSelectListItems,
+                    Selections = accSelectListItems,
                     Label = "Resource 2",
                     Disabled = false
                 }
@@ -154,8 +134,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             {
                 accResource
             };
-            string ISAAP = "TDS_TEST3;";
-            string ExpectedCode = ISAAP.Split(';')[0];
+            string[] ISAAP = { "TDS_TEST3" };
+            var expectedCode = "TDS_TEST3";
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
                 .ToAccessibilityResourceViewModels(accResources, ISAAP);
@@ -164,7 +144,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 
             AccessibilityResourceViewModel accResourceViewModel = accResourceViewModels[0];
 
-            Assert.Equal(ExpectedCode, accResourceViewModel.SelectedCode);
+            Assert.Equal(expectedCode, accResourceViewModel.SelectedCode);
             Assert.Equal(accResource.Label, accResourceViewModel.Label);
             Assert.Equal(accResource.Disabled, accResourceViewModel.Disabled);
         }
@@ -180,7 +160,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             {
                 accResource
             };
-            string ISAAP = "NOT_THERE;";
+            string[] ISAAP = { "NOT_THERE" };
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
                 .ToAccessibilityResourceViewModels(accResources, ISAAP);
@@ -200,7 +180,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestAccessibilityResourceToViewModelsWithISAAP()
         {
-            string ISAAP = "TDS_TEST3;";
+            string[] ISAAP = { "TDS_TEST3" };
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
                 .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
@@ -214,7 +194,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestNullAccessibilityResourceToViewModelsWithISAAP()
         {
-            string ISAAP = "TDS_TEST3;";
+            string[] ISAAP = { "TDS_TEST3" };
         
             Assert.Throws<ArgumentNullException>(() => AccessibilityTranslations
                 .ToAccessibilityResourceViewModels(null, ISAAP));
@@ -224,9 +204,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         /// Test multiple accessibility resources with null isaap translation to view models
         /// </summary>
         [Fact]
-        public void TestAccessibilityResourceToViewModelsWithNullISAAP()
+        public void TestAccessibilityResourceToViewModelsWithEmptyISAAP()
         {
-            string ISAAP = null;
+            string[] ISAAP = new string[0];
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
                 .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
@@ -240,7 +220,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestEmptyAccessibilityResourceToViewModelsWithISAAP()
         {
-            string ISAAP = "TDS_TEST3;";
+            string[] ISAAP = { "TDS_TEST3" };
             List<AccessibilityResourceViewModel> accResourceViewModels =
                 AccessibilityTranslations
                 .ToAccessibilityResourceViewModels(new List<AccessibilityResource>(), ISAAP);

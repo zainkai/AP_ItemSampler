@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using System.Collections.Immutable;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 {
@@ -41,7 +42,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
-            
+            contents.Item.Contents = new List<Gen.Content>();
+
             var interactionTypes = new List<InteractionType>
             {
                 new InteractionType(code: "EQ", label: "", order: 0)
@@ -57,7 +59,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     interactionTypeCodes: ImmutableArray.Create<string>())
             };
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), interactionTypes, subjects);
+            var placeholderText = new RubricPlaceHolderText
+            {
+                RubricPlaceHolderContains = new string[0],
+                RubricPlaceHolderEquals = new string[0]
+            };
+
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, placeholderText);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -93,7 +101,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<AccessibilityResourceFamily>(), new List<InteractionType>(), new List<Subject>()));
+            contents.Item.Contents = new List<Gen.Content>();
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), new RubricPlaceHolderText()));
         }
 
 
@@ -145,6 +154,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 //Test contents attributes
                 contents.Item.ItemKey = itemKeys[i];
                 contents.Item.ItemBank = banksKeys[i];
+                contents.Item.Contents = new List<Gen.Content>();
 
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
@@ -165,7 +175,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     interactionTypeCodes: ImmutableArray.Create<string>())
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects);
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, new RubricPlaceHolderText());
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

@@ -35,16 +35,16 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemCards = new List<ItemCardViewModel>() {
                 new ItemCardViewModel(bankKey: goodBankKey, itemKey: goodItemKey, title: "", grade: GradeLevels.Grade6, gradeLabel: "",
                 subjectCode: "", subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: "", interactionTypeLabel: ""),
+                    target: "", interactionTypeCode: "", interactionTypeLabel: "", commonCoreStandardsId: ""),
                 new ItemCardViewModel(bankKey: goodBankKey, itemKey: badItemKey, title: "", grade: GradeLevels.High, gradeLabel: "",
                 subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: ""),
+                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
                 new ItemCardViewModel(bankKey: badBankKey, itemKey: goodItemKey, title: "", grade: GradeLevels.Grade9, gradeLabel: "",
                 subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: ""),
+                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
                 new ItemCardViewModel(bankKey: badBankKey, itemKey: badItemKey, title: "", grade: GradeLevels.Grade4, gradeLabel: "",
                 subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: ""),
+                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
             };
 
             var sampleItemsSearchRepoMock = new Mock<ISampleItemsSearchRepo>();
