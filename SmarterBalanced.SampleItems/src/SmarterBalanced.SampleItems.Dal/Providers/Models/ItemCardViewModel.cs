@@ -65,7 +65,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string claimLabel = "",
            string target = "",
            string interactionTypeCode = "",
-           string interactionTypeLabel = "")
+           string interactionTypeLabel = "",
+           string commonCoreStandardsId = "")
 
         {
             var card = new ItemCardViewModel(
@@ -80,7 +81,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 claimLabel: claimLabel,
                 target: target,
                 interactionTypeCode: interactionTypeCode,
-                interactionTypeLabel: interactionTypeLabel);
+                interactionTypeLabel: interactionTypeLabel,
+                commonCoreStandardsId: commonCoreStandardsId);
             return card;
         }
     }
