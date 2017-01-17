@@ -8,6 +8,7 @@
     export interface Props {
         defaultSelection: string;
         label: string;
+        disabled: boolean;
         selectedCode: string;
         selections: Selection[];
         updateSelection(code: string, label: string): void;
@@ -37,11 +38,13 @@
         }
 
         render() {
+            const classes = "accessibility-dropdown form-group ".concat(this.props.disabled ? "selection-disabled" : "selection-enabled");
             const options = this.props.selections.map(this.renderOption);
             return (
-                <div className="accessibility-dropdown form-group">
+                <div className={classes}>
                     <label>{this.props.label}</label><br />
                     <select className="form-control"
+                        disabled={this.props.disabled}
                         onChange={this.onChange}
                         value={this.props.selectedCode}>
                         {options}

@@ -21,8 +21,28 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
         public ItemsSearchControllerTests()
         {
-            itemsSearchViewModel = new ItemsSearchViewModel();
-            itemsSearchViewModelBadReq = null;
+            string subjectCode = "MATH";
+            mathSubjectList = new string[] { subjectCode };
+            string interactionTypeCode = "TC2";
+            interactionCodeList = new string[] { interactionTypeCode };
+            string claimCode = "1";
+            claimList = new string[] { claimCode };
+
+            itemCards = new List<ItemCardViewModel>() {
+                new ItemCardViewModel(bankKey: goodBankKey, itemKey: goodItemKey, title: "", grade: GradeLevels.Grade6, gradeLabel: "",
+                subjectCode: "", subjectLabel: "", claimCode: "", claimLabel: "",
+                    target: "", interactionTypeCode: "", interactionTypeLabel: "", commonCoreStandardsId: ""),
+                new ItemCardViewModel(bankKey: goodBankKey, itemKey: badItemKey, title: "", grade: GradeLevels.High, gradeLabel: "",
+                subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
+                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
+                new ItemCardViewModel(bankKey: badBankKey, itemKey: goodItemKey, title: "", grade: GradeLevels.Grade9, gradeLabel: "",
+                subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
+                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
+                new ItemCardViewModel(bankKey: badBankKey, itemKey: badItemKey, title: "", grade: GradeLevels.Grade4, gradeLabel: "",
+                subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
+                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
+            };
+
             var sampleItemsSearchRepoMock = new Mock<ISampleItemsSearchRepo>();
             var sampleItemsSearchRepoBadRequestMock = new Mock<ISampleItemsSearchRepo>();
             sampleItemsSearchRepoMock.Setup(x => x

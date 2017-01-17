@@ -8,6 +8,8 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
     {
         public SettingsConfig SettingsConfig { get; set; }
         public ExceptionMessages ExceptionMessages { get; set; }
+
+        public RubricPlaceHolderText RubricPlaceHolderText {get;set;}
         public AppSettings() { }
     }
 }

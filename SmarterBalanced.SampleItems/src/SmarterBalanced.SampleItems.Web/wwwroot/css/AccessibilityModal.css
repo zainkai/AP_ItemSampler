@@ -1,3 +1,8 @@
+.accessibility-groups {
+    display: flex;
+    flex-direction: column;
+}
+
 .accessibility-dropdowns {
     display: flex;
     flex-wrap: wrap;
@@ -11,7 +16,7 @@
 
 .accessibility-modal {
     width: auto;
-    max-width: 800px; /* 3 columns of options */
+    max-width: 550px;
 }
 
 .accessibility-button { 
@@ -24,6 +29,10 @@
     content: ' Accessibility';
 }
 
+.expand-button {
+    cursor: pointer;
+}
+
 @media screen and (max-width: 600px) {
     .accessibility-button-text:before {
         content: '';
@@ -31,8 +40,12 @@
 }
 
 .option-disabled {
-    background: rgb(255, 0, 0); /* Fallback for browsers without support for rgba() */
-    background: rgba(255,0,0,0.4);
+    background: rgb(128,128,128); /* Fallback for browsers without support for rgba() */
+    background: rgba(128,128,128,0.4);
+}
+
+.selection-disabled {
+    opacity: 0.5;
 }
 
 .url-display {
@@ -40,6 +53,29 @@
   margin-bottom: 10px;
   overflow: auto;
   padding: 5px;
+  padding-top: 75px;
   width: auto;
   word-wrap:break-word;
+}
+
+.readonly-select {
+    user-select: all;
+}
+
+.modal-toggle {
+    font-size: 20px;
+    color: black;
+}
+
+.glyphicon-pad {
+    padding: 5px;
+}
+
+.btn-cancel {
+    background-color: #0085AD;
+    border-color: #106481;
+}
+
+.btn-cancel:hover {
+    background-color: #106481;
 }

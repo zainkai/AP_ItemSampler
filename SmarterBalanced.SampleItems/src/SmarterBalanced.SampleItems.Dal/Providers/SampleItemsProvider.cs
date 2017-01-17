@@ -16,18 +16,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
         public static async Task<SampleItemsContext> LoadContext(AppSettings appSettings, ILogger logger)
         {
+            string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
             List<InteractionType> interactionTypes;
             List<InteractionFamily> interactionFamilies;
 
+
+            Task<IEnumerable<FileInfo>> metaDataFilesTask = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            Task<IEnumerable<FileInfo>> contentFilesTask = XmlSerialization.FindContentXmlFiles(contentDir);
             Task<XElement> interactionTypeDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.InteractionTypesXMLPath, "InteractionTypes");
             Task<XElement> accessibilityDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
             Task<XDocument> subjectDoc = XmlSerialization.GetXDocumentAsync(appSettings.SettingsConfig.ClaimsXMLPath);
 
-            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result);
+            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result, appSettings);
             GetInteractionTypes(interactionTypeDoc.Result, out interactionTypes, out interactionFamilies);
             List<Subject> subjects = subjectDoc.Result.ToSubjects(interactionFamilies);
 
-            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes, subjects);
+            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes,
+                                                                subjects, metaDataFilesTask.Result, contentFilesTask.Result, appSettings.RubricPlaceHolderText);
+
             List<ItemCardViewModel> itemCards = itemDigests.Select(i => i.ToItemCardViewModel()).ToList();
             SampleItemsContext context = new SampleItemsContext
             {
@@ -49,39 +55,34 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             AppSettings settings,
             IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
             IList<InteractionType> interactionTypes,
-            IList<Subject> subjects)
+            IList<Subject> subjects,
+            IEnumerable<FileInfo> metaDataFilesTask,
+            IEnumerable<FileInfo> contentFilesTask,
+            RubricPlaceHolderText rubricPlaceHolder)
         {
-            string contentDir = settings.SettingsConfig.ContentItemDirectory;
-
-            //Find xml files
-            Task<IEnumerable<FileInfo>> fetchMetadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
-            Task<IEnumerable<FileInfo>> fetchContentsFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-            IEnumerable<FileInfo> metadataFiles = await fetchMetadataFiles;
-            IEnumerable<FileInfo> contentsFiles = await fetchContentsFiles;
-
+    
             //Parse Xml Files
-            Task<IEnumerable<ItemMetadata>> deserializeMetadata = XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metadataFiles);
-            Task<IEnumerable<ItemContents>> deserializeContents = XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentsFiles);
-            IEnumerable<ItemMetadata> itemMetadata = await deserializeMetadata;
-            IEnumerable<ItemContents> itemContents = await deserializeContents;
+            Task<IEnumerable<ItemMetadata>> itemMetadataTask = XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFilesTask);
+            Task<IEnumerable<ItemContents>> itemContentsTask = XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFilesTask);
 
             var itemDigests = ItemDigestTranslation
                 .ItemsToItemDigests(
-                    itemMetadata,
-                    itemContents,
+                    await itemMetadataTask,
+                    await itemContentsTask,
                     accessibilityResourceFamilies,
                     interactionTypes,
-                    subjects)
+                    subjects,
+                    rubricPlaceHolder)
                 .Where(i => i.Grade != GradeLevels.NA).ToList();
 
             return itemDigests;
         }
 
-        private static IList<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml)
+        private static IList<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml, AppSettings appSettings)
         {
 
             List<AccessibilityResource> globalResources = accessibilityXml.Element("MasterResourceFamily")
-                                                          .Elements("SingleSelectResource").ToAccessibilityResources().ToList();
+                                                          .Elements("SingleSelectResource").ToAccessibilityResources(appSettings).ToList();
             return accessibilityXml.Elements("ResourceFamily")
                      .ToAccessibilityResourceFamilies(globalResources).ToList();
         }

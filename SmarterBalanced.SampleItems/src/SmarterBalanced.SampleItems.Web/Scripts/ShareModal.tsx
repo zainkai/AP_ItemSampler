@@ -1,7 +1,8 @@
 ﻿namespace Share {
     function getItemUrl(): string {
         let fullUrl = window.location.href;
-        let url = fullUrl.split("&isaap=")[0];
+        //Strip off any exsisting iSAAP codes or anchors/fragments
+        let url = fullUrl.split("#")[0].split("&isaap=")[0];
         return url;
     }
 
@@ -14,8 +15,15 @@
             super(props);
         }
 
+        copyToClipboard(event: any): void {
+            event.preventDefault();
+            let input = document.getElementById("shareUrl") as HTMLTextAreaElement;
+            input.select();
+            document.execCommand("copy");
+        }
+
         render() {
-            let url = getItemUrl() + "&isaap=" + this.props.iSAAP
+            const url = getItemUrl() + "&isaap=" + this.props.iSAAP
             return (
                 <div className="modal fade" id="share-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
                     <div className="modal-dialog share-modal" role="document">
@@ -26,10 +34,16 @@
                                 </button>
                                 <h4 className="modal-title" id="myModalLabel">Share</h4>
                             </div>
-                            <div className="modal-body">
+                            <div className="modal-body ">
                                 <span>The following URL can be used to load this question with your currently saved accessibility options.</span>
-                                <div className="url-display">
-                                    <a href={url}>{url}</a>
+                                <div className="input-group">
+                                    <input type="text" className="form-control readonly-select" id="shareUrl" style={{ "maxWidth": "unset" }} readOnly={true} value={url} />
+                                    <span className="input-group-btn">
+                                        <button className="btn btn-default" type="button" id="copy-button" onClick={this.copyToClipboard}>
+                                            <span className="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                                            <span> Copy to clipboard</span>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                             <div className="modal-footer">

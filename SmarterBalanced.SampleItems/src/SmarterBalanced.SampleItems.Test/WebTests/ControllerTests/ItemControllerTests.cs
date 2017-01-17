@@ -8,6 +8,9 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Collections.Immutable;
+using SmarterBalanced.SampleItems.Dal.Translations;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -25,12 +28,31 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
-            var itemDigest = new ItemDigest
+            ItemDigest digest = new ItemDigest
+                        {
+                            BankKey = bankKey,
+                            ItemKey = itemKey,
+                            Grade = GradeLevels.NA
+                        };
+            ItemCardViewModel card = digest.ToItemCardViewModel();
+
+            var aboutItem = new AboutItemViewModel(
+                rubrics: ImmutableArray.Create<Rubric>(),
+                itemCard: card);
+
+
+            ItemDigest digestCookie = new ItemDigest
             {
                 BankKey = bankKey,
-                ItemKey = itemKey,
-                Grade = GradeLevels.Grade6
+                ItemKey = 0,
+                Grade = GradeLevels.NA
             };
+            ItemCardViewModel cardCookie = digest.ToItemCardViewModel();
+
+            var aboutItemCookie = new AboutItemViewModel(
+                rubrics: ImmutableArray.Create<Rubric>(),
+                itemCard: cardCookie);
+
 
             iSAAP = "TDS_test;TDS_test2;";
 
@@ -46,22 +68,33 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 }
             };
 
-            itemViewModel = new ItemViewModel()
-            {
-                ItemDigest = itemDigest,
-                ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
-                AccResourceVMs = accessibilityResourceViewModels
-            };
+            itemViewModel = new ItemViewModel(
+                itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
+                accessibilityCookieName: accCookieName,
+                aboutItemVM: aboutItem,
+                accResourceVMs: accessibilityResourceViewModels);
 
-            itemViewModelCookie = new ItemViewModel()
-            {
-                AccResourceVMs = accessibilityResourceViewModels
-            };
+            itemViewModelCookie = new ItemViewModel(
+                itemViewerServiceUrl: string.Empty,
+                accessibilityCookieName: string.Empty,
+                aboutItemVM: aboutItemCookie,
+                accResourceVMs: accessibilityResourceViewModels);
+
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
-            itemViewRepoMock.Setup(repo => repo.GetItemViewModel(bankKey, itemKey, string.Empty, null)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(repo => repo.GetItemViewModel(bankKey, itemKey, iSAAP, null)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(repo => repo.GetItemViewModel(bankKey, itemKey, null, null)).Returns(itemViewModelCookie);
+            itemViewRepoMock
+                .Setup(repo =>
+                    repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<string>()))
+                .Returns(itemViewModel);
+
+            itemViewRepoMock
+                .Setup(repo =>
+                    repo.GetItemViewModel(
+                        bankKey,
+                        itemKey,
+                        It.Is<string[]>(ss => Enumerable.SequenceEqual(ss, iSAAP.Split(';'))),
+                        It.IsAny<string>()))
+                .Returns(itemViewModel);
             itemViewRepoMock.Setup(repo => repo.AppSettings).Returns(appSettings);
 
             var loggerFactory = new Mock<ILoggerFactory>();

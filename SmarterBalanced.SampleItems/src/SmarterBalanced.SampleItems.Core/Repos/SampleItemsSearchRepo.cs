@@ -28,28 +28,25 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         public IList<ItemCardViewModel> GetItemCards(ItemsSearchParams parms)
         {
+            var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA);
+
             int itemId;
             if (int.TryParse(parms.ItemId, out itemId))
             {
-                var item = context.ItemCards.FirstOrDefault(i => i.ItemKey == itemId);
-                if (item == null)
-                    return new List<ItemCardViewModel>();
-                else
-                    return new List<ItemCardViewModel> { item };
+                query = context.ItemCards.Where(i => i.ItemKey.ToString().StartsWith(itemId.ToString()));
             }
 
-            var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA);
             if (parms.Grades != GradeLevels.All && parms.Grades != GradeLevels.NA)
                 query = query.Where(i => GradeLevelsUtils.Contains(parms.Grades, i.Grade));
 
             if (parms.Subjects != null && parms.Subjects.Any())
+            {
                 query = query.Where(i => parms.Subjects.Contains(i.SubjectCode));
-
-            if (parms.InteractionTypes.Any())
-                query = query.Where(i => parms.InteractionTypes.Contains(i.InteractionTypeCode));
-
-            if (parms.ClaimIds.Any())
-                query = query.Where(i => parms.ClaimIds.Contains(i.ClaimCode));
+                if (parms.InteractionTypes.Any())
+                    query = query.Where(i => parms.InteractionTypes.Contains(i.InteractionTypeCode));
+                if (parms.ClaimIds.Any())
+                    query = query.Where(i => parms.ClaimIds.Contains(i.ClaimCode));
+            }
 
             return query.OrderBy(i => i.SubjectCode).ThenBy(i => i.Grade).ThenBy(i => i.ClaimCode).ToList();
         }

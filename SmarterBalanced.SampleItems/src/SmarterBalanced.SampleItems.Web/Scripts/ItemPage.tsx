@@ -4,6 +4,7 @@
     disabled: boolean;
     label: string;
     selectedCode: string;
+    resourceTypeLabel: string;
     selections: Dropdown.Selection[];
 }
 
@@ -13,28 +14,54 @@ namespace ItemPage {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         accResourceVMs: AccessibilityResource[];
+        aboutItemVM: AboutItem.Props;
     }
 
     function getAccessibilityString(accResourceVM: AccessibilityResource[]): string {
-        let str: string = "";
+        let str = "";
         for (let res of accResourceVM) {
-            if (res.selectedCode) {
-                str = str.concat(res.selectedCode, ";");
+            if (res.selectedCode && !res.disabled) {
+                str += res.selectedCode + ";";
             }
         }
         return str;
     }
 
-    function trimAccResource(model: AccessibilityResource): {label: string, selectedCode: string} {
-        return ({
+    function trimAccResource(model: AccessibilityResource): { label: string, selectedCode: string } {
+        return {
             label: model.label,
             selectedCode: model.selectedCode,
-        });
+        };
     }
 
     function generateAccCookieValue(accessibilityPrefs: AccessibilityResource[]): string {
         let newPrefs = accessibilityPrefs.map(trimAccResource);
         return JSON.stringify(newPrefs);
+    }
+
+    function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
+        if (resource.disabled) {
+            let newSelection = Object.assign(resource, resource);
+            let disabledOption: Dropdown.Selection = {
+                label: "Disabled for item",
+                code: "",
+                disabled: true,
+            };
+            newSelection.selections.push(disabledOption);
+            newSelection.selectedCode = "";
+            return newSelection;
+        }
+        return resource;
+    }
+
+    export function getResourceTypes(resources: AccessibilityResource[]): string[] {
+        let resourceTypes: string[] = [];
+        for (const res of resources) {
+            if (resourceTypes.indexOf(res.resourceTypeLabel) === -1) {
+                resourceTypes.push(res.resourceTypeLabel);
+            }
+        }
+        return resourceTypes;
     }
 
     interface State {
@@ -45,16 +72,18 @@ namespace ItemPage {
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
+            let accResourceVMs = this.props.accResourceVMs.map(addDisabledPlaceholder).sort((a, b) => {
+                let aLabel = a.label.toLowerCase();
+                let bLabel = b.label.toLowerCase();
+                return (aLabel < bLabel) ? -1 : (aLabel > bLabel) ? 1 : 0;
+            });
             this.state = {
                 ivsAccOptions: getAccessibilityString(this.props.accResourceVMs),
-                accResourceVMs: this.props.accResourceVMs,
+                accResourceVMs: accResourceVMs,
             };
-            this.saveOptions = this.saveOptions.bind(this);
-            this.resetOptions = this.resetOptions.bind(this);
-            this.updateResource = this.updateResource.bind(this);
         }
 
-        updateResource(code: string, label: string) {
+        updateResource = (code: string, label: string) => {
             const newResources = this.state.accResourceVMs.map((resource) => {
                 if (resource.label === label) {
                     const newResource = Object.assign({}, resource);
@@ -75,7 +104,7 @@ namespace ItemPage {
             return newModel;
         }
 
-        saveOptions(event: any): void {
+        saveOptions = (event: React.FormEvent): void => {
             //Update Cookie with current options
             event.preventDefault();
             //copy the old accessibility resource view models
@@ -87,7 +116,7 @@ namespace ItemPage {
             document.cookie = this.props.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
         }
 
-        resetOptions(event: any): void {
+        resetOptions = (event: React.FormEvent): void => {
             event.preventDefault();
             document.cookie = this.props.accessibilityCookieName.concat("=", "", "; path=/");
             let newAccResourceVms = this.state.accResourceVMs.map(this.resetModelToDefault);
@@ -97,33 +126,46 @@ namespace ItemPage {
             });
         }
 
+        resetAccForm = (event: React.FormEvent): void => {
+            event.preventDefault();
+            //TODO: reset the accessibility form to the currently set code
+        }
+
         render() {
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", this.state.ivsAccOptions);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
                 <div>
-                    <ul className="nav navbar-nav">
+                    <ul className="nav navbar-nav mr-auto">
                         <li className="nav-item">
-                            <a className="btn" data-toggle="modal" data-target="#share-modal-container" >About This Item</a>
+                            <a className="btn modal-toggle" data-toggle="modal" data-target="#about-item-modal-container" >
+                                <span className="glyphicon glyphicon-th-list glyphicon-pad" aria-hidden="true"></span>
+                                About This Item
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="btn" data-target="#share-modal-container" >More Like This</a>
+                            <a className="btn modal-toggle" data-target="#share-modal-container" >
+                                <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
+                                More Like This
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="btn" data-toggle="modal" data-target="#share-modal-container" >Share</a>
+                            <a className="btn modal-toggle" data-toggle="modal" data-target="#share-modal-container" >
+                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
+                                Share
+                            </a>
                         </li>
                     </ul>
+                    <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
+                        <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                        <span className="accessibility-button-text"></span>
+                    </a>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
                         accessibilityString={this.state.ivsAccOptions}
-                        url={ivsUrl}/>
-                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} />
+                        url={ivsUrl} />
+                    <AboutItem.AIComponent {...this.props.aboutItemVM} />
+                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
                     <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
-                    <div className="navbar-fixed-bottom">
-                        <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
-                            <span className="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
-                            <span className="accessibility-button-text"></span>
-                        </a>
-                    </div>
                 </div>
             );
         }

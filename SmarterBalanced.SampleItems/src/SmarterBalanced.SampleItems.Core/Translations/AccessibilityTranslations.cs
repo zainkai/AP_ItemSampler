@@ -60,7 +60,8 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                             Label = ar.Label,
                             Description = ar.Description,
                             Selections = ar.Selections.Select(ToAccessibilitySelectionViewModel).ToList(),
-                            Disabled = ar.Disabled
+                            Disabled = ar.Disabled,
+                            ResourceTypeLabel = ar.ResourceTypeLabel,
                         })
                     .ToList();
 
@@ -74,7 +75,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <param name="accessibilityResources"></param>
         /// <param name="iSAAPCode"></param>
         /// <returns>a List of AccessibilityResources.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSAAPCode)
+        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string[] codes)
         {
             if (accessibilityResources == null)
             {
@@ -82,8 +83,6 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             }
 
             var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
-
-            var codes = ToISAAPList(iSAAPCode);
 
             foreach (var accResourceViewModel in accResourceViewModels)
             {
