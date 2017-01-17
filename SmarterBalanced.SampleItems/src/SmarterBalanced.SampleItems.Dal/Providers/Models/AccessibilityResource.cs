@@ -19,7 +19,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public bool Disabled { get; set; }
 
         public string ResourceType { get; set; }
-
+        public string ResourceTypeLabel { get; set; }
         public AccessibilityResource DeepClone()
         {
             List<AccessibilitySelection> selections = new List<AccessibilitySelection>();
@@ -36,7 +36,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 Label = Label,
                 Description = Description,
                 Disabled = Disabled,
-                ResourceType = ResourceType
+                ResourceType = ResourceType,
+                ResourceTypeLabel = ResourceTypeLabel
             };
         }
     }

@@ -4,7 +4,7 @@
     disabled: boolean;
     label: string;
     selectedCode: string;
-    resourceType: string;
+    resourceTypeLabel: string;
     selections: Dropdown.Selection[];
 }
 
@@ -42,7 +42,7 @@ namespace ItemPage {
         if (resource.disabled) {
             let newSelection = Object.assign(resource, resource);
             let disabledOption: Dropdown.Selection = {
-                label: "Item is disabled",
+                label: "Disabled for item",
                 code: "",
                 disabled: true,
             };
@@ -56,8 +56,8 @@ namespace ItemPage {
     export function getResourceTypes(resources: AccessibilityResource[]): string[] {
         let resourceTypes: string[] = [];
         for (const res of resources) {
-            if (resourceTypes.indexOf(res.resourceType) === -1) {
-                resourceTypes.push(res.resourceType);
+            if (resourceTypes.indexOf(res.resourceTypeLabel) === -1) {
+                resourceTypes.push(res.resourceTypeLabel);
             }
         }
         return resourceTypes;

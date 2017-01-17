@@ -173,8 +173,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                                                                    && !placeholder.RubricPlaceHolderContains.Any(s => r.Value.Contains(s))
                                                                    && !placeholder.RubricPlaceHolderEquals.Any(s => r.Value.Equals(s))).ToImmutableArray();
 
-       
-
            Predicate<SampleResponse> pred = (r => string.IsNullOrWhiteSpace(r.SampleContent)
                                                     || placeholder.RubricPlaceHolderContains.Any(s => r.SampleContent.Contains(s))
                                                     || placeholder.RubricPlaceHolderEquals.Any(s => r.SampleContent.Equals(s)));

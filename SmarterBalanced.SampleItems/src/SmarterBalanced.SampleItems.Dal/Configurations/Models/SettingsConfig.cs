@@ -1,4 +1,6 @@
-﻿namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
+﻿using System.Collections.Generic;
+
+namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
 {
     public class SettingsConfig
     {
@@ -16,5 +18,8 @@
         public string StatusUrl { get; set; }
         public string AccessibilityCookie { get; set; }
         public string ISAAPUrlParam { get; set; }
+        public Dictionary<string, string> AccessibilityTypeLabels { get; set; }
+        public string BrowserWarningCookie { get; set; }
+        public string UserAgentRegex { get; set; }
     }
 }

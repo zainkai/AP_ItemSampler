@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
@@ -13,7 +14,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         /// <param name="singleSelectResources"></param>
         /// <returns></returns>
-        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources)
+        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources, AppSettings appSettings)
         {
             IList<AccessibilityResource> accessibilityResources = singleSelectResources
                 .Select(a =>
@@ -22,8 +23,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                     var defaultSelection = (string)a.Element("DefaultSelection");
                     defaultSelection = string.IsNullOrEmpty(defaultSelection) ? 
-                         selections.FirstOrDefault()?.Code : defaultSelection;
+                                        selections.FirstOrDefault()?.Code : defaultSelection;
 
+                    string resourceType = string.IsNullOrEmpty((string)a.Element("ResourceType")) ? 
+                                            string.Empty : (string)a.Element("ResourceType");
+
+                    string resourceTypeLabel = appSettings.SettingsConfig.AccessibilityTypeLabels[resourceType];
                     return new AccessibilityResource
                     {
                         Code = (string)a.Element("Code"),
@@ -33,7 +38,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                         Description = (string)a.Element("Text").Element("Description"),
                         Disabled = (a?.Element("Disabled") != null) ? true : false,
                         Selections = selections,
-                        ResourceType = (string)a.Element("ResourceType")
+                        ResourceType = resourceType,
+                        ResourceTypeLabel = resourceTypeLabel
                     };
                 })
                 .Where(a => a.Selections.Any())
