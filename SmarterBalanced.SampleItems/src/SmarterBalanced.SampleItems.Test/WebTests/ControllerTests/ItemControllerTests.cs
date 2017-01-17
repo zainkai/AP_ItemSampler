@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Collections.Immutable;
+using SmarterBalanced.SampleItems.Dal.Translations;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -27,13 +28,32 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
+            ItemDigest digest = new ItemDigest
+                        {
+                            BankKey = bankKey,
+                            ItemKey = itemKey,
+                            Grade = GradeLevels.NA
+                        };
+            ItemCardViewModel card = digest.ToItemCardViewModel();
+
             var aboutItem = new AboutItemViewModel(
-                itemKey: itemKey,
-                commonCoreStandardsId: string.Empty,
-                targetId: string.Empty,
-                grade: GradeLevels.Grade6,
-                rubrics: ImmutableArray.Create<Rubric>());
-             
+                rubrics: ImmutableArray.Create<Rubric>(),
+                itemCard: card);
+
+
+            ItemDigest digestCookie = new ItemDigest
+            {
+                BankKey = bankKey,
+                ItemKey = 0,
+                Grade = GradeLevels.NA
+            };
+            ItemCardViewModel cardCookie = digest.ToItemCardViewModel();
+
+            var aboutItemCookie = new AboutItemViewModel(
+                rubrics: ImmutableArray.Create<Rubric>(),
+                itemCard: cardCookie);
+
+
             iSAAP = "TDS_test;TDS_test2;";
 
             string accCookieName = "accessibilitycookie";
@@ -57,12 +77,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
-                aboutItemVM: new AboutItemViewModel(
-                    itemKey: 0,
-                    commonCoreStandardsId: string.Empty,
-                    targetId: string.Empty,
-                    grade: GradeLevels.NA,
-                    rubrics: ImmutableArray.Create<Rubric>()),
+                aboutItemVM: aboutItemCookie,
                 accResourceVMs: accessibilityResourceViewModels);
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
