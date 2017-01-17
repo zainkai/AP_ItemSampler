@@ -1,13 +1,12 @@
-﻿using SmarterBalanced.SampleItems.Dal.Configurations.Models;
-using SmarterBalanced.SampleItems.Dal.Providers.Models;
-using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using System.Threading.Tasks;
-using System.IO;
+using System.Collections.Generic;
 using SmarterBalanced.SampleItems.Dal.Xml;
 using SmarterBalanced.SampleItems.Dal.Translations;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers
 {
@@ -15,33 +14,53 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
     {
         public static async Task<SampleItemsContext> LoadContext(AppSettings appSettings)
         {
-            Gen.Accessibility generatedAccessibility = XmlSerialization.DeserializeXml<Gen.Accessibility>(
-                new FileInfo(appSettings.SettingsConfig.AccommodationsXMLPath));
+            // TODO:
+            //      - Refactor to separate method.
+            //      - Don't need Global Acccessibility in context
+            XElement accessibilityXml = XDocument
+                .Load(appSettings.SettingsConfig.AccommodationsXMLPath)
+                .Element("Accessibility");
 
-            IList<AccessibilityResource> globalAccessibilityResources = generatedAccessibility.ToAccessibilityResources();
-            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = generatedAccessibility.ResourceFamily
-                .Select(f => f.ToAccessibilityResourceFamily(globalAccessibilityResources))
-                .ToList();
-            
-            IList<InteractionType> interactionTypes = LoadInteractionTypes();
-            IList<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes);
+            List<AccessibilityResource> globalResources = accessibilityXml
+                                                          .Element("MasterResourceFamily")
+                                                          .Elements("SingleSelectResource")
+                                                          .ToAccessibilityResources().ToList();
+
+            IList<AccessibilityResourceFamily> accessibilityResourceFamilies = accessibilityXml
+                                                          .Elements("ResourceFamily")
+                                                          .ToAccessibilityResourceFamilies(globalResources).ToList();
+
+            // TODO: Refactor to method. is List<InteractionType> needed in the context?
+            XElement interactionTypesDoc = XDocument
+                .Load(appSettings.SettingsConfig.InteractionTypesXMLPath)
+                .Element("InteractionTypes");
+            List<InteractionType> interactionTypes = interactionTypesDoc.Element("Items").Elements("Item").ToInteractionTypes();
+            List<InteractionFamily> interactionFamily = interactionTypesDoc.ToInteractionFamilies();
+
+            List<Subject> subjects = XDocument.Load(appSettings.SettingsConfig.ClaimsXMLPath).ToSubjects(interactionFamily);
+
+            List<ItemDigest> itemDigests = await LoadItemDigests(appSettings, accessibilityResourceFamilies, interactionTypes, subjects);
+            List<ItemCardViewModel> itemCards = itemDigests.Select(i => i.ToItemCardViewModel()).ToList();
 
             SampleItemsContext context = new SampleItemsContext
             {
                 AccessibilityResourceFamilies = accessibilityResourceFamilies,
-                GlobalAccessibilityResources = globalAccessibilityResources,
+                GlobalAccessibilityResources = globalResources, // TODO: Remove with global accessibility refactor
                 InteractionTypes = interactionTypes,
                 ItemDigests = itemDigests,
-                AppSettings = appSettings
+                ItemCards = itemCards,
+                AppSettings = appSettings,
+                Subjects = subjects
             };
 
             return context;
         }
 
-        private static async Task<IList<ItemDigest>> LoadItemDigests(
+        private static async Task<List<ItemDigest>> LoadItemDigests(
             AppSettings settings,
             IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
-            IList<InteractionType> interactionTypes)
+            IList<InteractionType> interactionTypes,
+            IList<Subject> subjects)
         {
             string contentDir = settings.SettingsConfig.ContentItemDirectory;
 
@@ -58,78 +77,17 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IEnumerable<ItemContents> itemContents = await deserializeContents;
 
 
-            IList<ItemDigest> itemDigests = ItemDigestTranslation
+            var itemDigests = ItemDigestTranslation
                 .ItemsToItemDigests(
                     itemMetadata,
                     itemContents,
                     accessibilityResourceFamilies,
-                    interactionTypes)
+                    interactionTypes,
+                    subjects)
                 .ToList();
 
             return itemDigests;
         }
 
-        // TODO: Get from XML
-        private static IList<InteractionType> LoadInteractionTypes()
-        {
-            return new List<InteractionType>
-            {
-                new InteractionType
-                {
-                    Code = "GI",
-                    Label = "Grid Item"
-                },
-                new InteractionType
-                {
-                    Code = "MI",
-                    Label = "Match Interaction"
-                },
-                new InteractionType
-                {
-                    Code = "HTQ",
-                    Label = "Hot Text"
-                },
-                new InteractionType
-                {
-                    Code = "MC",
-                    Label = "Multiple Choice"
-                },
-                new InteractionType
-                {
-                    Code = "WER",
-                    Label = "Writing Extended Response"
-                },
-                new InteractionType
-                {
-                    Code = "SA",
-                    Label = "Short Answer"
-                },
-                new InteractionType
-                {
-                    Code = "MS",
-                    Label = "Multi-Select"
-                },
-                new InteractionType
-                {
-                    Code = "EBSR",
-                    Label = "Evidence Based Selected Response"
-                },
-                new InteractionType
-                {
-                    Code = "TI",
-                    Label = "Table Interaction"
-                },
-                new InteractionType
-                {
-                    Code = "ER",
-                    Label = "Extended Response"
-                },
-                new InteractionType
-                {
-                    Code = "EQ",
-                    Label = "Equation"
-                }
-            };
-        }
     }
 }

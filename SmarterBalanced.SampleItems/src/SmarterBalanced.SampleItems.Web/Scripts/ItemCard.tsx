@@ -1,31 +1,54 @@
 ﻿
-interface ItemDigest {
-    name: string;
+interface ItemCardViewModel {
     bankKey: number;
     itemKey: number;
-    subject: string;
+    title: string;
     grade: GradeLevels;
-    claim: string | null;
+    gradeLabel: string;
+    subjectCode: string;
+    subjectLabel: string;
+    claimCode: string;
+    claimLabel: string;
     target: string;
+    interactionTypeCode: string;
     interactionTypeLabel: string;
-    associatedStimulus: number | null;
 }
 
 function itemPageLink(bankKey: number, itemKey: number) {
     window.location.href = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
 }
 
-class ItemCard extends React.Component<ItemDigest, {}> {
+class ItemCard extends React.Component<ItemCardViewModel, {}> {
     render() {
         const { bankKey, itemKey } = this.props;
         return (
-            <div key={bankKey.toString() + "-" + itemKey.toString()} className="card card-block" onClick={e => itemPageLink(bankKey, itemKey)}>
+            <div className={'card card-block ' + this.props.subjectCode.toLowerCase()} onClick={e => itemPageLink(bankKey, itemKey)}>
                 <div className="card-contents">
-                    <h4 className="card-title">{this.props.name}</h4>
-                    <p className="card-text">Claim: {this.props.claim}</p>
-                    <p className="card-text">Grade: {GradeLevels.toString(this.props.grade)}</p>
-                    <p className="card-text">Subject: {this.props.subject}</p>
-                    <p className="card-text">Interaction Type: {this.props.interactionTypeLabel}</p>
+                    <h4 className="card-title">{this.props.title}</h4>
+                    <p className="card-text subject">
+                        <span className="card-text-label">Subject:</span>
+                        <span className="card-text-value"> {this.props.subjectLabel}</span>
+                    </p>
+                    <p className="card-text grade">
+                        <span className="card-text-label">Grade:</span>
+                        <span className="card-text-value"> {this.props.gradeLabel}</span>
+                    </p>
+                    <p className="card-text claim">
+                        <span className="card-text-label">Claim:</span>
+                        <span className="card-text-value"> {this.props.claimLabel}</span>
+                    </p>
+                    <p className="card-text target">
+                        <span className="card-text-label">Target:</span>
+                        <span className="card-text-value"> {this.props.target}</span>
+                    </p>
+                    <p className="card-text interaction-type">
+                        <span className="card-text-label">Interaction Type:</span>
+                        <span className="card-text-value"> {this.props.interactionTypeLabel}</span>
+                    </p>
+                    <p className="card-text item-id">
+                        <span className="card-text-label">Item Id:</span>
+                        <span className="card-text-value"> {this.props.itemKey}</span>
+                    </p>
                 </div>
             </div>
         );

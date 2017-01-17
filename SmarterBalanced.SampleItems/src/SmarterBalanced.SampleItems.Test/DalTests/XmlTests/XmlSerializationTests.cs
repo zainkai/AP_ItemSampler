@@ -31,10 +31,10 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             Assert.NotNull(metadata.Metadata);
             Assert.Equal(expectedItemKey, metadata.Metadata.ItemKey);
             Assert.Equal(expectedGrade, metadata.Metadata.Grade);
-            Assert.Equal(expectedTarget, metadata.Metadata.Target);
+            Assert.Equal(expectedTarget, metadata.Metadata.TargetAssessmentType);
             Assert.Equal(expectedInteractionType, metadata.Metadata.InteractionType);
             Assert.Equal(expectedSubject, metadata.Metadata.Subject);
-            Assert.Equal(expectedClaim, metadata.Metadata.Claim);
+            Assert.Equal(expectedClaim, metadata.Metadata.SufficientEvidenceOfClaim);
         }
 
         /// <summary>

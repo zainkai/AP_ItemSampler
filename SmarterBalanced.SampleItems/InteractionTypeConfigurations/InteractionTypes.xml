@@ -1,0 +1,89 @@
+<InteractionTypes>
+    <Items>
+        <Item>
+            <Code>EBSR</Code>
+            <Label>Evidence-Based Selected Response</Label>
+			<Order>1</Order>
+        </Item>
+            <Item>
+            <Code>EQ</Code>
+            <Label>Equation</Label>
+            <Order>2</Order>
+        </Item>
+        <Item>
+            <Code>ER</Code>
+            <Label>Extended Response</Label>
+            <Order>3</Order>
+        </Item>
+        <Item>
+            <Code>SA</Code>
+            <Label>Short Answer</Label>
+			<Order>4</Order>
+        </Item>
+        <Item>
+            <Code>GI</Code>
+            <Label>Grid Item</Label>
+            <Order>5</Order>
+        </Item>
+        <Item>
+            <Code>HTQ</Code>
+            <Label>Hot Text</Label>
+			<Order>6</Order>
+        </Item>
+        <Item>
+            <Code>MC</Code>
+            <Label>Multiple Choice</Label>
+			<Order>7</Order>
+        </Item>
+        <Item>
+            <Code>MS</Code>
+            <Label>Multi Select</Label>
+			<Order>8</Order>
+        </Item>
+        <Item>
+            <Code>MI</Code>
+            <Label>Matching Item</Label>
+			<Order>9</Order>
+        </Item>
+        <Item>
+            <Code>TI</Code>
+            <Label>Table Item</Label>
+			<Order>10</Order>
+        </Item>
+        <Item>
+            <Code>WER</Code>
+            <Label>Writing Extended Response</Label>
+			<Order>11</Order>
+        </Item>
+    </Items>
+
+    <Families>
+        <Family>
+            <SubjectCode>ELA</SubjectCode>
+            <InteractionTypeCodes>
+				<Code>EBSR</Code>
+				<Code>ER</Code>
+				<Code>SA</Code>
+				<Code>HTQ</Code>
+				<Code>MC</Code>
+				<Code>MS</Code>
+				<Code>MI</Code>
+				<Code>WER</Code>
+            </InteractionTypeCodes>
+        </Family>
+
+        <Family>
+            <SubjectCode>MATH</SubjectCode>
+            <InteractionTypeCodes>
+				<Code>EQ</Code>
+				<Code>GI</Code>
+				<Code>MC</Code>
+				<Code>MI</Code>
+				<Code>MS</Code>
+				<Code>TI</Code>
+				<Code>ER</Code>
+				<Code>SA</Code>
+            </InteractionTypeCodes>
+        </Family>
+    </Families>
+</InteractionTypes>

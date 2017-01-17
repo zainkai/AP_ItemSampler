@@ -1,23 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class ItemController : Controller
     {
-        private IItemViewRepo repo;
+        private readonly IItemViewRepo repo;
+        private readonly ILogger logger;
 
-        public ItemController(IItemViewRepo itemViewRepo)
+        public ItemController(IItemViewRepo itemViewRepo, ILoggerFactory loggerFactory)
         {
             repo = itemViewRepo;
+            logger = loggerFactory.CreateLogger<ItemController>();
         }
 
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            logger.LogDebug($"{nameof(Index)} redirect to itemssearch");
+
+            return RedirectToActionPermanent("Index", "itemsSearch");
         }
 
         /// <summary>
@@ -31,18 +37,20 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
+                logger.LogWarning($"{nameof(Details)} null param(s) for {bankKey} {itemKey}");
                 return BadRequest();
             } 
 
             if (string.IsNullOrEmpty(iSAAP))
             {
                 string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-                iSAAP = Request.Cookies[cookieName];
+                iSAAP = CookieManager.GetCookie(Request, cookieName);
             }
 
             ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
             {
+                logger.LogWarning($"{nameof(Details)} invalid item {bankKey} {itemKey}");
                 return BadRequest();
             }
 
@@ -60,15 +68,17 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
+                logger.LogWarning($"{nameof(ResetToGlobalAccessibility)} null param(s) for {bankKey} {itemKey}");
                 return BadRequest();
             }
 
             string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-            string iSAAP = Request.Cookies[cookieName];
+            string iSAAP = CookieManager.GetCookie(Request, cookieName);
 
             ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, iSAAP);
             if (itemViewModel == null)
             {
+                logger.LogWarning($"{nameof(ResetToGlobalAccessibility)} invalid item {bankKey} {itemKey}");
                 return BadRequest();
             }
 

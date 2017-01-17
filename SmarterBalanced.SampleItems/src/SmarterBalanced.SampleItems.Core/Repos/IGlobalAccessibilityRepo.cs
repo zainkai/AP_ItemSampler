@@ -1,14 +1,15 @@
 ﻿using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public interface IGlobalAccessibilityRepo
     {
-        GlobalAccessibilityViewModel GetGlobalAccessibilityViewModel(string iSAAPCode);
+        Task<GlobalAccessibilityViewModel> GetGlobalAccessibilityViewModelAsync(string iSAAPCode);
 
-        string GetISAAPCode(GlobalAccessibilityViewModel globalAccessibilityViewModel);
+        Task<string> GetISAAPCodeAsync(GlobalAccessibilityViewModel globalAccessibilityViewModel);
 
         AppSettings GetSettings();
     }

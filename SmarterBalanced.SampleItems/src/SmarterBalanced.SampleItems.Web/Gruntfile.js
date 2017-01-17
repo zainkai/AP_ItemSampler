@@ -1,4 +1,4 @@
-/// <binding ProjectOpened='all' />
+/// <binding AfterBuild='tsrecompile' ProjectOpened='all' />
 'use strict';
 module.exports = function (grunt) {
     grunt.initConfig({
@@ -35,6 +35,12 @@ module.exports = function (grunt) {
         watch: {
             files: ["Scripts/*"],
             tasks: ["tsrecompile"]
+        },
+        
+        karma: {
+            unit: {
+                configFile: 'Scripts/karma.conf.js'
+            }
         }
         //TODO: add watch for css.min, issue with watch.
 
@@ -45,7 +51,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask("all", ['clean', 'ts', 'cssmin']); //,'uglify']); // TODO: Minify JS eventually
     grunt.registerTask("tsrecompile", ['clean', 'ts']);
+    grunt.registerTask("test", ['karma']);
+
 };

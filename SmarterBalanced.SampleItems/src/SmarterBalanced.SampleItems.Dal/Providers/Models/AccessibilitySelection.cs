@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
@@ -27,11 +26,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             };
         }
 
-        public AccessibilitySelection CloneWithDisabled(bool disabled)
-        {
-            var selection = this.Clone();
-            selection.Disabled = disabled;
-            return selection;
-        }
     }
+
 }

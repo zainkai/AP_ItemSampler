@@ -6,16 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using SmarterBalanced.SampleItems.Core.Translations;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public class ItemViewRepo : IItemViewRepo
     {
-        private SampleItemsContext context;
-      
-        public ItemViewRepo(SampleItemsContext context)
+        private readonly SampleItemsContext context;
+        private readonly ILogger logger;
+
+        public ItemViewRepo(SampleItemsContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
+            logger = loggerFactory.CreateLogger<ItemViewRepo>();
         }
 
         /// <summary>
@@ -31,28 +35,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         }
 
         /// <summary>
-        /// Get all ItemDigests with default order (BankKey, then ItemKey).
-        /// </summary>
-        /// <returns>
-        /// An IEnumerable of ItemDigests
-        /// </returns>
-        public IEnumerable<ItemDigest> GetItemDigests()
-        {
-            return context.ItemDigests.OrderBy(t => t.BankKey)
-                                        .ThenBy(t => t.ItemKey);
-        }
-
-        /// <summary>
-        /// Retreives the single specified ItemDigest.
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns>ItemDigest</returns>
-        public ItemDigest GetItemDigest(Func<ItemDigest, bool> predicate)
-        {
-            return GetItemDigests().SingleOrDefault(predicate);
-        }
-
-        /// <summary>
         /// Retrieves an ItemDigest matching the given bankKey and itemKey.
         /// </summary>
         /// <param name="bankKey"></param>
@@ -60,7 +42,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <returns>an ItemDigest object.</returns>
         public ItemDigest GetItemDigest(int bankKey, int itemKey)
         {
-            return GetItemDigest(item => item.BankKey == bankKey && item.ItemKey == itemKey);
+            return context.ItemDigests.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
         }
 
         /// <summary>
@@ -94,16 +76,16 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs a LocalAccessibilityViewModel using AccessiblityResourceViewModels
         /// </summary>
         /// <param name="accResourceViewModels"></param>
-        private LocalAccessibilityViewModel GetLocalAccessibilityResources(List<AccessibilityResourceViewModel> accResourceViewModels)
+        private LocalAccessibilityViewModel GetLocalAccessibilityResourcesAsync(List<AccessibilityResourceViewModel> accResourceViewModels)
         {
             LocalAccessibilityViewModel localAccViewModel = new LocalAccessibilityViewModel();
 
             List<AccessibilityResourceViewModel> nonApplicableResources = accResourceViewModels
-                .Where(t => t.Disabled || t.AccessibilityListItems.TrueForAll(s => s.Disabled)).ToList();
+                                        .Where(t => t.Disabled || t.AccessibilityListItems.TrueForAll(s => s.Disabled)).ToList();
 
             localAccViewModel.AccessibilityResourceViewModels = accResourceViewModels
-                .Where(t => !nonApplicableResources.Contains(t))
-                .ToList();
+                                    .Where(t => !nonApplicableResources.Contains(t))
+                                    .ToList();
 
             localAccViewModel.NonApplicableAccessibilityResources = ConcatAccessibilityResources(nonApplicableResources);
 
@@ -151,7 +133,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 itemView.ItemViewerServiceUrl = GetItemViewerUrl(itemView.ItemDigest, iSAAP);
 
                 var accResourceVMs = GetAccessibilityResourceViewModels(itemDigest?.AccessibilityResources, iSAAP);
-                itemView.LocalAccessibilityViewModel = GetLocalAccessibilityResources(accResourceVMs);
+                itemView.LocalAccessibilityViewModel = GetLocalAccessibilityResourcesAsync(accResourceVMs);
             }
 
             return itemView;

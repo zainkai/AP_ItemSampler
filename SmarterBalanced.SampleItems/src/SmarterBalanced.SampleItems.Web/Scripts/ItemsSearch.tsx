@@ -1,6 +1,10 @@
 ﻿
 interface SubjectClaims {
-    [subject: string]: { text: string; value: string }[]
+    [subject: string]: { text: string; value: string }[];
+}
+
+interface Loading {
+    kind: "loading";
 }
 
 interface Success<T> {
@@ -10,70 +14,104 @@ interface Success<T> {
 
 interface Failure {
     kind: "failure";
-    content: string;
 }
 
-interface Loading {
-    kind: "loading";
+interface Reloading<T> {
+    kind: "reloading",
+    content: T
 }
 
 /** Represents the state of an asynchronously obtained resource at a particular time. */
-type Resource<T> = Loading | Success<T> | Failure
+type Resource<T> = Loading | Success<T> | Reloading<T> | Failure
 
 interface InteractionType {
     code: string;
     label: string;
 }
 
+interface Subject {
+    code: string;
+    label: string;
+    claims: Claim[];
+    interactionTypeCodes: string[];
+}
+
+interface Claim {
+    code: string;
+    label: string;
+}
+
 namespace ItemsSearch {
     export interface Props {
-        interactionTypes: InteractionType[]
-        apiClient: ItemsSearchClient
+        interactionTypes: InteractionType[];
+        subjects: Subject[];
+        apiClient: ItemsSearchClient;
     }
 
     export interface State {
-        searchResults: Resource<ItemDigest[]>;
+        searchResults: Resource<ItemCardViewModel[]>;
     }
     
-    export class Component extends React.Component<Props, State> {
+    export class ISComponent extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
             this.state = { searchResults: { kind: "loading" } };
 
-            const defaultParams: SearchAPIParams = { terms: "", gradeLevels: GradeLevels.All, subjects: [], interactionTypes: [] };
+            const defaultParams: SearchAPIParams = { itemId: '', gradeLevels: GradeLevels.All, subjects: [], claims: [], interactionTypes: [] };
             this.beginSearch(defaultParams);
         }
 
         beginSearch(params: SearchAPIParams) {
+            const searchResults = this.state.searchResults;
+            if (searchResults.kind === "success") {
+                this.setState({
+                    searchResults: {
+                        kind: "reloading",
+                        content: searchResults.content
+                    }
+                });
+            } else if (searchResults.kind === "failure") {
+                this.setState({
+                    searchResults: { kind: "loading" }
+                });
+            }
+
             this.props.apiClient.itemsSearch(params, this.onSearch.bind(this), this.onError.bind(this));
         }
 
-        onSearch(results: ItemDigest[]) {
+        onSearch(results: ItemCardViewModel[]) {
             this.setState({ searchResults: { kind: "success", content: results } });
         }
 
         onError(err: any) {
-            console.log(err);
-            this.setState({ searchResults: { kind: "failure", content: err } });
+            this.setState({ searchResults: { kind: "failure" } });
+        }
+
+        isLoading() {
+            return this.state.searchResults.kind === "loading" || this.state.searchResults.kind === "reloading";
         }
 
         render() {
             const searchResults = this.state.searchResults;
 
-            let resultsElement: JSX.Element[] | JSX.Element
-            if (searchResults.kind === "success") {
+            let resultsElement: JSX.Element[] | JSX.Element | undefined
+            if (searchResults.kind === "success" || searchResults.kind === "reloading") {
                 resultsElement = searchResults.content.length === 0
                     ? <span className="placeholder-text">No results found for the given search terms.</span>
-                    : searchResults.content.map(digest => <ItemCard {...digest} />);
+                    : searchResults.content.map(digest => <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
-                resultsElement = <span className="placeholder-text">An error occurred. Please try again later.</span>;
+                resultsElement = <div className="placeholder-text">An error occurred. Please try again later.</div>;
             } else {
-                resultsElement = <span></span>;
+                resultsElement = undefined;
             }
-             
+            const isLoading = this.isLoading();
             return (
                 <div className="search-container">
-                    <ItemSearchParams.Component interactionTypes={this.props.interactionTypes} onChange={(params) => this.beginSearch(params)} />
+                    <ItemSearchParams.ISPComponent
+                        interactionTypes={this.props.interactionTypes}
+                        subjects={this.props.subjects}
+                        onChange={(params) => this.beginSearch(params)}
+                        isLoading={isLoading} />
                     <div className="search-results">
                         {resultsElement}
                     </div>
@@ -85,7 +123,7 @@ namespace ItemsSearch {
 
 interface ItemsSearchClient {
     itemsSearch(params: SearchAPIParams,
-        onSuccess: (data: ItemDigest[]) => void,
+        onSuccess: (data: ItemCardViewModel[]) => void,
         onError?: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => any): any;
 }
 
@@ -103,15 +141,20 @@ const client: ItemsSearchClient = {
 };
 
 interface SearchAPIParams {
-    terms: string;
+    itemId: string;
     gradeLevels: GradeLevels;
     subjects: string[];
+    claims: string[];
     interactionTypes: string[];
 }
 
-function initializeItemsSearch(interactionTypes: any) {
+interface ItemsSearchViewModel {
+    interactionTypes: InteractionType[];
+    subjects: Subject[];
+}
+
+function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
     ReactDOM.render(
-        <ItemsSearch.Component apiClient={client}
-            interactionTypes={interactionTypes} />,
+        <ItemsSearch.ISComponent apiClient={client} {...viewModel} />,
         document.getElementById("search-container") as HTMLElement);
 }

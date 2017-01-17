@@ -24,12 +24,15 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public string Grade { get; set; }
 
         [XmlElement("SufficientEvidenceOfClaim")]
-        public string Claim { get; set; }
+        public string SufficientEvidenceOfClaim { get; set; }
 
         [XmlElement("TargetAssessmentType")]
-        public string Target { get; set; }
+        public string TargetAssessmentType { get; set; }
 
         [XmlElement("InteractionType")]
         public string InteractionType { get; set; }
+
+        [XmlElement("StandardPublication")]
+        public List<StandardPublication> StandardPublications { get; set; }
     }
 }

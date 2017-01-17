@@ -7,52 +7,26 @@ using SmarterBalanced.SampleItems.Dal.Providers.Models;
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     /// <summary>
-    /// Flattened digest of an ItemMetadata object and an ItemContents object
+    /// Collection of known attributes of a Smarter Balanced item
     /// </summary>
-    public class ItemDigest : IEquatable<ItemDigest>
+    public sealed class ItemDigest
     {
-        [Display(Name = "Bank")]
         public int BankKey { get; set; }
-
-        [Display(Name = "Item Key")]
         public int ItemKey { get; set; }
-
-        [Display(Name = "Subject")]
-        public string Subject { get; set; }
-
-        [Display(Name = "Grade")]
-        public GradeLevels Grade { get; set; }
-
-        [Display(Name = "Claim")]
-        public string Claim { get; set; }
-
-        [Display(Name = "Target Assessment Type")]
-        public string Target { get; set; }
-
-        [Display(Name = "Interaction Type")]
-        public string InteractionTypeCode { get; set; }
-
-        [Display(Name = "Interaction Type")]
-        public string InteractionTypeLabel { get; set; }
-
-        [Display(Name = "AssociatedStimulus")]
-        public int? AssociatedStimulus { get; set; }
-
-        public List<AccessibilityResource> AccessibilityResources { get; set; }
-        [Display(Name = "Item Type")]
         public string ItemType { get; set; }
 
-        public string Name { get; set; }
-        public bool Equals(ItemDigest obj)
-        {
-            return GetHashCode() == obj.GetHashCode();
-        }
+        public string TargetId { get; set; }
+        public string CommonCoreStandardsId { get; set; }
 
-        public override int GetHashCode()
-        {
-            return ($"{BankKey}-{ItemKey}").GetHashCode();
-        }
+        public GradeLevels Grade { get; set; }
+        public Subject Subject { get; set; }
+        public Claim Claim { get; set; }
+        public InteractionType InteractionType { get; set; }
+
+        public List<AccessibilityResource> AccessibilityResources { get; set; }
+        public string TargetAssessmentType { get; set; }
+        public string SufficentEvidenceOfClaim { get; set; }
+        public int? AssociatedStimulus { get; set; }
 
     }
-
 }

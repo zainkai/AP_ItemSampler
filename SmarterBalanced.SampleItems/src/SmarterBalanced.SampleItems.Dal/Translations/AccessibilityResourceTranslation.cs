@@ -1,65 +1,121 @@
-﻿using SmarterBalanced.SampleItems.Dal.Providers.Models;
-using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using System.Xml.Linq;
+using System.Collections.Generic;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class AccessibilityResourceTranslation
     {
-        public static IList<AccessibilityResource> ToAccessibilityResources(this Gen.Accessibility generatedAccessibility)
+        /// <summary>
+        /// Parse XML to Global AccessbilityResources
+        /// </summary>
+        /// <param name="singleSelectResources"></param>
+        /// <returns></returns>
+        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources)
         {
-            var accessibilityResources = generatedAccessibility.MasterResourceFamily
-                .OfType<Gen.AccessibilitySingleSelectResource>()
-                .Where(r => r.Selection != null)
-                .Select(r => r.ToAccessibilityResource())
-                .ToList();
+            IList<AccessibilityResource> accessibilityResources = singleSelectResources
+                .Select(a =>
+                        new AccessibilityResource
+                        {
+                            Code = (string)a.Element("Code"),
+                            Order = (int)a.Element("Order"),
+                            DefaultSelection = (string)a.Element("DefaultSelection"),
+                            Label = (string)a.Element("Text").Element("Label"),
+                            Description = (string)a.Element("Text").Element("Description"),
+                            Disabled = (a?.Element("Disabled") != null) ? true : false,
+                            Selections = a.Elements("Selection").ToSelections()
+                        })
+                        .Where(a => a.Selections.Any())
+                        .ToList();
 
             return accessibilityResources;
         }
 
-        public static AccessibilityResource ToAccessibilityResource(this Gen.AccessibilitySingleSelectResource generatedResource)
+        /// <summary>
+        /// Parse XML Accessibilty Resource Selections to AccessibilitySelections
+        /// </summary>
+        /// <param name="xmlSelections"></param>
+        /// <returns></returns>
+        public static List<AccessibilitySelection> ToSelections(this IEnumerable<XElement> xmlSelections)
         {
-            var text = generatedResource.Text.First();
+            List<AccessibilitySelection> selections = xmlSelections
+                .Select(s => new AccessibilitySelection
+                {
+                    Disabled = false,
+                    Code = (string)s.Element("Code"),
+                    Order = (int)s.Element("Order"),
+                    Label = (string)s.Element("Text").Element("Label")
+                })
+                .ToList();
 
-            var resource = new AccessibilityResource
-            {
-                Code = generatedResource.Code,
-                DefaultSelection = generatedResource.DefaultSelection as string,
-                Description = text.Description,
-                Label = text.Label,
-                Order = Convert.ToInt32(generatedResource.Order),
-                Selections = generatedResource.Selection.Select(s => s.ToAccessibilitySelection()).ToList()
-            };
-
-            return resource;
+            return selections;
         }
 
-        public static AccessibilitySelection ToAccessibilitySelection(this Gen.AccessibilitySingleSelectResourceSelection generatedSelection)
+        /// <summary>
+        /// Parse XML resource family elements to AccessibilityResourceFamilies
+        /// </summary>
+        /// <param name="resourceFamilies"></param>
+        /// <param name="globalResources"></param>
+        /// <returns></returns>
+        public static IList<AccessibilityResourceFamily> ToAccessibilityResourceFamilies(this IEnumerable<XElement> resourceFamilies, List<AccessibilityResource> globalResources)
         {
-            var text = generatedSelection.Text.First();
+            List<AccessibilityResourceFamily> families = resourceFamilies
+                .Select(f => new AccessibilityResourceFamily
+                {
+                    Subjects = f.Elements("Subject")
+                        .Select(s => (string)s.Element("Code"))
+                        .ToList(),
+                    Grades = f.Elements("Grade")
+                        .Select(g => g.Value)
+                        .ToList()
+                        .ToGradeLevels(),
+                    Resources = f.Elements("SingleSelectResource").ToAccessibilityResources(globalResources)
+                }).ToList();
 
-            var selection = new AccessibilitySelection
-            {
-                Code = generatedSelection.Code,
-                Label = text.Label,
-                Order = Convert.ToInt32(generatedSelection.Order)
-            };
-
-            return selection;
+            return families;
         }
 
+        /// <summary>
+        /// Parse XML Family accessibility resources and attach global resources to Accessiblity Resources
+        /// </summary>
+        /// <param name="xmlResources"></param>
+        /// <param name="globalResources"></param>
+        /// <returns></returns>
+        public static List<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> xmlFamilyResources, List<AccessibilityResource> globalResources)
+        {
+            List<AccessibilityResource> partialResources = xmlFamilyResources
+                .Select(r => new AccessibilityResource
+                {
+                    Code = (string)r.Element("Code"),
+                    Disabled = (r.Element("Disabled") != null) ? true : false,
+                    Selections = r.Elements("Selection")
+                        .Select(s => new AccessibilitySelection
+                        {
+                            Code = (string)s.Element("Code"),
+                            Label = (string)s.Element("Text")?.Element("Label")
+                        })
+                        .ToList()
+                }).ToList();
 
+            return partialResources.ToAccessibilityResources(globalResources);
+        }
 
-        public static AccessibilityResourceFamily ToAccessibilityResourceFamily(this Gen.AccessibilityResourceFamily generatedFamily, IList<AccessibilityResource> globalResources)
+        /// <summary>
+        /// Translates Partial family resources with global resources to full set of family resources
+        /// </summary>
+        /// <param name="partialResources"></param>
+        /// <param name="globalResources"></param>
+        /// <returns></returns>
+        public static List<AccessibilityResource> ToAccessibilityResources(this List<AccessibilityResource> partialResources, List<AccessibilityResource> globalResources)
         {
             var resources = globalResources.Select(globalResource =>
             {
-                var familyResource = generatedFamily.SingleSelectResource.FirstOrDefault(fr => fr.Code == globalResource.Code);
+                var familyResource = partialResources.FirstOrDefault(fr => fr.Code == globalResource.Code);
                 if (familyResource == null)
                 {
-                    return globalResource;
+                    return globalResource.DeepClone();
                 }
                 else
                 {
@@ -67,45 +123,46 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
             }).ToList();
 
-            var selection = new AccessibilityResourceFamily
-            {
-                Subjects = generatedFamily.Subject.Select(s => s.Code).ToList(),
-                Grades = generatedFamily.Grade.ToGradeLevels(),
-                Resources = resources
-            };
-
-            return selection;
+            return resources;
         }
 
-        public static AccessibilityResource ToAccessibilityResource(this Gen.AccessibilityResourceFamilySingleSelectResource generatedResource, AccessibilityResource globalResource)
+        /// <summary>
+        /// Copies a Global AccessibilityResource based on Family Resource values and selections.
+        /// </summary>
+        /// <param name="partialResource"> Accessbility Family Resources </param>
+        /// <param name="globalResource"> Global Accessiblity Resources </param>
+        /// <returns></returns>
+        public static AccessibilityResource ToAccessibilityResource(this AccessibilityResource partialResource, AccessibilityResource globalResource)
         {
-            if (globalResource == null)
+            if (partialResource == null)
+                throw new ArgumentNullException(nameof(partialResource));
+            else if (globalResource == null)
                 throw new ArgumentNullException(nameof(globalResource));
 
-            // <Disabled /> means the entire resource is disabled
-            bool isResourceDisabled = generatedResource.Disabled != null;
             AccessibilityResource resource = globalResource.DeepClone();
 
-            resource.DefaultSelection = generatedResource.DefaultSelection as string;
+            // <Disabled /> means the entire resource is disabled
+            bool isResourceDisabled = partialResource.Disabled;
+
             resource.Disabled = isResourceDisabled;
 
-            if (isResourceDisabled)
+            foreach (AccessibilitySelection selection in resource.Selections)
             {
-                foreach (var selection in resource.Selections)
-                {
-                    selection.Disabled = true;
-                }
+                AccessibilitySelection partialResourceSelection = partialResource.Selections?.SingleOrDefault(s => s.Code == selection.Code);
+                selection.Disabled = (partialResourceSelection == null) || isResourceDisabled;
+                selection.Label = (string.IsNullOrEmpty(partialResourceSelection?.Label)) ? selection.Label : partialResourceSelection?.Label;
             }
-            else
+
+            // If the default select item is disabled, pick a different one 
+            if (!isResourceDisabled && resource.Selections != null
+                && resource.Selections.Any(s => s.Code == resource.DefaultSelection && s.Disabled))
             {
-                // Individual selections are disabled by not being included in family resource selections
-                // If the family's selections contains this selection, enable the selection. Otherwise disable it.
-                resource.Selections = globalResource.Selections.Select(s =>
-                    s.CloneWithDisabled(
-                        !generatedResource.Selection.Any(fs => fs.Code == s.Code))).ToList();
+                resource.DefaultSelection = resource.Selections?.FirstOrDefault(s => !s.Disabled)?.Code;
             }
 
             return resource;
         }
+
     }
+
 }

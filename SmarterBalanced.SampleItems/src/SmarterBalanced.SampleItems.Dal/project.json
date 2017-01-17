@@ -12,7 +12,8 @@
     "System.Runtime.Serialization.Xml": "4.1.1",
     "System.Xml.XmlDocument": "4.0.1",
     "System.ComponentModel.Primitives": "4.1.0",
-    "AWSSDK.S3": "3.3.1"
+    "AWSSDK.S3": "3.3.1",
+    "System.Collections.Immutable": "1.2.0"
   },
   "frameworks": {
     "netstandard1.6": {

@@ -1,8 +1,6 @@
 ﻿@using SmarterBalanced.SampleItems.Core.Repos.Models
 @model ItemsSearchViewModel
 
-<h1>Sample Items Search</h1>
-<hr />
 <div id="search-container"></div>
 
 @section Scripts {
@@ -11,6 +9,7 @@
 <script src="~/scripts/ItemCard.js"></script>
 <script src="~/scripts/ItemsSearch.js"></script>
 <script>
-    initializeItemsSearch(@Json.Serialize(Model.InteractionTypes));
+    var viewModel = @Json.Serialize(Model);
+    initializeItemsSearch(viewModel);
 </script>
 }

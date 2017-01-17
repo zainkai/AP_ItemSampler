@@ -5,13 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
     public class ItemControllerTests
     {
         ItemController controller;
-        ItemDigest itemDigest;
+        ItemViewModel itemViewModel;
+        ItemViewModel itemViewModelCookie;
         int bankKey;
         int itemKey;
         string iSAAP;
@@ -20,7 +24,8 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             bankKey = 234343;
             itemKey = 485954;
-            itemDigest = new ItemDigest
+
+            var itemDigest = new ItemDigest
             {
                 BankKey = bankKey,
                 ItemKey = itemKey,
@@ -29,18 +34,46 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             iSAAP = "TDS_test;TDS_test2;";
 
-            var itemViewRepoMock = new Mock<IItemViewRepo>();
-            itemViewRepoMock.Setup(x => x.GetItemDigest(bankKey, itemKey)).Returns(itemDigest);
+            string accCookieName = "accessibilitycookie";
 
-            var itemViewModel = new ItemViewModel()
+            var localAccessibilityViewModel = new LocalAccessibilityViewModel()
+            {
+                AccessibilityResourceViewModels = new List<AccessibilityResourceViewModel>()
+            };
+
+            var appSettings = new AppSettings()
+            {
+                SettingsConfig = new SettingsConfig()
+                {
+                    AccessibilityCookie = accCookieName
+                }
+            };
+
+            itemViewModel = new ItemViewModel()
             {
                 ItemDigest = itemDigest,
-                ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}"
+                ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
+                LocalAccessibilityViewModel = localAccessibilityViewModel
+               
             };
+
+            itemViewModelCookie = new ItemViewModel()
+            {
+                LocalAccessibilityViewModel = localAccessibilityViewModel
+
+            };
+            var itemViewRepoMock = new Mock<IItemViewRepo>();
+          
             itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey)).Returns(itemViewModel);
             itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, iSAAP)).Returns(itemViewModel);
+            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, null)).Returns(itemViewModelCookie);
+            itemViewRepoMock.Setup(x => x.AppSettings).Returns(appSettings);
 
-            controller = new ItemController(itemViewRepoMock.Object);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var logger = new Mock<ILogger>();
+            loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            controller = new ItemController(itemViewRepoMock.Object, loggerFactory.Object);
         }
 
         /// <summary>
@@ -53,6 +86,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
+
+            Assert.Equal(itemViewModel, model);
+
         }
 
         /// <summary>
@@ -77,5 +113,66 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             Assert.IsType<BadRequestResult>(result);
         }
 
+        /// <summary>
+        /// Tests that a cookie ISSAP is returned instead of param
+        /// </summary>
+        [Fact]
+        public void TestDetailsNoISAAP()
+        {
+            var result = controller.Details(bankKey, itemKey, string.Empty);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
+
+            Assert.Equal(itemViewModelCookie, model);
+        }
+
+        /// <summar>
+        /// Tests that a BadRequestResult is returned given a null bank key
+        /// </summary>
+        [Fact]
+        public void ResetToGlobalAccessibilityNullBankKey()
+        {
+            var result = controller.Details(null, itemKey, iSAAP);
+
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        /// <summary>
+        /// Tests that a BadRequestResult is returned given a null item  key
+        /// </summary>
+        [Fact]
+        public void ResetToGlobalAccessibilityNullItemKey()
+        {
+            var result = controller.ResetToGlobalAccessibility(bankKey, null);
+
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        /// <summary>
+        /// Tests that a BadRequestResult is returned given a bad key
+        /// </summary>
+        [Fact]
+        public void ResetToGlobalAccessibilityBadKey()
+        {
+            var result = controller.ResetToGlobalAccessibility(bankKey + 1, itemKey + 1);
+
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        /// <summary>
+        /// Tests that a BadRequestResult is returned given a bad key
+        /// </summary>
+        [Fact]
+        public void ResetToGlobalAccessibilityHappy()
+        {
+            var result = controller.ResetToGlobalAccessibility(bankKey, itemKey);
+
+            var viewResult = Assert.IsType<PartialViewResult>(result);
+            Assert.Equal("_LocalAccessibility", viewResult.ViewName);
+
+            var model = Assert.IsType<LocalAccessibilityViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(itemViewModel.LocalAccessibilityViewModel, model);
+        }
     }
 }

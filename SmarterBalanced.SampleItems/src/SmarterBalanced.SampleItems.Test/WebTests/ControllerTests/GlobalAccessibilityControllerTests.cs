@@ -56,8 +56,8 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
 
             var globalAccessibilityRepoMock = new Mock<IGlobalAccessibilityRepo>();
-            globalAccessibilityRepoMock.Setup(x => x.GetGlobalAccessibilityViewModel(iSAAP)).Returns(globalAccViewModel);
-            globalAccessibilityRepoMock.Setup(x => x.GetISAAPCode(globalAccViewModel)).Returns("Test1;Test2;");
+            globalAccessibilityRepoMock.Setup(x => x.GetGlobalAccessibilityViewModelAsync(iSAAP)).ReturnsAsync(globalAccViewModel);
+            globalAccessibilityRepoMock.Setup(x => x.GetISAAPCodeAsync(globalAccViewModel)).ReturnsAsync("Test1;Test2;");
 
             globalAccessibilityRepoMock.Setup(x => x.GetSettings()).Returns(appSettings);
 
@@ -80,18 +80,18 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         }
 
         [Fact]
-        public void TestIndexDefault()
+        public async void TestIndexDefault()
         {
-            var result = controller.Index();
+            var result = await controller.Index();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<GlobalAccessibilityViewModel>(viewResult.ViewData.Model);
         }
 
         [Fact]
-        public void TestIndexWithViewModel()
+        public async void TestIndexWithViewModel()
         {
-            var result = controller.Index(globalAccViewModel);
+            var result = await controller.Index(globalAccViewModel);
 
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", viewResult.ActionName);
@@ -99,9 +99,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
 
         [Fact]
-        public void TestResetAction()
+        public async void TestResetAction()
         {
-            var result = controller.Index(globalAccViewModel);
+            var result = await controller.Index(globalAccViewModel);
 
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", viewResult.ActionName);
