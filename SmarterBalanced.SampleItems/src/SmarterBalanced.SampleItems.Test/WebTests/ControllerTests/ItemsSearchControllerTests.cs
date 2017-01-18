@@ -33,18 +33,11 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             claimList = new string[] { claimCode };
 
             itemCards = new List<ItemCardViewModel>() {
-                new ItemCardViewModel(bankKey: goodBankKey, itemKey: goodItemKey, title: "", grade: GradeLevels.Grade6, gradeLabel: "",
-                subjectCode: "", subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: "", interactionTypeLabel: "", commonCoreStandardsId: ""),
-                new ItemCardViewModel(bankKey: goodBankKey, itemKey: badItemKey, title: "", grade: GradeLevels.High, gradeLabel: "",
-                subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
-                new ItemCardViewModel(bankKey: badBankKey, itemKey: goodItemKey, title: "", grade: GradeLevels.Grade9, gradeLabel: "",
-                subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
-                new ItemCardViewModel(bankKey: badBankKey, itemKey: badItemKey, title: "", grade: GradeLevels.Grade4, gradeLabel: "",
-                subjectCode: subjectCode, subjectLabel: "", claimCode: "", claimLabel: "",
-                    target: "", interactionTypeCode: interactionTypeCode, interactionTypeLabel: "", commonCoreStandardsId: ""),
+                ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade6),
+                ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: badItemKey, grade: GradeLevels.High),
+                ItemCardViewModel.Create(bankKey: badBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade9),
+                ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey, grade: GradeLevels.Grade4,
+                        subjectCode: subjectCode,interactionTypeCode: interactionTypeCode)
             };
 
             var sampleItemsSearchRepoMock = new Mock<ISampleItemsSearchRepo>();
@@ -66,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         }
 
 
-        [Fact (Skip ="TODO: Fixme")]
+        [Fact(Skip = "TODO: Fixme")]
         public void TestSearchHappyCase()
         {
             var result = controller.Search("", GradeLevels.High, mathSubjectList, interactionCodeList, claimList) as JsonResult;
