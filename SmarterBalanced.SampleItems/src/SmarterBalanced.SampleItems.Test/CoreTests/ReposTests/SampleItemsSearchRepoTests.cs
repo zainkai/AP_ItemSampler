@@ -4,6 +4,7 @@ using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Xunit;
 
 namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
@@ -24,18 +25,13 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             goodBankKey = 8398;
             badItemKey = 9234;
             badBankKey = 1123;
-
-
-            SampleItemsContext context = new SampleItemsContext {
-                InteractionTypes = new List<InteractionType>(),
-                Subjects = new List<Subject>(),
-                ItemCards = new List<ItemCardViewModel> {
-                        ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade6),
-                        ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: badItemKey, grade: GradeLevels.High),
-                        ItemCardViewModel.Create(bankKey: badBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade9),
-                        ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey, grade: GradeLevels.Grade4)
-                }
-            };
+            
+            SampleItemsContext context = SampleItemsContext.Create(
+                itemCards: ImmutableArray.Create(
+                    ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade6),
+                    ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: badItemKey, grade: GradeLevels.High),
+                    ItemCardViewModel.Create(bankKey: badBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade9),
+                    ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey, grade: GradeLevels.Grade4)));
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();

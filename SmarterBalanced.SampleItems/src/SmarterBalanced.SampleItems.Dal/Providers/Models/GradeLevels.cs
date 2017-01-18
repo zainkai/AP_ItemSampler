@@ -116,7 +116,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             return (haystack & needle) != GradeLevels.NA;
         }
 
-        public static GradeLevels ToGradeLevels(this List<string> grades)
+        public static GradeLevels ToGradeLevels(this IEnumerable<string> grades)
         {
             GradeLevels gradeLevels = GradeLevels.NA;
             foreach (string grade in grades)

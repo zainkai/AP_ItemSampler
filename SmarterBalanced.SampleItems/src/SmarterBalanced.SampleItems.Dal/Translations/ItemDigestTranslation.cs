@@ -202,19 +202,19 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static void AssignAccessibilityResources(ItemDigest itemDigest, IList<AccessibilityResourceFamily> resourceFamilies)
         {
-            List<AccessibilityResource> resources = resourceFamilies
+            var resources = resourceFamilies
                 .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
                     && t.Grades.Contains(itemDigest.Grade)
-                )?.Resources;
+                )?.Resources ?? default(ImmutableArray<AccessibilityResource>);
 
-            if (resources == null)
+            if (resources.IsDefault)
             {
                 return;
             }
 
             if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
             {
-                resources = resources.Select(t => t.DeepClone()).ToList();
+                resources = resources.Select(t => t.DeepClone()).ToImmutableArray();
 
                 if (!itemDigest.AslSupported)
                 {
@@ -227,14 +227,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
             }
 
-            itemDigest.AccessibilityResources = resources;
+            itemDigest.AccessibilityResources = resources.ToList(); // TODO: immutable
         }
-
-        /// <summary>
-        /// Disables a given resource
-        /// </summary>
-        /// <param name="resource"></param>
-        private static void DisableResource(List<AccessibilityResource> resources, string code)
+        
+        private static void DisableResource(IEnumerable<AccessibilityResource> resources, string code)
         {
             var resource = resources.FirstOrDefault(t => t.Code == code);
             if (resource != null)
