@@ -136,37 +136,36 @@ namespace ItemPage {
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
                 <div>
-                    <ul className="nav navbar-nav mr-auto">
-                        <li className="nav-item">
-                            <a className="btn modal-toggle item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container" >
+                    <div className="btn-toolbar item-nav-group" role="toolbar" aria-label="Toolbar with button groups">
+                        <div className="btn-group mr-2 item-nav-bottom" role="group" aria-label="First group">
+                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container" >
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
                                 About This Item
                             </a>
-                        </li>
-                        <li className="nav-item">
 
-                            <a className="btn modal-toggle item-nav-btn" data-target="#share-modal-container" >
+                            <a className="btn item-nav-btn" data-target="#share-modal-container" >
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
                                 More Like This
                             </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="btn modal-toggle item-nav-btn" data-toggle="modal" data-target="#share-modal-container" >
+                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container" >
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
                                 Share
                             </a>
-                        </li>
-                    </ul>
-                    <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
-                        <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                        <span className="accessibility-button-text"></span>
-                    </a>
+                        </div>
+
+                        <div className="btn-group mr-2 pull-right" role="group" aria-label="Second group">
+                            <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
+                                <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                                <span className="accessibility-button-text"></span>
+                            </a>
+                        </div>
+                    </div>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
                         accessibilityString={this.state.ivsAccOptions}
                         url={ivsUrl} />
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
-                    <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
+                    <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)} />
                 </div>
             );
         }
