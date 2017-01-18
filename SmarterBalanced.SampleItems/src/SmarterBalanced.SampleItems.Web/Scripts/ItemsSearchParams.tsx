@@ -271,7 +271,8 @@ namespace ItemSearchParams {
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                             <div><a onClick={() => this.resetFilters()} tabIndex={0}>Reset filters</a></div>
                             <div onClick={() => this.toggleExpandAll()} tabIndex={0}>
-                                {this.getExpandAll() ? "▼ Hide" : "▶ Show"} all
+                                {this.getExpandAll() ? hideArrow : showArrow}
+                                {this.getExpandAll() ? " Hide" : " Show"} all
                             </div>
                         </div>
                     </div>
