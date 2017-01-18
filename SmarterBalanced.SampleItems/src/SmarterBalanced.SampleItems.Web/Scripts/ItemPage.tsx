@@ -137,33 +137,33 @@ namespace ItemPage {
             return (
                 <div>
                     <ul className="nav navbar-nav mr-auto">
-                        <li className="nav-item">
+                        <li className="nav-item" tabIndex={0}>
                             <a className="btn modal-toggle item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container" >
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
                                 About This Item
                             </a>
                         </li>
-                        <li className="nav-item">
+                        <li className="nav-item" tabIndex={0}>
 
                             <a className="btn modal-toggle item-nav-btn" data-target="#share-modal-container" >
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
                                 More Like This
                             </a>
                         </li>
-                        <li className="nav-item">
+                        <li className="nav-item" tabIndex={0}> 
                             <a className="btn modal-toggle item-nav-btn" data-toggle="modal" data-target="#share-modal-container" >
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
                                 Share
                             </a>
                         </li>
                     </ul>
-                    <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container">
+                    <a type="button" className="accessibility-button btn btn-primary" data-toggle="modal" data-target="#accessibility-modal-container" tabIndex={0}>
                         <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                         <span className="accessibility-button-text"></span>
                     </a>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
                         accessibilityString={this.state.ivsAccOptions}
-                        url={ivsUrl} />
+                        url={ivsUrl}/>
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
                     <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)}/>
