@@ -67,7 +67,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
            string commonCoreStandardsId = "")
-
         {
             return new ItemCardViewModel(
                 bankKey: bankKey,
