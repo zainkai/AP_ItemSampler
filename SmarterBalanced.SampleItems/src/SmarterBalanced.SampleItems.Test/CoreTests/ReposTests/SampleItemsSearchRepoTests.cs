@@ -53,7 +53,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
                         ItemCardViewModel.Create(bankKey: badBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade9,
                                                  subjectCode:ela.Code, interactionTypeCode:itEla.Code, claimCode: claim1.Code),
                         ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey, grade: GradeLevels.Grade4,
-                                                 subjectCode:ela.Code, interactionTypeCode:itEla.Code, claimCode: claim2.Code)
+                                                 subjectCode:ela.Code, interactionTypeCode:itEla.Code, claimCode: claim2.Code),
+                        ItemCardViewModel.Create(bankKey: 1, itemKey: 2, grade: GradeLevels.Grade12)
                 }
             };
 
@@ -100,7 +101,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void HappyCase()
         {
-            Assert.Equal(4, sampleItemsSearchRepo.GetItemCards().Count);
+            Assert.Equal(context.ItemCards.Count, sampleItemsSearchRepo.GetItemCards().Count);
         }
 
         [Fact]
@@ -154,9 +155,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestNullItemId()
         {
-            var parameters = new ItemsSearchParams(goodItemKey.ToString(), GradeLevels.All, null, new string[] { }, new string[] { });
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { }, new string[] { });
             var cards = sampleItemsSearchRepo.GetItemCards(parameters);
-            var cardsCheck = context.ItemCards.Where(c => c.ItemKey == goodItemKey).ToList();
+            var cardsCheck = context.ItemCards;
 
             Assert.NotNull(cards);
             Assert.Equal(cards.Count, cardsCheck.Count);
@@ -188,7 +189,68 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         // TODO: Test following cases:
         //  - Test each ItemSearchParams property when null
+
+        [Fact]
+        public void TestGetItemCardsNull()
+        {
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, null, null);
+            var cards = sampleItemsSearchRepo.GetItemCards(parameters);
+            var cardsCheck = context.ItemCards;
+
+            Assert.NotNull(cards);
+            Assert.Equal(cards.Count, cardsCheck.Count);
+            Assert.Equal(Sort(cards), Sort(cardsCheck));
+        }
+
         //  - Use Miletone 1 UAT cases as templates
+        [Fact]
+        public void TestSearchTwoClaims()
+        {
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { math.Code }, new string[] { }, new string[] { claim1.Code, claim2.Code });
+            var cards = sampleItemsSearchRepo.GetItemCards(parameters);
+            var cardsCheck = context.ItemCards.Where(c => c.SubjectCode == math.Code && (c.ClaimCode == claim1.Code 
+                                                     || c.ClaimCode == claim2.Code)).ToList();
+            Assert.NotNull(cards);
+            Assert.Equal(cards.Count, cardsCheck.Count);
+            Assert.Equal(Sort(cards), Sort(cardsCheck));
+        }
+
+        [Fact]
+        public void TestSearchTwoITypes()
+        {
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { math.Code }, new string[] { itEla.Code, itMath.Code }, new string[] {  });
+            var cards = sampleItemsSearchRepo.GetItemCards(parameters);
+            var cardsCheck = context.ItemCards.Where(c => c.SubjectCode == math.Code && (c.ClaimCode == claim1.Code
+                                                     || c.ClaimCode == claim2.Code)).ToList();
+            Assert.NotNull(cards);
+            Assert.Equal(cards.Count, cardsCheck.Count);
+            Assert.Equal(Sort(cards), Sort(cardsCheck));
+        }
+
+        [Fact]
+        public void TestSearchTwoSubjects()
+        {
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { math.Code, ela.Code }, new string[] { }, new string[] { });
+            var cards = sampleItemsSearchRepo.GetItemCards(parameters);
+            var cardsCheck = context.ItemCards.Where(c => c.SubjectCode == math.Code || c.SubjectCode == ela.Code).ToList();
+
+            Assert.NotNull(cards);
+            Assert.Equal(cards.Count, cardsCheck.Count);
+            Assert.Equal(Sort(cards), Sort(cardsCheck));
+        }
+
+        [Fact]
+        public void TestSearchAllCategories()
+        {
+            var parameters = new ItemsSearchParams(goodItemKey.ToString(), GradeLevels.Grade6, new List<string>() { math.Code }, new string[] { itMath.Code }, new string[] { claim1.Code });
+            var cards = sampleItemsSearchRepo.GetItemCards(parameters);
+            var cardsCheck = context.ItemCards.Where(c => c.SubjectCode == math.Code && c.ItemKey == goodItemKey && c.Grade == GradeLevels.Grade6
+                                                     && c.InteractionTypeCode == itMath.Code && c.ClaimCode == claim1.Code).ToList();
+
+            Assert.NotNull(cards);
+            Assert.Equal(cards.Count, cardsCheck.Count);
+            Assert.Equal(Sort(cards), Sort(cardsCheck));
+        }
 
         [Fact]
         public void TestGetItemCardsAll()
@@ -224,7 +286,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         {
             var parameters = new ItemsSearchParams(badItemKey.ToString(), GradeLevels.All, null, new string[] { }, new string[] { });
             var cards = sampleItemsSearchRepo.GetItemCards(parameters);
-            var cardsCheck = context.ItemCards.Where(c => c.ItemKey == badItemKey).ToList();
+            var cardsCheck = context.ItemCards.Where(c => c.ItemKey.ToString().StartsWith(badItemKey.ToString())).ToList();
 
             Assert.NotNull(cards);
             Assert.Equal(cardsCheck.Count, cards.Count);
