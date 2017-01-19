@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
@@ -14,7 +15,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         /// <param name="singleSelectResources"></param>
         /// <returns></returns>
-        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources, AppSettings appSettings)
+        public static IList<AccessibilityResource> ToAccessibilityResources(
+            this IEnumerable<XElement> singleSelectResources, AppSettings appSettings)
         {
             IList<AccessibilityResource> accessibilityResources = singleSelectResources
                 .Select(a =>
@@ -37,7 +39,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                         Label = (string)a.Element("Text").Element("Label"),
                         Description = (string)a.Element("Text").Element("Description"),
                         Disabled = (a.Element("Disabled") != null) ? true : false,
-                        Selections = selections,
+                        Selections = selections.ToList(),
                         ResourceType = resourceType,
                         ResourceTypeLabel = resourceTypeLabel
                     };
@@ -49,14 +51,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return accessibilityResources;
         }
 
-        /// <summary>
-        /// Parse XML Accessibilty Resource Selections to AccessibilitySelections
-        /// </summary>
-        /// <param name="xmlSelections"></param>
-        /// <returns></returns>
-        public static List<AccessibilitySelection> ToSelections(this IEnumerable<XElement> xmlSelections)
+        public static ImmutableArray<AccessibilitySelection> ToSelections(this IEnumerable<XElement> xmlSelections)
         {
-            List<AccessibilitySelection> selections = xmlSelections
+            var selections = xmlSelections
                 .Select(s => new AccessibilitySelection
                 {
                     Disabled = false,
@@ -64,44 +61,41 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     Order = (int)s.Element("Order"),
                     Label = (string)s.Element("Text").Element("Label")
                 })
-                .ToList();
+                .ToImmutableArray();
 
             return selections;
         }
-
-        /// <summary>
-        /// Parse XML resource family elements to AccessibilityResourceFamilies
-        /// </summary>
-        /// <param name="resourceFamilies"></param>
-        /// <param name="globalResources"></param>
-        /// <returns></returns>
-        public static IList<AccessibilityResourceFamily> ToAccessibilityResourceFamilies(this IEnumerable<XElement> resourceFamilies, List<AccessibilityResource> globalResources)
+        
+        public static ImmutableArray<AccessibilityResourceFamily> ToAccessibilityResourceFamilies(
+            this IEnumerable<XElement> resourceFamilies,
+            IEnumerable<AccessibilityResource> globalResources)
         {
-            List<AccessibilityResourceFamily> families = resourceFamilies
-                .Select(f => new AccessibilityResourceFamily
-                {
-                    Subjects = f.Elements("Subject")
+            ImmutableArray<AccessibilityResourceFamily> families = resourceFamilies
+                .Select(f => new AccessibilityResourceFamily(
+                    subjects: f.Elements("Subject")
                         .Select(s => (string)s.Element("Code"))
-                        .ToList(),
-                    Grades = f.Elements("Grade")
+                        .ToImmutableArray(),
+                    grades: f.Elements("Grade")
                         .Select(g => g.Value)
-                        .ToList()
                         .ToGradeLevels(),
-                    Resources = f.Elements("SingleSelectResource").ToAccessibilityResources(globalResources)
-                }).ToList();
+                    resources: f.Elements("SingleSelectResource")
+                        .ToAccessibilityResources(globalResources)))
+                .ToImmutableArray();
 
             return families;
         }
 
         /// <summary>
-        /// Parse XML Family accessibility resources and attach global resources to Accessiblity Resources
+        /// Parse XML Family accessibility resources and attach global resources to AccessibIlity Resources
         /// </summary>
         /// <param name="xmlResources"></param>
         /// <param name="globalResources"></param>
         /// <returns></returns>
-        public static List<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> xmlFamilyResources, List<AccessibilityResource> globalResources)
+        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(
+            this IEnumerable<XElement> xmlFamilyResources,
+            IEnumerable<AccessibilityResource> globalResources)
         {
-            List<AccessibilityResource> partialResources = xmlFamilyResources
+            var partialResources = xmlFamilyResources
                 .Select(r => new AccessibilityResource
                 {
                     Code = (string)r.Element("Code"),
@@ -113,7 +107,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                             Label = (string)s.Element("Text")?.Element("Label")
                         })
                         .ToList()
-                }).ToList();
+                }).ToImmutableArray();
 
             return partialResources.ToAccessibilityResources(globalResources);
         }
@@ -124,7 +118,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <param name="partialResources"></param>
         /// <param name="globalResources"></param>
         /// <returns></returns>
-        public static List<AccessibilityResource> ToAccessibilityResources(this List<AccessibilityResource> partialResources, List<AccessibilityResource> globalResources)
+        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(
+            this IEnumerable<AccessibilityResource> partialResources,
+            IEnumerable<AccessibilityResource> globalResources)
         {
             var resources = globalResources.Select(globalResource =>
             {
@@ -137,7 +133,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     return familyResource.ToAccessibilityResource(globalResource);
                 }
-            }).ToList();
+            }).ToImmutableArray();
 
             return resources;
         }
