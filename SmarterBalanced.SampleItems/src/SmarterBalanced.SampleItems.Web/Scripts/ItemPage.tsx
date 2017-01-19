@@ -1,20 +1,23 @@
 ﻿interface AccessibilityResource {
-    defaultCode: string;
+    defaultSelection: string;
     description: string;
     disabled: boolean;
     label: string;
     selectedCode: string;
     resourceTypeLabel: string;
+    order: number;
     selections: Dropdown.Selection[];
 }
 
 namespace ItemPage {
 
-    function toiSAAP(accResourceVM: AccessibilityResource[]): string {
+    function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
         let str = "";
-        for (let res of accResourceVM) {
-            if (res.selectedCode && !res.disabled) {
-                str += res.selectedCode + ";";
+        for (let group of accResourceGroups) {
+            for (let res of group.accessibilityResources) {
+                if (res.selectedCode && !res.disabled) {
+                    str += res.selectedCode + ";";
+                }
             }
         }
         return str;
@@ -22,20 +25,28 @@ namespace ItemPage {
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
         const newModel = Object.assign({}, model);
-        newModel.selectedCode = model.defaultCode;
+        newModel.selectedCode = model.defaultSelection;
         return newModel;
     }
 
-    function trimAccResource(model: AccessibilityResource): { label: string, selectedCode: string } {
+    function trimAccResource(resource: AccessibilityResource): { label: string, selectedCode: string } {
         return {
-            label: model.label,
-            selectedCode: model.selectedCode,
+            label: resource.label,
+            selectedCode: resource.selectedCode,
         };
     }
 
-    function generateAccCookieValue(accessibilityPrefs: AccessibilityResource[]): string {
-        let newPrefs = accessibilityPrefs.map(trimAccResource);
-        return JSON.stringify(newPrefs);
+    function generateAccCookieValue(accGroups: AccResourceGroup[]): string {
+        let cookieValue = "";
+        let newGroups = [];
+        for (let group of accGroups) {
+            newGroups.push({
+                label: group.label,
+                order: group.order,
+                accessibilityResources: group.accessibilityResources.map(trimAccResource)
+            });
+        }
+        return JSON.stringify(newGroups);
     }
 
     function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
@@ -45,6 +56,7 @@ namespace ItemPage {
                 label: "Disabled for item",
                 code: "",
                 disabled: true,
+                order: 0,
             };
             newSelection.selections.push(disabledOption);
             newSelection.selectedCode = "";
@@ -53,20 +65,26 @@ namespace ItemPage {
         return resource;
     }
 
-    export function getResourceTypes(resources: AccessibilityResource[]): string[] {
+    export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
         let resourceTypes: string[] = [];
-        for (const res of resources) {
-            if (resourceTypes.indexOf(res.resourceTypeLabel) === -1) {
-                resourceTypes.push(res.resourceTypeLabel);
+        for (const group of resourceGroups) {
+            if (resourceTypes.indexOf(group.label) === -1) {
+                resourceTypes.push(group.label);
             }
         }
         return resourceTypes;
     }
 
+    export interface AccResourceGroup {
+        label: string;
+        order: number;
+        accessibilityResources: AccessibilityResource[];
+    }
+
     export interface ViewModel {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
-        accResourceVMs: AccessibilityResource[];
+        accResourceGroups: AccResourceGroup[];
         aboutItemVM: AboutItem.Props;
     }
 
@@ -80,11 +98,6 @@ namespace ItemPage {
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
-            let accResourceVMs = this.props.accResourceVMs.map(addDisabledPlaceholder).sort((a, b) => {
-                let aLabel = a.label.toLowerCase();
-                let bLabel = b.label.toLowerCase();
-                return (aLabel < bLabel) ? -1 : (aLabel > bLabel) ? 1 : 0;
-            });
             this.state = { selections: {} };
         }
 
@@ -103,7 +116,7 @@ namespace ItemPage {
         }
 
         render() {
-            let isaap = toiSAAP(this.props.accResourceVMs);
+            let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
@@ -137,7 +150,7 @@ namespace ItemPage {
                         url={ivsUrl} /> {/* TODO: remove redundant prop */}
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
-                        localAccessibility={this.props.accResourceVMs}
+                        accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
                         onReset={this.props.onReset} />
                     <Share.ShareModal iSAAP={isaap}/>
@@ -151,16 +164,22 @@ namespace ItemPage {
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
-            const newVMs: AccessibilityResource[] = [];
-            for (let vm of this.itemProps.accResourceVMs) {
-                const newVM = Object.assign({}, vm);
-                newVM.selectedCode = selections[newVM.label] || newVM.selectedCode;
-                newVMs.push(newVM);
+            const newGroups: AccResourceGroup[] = [];
+            for (let group of this.itemProps.accResourceGroups) {
+                const newGroup = Object.assign({}, group);
+                const newResources: AccessibilityResource[] = [];
+                for (let res of newGroup.accessibilityResources) {
+                    const newRes = Object.assign({}, res);
+                    newRes.selectedCode = selections[newRes.label] || newRes.selectedCode;
+                    newResources.push(newRes);
+                }
+                newGroup.accessibilityResources = newResources;
+                newGroups.push(newGroup);
             }
             this.itemProps = Object.assign({}, this.itemProps);
-            this.itemProps.accResourceVMs = newVMs;
+            this.itemProps.accResourceGroups = newGroups;
 
-            let cookieValue = generateAccCookieValue(this.itemProps.accResourceVMs);
+            let cookieValue = generateAccCookieValue(this.itemProps.accResourceGroups);
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
 
             this.render();
@@ -169,9 +188,12 @@ namespace ItemPage {
         onReset = () => {
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", "", "; path=/");
 
-            const newAccResourceVms = this.itemProps.accResourceVMs.map(resetResource);
+            const newAccResourceGroups = Object.assign({}, this.itemProps.accResourceGroups);
+            for (let group of newAccResourceGroups) {
+                group.accessibilityResources = group.accessibilityResources.map(resetResource);
+            }
             this.itemProps = Object.assign({}, this.itemProps);
-            this.itemProps.accResourceVMs = newAccResourceVms;
+            this.itemProps.accResourceGroups = newAccResourceGroups;
             
             this.render();
         }

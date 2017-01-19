@@ -25,8 +25,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public Claim Claim { get; set; }
         public ImmutableArray<Rubric> Rubrics { get; set; }
         public InteractionType InteractionType { get; set; }
-
-        public List<AccessibilityResource> AccessibilityResources { get; set; }
+        public ImmutableArray<AccessibilityResourceGroup> AccessibilityResourceGroups { get; set; }
         public string TargetAssessmentType { get; set; }
         public string SufficentEvidenceOfClaim { get; set; }
         public int? AssociatedStimulus { get; set; }

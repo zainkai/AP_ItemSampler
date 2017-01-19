@@ -1,6 +1,6 @@
 ﻿namespace AccessibilityModal {
     interface Props {
-        localAccessibility: AccessibilityResource[];
+        accResourceGroups: ItemPage.AccResourceGroup[];
         onSave(selections: ResourceSelections): void;
         onReset(): void;
     }
@@ -24,7 +24,9 @@
             super(props);
 
             const expandeds: IsResourceExpanded = {};
-            const resourceTypes = ItemPage.getResourceTypes(this.props.localAccessibility);
+            const resourceTypes = this.props.accResourceGroups.map((res) => {
+                return res.label;
+            });
             for (const key of resourceTypes) {
                 expandeds[key] = false;
             }
@@ -61,24 +63,15 @@
         }
 
         renderResourceType(type: string) {
-            let matchingResources = this.props.localAccessibility.filter(res => res.resourceTypeLabel === type);
-            matchingResources.sort((a, b) => {
-                if (!a.disabled && b.disabled) {
-                    return -1;
-                } else if (a.disabled && !b.disabled) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            });
+            let resources = this.props.accResourceGroups.filter(group => group.label === type)[0].accessibilityResources;
 
-            const resCount = matchingResources.length;
+            const resCount = resources.length;
             const isExpanded = (this.state.resourceTypeExpanded || {})[type];
             if (!isExpanded) {
-                matchingResources = matchingResources.slice(0, 4);
+                resources = resources.slice(0, 4);
             }
 
-            let dropdowns = matchingResources.map(res => {
+            let dropdowns = resources.map(res => {
                 let selectedCode = (this.state.resourceSelections || {})[res.label] || res.selectedCode;
                 let ddprops: Dropdown.Props = {
                     defaultSelection: res.selectedCode,
@@ -122,7 +115,7 @@
         }
 
         render() {
-            const types = ItemPage.getResourceTypes(this.props.localAccessibility);
+            const types = ItemPage.getResourceTypes(this.props.accResourceGroups);
             const groups = types.map(t => this.renderResourceType(t));
             return (
                 <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-hidden="true">

@@ -28,7 +28,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     string resourceType = string.IsNullOrEmpty((string)a.Element("ResourceType")) ? 
                                             string.Empty : (string)a.Element("ResourceType");
 
-                    string resourceTypeLabel = appSettings.SettingsConfig.AccessibilityTypeLabels[resourceType];
+                    string resourceTypeLabel = appSettings.SettingsConfig.AccessibilityTypes.Single(t => t.Id == resourceType).Label;
                     return new AccessibilityResource
                     {
                         Code = (string)a.Element("Code"),
@@ -36,7 +36,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                         DefaultSelection = defaultSelection,
                         Label = (string)a.Element("Text").Element("Label"),
                         Description = (string)a.Element("Text").Element("Description"),
-                        Disabled = (a?.Element("Disabled") != null) ? true : false,
+                        Disabled = (a.Element("Disabled") != null) ? true : false,
                         Selections = selections,
                         ResourceType = resourceType,
                         ResourceTypeLabel = resourceTypeLabel

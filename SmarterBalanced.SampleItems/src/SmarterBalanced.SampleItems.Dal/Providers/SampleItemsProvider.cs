@@ -72,7 +72,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                     accessibilityResourceFamilies,
                     interactionTypes,
                     subjects,
-                    rubricPlaceHolder)
+                    rubricPlaceHolder,
+                    settings)
                 .Where(i => i.Grade != GradeLevels.NA).ToList();
 
             return itemDigests;

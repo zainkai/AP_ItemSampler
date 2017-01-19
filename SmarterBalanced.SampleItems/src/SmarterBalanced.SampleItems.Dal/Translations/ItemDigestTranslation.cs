@@ -22,7 +22,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
-            IList<InteractionType> interactionTypes, IList<Subject> subjects, RubricPlaceHolderText rubricPlaceHolder)
+            IList<InteractionType> interactionTypes, IList<Subject> subjects, RubricPlaceHolderText rubricPlaceHolder,
+            AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
@@ -34,7 +35,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, rubricPlaceHolder);
 
-                    AssignAccessibilityResources(itemDigest, resourceFamilies);
+                    AssignAccessibilityResourceGroups(itemDigest, resourceFamilies, settings);
 
                     digests.Add(itemDigest);
                 }
@@ -193,7 +194,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// Assigns a list of AccessibilityResources to an item digest.
         /// If the item has auxilliary resources disabled, the resources are updated accordingly.
         /// </summary>
-        private static void AssignAccessibilityResources(ItemDigest itemDigest, IList<AccessibilityResourceFamily> resourceFamilies)
+        private static void AssignAccessibilityResourceGroups(
+            ItemDigest itemDigest,
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            AppSettings settings)
         {
             List<AccessibilityResource> resources = resourceFamilies
                 .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
@@ -220,7 +224,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
             }
 
-            itemDigest.AccessibilityResources = resources;
+            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
+            foreach(AccessibilityType type in settings.SettingsConfig.AccessibilityTypes)
+            {
+                var groupResources = resources.Where(r => r.ResourceType == type.Id).OrderBy(r => r.Order);
+                groups.Add(new AccessibilityResourceGroup(type.Label, type.Order, groupResources.ToImmutableArray()));
+            }
+
+            itemDigest.AccessibilityResourceGroups = groups.OrderBy(g => g.Order).ToImmutableArray();
         }
 
         /// <summary>
