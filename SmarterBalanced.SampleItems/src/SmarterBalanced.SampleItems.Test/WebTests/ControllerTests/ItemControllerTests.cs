@@ -38,7 +38,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             string accCookieName = "accessibilitycookie";
 
-            var accessibilityResourceViewModels = new List<AccessibilityResourceViewModel>();
+            var accessibilityResourceGroups = new List<AccessibilityResourceGroup>();
 
             var appSettings = new AppSettings()
             {
@@ -52,7 +52,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
                 accessibilityCookieName: accCookieName,
                 aboutItemVM: aboutItem,
-                accResourceVMs: accessibilityResourceViewModels);
+                accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>));
 
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
@@ -63,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                     targetId: string.Empty,
                     grade: GradeLevels.NA,
                     rubrics: ImmutableArray.Create<Rubric>()),
-                accResourceVMs: accessibilityResourceViewModels);
+                accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>));
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
