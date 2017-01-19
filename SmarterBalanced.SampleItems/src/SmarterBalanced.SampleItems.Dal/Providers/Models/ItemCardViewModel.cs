@@ -19,7 +19,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Target { get; }
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
-        public string CommonCoreStandardsId { get;}
+        public string CommonCoreStandardsId { get; }
         public ItemCardViewModel(
             int bankKey,
             int itemKey,
@@ -49,5 +49,40 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             InteractionTypeLabel = interactionTypeLabel;
             CommonCoreStandardsId = commonCoreStandardsId;
         }
+
+        /// <summary>
+        /// Used for testing so that it's not necessary to specify all parameters.
+        /// </summary>
+        public static ItemCardViewModel Create(
+           int bankKey = -1,
+           int itemKey = -1,
+           string title = "",
+           GradeLevels grade = GradeLevels.NA,
+           string gradeLabel = "",
+           string subjectCode = "",
+           string subjectLabel = "",
+           string claimCode = "",
+           string claimLabel = "",
+           string target = "",
+           string interactionTypeCode = "",
+           string interactionTypeLabel = "",
+           string commonCoreStandardsId = "")
+        {
+            return new ItemCardViewModel(
+                bankKey: bankKey,
+                itemKey: itemKey,
+                title: title,
+                grade: grade,
+                gradeLabel: gradeLabel,
+                subjectCode: subjectCode,
+                subjectLabel: subjectLabel,
+                claimCode: claimCode,
+                claimLabel: claimLabel,
+                target: target,
+                interactionTypeCode: interactionTypeCode,
+                interactionTypeLabel: interactionTypeLabel,
+                commonCoreStandardsId: commonCoreStandardsId);
+        }
+
     }
 }

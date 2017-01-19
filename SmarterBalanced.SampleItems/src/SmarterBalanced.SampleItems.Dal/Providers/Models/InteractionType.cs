@@ -17,5 +17,15 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Label = label;
             Order = order;
         }
+
+        public static InteractionType Create(string code = "", string label = "", int order = -1)
+        {
+            return new InteractionType(
+                code,
+                label,
+                order
+            );
+        }
+
     }
 }

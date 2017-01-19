@@ -22,5 +22,17 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Claims = claims;
             InteractionTypeCodes = interactionTypeCodes;
         }
+
+        public static Subject Create(string code, string label, string shortLabel, ImmutableArray<Claim> claims, ImmutableArray<string> interactionTypeCodes)
+        {
+            return new Subject(
+                code,
+                label,
+                shortLabel,
+                claims,
+                interactionTypeCodes
+            );
+        }
+
     }
 }
