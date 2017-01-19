@@ -34,7 +34,7 @@ namespace ItemSearchParams {
         selectSingleResult: () => void;
         isLoading: boolean;
     }
-    
+
     export interface State {
         itemId?: string;
         gradeLevels?: GradeLevels;
@@ -58,10 +58,10 @@ namespace ItemSearchParams {
             super(props);
 
             const queryObject = parseQueryString(location.search);
-            const itemId = (queryObject["itemID"] || [])[0] || '';
+            const itemId = (queryObject["itemID"] || [])[0] || "";
 
             const gradeString = (queryObject["gradeLevels"] || [])[0];
-            const gradeLevels: GradeLevels = parseInt(gradeString) || GradeLevels.NA;
+            const gradeLevels: GradeLevels = parseInt(gradeString, 10) || GradeLevels.NA;
 
             const subjects = queryObject["subjects"] || [];
             const claims = queryObject["claims"] || [];
@@ -83,7 +83,7 @@ namespace ItemSearchParams {
 
             this.onChange();
         }
-        
+
         encodeQuery(): string {
             let pairs: string[] = [];
             if (this.state.claims && this.state.claims.length !== 0) {
@@ -120,7 +120,7 @@ namespace ItemSearchParams {
 
         onChange() {
             const params: SearchAPIParams = {
-                itemId: this.state.itemId || '',
+                itemId: this.state.itemId || "",
                 gradeLevels: this.state.gradeLevels || GradeLevels.All,
                 subjects: this.state.subjects || [],
                 claims: this.state.claims || [],
@@ -148,7 +148,7 @@ namespace ItemSearchParams {
         toggleGrades(grades: GradeLevels) {
             this.setState({
                 // Exclusive OR to flip just the bits for the input grades
-                gradeLevels: this.state.gradeLevels ^ grades
+                gradeLevels: this.state.gradeLevels ^ grades // tslint:disable-line:no-bitwise
             }, () => this.beginChangeTimeout());
 
         }
@@ -157,7 +157,7 @@ namespace ItemSearchParams {
             const subjectCodes = this.state.subjects || [];
             const containsSubject = subjectCodes.indexOf(subject) !== -1;
             const newSubjectCodes = containsSubject ? subjectCodes.filter(s => s !== subject) : subjectCodes.concat([subject]);
-            
+
             if (newSubjectCodes.length === 0) {
                 this.setState({
                     subjects: newSubjectCodes,
@@ -168,7 +168,7 @@ namespace ItemSearchParams {
             }
 
             const newSubjects = this.props.subjects.filter(s => newSubjectCodes.indexOf(s.code) !== -1);
-            
+
             // Remove all claims not contained by the newly selected subjects
             const subjectClaimCodes = newSubjects.reduce((prev: string[], cur: Subject) => prev.concat(cur.claims.map(c => c.code)), []);
             const newClaimCodes = (this.state.claims || []).filter(c => subjectClaimCodes.indexOf(c) !== -1);
@@ -252,7 +252,7 @@ namespace ItemSearchParams {
 
         resetFilters() {
             this.setState({
-                itemId: '',
+                itemId: "",
                 gradeLevels: GradeLevels.NA,
                 subjects: [],
                 claims: [],
@@ -306,7 +306,7 @@ namespace ItemSearchParams {
         }
 
         render() {
-            history.replaceState(null, '', this.encodeQuery());
+            history.replaceState(null, "", this.encodeQuery());
 
             return (
                 <div className="search-params">
@@ -420,7 +420,6 @@ namespace ItemSearchParams {
         }
 
         renderSubjects() {
-            const subjects = this.state.subjects || [];
             const tags = this.state.expandSubjects
                 ? this.props.subjects.map(s => this.renderSubject(s))
                 : undefined;
@@ -443,7 +442,7 @@ namespace ItemSearchParams {
 
         renderClaims() {
             const selectedClaims = this.state.claims || [];
-            
+
             const renderClaim = (claim: Claim) => {
                 let containsClaim = selectedClaims.indexOf(claim.code) !== -1;
                 return (
@@ -455,7 +454,7 @@ namespace ItemSearchParams {
                         {claim.label}
                     </button>
                 );
-            }
+            };
 
             // If no subjects are selected, use the entire list of subjects
             const selectedSubjectCodes = this.state.subjects || [];
@@ -487,7 +486,7 @@ namespace ItemSearchParams {
 
         renderInteractionTypes() {
             const selectedInteractionTypes = this.state.interactionTypes || [];
-            
+
             const renderInteractionType = (it: InteractionType) => {
                 let containsInteractionType = selectedInteractionTypes.indexOf(it.code) !== -1;
                 return (
@@ -499,8 +498,8 @@ namespace ItemSearchParams {
                         {it.label}
                     </button>
                 );
-            }
-            
+            };
+
             const selectedSubjectCodes = this.state.subjects || [];
             const selectedSubjects = selectedSubjectCodes.length !== 0
                 ? this.props.subjects.filter(subj => selectedSubjectCodes.indexOf(subj.code) !== -1)
