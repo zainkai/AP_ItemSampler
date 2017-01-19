@@ -228,7 +228,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             foreach(AccessibilityType type in settings.SettingsConfig.AccessibilityTypes)
             {
                 var groupResources = resources.Where(r => r.ResourceType == type.Id).OrderBy(r => r.Order);
-                groups.Add(new AccessibilityResourceGroup(type.Label, type.Order, groupResources.ToImmutableArray()));
+                groups.Add(new AccessibilityResourceGroup(
+                    type.Label,
+                    type.Order,
+                    groupResources
+                        .OrderBy(r => r.Order)
+                        .OrderBy(r => r.Disabled)
+                        .ToImmutableArray()));
             }
 
             itemDigest.AccessibilityResourceGroups = groups.OrderBy(g => g.Order).ToImmutableArray();

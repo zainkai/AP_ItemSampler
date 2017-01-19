@@ -187,11 +187,13 @@ namespace ItemPage {
 
         onReset = () => {
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", "", "; path=/");
+            
+            const newAccResourceGroups = this.itemProps.accResourceGroups.map(g => {
+                const newGroup = Object.assign({}, g);
+                newGroup.accessibilityResources = newGroup.accessibilityResources.map(resetResource);
+                return newGroup;
+            });
 
-            const newAccResourceGroups = Object.assign({}, this.itemProps.accResourceGroups);
-            for (let group of newAccResourceGroups) {
-                group.accessibilityResources = group.accessibilityResources.map(resetResource);
-            }
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
             

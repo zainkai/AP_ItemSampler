@@ -80,14 +80,15 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             //Enabled resources
             foreach (AccessibilityResource res in disputedResources)
             {
+                var newRes = res.DeepClone();
                 try
                 {
-                    var userPref = cookiePreferences.Where(p => p.Label == res.Label).SingleOrDefault();
-                    var defaultSelDisabled = res.Selections.Where(s => s.Code == userPref.SelectedCode).SingleOrDefault();
+                    var userPref = cookiePreferences.Where(p => p.Label == newRes.Label).SingleOrDefault();
+                    var defaultSelDisabled = newRes.Selections.Where(s => s.Code == userPref.SelectedCode).SingleOrDefault();
                     var selected = userPref.SelectedCode;
                     if (!defaultSelDisabled.Disabled)
                     {
-                        res.SelectedCode = userPref.SelectedCode;
+                        newRes.SelectedCode = userPref.SelectedCode;
                     }
                 }
                 catch (Exception e) when (
@@ -101,7 +102,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     logger.LogInformation(e.ToString());
                 }
 
-                computedResources.Add(res);
+                computedResources.Add(newRes);
             }
 
             return computedResources;
@@ -117,8 +118,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 try
                 {
                     cookieResources = cookiePreferences.Where(g => g.Order == group.Order).First().AccessibilityResources;
-                    computedResources = SetResourceValuesFromCookie(group.AccessibilityResources, cookieResources)
+                    computedResources = SetResourceValuesFromCookie(cookieResources, group.AccessibilityResources)
                         .OrderBy(r => r.Order)
+                        .OrderBy(r => r.Disabled)
                         .ToImmutableArray();
                 }
                 catch(Exception e)
