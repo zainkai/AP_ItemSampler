@@ -12,7 +12,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 {
     public class ItemViewRepoTests
     {
-        ItemDigest mathDigest, elaDigest;
+        ItemDigest mathDigest, elaDigest, duplicateDigest;
         ImmutableArray<ItemDigest> itemDigests;
         ItemViewRepo itemViewRepo;
         SampleItemsContext context;
@@ -20,7 +20,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         int goodBankKey;
         int badItemKey;
         int badBankKey;
-        ItemCardViewModel mathCard, elaCard;
+        int duplicateItemKey, duplicateBankKey;
+        ItemCardViewModel mathCard, elaCard, duplicateCard;
 
         public ItemViewRepoTests()
         {
@@ -28,12 +29,16 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             goodItemKey = 2;
             badBankKey = 3;
             goodItemKey = 4;
+            duplicateBankKey = 5;
+            duplicateItemKey = 6;
             mathCard = ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: goodItemKey);
             elaCard = ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey);
+            duplicateCard = ItemCardViewModel.Create(bankKey: duplicateBankKey, itemKey: duplicateItemKey);
             mathDigest = new ItemDigest() { BankKey = goodBankKey, ItemKey = goodItemKey };
             elaDigest = new ItemDigest() { BankKey = badBankKey, ItemKey = badItemKey };
-            itemDigests = ImmutableArray.Create(mathDigest, elaDigest);
-            var itemCards = ImmutableArray.Create(mathCard, elaCard);
+            duplicateDigest = new ItemDigest() { BankKey = duplicateBankKey, ItemKey = duplicateItemKey };
+            itemDigests = ImmutableArray.Create(mathDigest, elaDigest, duplicateDigest, duplicateDigest);
+            var itemCards = ImmutableArray.Create(mathCard, elaCard, duplicateCard, duplicateCard);
 
             context = SampleItemsContext.Create(itemDigests: itemDigests, itemCards: itemCards);
 
@@ -41,12 +46,10 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             itemViewRepo = new ItemViewRepo(context, loggerFactory.Object);
-
-            
         }
 
         [Fact]
-        private void TestGetItem()
+        public void TestGetItemDigest()
         {
             var result = itemViewRepo.GetItemDigest(goodBankKey, goodItemKey);
             var resultCheck = context.ItemDigests.FirstOrDefault(i => i.ItemKey == goodItemKey && i.BankKey == goodBankKey);
@@ -56,13 +59,41 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         }
 
         [Fact]
-        private void TestGetItemCard()
+        public void TestGetItemDigestDuplicate()
+        {
+            bool thrown = true;
+            try
+            {
+                var result = itemViewRepo.GetItemDigest(duplicateBankKey, duplicateItemKey);
+                thrown = false;
+            }
+            catch { }
+            if (!thrown)
+                throw new System.Exception("Multiple items exception not thrown.");
+        }
+
+        [Fact]
+        public void TestGetItemCard()
         {
             var result = itemViewRepo.GetItemCardViewModel(badBankKey, badItemKey);
-            var resultCheck=context.ItemCards.FirstOrDefault(i => i.ItemKey == goodItemKey && i.BankKey == goodBankKey);
+            var resultCheck=context.ItemCards.FirstOrDefault(i => i.ItemKey == badItemKey && i.BankKey == badBankKey);
 
             Assert.NotNull(result);
             Assert.Equal(result, resultCheck);
+        }
+
+        [Fact]
+        public void TestGetItemCardDuplicate()
+        {
+            bool thrown = true;
+            try
+            {
+                var result = itemViewRepo.GetItemCardViewModel(duplicateBankKey, duplicateItemKey);
+                thrown = false;
+            }
+            catch { }
+            if (!thrown)
+                throw new System.Exception("Multiple items exception not thrown.");
         }
 
         //TODO:
