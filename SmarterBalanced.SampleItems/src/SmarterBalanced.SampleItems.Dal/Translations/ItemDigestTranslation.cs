@@ -240,7 +240,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     type.Order,
                     groupResources
                         .OrderBy(r => r.Order)
-                        .OrderBy(r => r.Disabled)
                         .ToImmutableArray()));
             }
 
