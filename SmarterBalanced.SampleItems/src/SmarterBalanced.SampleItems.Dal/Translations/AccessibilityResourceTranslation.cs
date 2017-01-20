@@ -10,39 +10,31 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class AccessibilityResourceTranslation
     {
-        /// <summary>
-        /// Parse XML to Global AccessbilityResources
-        /// </summary>
-        /// <param name="singleSelectResources"></param>
-        /// <returns></returns>
-        public static IList<AccessibilityResource> ToAccessibilityResources(
-            this IEnumerable<XElement> singleSelectResources, AppSettings appSettings)
+        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources)
         {
             IList<AccessibilityResource> accessibilityResources = singleSelectResources
-                .Select(a =>
+                .Select(xs =>
                 {
-                    var selections = a.Elements("Selection").ToSelections();
+                    var selections = xs.Elements("Selection")
+                        .Select(x => x.ToSelection())
+                        .ToImmutableArray();
 
-                    var defaultSelection = (string)a.Element("DefaultSelection");
-                    defaultSelection = string.IsNullOrEmpty(defaultSelection) ? 
-                                        selections.FirstOrDefault()?.Code : defaultSelection;
+                    var defaultSelection = (string)xs.Element("DefaultSelection");
+                    defaultSelection = string.IsNullOrEmpty(defaultSelection)
+                        ? selections.FirstOrDefault()?.Code
+                        : defaultSelection;
 
-                    string resourceType = string.IsNullOrEmpty((string)a.Element("ResourceType")) ? 
-                                            string.Empty : (string)a.Element("ResourceType");
+                    var resourceType = (string)xs.Element("ResourceType") ?? string.Empty;
 
-                    string resourceTypeLabel = appSettings.SettingsConfig.AccessibilityTypes.Single(t => t.Id == resourceType).Label;
-                    return new AccessibilityResource
-                    {
-                        Code = (string)a.Element("Code"),
-                        Order = (int)a.Element("Order"),
-                        DefaultSelection = defaultSelection,
-                        Label = (string)a.Element("Text").Element("Label"),
-                        Description = (string)a.Element("Text").Element("Description"),
-                        Disabled = (a.Element("Disabled") != null) ? true : false,
-                        Selections = selections.ToList(),
-                        ResourceType = resourceType,
-                        ResourceTypeLabel = resourceTypeLabel
-                    };
+                    return new AccessibilityResource(
+                        selectedCode: (string)xs.Element("Code"),
+                        order: (int)xs.Element("Order"),
+                        defaultSelection: defaultSelection,
+                        label: (string)xs.Element("Text").Element("Label"),
+                        description: (string)xs.Element("Text").Element("Description"),
+                        disabled: xs.Element("Disabled") != null,
+                        selections: selections,
+                        resourceType: resourceType);
                 })
                 .Where(a => a.Selections.Any())
                 .OrderBy(a => a.Order)
@@ -51,19 +43,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return accessibilityResources;
         }
 
-        public static ImmutableArray<AccessibilitySelection> ToSelections(this IEnumerable<XElement> xmlSelections)
+        public static AccessibilitySelection ToSelection(this XElement xmlSelection)
         {
-            var selections = xmlSelections
-                .Select(s => new AccessibilitySelection
-                {
-                    Disabled = false,
-                    Code = (string)s.Element("Code"),
-                    Order = (int)s.Element("Order"),
-                    Label = (string)s.Element("Text").Element("Label")
-                })
-                .ToImmutableArray();
+            var selection = new AccessibilitySelection(
+                    code: (string)xmlSelection.Element("Code"),
+                    label: (string)xmlSelection.Element("Text").Element("Label"),
+                    order: (int)xmlSelection.Element("Order"),
+                    disabled: false);
 
-            return selections;
+            return selection;
         }
         
         public static ImmutableArray<AccessibilityResourceFamily> ToAccessibilityResourceFamilies(
@@ -96,42 +84,39 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IEnumerable<AccessibilityResource> globalResources)
         {
             var partialResources = xmlFamilyResources
-                .Select(r => new AccessibilityResource
-                {
-                    Code = (string)r.Element("Code"),
-                    Disabled = (r.Element("Disabled") != null) ? true : false,
-                    Selections = r.Elements("Selection")
-                        .Select(s => new AccessibilitySelection
-                        {
-                            Code = (string)s.Element("Code"),
-                            Label = (string)s.Element("Text")?.Element("Label")
-                        })
-                        .ToList()
-                }).ToImmutableArray();
+                .Select(r => new AccessibilityResource(
+                    selectedCode: (string)r.Element("Code"),
+                    order: (int)r.Element("Order"),
+                    defaultSelection: null,
+                    label: null,
+                    description: null,
+                    resourceType: null,
+                    disabled: r.Element("Disabled") != null,
+                    selections: r.Elements("Selection")
+                        .Select(s => s.ToSelection())
+                        .ToImmutableArray()))
+                .ToImmutableArray();
 
-            return partialResources.ToAccessibilityResources(globalResources);
+            return partialResources.MergeAllWith(globalResources);
         }
 
         /// <summary>
         /// Translates Partial family resources with global resources to full set of family resources
         /// </summary>
-        /// <param name="partialResources"></param>
-        /// <param name="globalResources"></param>
-        /// <returns></returns>
-        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(
+        public static ImmutableArray<AccessibilityResource> MergeAllWith(
             this IEnumerable<AccessibilityResource> partialResources,
             IEnumerable<AccessibilityResource> globalResources)
         {
             var resources = globalResources.Select(globalResource =>
             {
-                var familyResource = partialResources.FirstOrDefault(fr => fr.Code == globalResource.Code);
+                var familyResource = partialResources.FirstOrDefault(fr => fr.SelectedCode == globalResource.SelectedCode);
                 if (familyResource == null)
                 {
-                    return globalResource.DeepClone();
+                    return globalResource;
                 }
                 else
                 {
-                    return familyResource.ToAccessibilityResource(globalResource);
+                    return familyResource.MergeWith(globalResource);
                 }
             }).ToImmutableArray();
 
@@ -142,35 +127,34 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// Copies a Global AccessibilityResource based on Family Resource values and selections.
         /// </summary>
         /// <param name="partialResource"> Accessbility Family Resources </param>
-        /// <param name="globalResource"> Global Accessiblity Resources </param>
+        /// <param name="resource"> Global Accessiblity Resources </param>
         /// <returns></returns>
-        public static AccessibilityResource ToAccessibilityResource(this AccessibilityResource partialResource, AccessibilityResource globalResource)
+        public static AccessibilityResource MergeWith(this AccessibilityResource partialResource, AccessibilityResource resource)
         {
             if (partialResource == null)
                 throw new ArgumentNullException(nameof(partialResource));
-            else if (globalResource == null)
-                throw new ArgumentNullException(nameof(globalResource));
-
-            AccessibilityResource resource = globalResource.DeepClone();
+            else if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
 
             // <Disabled /> means the entire resource is disabled
             bool isResourceDisabled = partialResource.Disabled;
 
-            resource.Disabled = isResourceDisabled;
+            // TODO: immutability
+            //resource.Disabled = isResourceDisabled;
 
-            foreach (AccessibilitySelection selection in resource.Selections)
-            {
-                AccessibilitySelection partialResourceSelection = partialResource.Selections?.SingleOrDefault(s => s.Code == selection.Code);
-                selection.Disabled = (partialResourceSelection == null) || isResourceDisabled;
-                selection.Label = (string.IsNullOrEmpty(partialResourceSelection?.Label)) ? selection.Label : partialResourceSelection?.Label;
-            }
+            //foreach (AccessibilitySelection selection in resource.Selections)
+            //{
+            //    AccessibilitySelection partialResourceSelection = partialResource.Selections.SingleOrDefault(s => s.Code == selection.Code);
+            //    selection.Disabled = (partialResourceSelection == null) || isResourceDisabled;
+            //    selection.Label = string.IsNullOrEmpty(partialResourceSelection?.Label) ? selection.Label : partialResourceSelection?.Label;
+            //}
 
-            // If the default select item is disabled, pick a different one 
-            if (!isResourceDisabled && resource.Selections != null
-                && resource.Selections.Any(s => s.Code == resource.DefaultSelection && s.Disabled))
-            {
-                resource.DefaultSelection = resource.Selections?.FirstOrDefault(s => !s.Disabled)?.Code;
-            }
+            //// If the default select item is disabled, pick a different one 
+            //if (!isResourceDisabled && resource.Selections != null
+            //    && resource.Selections.Any(s => s.Code == resource.DefaultSelection && s.Disabled))
+            //{
+            //    resource.DefaultSelection = resource.Selections.FirstOrDefault(s => !s.Disabled)?.Code;
+            //}
 
             return resource;
         }

@@ -85,29 +85,29 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             //Enabled resources
             foreach (AccessibilityResource res in disputedResources)
             {
-                var newRes = res.DeepClone();
-                try
-                {
-                    var userPref = cookiePreferences.Where(p => p.Label == newRes.Label).SingleOrDefault();
-                    var defaultSelDisabled = newRes.Selections.Where(s => s.Code == userPref.SelectedCode).SingleOrDefault();
-                    var selected = userPref.SelectedCode;
-                    if (!defaultSelDisabled.Disabled)
-                    {
-                        newRes.SelectedCode = userPref.SelectedCode;
-                    }
-                }
-                catch (Exception e) when (
-                    e is ArgumentNullException ||
-                    e is InvalidOperationException ||
-                    e is NullReferenceException)
-                {
-                    //There was a mismatch between the user's supplied preferences and the allowed values, 
-                    //or there was duplidate data
-                    //Use the default which is already set
-                    logger.LogInformation(e.ToString());
-                }
+                // TODO: immutability
+                //try
+                //{
+                //    var userPref = cookiePreferences.Where(p => p.Label == newRes.Label).SingleOrDefault();
+                //    var defaultSelDisabled = newRes.Selections.Where(s => s.Code == userPref.SelectedCode).SingleOrDefault();
+                //    var selected = userPref.SelectedCode;
+                //    if (!defaultSelDisabled.Disabled)
+                //    {
+                //        newRes.SelectedCode = userPref.SelectedCode;
+                //    }
+                //}
+                //catch (Exception e) when (
+                //    e is ArgumentNullException ||
+                //    e is InvalidOperationException ||
+                //    e is NullReferenceException)
+                //{
+                //    //There was a mismatch between the user's supplied preferences and the allowed values, 
+                //    //or there was duplidate data
+                //    //Use the default which is already set
+                //    logger.LogInformation(e.ToString());
+                //}
 
-                computedResources.Add(newRes);
+                //computedResources.Add(newRes);
             }
 
             return computedResources;

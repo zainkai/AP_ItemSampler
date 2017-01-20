@@ -218,8 +218,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
             {
-                resources = resources.Select(t => t.DeepClone()).ToImmutableArray();
-
                 if (!itemDigest.AslSupported)
                 {
                     DisableResource(resources, "AmericanSignLanguage");
@@ -249,12 +247,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         
         private static void DisableResource(IEnumerable<AccessibilityResource> resources, string code)
         {
-            var resource = resources.FirstOrDefault(t => t.Code == code);
-            if (resource != null)
-            {
-                resource.Disabled = true;
-                resource.Selections.ForEach(s => s.Disabled = true);
-            }
+            // TODO: immutability
+
+            //var resource = resources.FirstOrDefault(t => t.Code == code);
+            //if (resource != null)
+            //{
+            //    resource.Disabled = true;
+            //    resource.Selections.ForEach(s => s.Disabled = true);
+            //}
         }
 
     }

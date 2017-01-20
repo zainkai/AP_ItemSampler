@@ -17,50 +17,50 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 
         public AccessibilityTranslationsTests()
         {
-            accessibilitySelections = new List<AccessibilitySelection>
-            {
-                new AccessibilitySelection()
-                {
-                    Code = "TDS_TEST1",
-                    Order = 1,
-                    Label = "TEST 1",
-                    Disabled = false
-                },
-                new AccessibilitySelection()
-                {
-                    Code = "TDS_TEST2",
-                    Order = 2,
-                    Label = "TEST 2",
-                    Disabled = false
-                },
-                new AccessibilitySelection()
-                {
-                    Code = "TDS_TEST3",
-                    Order = 3,
-                    Label = "TEST 3",
-                    Disabled = false
-                }
-            };
+            //accessibilitySelections = new List<AccessibilitySelection>
+            //{
+            //    new AccessibilitySelection()
+            //    {
+            //        Code = "TDS_TEST1",
+            //        Order = 1,
+            //        Label = "TEST 1",
+            //        Disabled = false
+            //    },
+            //    new AccessibilitySelection()
+            //    {
+            //        Code = "TDS_TEST2",
+            //        Order = 2,
+            //        Label = "TEST 2",
+            //        Disabled = false
+            //    },
+            //    new AccessibilitySelection()
+            //    {
+            //        Code = "TDS_TEST3",
+            //        Order = 3,
+            //        Label = "TEST 3",
+            //        Disabled = false
+            //    }
+            //};
 
-            accessibilityResources = new List<AccessibilityResource>
-            {
-                new AccessibilityResource()
-                {
-                    Order = 1,
-                    DefaultSelection = null,
-                    Selections = accessibilitySelections,
-                    Label = "Resource 1",
-                    Disabled = false
-                },
-                new AccessibilityResource()
-                {
-                    Order = 2,
-                    DefaultSelection = "TDS_TEST1",
-                    Selections = accessibilitySelections,
-                    Label = "Resource 2",
-                    Disabled = false
-                }
-            };
+            //accessibilityResources = new List<AccessibilityResource>
+            //{
+            //    new AccessibilityResource()
+            //    {
+            //        Order = 1,
+            //        DefaultSelection = null,
+            //        Selections = accessibilitySelections,
+            //        Label = "Resource 1",
+            //        Disabled = false
+            //    },
+            //    new AccessibilityResource()
+            //    {
+            //        Order = 2,
+            //        DefaultSelection = "TDS_TEST1",
+            //        Selections = accessibilitySelections,
+            //        Label = "Resource 2",
+            //        Disabled = false
+            //    }
+            //};
 
             //accessibilityResourceViewModels = new List<AccessibilityResourceViewModel>
             //{

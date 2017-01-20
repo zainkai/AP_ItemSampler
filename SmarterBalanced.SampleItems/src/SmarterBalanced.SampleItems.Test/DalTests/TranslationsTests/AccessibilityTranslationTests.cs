@@ -18,84 +18,84 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             Resources = new List<AccessibilityResource>
             {
-                new AccessibilityResource
-                {
-                    Code = "ACC1",
-                    Order = 1,
-                    Disabled = false,
-                    DefaultSelection = "ACC1_SEL1",
-                    Label = "Accessibility 1",
-                    Description = "Accessibility Selection One",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC1_SEL1",
-                            Order = 1,
-                            Disabled = false,
-                            Label = "Selection 1"
-                        }
-                    }
-                },
-                new AccessibilityResource
-                {
-                    Code = "ACC2",
-                    Order = 2,
-                    Disabled = false,
-                    DefaultSelection = "ACC2_SEL2",
-                    Label = "Accessibility 2",
-                    Description = "Accessibility Selection Two",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL1",
-                            Order = 1,
-                            Disabled = false,
-                            Label = "Selection 1"
-                        },
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL2",
-                            Order = 2,
-                            Disabled = false,
-                            Label = "Selection 2"
-                        }
-                    }
-                },
+                //new AccessibilityResource
+                //{
+                //    Code = "ACC1",
+                //    Order = 1,
+                //    Disabled = false,
+                //    DefaultSelection = "ACC1_SEL1",
+                //    Label = "Accessibility 1",
+                //    Description = "Accessibility Selection One",
+                //    Selections = new List<AccessibilitySelection>
+                //    {
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC1_SEL1",
+                //            Order = 1,
+                //            Disabled = false,
+                //            Label = "Selection 1"
+                //        }
+                //    }
+                //},
+                //new AccessibilityResource
+                //{
+                //    Code = "ACC2",
+                //    Order = 2,
+                //    Disabled = false,
+                //    DefaultSelection = "ACC2_SEL2",
+                //    Label = "Accessibility 2",
+                //    Description = "Accessibility Selection Two",
+                //    Selections = new List<AccessibilitySelection>
+                //    {
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC2_SEL1",
+                //            Order = 1,
+                //            Disabled = false,
+                //            Label = "Selection 1"
+                //        },
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC2_SEL2",
+                //            Order = 2,
+                //            Disabled = false,
+                //            Label = "Selection 2"
+                //        }
+                //    }
+                //},
             };
 
             PartialResources = new List<AccessibilityResource>
             {
-                new AccessibilityResource
-                {
-                    Code = "ACC1",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC1_SEL1",
-                            Label = "Selection 1"
-                        }
-                    }
-                },
-                new AccessibilityResource
-                {
-                    Code = "ACC2",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL1",
-                            Label = "Selection 1"
-                        },
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL2",
-                            Label = "Selection 2"
-                        }
-                    }
-                },
+                //new AccessibilityResource
+                //{
+                //    Code = "ACC1",
+                //    Selections = new List<AccessibilitySelection>
+                //    {
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC1_SEL1",
+                //            Label = "Selection 1"
+                //        }
+                //    }
+                //},
+                //new AccessibilityResource
+                //{
+                //    Code = "ACC2",
+                //    Selections = new List<AccessibilitySelection>
+                //    {
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC2_SEL1",
+                //            Label = "Selection 1"
+                //        },
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC2_SEL2",
+                //            Label = "Selection 2"
+                //        }
+                //    }
+                //},
             };
         }
       
@@ -107,9 +107,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourceNullPartialAccessibility()
         {
-            AccessibilityResource r = new AccessibilityResource();
-            r = null;
-            Assert.Throws<ArgumentNullException>(() => r.ToAccessibilityResource(Resources[0]));
+            AccessibilityResource r = null;
+            Assert.Throws<ArgumentNullException>(() => r.MergeWith(Resources[0]));
         }
 
         /// <summary>
@@ -119,8 +118,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourceNullGlobalAccessibility()
         {
-            AccessibilityResource r = new AccessibilityResource();
-            Assert.Throws<ArgumentNullException>(() => r.ToAccessibilityResource(null));
+            AccessibilityResource r = AccessibilityResource.Create();
+            Assert.Throws<ArgumentNullException>(() => r.MergeWith(null));
         }
 
         /// <summary>
@@ -131,26 +130,26 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact] public void TestToAccessibilityResourceNoChanges()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC1",
-                Selections = new List<AccessibilitySelection>
-                {
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC2_SEL1"
-                    },
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC2_SEL2"
-                    }
-                }
-            };
+            AccessibilityResource partialResource = null; //new AccessibilityResource
+            //{
+            //    Code = "ACC1",
+            //    Selections = new List<AccessibilitySelection>
+            //    {
+            //        new AccessibilitySelection
+            //        {
+            //            Code = "ACC2_SEL1"
+            //        },
+            //        new AccessibilitySelection
+            //        {
+            //            Code = "ACC2_SEL2"
+            //        }
+            //    }
+            //};
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
             Assert.Equal(globalResource.Disabled, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
@@ -166,27 +165,27 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledResource()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC1",
-                Disabled = true,
-                Selections = new List<AccessibilitySelection>
-                {
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC1_SEL1"
-                    },
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC1_SEL2"
-                    }
-                }
-            };
+            AccessibilityResource partialResource = null; // new AccessibilityResource
+            //{
+            //    Code = "ACC1",
+            //    Disabled = true,
+            //    Selections = new List<AccessibilitySelection>
+            //    {
+            //        new AccessibilitySelection
+            //        {
+            //            Code = "ACC1_SEL1"
+            //        },
+            //        new AccessibilitySelection
+            //        {
+            //            Code = "ACC1_SEL2"
+            //        }
+            //    }
+            //};
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
             Assert.Equal(true, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
@@ -207,16 +206,16 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledAllSelections()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC2",
-                Selections = null
-            };
+            AccessibilityResource partialResource = null; // new AccessibilityResource
+            //{
+            //    Code = "ACC2",
+            //    Selections = null
+            //};
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(null, outputResource.DefaultSelection);
@@ -237,22 +236,22 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledSomeSelections()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC2",
-                Selections = new List<AccessibilitySelection>
-                {
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC2_SEL1"
-                    }
-                }
-            };
+            AccessibilityResource partialResource = null; // new AccessibilityResource
+            //{
+            //    Code = "ACC2",
+            //    Selections = new List<AccessibilitySelection>
+            //    {
+            //        new AccessibilitySelection
+            //        {
+            //            Code = "ACC2_SEL1"
+            //        }
+            //    }
+            //};
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
 
@@ -275,7 +274,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityResourcesNotModified()
         {
             List<AccessibilityResource> noPartialResources = new List<AccessibilityResource>();
-            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, Resources);
+            var resultResources = AccessibilityResourceTranslation.MergeAllWith(noPartialResources, Resources);
 
             Assert.Equal(Resources.Count, resultResources.Length);
         }
@@ -295,12 +294,12 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 inputResource
             };
 
-            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, inputResources);
+            var resultResources = AccessibilityResourceTranslation.MergeAllWith(noPartialResources, inputResources);
             Assert.Equal(inputResources.Count, resultResources.Length);
 
             AccessibilityResource outputResource = resultResources[0];
 
-            Assert.Equal(inputResource.Code, outputResource.Code);
+            Assert.Equal(inputResource.SelectedCode, outputResource.SelectedCode);
             Assert.Equal(inputResource.Description, outputResource.Description);
             Assert.Equal(inputResource.Disabled, outputResource.Disabled);
             Assert.Equal(inputResource.DefaultSelection, outputResource.DefaultSelection);
@@ -317,20 +316,20 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             List<AccessibilityResource> partialResources = new List<AccessibilityResource>
             {
-                new AccessibilityResource
-                {
-                    Code = "ACC2",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL1"
-                        }
-                   }
-                }
+                //new AccessibilityResource
+                //{
+                //    Code = "ACC2",
+                //    Selections = new List<AccessibilitySelection>
+                //    {
+                //        new AccessibilitySelection
+                //        {
+                //            Code = "ACC2_SEL1"
+                //        }
+                //   }
+                //}
             };
 
-            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(partialResources, Resources);
+            var resultResources = AccessibilityResourceTranslation.MergeAllWith(partialResources, Resources);
 
             Assert.Equal(Resources.Count, resultResources.Length);
         }

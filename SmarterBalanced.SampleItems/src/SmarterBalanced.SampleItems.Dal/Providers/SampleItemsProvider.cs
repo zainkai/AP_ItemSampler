@@ -28,7 +28,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             Task<XElement> accessibilityDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
             Task<XDocument> subjectDoc = XmlSerialization.GetXDocumentAsync(appSettings.SettingsConfig.ClaimsXMLPath);
 
-            var accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result, appSettings);
+            var accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result);
+
             GetInteractionTypes(interactionTypeDoc.Result, out interactionTypes, out interactionFamilies);
             var subjects = subjectDoc.Result.ToSubjects(interactionFamilies);
 
@@ -88,13 +89,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return itemDigests;
         }
 
-        private static ImmutableArray<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml, AppSettings appSettings)
+        private static ImmutableArray<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml)
         {
-
             ImmutableArray<AccessibilityResource> globalResources = accessibilityXml
                 .Element("MasterResourceFamily")
                 .Elements("SingleSelectResource")
-                .ToAccessibilityResources(appSettings)
+                .ToAccessibilityResources()
                 .ToImmutableArray();
 
             return accessibilityXml

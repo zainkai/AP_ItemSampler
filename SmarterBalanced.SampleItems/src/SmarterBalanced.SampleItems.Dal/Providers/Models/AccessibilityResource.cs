@@ -1,47 +1,60 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public sealed class AccessibilityResource
     {
-        public string Code { get; set; }
+        public string SelectedCode { get; }
+        public int Order { get; }
+        public string DefaultSelection { get; }
+        public ImmutableArray<AccessibilitySelection> Selections { get; }
+        public string Label { get; }
+        public string Description { get; }
+        public bool Disabled { get; }
+        public string ResourceType { get; }
 
-        public int Order { get; set; }
-
-        public string DefaultSelection { get; set; }
-
-        public string SelectedCode { get; set; }
-
-        public List<AccessibilitySelection> Selections { get; set; }
-
-        public string Label { get; set; }
-
-        public string Description { get; set; }
-
-        public bool Disabled { get; set; }
-
-        public string ResourceType { get; set; }
-        public string ResourceTypeLabel { get; set; }
-        public AccessibilityResource DeepClone()
+        public AccessibilityResource(
+            string selectedCode,
+            int order,
+            string defaultSelection,
+            ImmutableArray<AccessibilitySelection> selections,
+            string label,
+            string description,
+            bool disabled,
+            string resourceType)
         {
-            List<AccessibilitySelection> selections = new List<AccessibilitySelection>();
-            foreach(AccessibilitySelection selection in Selections)
-            {
-                selections.Add(selection.Clone());
-            }
-            return new AccessibilityResource
-            {
-                Code = Code,
-                Order = Order,
-                DefaultSelection = DefaultSelection,
-                SelectedCode = SelectedCode,
-                Selections = selections,
-                Label = Label,
-                Description = Description,
-                Disabled = Disabled,
-                ResourceType = ResourceType,
-                ResourceTypeLabel = ResourceTypeLabel
-            };
+            SelectedCode = selectedCode;
+            Order = order;
+            DefaultSelection = DefaultSelection;
+            Selections = selections;
+            Label = label;
+            Description = description;
+            Disabled = disabled;
+            ResourceType = resourceType;
+        }
+
+        public static AccessibilityResource Create(
+            string selectedCode = "",
+            int order = -1,
+            string defaultSelection = "",
+            ImmutableArray<AccessibilitySelection> selections = default(ImmutableArray<AccessibilitySelection>),
+            string label = "",
+            string description = "",
+            bool disabled = false,
+            string resourceType = "")
+        {
+            var resource = new AccessibilityResource(
+                selectedCode: selectedCode,
+                order: order,
+                defaultSelection: defaultSelection,
+                selections: selections,
+                label: label,
+                description: description,
+                disabled: disabled,
+                resourceType: resourceType);
+
+            return resource;
         }
     }
 }

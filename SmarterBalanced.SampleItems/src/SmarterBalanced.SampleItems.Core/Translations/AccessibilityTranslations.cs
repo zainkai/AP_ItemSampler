@@ -22,7 +22,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             if(items == null)
                 throw new ArgumentNullException(nameof(items));
 
-            return string.Join(";", items.Select(t => t.SelectedCode));
+            return string.Join(";", items.Select(r => r.SelectedCode));
         }
 
         /// <summary>
@@ -56,19 +56,20 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
             foreach (var resource in accessibilityResources)
             {
-                var newResource = resource.DeepClone();
-                var accListItems = newResource.Selections;
-                var accListItem = accListItems.FirstOrDefault(sel => codes.Contains(sel.Code));
-                if (accListItem != null)
-                {
-                    var selectedCode = accListItem.Code;
-                    newResource.SelectedCode = selectedCode;
-                }
-                else
-                {
-                    newResource.SelectedCode = newResource.DefaultSelection;
-                }
-                newResources.Add(newResource);
+                // TODO: immutability
+                //var newResource = resource.DeepClone();
+                //var accListItems = newResource.Selections;
+                //var accListItem = accListItems.FirstOrDefault(sel => codes.Contains(sel.Code));
+                //if (accListItem != null)
+                //{
+                //    var selectedCode = accListItem.Code;
+                //    newResource.SelectedCode = selectedCode;
+                //}
+                //else
+                //{
+                //    newResource.SelectedCode = newResource.DefaultSelection;
+                //}
+                //newResources.Add(newResource);
             }
 
             return newResources.ToImmutableArray();
