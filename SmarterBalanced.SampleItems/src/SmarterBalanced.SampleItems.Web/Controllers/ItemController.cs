@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
+using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,11 +14,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
     public class ItemController : Controller
     {
         private readonly IItemViewRepo repo;
+        private readonly AppSettings appSettings;
         private readonly ILogger logger;
 
-        public ItemController(IItemViewRepo itemViewRepo, ILoggerFactory loggerFactory)
+        public ItemController(IItemViewRepo itemViewRepo, AppSettings settings, ILoggerFactory loggerFactory)
         {
             repo = itemViewRepo;
+            appSettings = settings;
             logger = loggerFactory.CreateLogger<ItemController>();
         }
 
@@ -26,6 +30,28 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             logger.LogDebug($"{nameof(Index)} redirect to itemssearch");
 
             return RedirectToActionPermanent("Index", "itemsSearch");
+        }
+
+        /// <summary>
+        /// Converts a base64 encoded, serialized JSON string to
+        /// a dictionary representing user accessibility preferences.
+        /// </summary>
+        private Dictionary<string, string> DecodeCookie(string base64Cookie)
+        {
+            try
+            {
+                byte[] data = Convert.FromBase64String(base64Cookie);
+                string utf8Cookie = Encoding.UTF8.GetString(data);
+
+                var cookiePreferences = JsonConvert.DeserializeObject<Dictionary<string, string>>(base64Cookie);
+                return cookiePreferences;
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation(
+                    "Unable to deserialize user accessibility options from cookie. Reason: " + e.Message);
+                return null;
+            }
         }
 
         /// <summary>
@@ -43,12 +69,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 return BadRequest();
             }
 
-            string cookieName = repo.AppSettings.SettingsConfig.AccessibilityCookie;
-            string cookieValue = Request?.Cookies[cookieName] ?? string.Empty;
-            string[] isaapCodes = string.IsNullOrEmpty(iSAAP) ? new string[0] : iSAAP.Split(';');
-            
-            ItemViewModel itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookieValue);
+            string cookieName = appSettings.SettingsConfig.AccessibilityCookie;
+            string cookieString = Request?.Cookies[cookieName] ?? string.Empty;
+            var cookiePreferences = DecodeCookie(cookieString);
 
+            string[] isaapCodes = string.IsNullOrEmpty(iSAAP) ? new string[0] : iSAAP.Split(';');
+
+            var itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookiePreferences);
             if (itemViewModel == null)
             {
                 logger.LogWarning($"{nameof(Details)} invalid item {bankKey} {itemKey}");

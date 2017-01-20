@@ -35,7 +35,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
 
-                    AssignAccessibilityResourceGroups(itemDigest, resourceFamilies, settings);
+                    AssignAccessibilityResourceGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
 
                     digests.Add(itemDigest);
                 }
@@ -131,8 +131,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 Claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId()),
                 CommonCoreStandardsId = identifier.CommonCoreStandard,
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
-                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y" ? true : false,
-                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y" ? true : false
+                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
+                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y"
             };
 
             return digest;
@@ -197,6 +197,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
+        private static AccessibilityResource ApplyFlags(
+            AccessibilityResource resource,
+            bool aslSupported,
+            bool allowCalculator)
+        {
+            // TODO
+            return resource;
+        } 
+
         /// <summary>
         /// Assigns a list of AccessibilityResources to an item digest.
         /// If the item has auxilliary resources disabled, the resources are updated accordingly.
@@ -204,7 +213,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         private static void AssignAccessibilityResourceGroups(
             ItemDigest itemDigest,
             IList<AccessibilityResourceFamily> resourceFamilies,
-            AppSettings settings)
+            IList<AccessibilityType> accessibilityTypes)
         {
             var resources = resourceFamilies
                 .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
@@ -215,22 +224,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             {
                 return;
             }
-
             if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
             {
-                if (!itemDigest.AslSupported)
-                {
-                    DisableResource(resources, "AmericanSignLanguage");
-                }
+                // TODO
+                //if (!itemDigest.AslSupported)
+                //{
+                //    DisableResource(resources, "AmericanSignLanguage");
+                //}
 
-                if (!itemDigest.AllowCalculator)
-                {
-                    DisableResource(resources, "Calculator");
-                }
+                //if (!itemDigest.AllowCalculator)
+                //{
+                //    DisableResource(resources, "Calculator");
+                //}
             }
 
             List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
-            foreach(AccessibilityType type in settings.SettingsConfig.AccessibilityTypes)
+            foreach(AccessibilityType type in accessibilityTypes)
             {
                 var groupResources = resources.Where(r => r.ResourceType == type.Id).OrderBy(r => r.Order);
                 groups.Add(new AccessibilityResourceGroup(
@@ -243,19 +252,5 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             itemDigest.AccessibilityResourceGroups = groups.OrderBy(g => g.Order).ToImmutableArray();
         }
-        
-        private static void DisableResource(IEnumerable<AccessibilityResource> resources, string code)
-        {
-            // TODO: immutability
-
-            //var resource = resources.FirstOrDefault(t => t.Code == code);
-            //if (resource != null)
-            //{
-            //    resource.Disabled = true;
-            //    resource.Selections.ForEach(s => s.Disabled = true);
-            //}
-        }
-
     }
-
 }

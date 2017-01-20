@@ -97,15 +97,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         }
 
         /// <summary>
-        /// Tests null AccessibilityResourceViewModels to ISAAP code
-        /// </summary>
-        [Fact]
-        public void TestNullItemsToISAAP()
-        {
-            Assert.Throws<ArgumentNullException>(() => AccessibilityTranslations.ToISAAP(null));
-        }
-
-        /// <summary>
         /// Tests empty AccessibilityResourceViewModels to ISAAP code
         /// </summary>
         [Fact(Skip = "TODO")]

@@ -28,12 +28,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             
             var accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc);
 
-            ImmutableArray<InteractionType> interactionTypes = interactionTypeDoc
-                .Element("Items")
-                .Elements("Item")
-                .Select(i => i.ToInteractionType())
-                .ToImmutableArray();
-
+            var interactionTypes = interactionTypeDoc.ToInteractionTypes();
             ImmutableArray<InteractionFamily> interactionFamilies = interactionTypeDoc
                 .Element("Families")
                 .Elements("Family")

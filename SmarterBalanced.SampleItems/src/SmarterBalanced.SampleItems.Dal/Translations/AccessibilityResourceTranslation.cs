@@ -29,7 +29,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     var textElem = xs.Element("Text");
 
                     return new AccessibilityResource(
-                        selectedCode: (string)xs.Element("Code"),
+                        code: (string)xs.Element("Code"),
+                        selectedCode: defaultSelection,
                         order: (int)xs.Element("Order"),
                         defaultSelection: defaultSelection,
                         label: (string)textElem.Element("Label"),
@@ -83,14 +84,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 : selectionsElem.Select(s => s.ToSelection()).ToImmutableArray();
 
             var resource = new AccessibilityResource(
-                    selectedCode: (string)elem.Element("Code"),
-                    order: (int?)elem.Element("Order") ?? 0,
-                    defaultSelection: null,
-                    label: null,
-                    description: null,
-                    resourceType: null,
-                    disabled: elem.Element("Disabled") != null,
-                    selections: selections);
+                code: (string)elem.Element("Code"),
+                selectedCode: null,
+                order: (int?)elem.Element("Order") ?? 0,
+                defaultSelection: null,
+                label: null,
+                description: null,
+                resourceType: null,
+                disabled: elem.Element("Disabled") != null,
+                selections: selections);
 
             return resource;
         }
@@ -99,7 +101,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             this IEnumerable<XElement> xmlFamilyResources,
             IEnumerable<AccessibilityResource> globalResources)
         {
-
             var partialResources = xmlFamilyResources
                 .Select(r => ToAccessibilityResource(r))
                 .ToImmutableArray();

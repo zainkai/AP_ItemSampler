@@ -5,7 +5,16 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public sealed class AccessibilityResource
     {
+        /// <summary>
+        /// ID for this accessibility resource.
+        /// </summary>
+        public string Code { get; }
+
+        /// <summary>
+        /// ID of the current AccessibilitySelection.
+        /// </summary>
         public string SelectedCode { get; }
+
         public int Order { get; }
         public string DefaultSelection { get; }
         public ImmutableArray<AccessibilitySelection> Selections { get; }
@@ -15,6 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string ResourceType { get; }
 
         public AccessibilityResource(
+            string code,
             string selectedCode,
             int order,
             string defaultSelection,
@@ -24,6 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool disabled,
             string resourceType)
         {
+            Code = code;
             SelectedCode = selectedCode;
             Order = order;
             DefaultSelection = DefaultSelection;
@@ -34,7 +45,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             ResourceType = resourceType;
         }
 
+        public AccessibilityResource WithSelectedCode(string selectedCode)
+        {
+            var newResource = new AccessibilityResource(
+                code: Code,
+                selectedCode: selectedCode,
+                order: Order,
+                defaultSelection: DefaultSelection,
+                selections: Selections,
+                label: Label,
+                description: Description,
+                disabled: Disabled,
+                resourceType: ResourceType);
+
+            return newResource;
+        }
+
         public static AccessibilityResource Create(
+            string code = "",
             string selectedCode = "",
             int order = -1,
             string defaultSelection = "",
@@ -45,6 +73,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string resourceType = "")
         {
             var resource = new AccessibilityResource(
+                code: code,
                 selectedCode: selectedCode,
                 order: order,
                 defaultSelection: defaultSelection,
