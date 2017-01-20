@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
@@ -56,6 +56,26 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 label: Label,
                 description: Description,
                 disabled: Disabled,
+                resourceType: ResourceType);
+
+            return newResource;
+        }
+
+        public AccessibilityResource ToDisabled()
+        {
+            var newSelections = Selections
+                .Select(sel => sel.WithDisabled(true))
+                .ToImmutableArray();
+
+            var newResource = new AccessibilityResource(
+                code: Code,
+                selectedCode: SelectedCode,
+                order: Order,
+                defaultSelection: DefaultSelection,
+                selections: newSelections,
+                label: Label,
+                description: Description,
+                disabled: true,
                 resourceType: ResourceType);
 
             return newResource;

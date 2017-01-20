@@ -35,7 +35,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
 
-                    AssignAccessibilityResourceGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
+                    itemDigest.AccessibilityResourceGroups =
+                        CreateAccessibilityGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
 
                     digests.Add(itemDigest);
                 }
@@ -198,59 +199,63 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         }
 
         private static AccessibilityResource ApplyFlags(
-            AccessibilityResource resource,
+            this AccessibilityResource resource,
             bool aslSupported,
             bool allowCalculator)
         {
-            // TODO
+            if (!aslSupported && resource.Code == "AmericanSignLanguage")
+            {
+                var newResource = resource.ToDisabled();
+                return newResource;
+            }
+
+            if (!allowCalculator && resource.Code == "Calculator")
+            {
+                var newResource = resource.ToDisabled();
+                return newResource;
+            }
+            
             return resource;
         } 
-
-        /// <summary>
-        /// Assigns a list of AccessibilityResources to an item digest.
-        /// If the item has auxilliary resources disabled, the resources are updated accordingly.
-        /// </summary>
-        private static void AssignAccessibilityResourceGroups(
+        
+        private static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
             ItemDigest itemDigest,
             IList<AccessibilityResourceFamily> resourceFamilies,
             IList<AccessibilityType> accessibilityTypes)
         {
-            var resources = resourceFamilies
-                .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
-                    && t.Grades.Contains(itemDigest.Grade)
-                )?.Resources ?? default(ImmutableArray<AccessibilityResource>);
+            var family = resourceFamilies
+                .FirstOrDefault(f =>
+                    f.Subjects.Any(c => c == itemDigest.Subject?.Code) &&
+                    f.Grades.Contains(itemDigest.Grade));
 
-            if (resources.IsDefault)
+            if (family == null)
             {
-                return;
-            }
-            if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
-            {
-                // TODO
-                //if (!itemDigest.AslSupported)
-                //{
-                //    DisableResource(resources, "AmericanSignLanguage");
-                //}
-
-                //if (!itemDigest.AllowCalculator)
-                //{
-                //    DisableResource(resources, "Calculator");
-                //}
+                return ImmutableArray<AccessibilityResourceGroup>.Empty;
             }
 
-            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
-            foreach(AccessibilityType type in accessibilityTypes)
-            {
-                var groupResources = resources.Where(r => r.ResourceType == type.Id).OrderBy(r => r.Order);
-                groups.Add(new AccessibilityResourceGroup(
-                    type.Label,
-                    type.Order,
-                    groupResources
-                        .OrderBy(r => r.Order)
-                        .ToImmutableArray()));
-            }
+            var flaggedResources = family.Resources
+                .Select(r => r.ApplyFlags(
+                    aslSupported: itemDigest.AslSupported,
+                    allowCalculator: itemDigest.AllowCalculator))
+                .ToImmutableArray();
 
-            itemDigest.AccessibilityResourceGroups = groups.OrderBy(g => g.Order).ToImmutableArray();
+            var groups = accessibilityTypes
+                .Select(at =>
+                {
+                    var groupResources = flaggedResources
+                    .Where(r => r.ResourceType == at.Id)
+                    .ToImmutableArray();
+
+                    var group = new AccessibilityResourceGroup(
+                        label: at.Label,
+                        order: at.Order,
+                        accessibilityResources: groupResources);
+
+                    return group;
+                })
+                .ToImmutableArray();
+
+            return groups;
         }
     }
 }

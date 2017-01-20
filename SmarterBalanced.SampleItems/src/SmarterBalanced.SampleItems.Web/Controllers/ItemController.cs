@@ -43,14 +43,15 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 byte[] data = Convert.FromBase64String(base64Cookie);
                 string utf8Cookie = Encoding.UTF8.GetString(data);
 
-                var cookiePreferences = JsonConvert.DeserializeObject<Dictionary<string, string>>(base64Cookie);
+                var cookiePreferences =
+                    JsonConvert.DeserializeObject<Dictionary<string, string>>(utf8Cookie) ?? new Dictionary<string, string>();
                 return cookiePreferences;
             }
             catch (Exception e)
             {
                 logger.LogInformation(
                     "Unable to deserialize user accessibility options from cookie. Reason: " + e.Message);
-                return null;
+                return new Dictionary<string, string>();
             }
         }
 
