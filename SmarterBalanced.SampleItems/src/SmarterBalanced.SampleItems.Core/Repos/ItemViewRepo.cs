@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -72,9 +73,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}";
         }
 
-        private List<AccessibilityResourceViewModel> SetAccessibilityFromCookie(AccessibilityResourceViewModel[] cookiePreferences, List<AccessibilityResourceViewModel> defaultPreferences)
+        private List<AccessibilityResource> SetResourceValuesFromCookie(ImmutableArray<AccessibilityResource> cookiePreferences, ImmutableArray<AccessibilityResource> defaultPreferences)
         {
-            List<AccessibilityResourceViewModel> computedResources = new List<AccessibilityResourceViewModel>();
+            List<AccessibilityResource> computedResources = new List<AccessibilityResource>();
 
             //Use the defaults for any disabled accessibility resources
             computedResources = defaultPreferences.Where(r => r.Disabled).ToList();
@@ -82,16 +83,17 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var disputedResources = defaultPreferences.Where(r => !r.Disabled);
 
             //Enabled resources
-            foreach (AccessibilityResourceViewModel res in disputedResources)
+            foreach (AccessibilityResource res in disputedResources)
             {
+                var newRes = res.DeepClone();
                 try
                 {
-                    var userPref = cookiePreferences.Where(p => p.Label == res.Label).SingleOrDefault();
-                    var defaultSelDisabled = res.Selections.Where(s => s.Code == userPref.SelectedCode).SingleOrDefault();
+                    var userPref = cookiePreferences.Where(p => p.Label == newRes.Label).SingleOrDefault();
+                    var defaultSelDisabled = newRes.Selections.Where(s => s.Code == userPref.SelectedCode).SingleOrDefault();
                     var selected = userPref.SelectedCode;
                     if (!defaultSelDisabled.Disabled)
                     {
-                        res.SelectedCode = userPref.SelectedCode;
+                        newRes.SelectedCode = userPref.SelectedCode;
                     }
                 }
                 catch (Exception e) when (
@@ -105,10 +107,48 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     logger.LogInformation(e.ToString());
                 }
 
-                computedResources.Add(res);
+                computedResources.Add(newRes);
             }
 
             return computedResources;
+        }
+
+        private List<AccessibilityResourceGroup> SetAccessibilityFromCookie(AccessibilityResourceGroup[] cookiePreferences, ImmutableArray<AccessibilityResourceGroup> defaultPreferences)
+        {
+            List<AccessibilityResourceGroup> resourceGroups = new List<AccessibilityResourceGroup>();
+            foreach (AccessibilityResourceGroup group in defaultPreferences)
+            {
+                ImmutableArray<AccessibilityResource> cookieResources;
+                ImmutableArray<AccessibilityResource> computedResources;
+                try
+                {
+                    cookieResources = cookiePreferences.Where(g => g.Order == group.Order).First().AccessibilityResources;
+                    computedResources = SetResourceValuesFromCookie(cookieResources, group.AccessibilityResources)
+                        .OrderBy(r => r.Order)
+                        .OrderBy(r => r.Disabled)
+                        .ToImmutableArray();
+                }
+                catch(Exception e)
+                {
+                    //Fall back to the defaults if there are no user preferences for the group
+                    if(e is ArgumentNullException || e is InvalidOperationException)
+                    {
+                        logger.LogDebug($"Cookie does not contain user accessibility preferences for {group.Label} group");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                    computedResources = group.AccessibilityResources;
+                }
+
+                resourceGroups.Add(new AccessibilityResourceGroup(
+                    label: group.Label,
+                    order: group.Order,
+                    accessibilityResources: computedResources
+                    ));
+            }
+            return resourceGroups;
         }
 
         /// <summary>
@@ -116,13 +156,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="cookieValue"></param>
         /// <returns></returns>
-        private AccessibilityResourceViewModel[] DecodeCookie(string cookieValue)
+        private AccessibilityResourceGroup[] DecodeCookie(string cookieValue)
         {
             try
             {
                 byte[] data = Convert.FromBase64String(cookieValue);
                 cookieValue = Encoding.UTF8.GetString(data);
-                AccessibilityResourceViewModel[] cookiePreferences = JsonConvert.DeserializeObject<AccessibilityResourceViewModel[]>(cookieValue);
+                AccessibilityResourceGroup[] cookiePreferences = JsonConvert.DeserializeObject<AccessibilityResourceGroup[]>(cookieValue);
                 return cookiePreferences;
             }
             catch (Exception e)
@@ -142,7 +182,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         public ItemViewModel GetItemViewModel(int bankKey, int itemKey, string[] iSAAPCodes,
             string cookieValue)
         {
-            AccessibilityResourceViewModel[] cookiePreferences = null;
+            AccessibilityResourceGroup[] cookiePreferences = null;
             var itemDigest = GetItemDigest(bankKey, itemKey);
             var itemCardViewModel = GetItemCardViewModel(bankKey, itemKey);
             if (itemDigest == null || itemCardViewModel == null)
@@ -157,17 +197,17 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 cookiePreferences = DecodeCookie(cookieValue);
             }
 
-            var accResources = itemDigest.AccessibilityResources.ToAccessibilityResourceViewModels(iSAAPCodes);
+            var accResources = itemDigest.AccessibilityResourceGroups.SetIsaap(iSAAPCodes);
             if ((cookiePreferences != null) && (iSAAPCodes.Length == 0))
             {
-                accResources = SetAccessibilityFromCookie(cookiePreferences, accResources);
+                accResources = SetAccessibilityFromCookie(cookiePreferences, accResources).ToImmutableArray();
             }
 
             return new ItemViewModel(
                             itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
                             accessibilityCookieName: AppSettings.SettingsConfig.AccessibilityCookie,
                             aboutItemVM: aboutItem,
-                            accResourceVMs: accResources
+                            accResourceGroups: accResources
                         );
         }
 

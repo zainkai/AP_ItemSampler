@@ -79,3 +79,24 @@
 .btn-cancel:hover {
     background-color: #106481;
 }
+
+.item-nav-group {
+    position: relative;
+    margin-bottom: 3px;
+}
+
+.item-nav-bottom {
+    position: absolute;
+    bottom: 0;    
+}
+
+.item-nav-btn {
+    font-size: 14px;
+    padding: 0px 2px 0px 2px;
+    color: black;
+}
+
+.accessibility-btn {
+    font-size: 18px;
+    padding: 2px 2px 2px 2px;
+}

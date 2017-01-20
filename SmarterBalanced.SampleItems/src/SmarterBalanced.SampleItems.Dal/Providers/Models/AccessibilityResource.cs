@@ -10,6 +10,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         public string DefaultSelection { get; set; }
 
+        public string SelectedCode { get; set; }
+
         public List<AccessibilitySelection> Selections { get; set; }
 
         public string Label { get; set; }
@@ -32,6 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 Code = Code,
                 Order = Order,
                 DefaultSelection = DefaultSelection,
+                SelectedCode = SelectedCode,
                 Selections = selections,
                 Label = Label,
                 Description = Description,

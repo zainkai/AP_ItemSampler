@@ -3,6 +3,7 @@
         disabled: boolean;
         label: string;
         code: string;
+        order: number;
     }
 
     export interface Props {

@@ -63,11 +63,21 @@ class RubricComponent extends React.Component<Rubric, {}> {
         const label = `${this.props.language} Rubric`;
 
         const rubricEntries = this.props.rubricEntries.map((re, i) => <RubricEntryComponent {...re} key={String(i)} />);
-        const rubricSamples = this.props.samples.map((s, i) => <RubricSampleComponent {...s} key={String(i)} />);
+
+        let rubricSamples: JSX.Element[] = [];
+        let i: number = 0;
+        for (const sample of this.props.samples) {
+            const key = `${i}:`;
+            const responses = sample.sampleResponses.map((sr, idx) => <SampleResponseComponent {...sr} key={key + String(idx)} />);
+            rubricSamples.push(...responses);
+            i++;
+        }
 
         return (
             <Collapsible.CComponent label={label}>
+                <h4>Rubrics</h4>
                 {rubricEntries}
+                <h4>Sample Responses</h4>
                 {rubricSamples}
             </Collapsible.CComponent>
         );
@@ -81,18 +91,6 @@ class RubricEntryComponent extends React.Component<RubricEntry, {}> {
         return (
             <Collapsible.CComponent label={label}>
                 <div dangerouslySetInnerHTML={{ __html: this.props.value }} />
-            </Collapsible.CComponent>
-        );
-    }
-}
-
-class RubricSampleComponent extends React.Component<RubricSample, {}> {
-    render() {
-        const label = `Sample Response (Minimum Score: ${this.props.minValue}, Maximum Score ${this.props.maxValue})`;
-        const responses = this.props.sampleResponses.map((sr, i) => <SampleResponseComponent {...sr} key={String(i)} />);
-        return (
-            <Collapsible.CComponent label={label}>
-                {responses}
             </Collapsible.CComponent>
         );
     }

@@ -61,7 +61,7 @@ namespace SmarterBalanced.SampleItems.Web
             }
             catch (Exception e)
             {
-                logger.LogCritical($"{e.Message} occured when loading the context");
+                logger.LogCritical($"{e.Message} occurred when loading the context");
                 throw e;
             }
 

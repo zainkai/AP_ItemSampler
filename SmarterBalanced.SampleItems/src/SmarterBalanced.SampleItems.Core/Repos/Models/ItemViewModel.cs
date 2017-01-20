@@ -1,5 +1,6 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
@@ -11,18 +12,18 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public AboutItemViewModel AboutItemVM { get; }
 
-        public List<AccessibilityResourceViewModel> AccResourceVMs { get; }
+        public ImmutableArray<AccessibilityResourceGroup> AccResourceGroups { get; }
 
         public ItemViewModel(
             string itemViewerServiceUrl,
             string accessibilityCookieName,
             AboutItemViewModel aboutItemVM,
-            List<AccessibilityResourceViewModel> accResourceVMs)
+            ImmutableArray<AccessibilityResourceGroup> accResourceGroups)
         {
             ItemViewerServiceUrl = itemViewerServiceUrl;
             AccessibilityCookieName = accessibilityCookieName;
             AboutItemVM = aboutItemVM;
-            AccResourceVMs = accResourceVMs;
+            AccResourceGroups = accResourceGroups;
         }
     }
 }

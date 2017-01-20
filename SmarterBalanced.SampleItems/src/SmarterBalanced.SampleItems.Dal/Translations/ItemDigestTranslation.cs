@@ -22,7 +22,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
-            IList<InteractionType> interactionTypes, IList<Subject> subjects, RubricPlaceHolderText rubricPlaceHolder)
+            IList<InteractionType> interactionTypes, IList<Subject> subjects,
+            AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
@@ -32,9 +33,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, rubricPlaceHolder);
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
 
-                    AssignAccessibilityResources(itemDigest, resourceFamilies);
+                    AssignAccessibilityResourceGroups(itemDigest, resourceFamilies, settings);
 
                     digests.Add(itemDigest);
                 }
@@ -55,9 +56,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, RubricPlaceHolderText rubricPlaceHolder)
+                                    IList<Subject> subjects, AppSettings appSettings)
         {
-            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(rubricPlaceHolder)).Where(r => r != null).ToImmutableArray();
+            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
             return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics);
         }
 
@@ -156,9 +157,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <summary>
         /// Returns a Single Rubric from content and filters out any placeholder text
         /// </summary>
-        public static Rubric ToRubric(this Content content, RubricPlaceHolderText placeholder)
+        public static Rubric ToRubric(this Content content, AppSettings appSettings)
         {
-            if (placeholder == null) { throw new ArgumentNullException(nameof(placeholder)); }
+            if (appSettings == null || appSettings.RubricPlaceHolderText == null || appSettings.SettingsConfig == null)
+                { throw new ArgumentNullException(nameof(appSettings)); }
+
+            var placeholder = appSettings.RubricPlaceHolderText;
+            var languageToLabel = appSettings.SettingsConfig.LanguageToLabel;
 
             if (content == null ||
                 content.RubricList == null ||
@@ -185,7 +190,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 return null;
             }
 
-            var rubric = new Rubric(content.Language, rubricEntries, samples);
+            string languangeLabel = (string.IsNullOrEmpty(content.Language)) ? string.Empty: 
+                                                languageToLabel[content.Language.ToUpper()];
+
+            var rubric = new Rubric(languangeLabel, rubricEntries, samples);
             return rubric;
         }
 
@@ -193,21 +201,24 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// Assigns a list of AccessibilityResources to an item digest.
         /// If the item has auxilliary resources disabled, the resources are updated accordingly.
         /// </summary>
-        private static void AssignAccessibilityResources(ItemDigest itemDigest, IList<AccessibilityResourceFamily> resourceFamilies)
+        private static void AssignAccessibilityResourceGroups(
+            ItemDigest itemDigest,
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            AppSettings settings)
         {
-            List<AccessibilityResource> resources = resourceFamilies
+            var resources = resourceFamilies
                 .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
                     && t.Grades.Contains(itemDigest.Grade)
-                )?.Resources;
+                )?.Resources ?? default(ImmutableArray<AccessibilityResource>);
 
-            if (resources == null)
+            if (resources.IsDefault)
             {
                 return;
             }
 
             if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
             {
-                resources = resources.Select(t => t.DeepClone()).ToList();
+                resources = resources.Select(t => t.DeepClone()).ToImmutableArray();
 
                 if (!itemDigest.AslSupported)
                 {
@@ -220,14 +231,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
             }
 
-            itemDigest.AccessibilityResources = resources;
-        }
+            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
+            foreach(AccessibilityType type in settings.SettingsConfig.AccessibilityTypes)
+            {
+                var groupResources = resources.Where(r => r.ResourceType == type.Id).OrderBy(r => r.Order);
+                groups.Add(new AccessibilityResourceGroup(
+                    type.Label,
+                    type.Order,
+                    groupResources
+                        .OrderBy(r => r.Order)
+                        .ToImmutableArray()));
+            }
 
-        /// <summary>
-        /// Disables a given resource
-        /// </summary>
-        /// <param name="resource"></param>
-        private static void DisableResource(List<AccessibilityResource> resources, string code)
+            itemDigest.AccessibilityResourceGroups = groups.OrderBy(g => g.Order).ToImmutableArray();
+        }
+        
+        private static void DisableResource(IEnumerable<AccessibilityResource> resources, string code)
         {
             var resource = resources.FirstOrDefault(t => t.Code == code);
             if (resource != null)
