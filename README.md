@@ -10,7 +10,6 @@ Master | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?
 Stage | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?branch=stage)](https://travis-ci.org/osu-cass/SampleItemsWebsite) 
 Dev  | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?branch=dev)](https://travis-ci.org/osu-cass/SampleItemsWebsite)
 
-
 ## Getting Started
 Below is our recommended development environment, although it is not required.
 - Windows 10
@@ -24,8 +23,7 @@ Below is our recommended development environment, although it is not required.
 - Download the latest sample item content package (TODO: Link?)
     - Place this in the location specified in src/Web/appsettings.json (`ContentRootDirectory`)
 
-### Running
-
+## Running
 #### Using Visual Studio 2015
 - Open the project in Visual Studio 2015
 - Click the run button

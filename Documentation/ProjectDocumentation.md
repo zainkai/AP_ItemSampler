@@ -1,7 +1,7 @@
 # Sample Items Website Code Documentation
 
 # Application Overview
-The Sample Items Website is a Microsoft ASP.NET Core web application that displays
+The Sample Items Website is a Microsoft ASP.NET Core MVC web application that displays
 sample test question items.
 
 The content for the site is provided by a content package supplied by the Smarter Balanced 
@@ -16,7 +16,7 @@ that are used throughout the application.
 Within `appsettings.json`, the `SettingsConfig` object contains configurations 
 necessary to start the application, as well as runtime configuration settings.
 
-Following is a description of important configurations within this object:
+#### Following is a description of important configurations within this object:
 
 `ContentItemDirectory`: Location of the **Items** directory within thecontent package. 
 Dependent on deployment environment setting (development, staging, production).
