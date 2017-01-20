@@ -1,7 +1,7 @@
 # Welcome to the Smarter Balanced Sample Items Website
-.NET Core MVC Web Application
-The Sample Items Website allows users to quickly search for and view sample 
-test question items provided by the Smarter Balanced Assessment Consortium.
+The Sample Items Website .NET Core MVC Web Application. It allows users 
+to quickly search for and view sample test question items provided by the 
+Smarter Balanced Assessment Consortium.
 
 ## Unit Tests
 Branch| Build
@@ -12,7 +12,7 @@ Dev  | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?br
 
 
 ## Getting Started
-Below is our recommended development environment, although it is not required to contribute.
+Below is our recommended development environment, although it is not required.
 - Windows 10
 - Visual Studio Enterprise 2015
 
