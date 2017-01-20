@@ -1,4 +1,4 @@
-# Sample Items Website Code Documentation
+# Code-Level Documentation
 
 # Application Overview
 The Sample Items Website is a Microsoft ASP.NET Core MVC web application that displays
