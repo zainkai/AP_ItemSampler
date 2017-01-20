@@ -9,7 +9,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using Xunit;
 
-
 namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 {
     public class SampleItemsSearchRepoTests
