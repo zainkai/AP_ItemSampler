@@ -16,8 +16,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <param name="singleSelectResources"></param>
         /// <returns></returns>
         public static IList<AccessibilityResource> ToAccessibilityResources(
-            this IEnumerable<XElement> singleSelectResources,
-            Dictionary<string, string> accessibilityTypeLabels)
+            this IEnumerable<XElement> singleSelectResources, AppSettings appSettings)
         {
             IList<AccessibilityResource> accessibilityResources = singleSelectResources
                 .Select(a =>
@@ -25,13 +24,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     var selections = a.Elements("Selection").ToSelections();
 
                     var defaultSelection = (string)a.Element("DefaultSelection");
-                    defaultSelection = string.IsNullOrEmpty(defaultSelection)
-                        ? selections.FirstOrDefault()?.Code
-                        : defaultSelection;
+                    defaultSelection = string.IsNullOrEmpty(defaultSelection) ? 
+                                        selections.FirstOrDefault()?.Code : defaultSelection;
 
-                    var resourceType = (string)a.Element("ResourceType") ?? string.Empty;
-                    var resourceTypeLabel = accessibilityTypeLabels[resourceType];
+                    string resourceType = string.IsNullOrEmpty((string)a.Element("ResourceType")) ? 
+                                            string.Empty : (string)a.Element("ResourceType");
 
+                    string resourceTypeLabel = appSettings.SettingsConfig.AccessibilityTypes.Single(t => t.Id == resourceType).Label;
                     return new AccessibilityResource
                     {
                         Code = (string)a.Element("Code"),
@@ -39,8 +38,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                         DefaultSelection = defaultSelection,
                         Label = (string)a.Element("Text").Element("Label"),
                         Description = (string)a.Element("Text").Element("Description"),
-                        Disabled = a?.Element("Disabled") != null,
-                        Selections = selections.ToList(), // TODO: do accessibility translation without mutation
+                        Disabled = (a.Element("Disabled") != null) ? true : false,
+                        Selections = selections.ToList(),
                         ResourceType = resourceType,
                         ResourceTypeLabel = resourceTypeLabel
                     };

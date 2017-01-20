@@ -1,42 +1,52 @@
 ﻿interface AccessibilityResource {
-    defaultCode: string;
+    defaultSelection: string;
     description: string;
     disabled: boolean;
     label: string;
     selectedCode: string;
     resourceTypeLabel: string;
+    order: number;
     selections: Dropdown.Selection[];
 }
 
 namespace ItemPage {
 
-    export interface Props {
-        itemViewerServiceUrl: string;
-        accessibilityCookieName: string;
-        accResourceVMs: AccessibilityResource[];
-        aboutItemVM: AboutItem.Props;
-    }
-
-    function getAccessibilityString(accResourceVM: AccessibilityResource[]): string {
+    function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
         let str = "";
-        for (let res of accResourceVM) {
-            if (res.selectedCode && !res.disabled) {
-                str += res.selectedCode + ";";
+        for (let group of accResourceGroups) {
+            for (let res of group.accessibilityResources) {
+                if (res.selectedCode && !res.disabled) {
+                    str += res.selectedCode + ";";
+                }
             }
         }
         return str;
     }
 
-    function trimAccResource(model: AccessibilityResource): { label: string, selectedCode: string } {
+    function resetResource(model: AccessibilityResource): AccessibilityResource {
+        const newModel = Object.assign({}, model);
+        newModel.selectedCode = model.defaultSelection;
+        return newModel;
+    }
+
+    function trimAccResource(resource: AccessibilityResource): { label: string, selectedCode: string } {
         return {
-            label: model.label,
-            selectedCode: model.selectedCode,
+            label: resource.label,
+            selectedCode: resource.selectedCode,
         };
     }
 
-    function generateAccCookieValue(accessibilityPrefs: AccessibilityResource[]): string {
-        let newPrefs = accessibilityPrefs.map(trimAccResource);
-        return JSON.stringify(newPrefs);
+    function generateAccCookieValue(accGroups: AccResourceGroup[]): string {
+        let cookieValue = "";
+        let newGroups = [];
+        for (let group of accGroups) {
+            newGroups.push({
+                label: group.label,
+                order: group.order,
+                accessibilityResources: group.accessibilityResources.map(trimAccResource)
+            });
+        }
+        return JSON.stringify(newGroups);
     }
 
     function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
@@ -46,6 +56,7 @@ namespace ItemPage {
                 label: "Disabled for item",
                 code: "",
                 disabled: true,
+                order: 0,
             };
             newSelection.selections.push(disabledOption);
             newSelection.selectedCode = "";
@@ -54,81 +65,54 @@ namespace ItemPage {
         return resource;
     }
 
-    export function getResourceTypes(resources: AccessibilityResource[]): string[] {
+    export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
         let resourceTypes: string[] = [];
-        for (const res of resources) {
-            if (resourceTypes.indexOf(res.resourceTypeLabel) === -1) {
-                resourceTypes.push(res.resourceTypeLabel);
+        for (const group of resourceGroups) {
+            if (resourceTypes.indexOf(group.label) === -1) {
+                resourceTypes.push(group.label);
             }
         }
         return resourceTypes;
     }
 
-    interface State {
-        ivsAccOptions: string;
-        accResourceVMs: AccessibilityResource[];
+    export interface AccResourceGroup {
+        label: string;
+        order: number;
+        accessibilityResources: AccessibilityResource[];
     }
+
+    export interface ViewModel {
+        itemViewerServiceUrl: string;
+        accessibilityCookieName: string;
+        accResourceGroups: AccResourceGroup[];
+        aboutItemVM: AboutItem.Props;
+    }
+
+    export interface Props extends ViewModel {
+        onSave: (selections: AccessibilityModal.ResourceSelections) => void;
+        onReset: () => void;
+    }
+
+    interface State { }
 
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
-            let accResourceVMs = this.props.accResourceVMs.map(addDisabledPlaceholder).sort((a, b) => {
-                let aLabel = a.label.toLowerCase();
-                let bLabel = b.label.toLowerCase();
-                return (aLabel < bLabel) ? -1 : (aLabel > bLabel) ? 1 : 0;
-            });
-            this.state = {
-                ivsAccOptions: getAccessibilityString(this.props.accResourceVMs),
-                accResourceVMs: accResourceVMs,
-            };
+            this.state = { selections: {} };
         }
 
-        updateResource = (code: string, label: string) => {
-            const newResources = this.state.accResourceVMs.map((resource) => {
-                if (resource.label === label) {
-                    const newResource = Object.assign({}, resource);
-                    newResource.selectedCode = code;
-                    return newResource;
-                }
-                return resource;
-            });
-            this.setState({
-                ivsAccOptions: this.state.ivsAccOptions,
-                accResourceVMs: newResources,
-            });
-        }
-
-        resetModelToDefault(model: AccessibilityResource): AccessibilityResource {
-            const newModel = Object.assign({}, model);
-            newModel.selectedCode = model.defaultCode;
-            return newModel;
-        }
-
-        saveOptions = (event: React.FormEvent): void => {
-            //Update Cookie with current options
-            event.preventDefault();
-            //copy the old accessibility resource view models
-            let cookieValue = generateAccCookieValue(this.state.accResourceVMs);
-            this.setState({
-                accResourceVMs: this.state.accResourceVMs,
-                ivsAccOptions: getAccessibilityString(this.state.accResourceVMs),
-            });
-            document.cookie = this.props.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
+        saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
+            this.props.onSave(resourceSelections);
         }
 
         resetOptions = (event: React.FormEvent): void => {
             event.preventDefault();
-            document.cookie = this.props.accessibilityCookieName.concat("=", "", "; path=/");
-            let newAccResourceVms = this.state.accResourceVMs.map(this.resetModelToDefault);
-            this.setState({
-                ivsAccOptions: getAccessibilityString(newAccResourceVms),
-                accResourceVMs: newAccResourceVms,
-            });
+            this.props.onReset();
         }
 
-        resetAccForm = (event: React.FormEvent): void => {
+        cancelChanges = (event: React.FormEvent): void => {
             event.preventDefault();
-            //TODO: reset the accessibility form to the currently set code
+            this.setState({ selections: {} });
         }
 
         openAboutItemModal(e: React.KeyboardEvent) {
@@ -161,7 +145,8 @@ namespace ItemPage {
         }
 
         render() {
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", this.state.ivsAccOptions);
+            let isaap = toiSAAP(this.props.accResourceGroups);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
                 <div>
@@ -195,20 +180,71 @@ namespace ItemPage {
                         </div>
                     </div>
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
-                        accessibilityString={this.state.ivsAccOptions}
-                        url={ivsUrl}/>
+                        accessibilityString={isaap}
+                        url={ivsUrl} /> {/* TODO: remove redundant prop */}
                     <AboutItem.AIComponent {...this.props.aboutItemVM} />
-                    <AccessibilityModal.ItemAccessibilityModal localAccessibility={this.state.accResourceVMs} updateSelection={this.updateResource} onSave={this.saveOptions} onReset={this.resetOptions} onCancel={this.resetAccForm} />
-                    <Share.ShareModal iSAAP={getAccessibilityString(this.state.accResourceVMs)} />
+                    <AccessibilityModal.ItemAccessibilityModal
+                        accResourceGroups={this.props.accResourceGroups}
+                        onSave={this.props.onSave}
+                        onReset={this.props.onReset} />
+                    <Share.ShareModal iSAAP={isaap}/>
                 </div>
             );
         }
     }
 
+    export class Controller {
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
 
+        onSave = (selections: AccessibilityModal.ResourceSelections) => {
+
+            const newGroups: AccResourceGroup[] = [];
+            for (let group of this.itemProps.accResourceGroups) {
+                const newGroup = Object.assign({}, group);
+                const newResources: AccessibilityResource[] = [];
+                for (let res of newGroup.accessibilityResources) {
+                    const newRes = Object.assign({}, res);
+                    newRes.selectedCode = selections[newRes.label] || newRes.selectedCode;
+                    newResources.push(newRes);
+                }
+                newGroup.accessibilityResources = newResources;
+                newGroups.push(newGroup);
+            }
+            this.itemProps = Object.assign({}, this.itemProps);
+            this.itemProps.accResourceGroups = newGroups;
+
+            let cookieValue = generateAccCookieValue(this.itemProps.accResourceGroups);
+            document.cookie = this.itemProps.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
+
+            this.render();
+        }
+
+        onReset = () => {
+            document.cookie = this.itemProps.accessibilityCookieName.concat("=", "", "; path=/");
+            
+            const newAccResourceGroups = this.itemProps.accResourceGroups.map(g => {
+                const newGroup = Object.assign({}, g);
+                newGroup.accessibilityResources = newGroup.accessibilityResources.map(resetResource);
+                return newGroup;
+            });
+
+            this.itemProps = Object.assign({}, this.itemProps);
+            this.itemProps.accResourceGroups = newAccResourceGroups;
+            
+            this.render();
+        }
+
+        render() {
+            ReactDOM.render(
+                <Page {...this.itemProps} onSave={this.onSave} onReset={this.onReset} />,
+                this.rootDiv);
+        }
+    }
 }
 
-function initializeItemPage(viewModel: ItemPage.Props) {
-    ReactDOM.render(<ItemPage.Page {...viewModel} />,
-        document.getElementById("item-container") as HTMLElement);
+function initializeItemPage(itemProps: ItemPage.ViewModel) {
+    const controller = new ItemPage.Controller(
+        itemProps,
+        document.getElementById("item-container") as HTMLDivElement);
+    controller.render();
 }

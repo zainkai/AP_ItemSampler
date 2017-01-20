@@ -94,7 +94,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             ImmutableArray<AccessibilityResource> globalResources = accessibilityXml
                 .Element("MasterResourceFamily")
                 .Elements("SingleSelectResource")
-                .ToAccessibilityResources(appSettings.SettingsConfig.AccessibilityTypeLabels)
+                .ToAccessibilityResources(appSettings)
                 .ToImmutableArray();
 
             return accessibilityXml

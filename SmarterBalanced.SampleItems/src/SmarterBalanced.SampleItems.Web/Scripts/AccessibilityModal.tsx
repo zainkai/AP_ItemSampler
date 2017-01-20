@@ -1,10 +1,12 @@
 ﻿namespace AccessibilityModal {
     interface Props {
-        localAccessibility: AccessibilityResource[];
-        updateSelection(category: string, code: string): void;
-        onSave(event: React.FormEvent): void;
-        onReset(event: React.FormEvent): void;
-        onCancel(event: React.FormEvent): void;
+        accResourceGroups: ItemPage.AccResourceGroup[];
+        onSave(selections: ResourceSelections): void;
+        onReset(): void;
+    }
+
+    export interface ResourceSelections {
+        [resourceName: string]: string;
     }
 
     interface IsResourceExpanded {
@@ -12,7 +14,8 @@
     }
 
     interface State {
-        resourceTypeExpanded: IsResourceExpanded;
+        resourceTypeExpanded?: IsResourceExpanded;
+        resourceSelections?: ResourceSelections;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, State> {
@@ -21,17 +24,20 @@
             super(props);
 
             const expandeds: IsResourceExpanded = {};
-            const resourceTypes = ItemPage.getResourceTypes(this.props.localAccessibility);
+            const resourceTypes = this.props.accResourceGroups.map((res) => {
+                return res.label;
+            });
             for (const key of resourceTypes) {
                 expandeds[key] = false;
             }
             this.state = {
-                resourceTypeExpanded: expandeds
+                resourceTypeExpanded: expandeds,
+                resourceSelections: {}
             };
         }
 
         toggleResourceType(resourceType: string) {
-            const expandeds = Object.assign({}, this.state.resourceTypeExpanded);
+            const expandeds = Object.assign({}, this.state.resourceTypeExpanded || {});
             expandeds[resourceType] = !expandeds[resourceType];
 
             this.setState({
@@ -39,32 +45,41 @@
             });
         }
 
-        renderResourceType(type: string) {
-            let matchingResources = this.props.localAccessibility.filter(res => res.resourceTypeLabel === type);
-            matchingResources.sort((a, b) => {
-                if (!a.disabled && b.disabled) {
-                    return -1;
-                } else if (a.disabled && !b.disabled) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            });
+        updateSelection = (code: string, label: string) => {
+            const newSelections = Object.assign({}, this.state.resourceSelections || {});
+            newSelections[label] = code;
 
-            const resCount = matchingResources.length;
-            const isExpanded = this.state.resourceTypeExpanded[type];
+            this.setState({ resourceSelections: newSelections });
+        }
+
+        onSave = (e: React.FormEvent) => {
+            e.preventDefault();
+            this.props.onSave(this.state.resourceSelections || {});
+        }
+
+        onCancel = (e: React.FormEvent) => {
+            e.preventDefault();
+            this.setState({ resourceSelections: {} });
+        }
+
+        renderResourceType(type: string) {
+            let resources = this.props.accResourceGroups.filter(group => group.label === type)[0].accessibilityResources;
+
+            const resCount = resources.length;
+            const isExpanded = (this.state.resourceTypeExpanded || {})[type];
             if (!isExpanded) {
-                matchingResources = matchingResources.slice(0, 4);
+                resources = resources.slice(0, 4);
             }
 
-            let dropdowns = matchingResources.map(res => {
+            let dropdowns = resources.map(res => {
+                let selectedCode = (this.state.resourceSelections || {})[res.label] || res.selectedCode;
                 let ddprops: Dropdown.Props = {
                     defaultSelection: res.selectedCode,
                     label: res.label,
                     selections: res.selections,
-                    selectedCode: res.selectedCode,
+                    selectedCode: selectedCode,
                     disabled: res.disabled,
-                    updateSelection: this.props.updateSelection,
+                    updateSelection: this.updateSelection,
                 }
                 return <Dropdown.Dropdown{...ddprops} key={res.label} />;
             });
@@ -100,30 +115,30 @@
         }
 
         render() {
-            const types = ItemPage.getResourceTypes(this.props.localAccessibility);
+            const types = ItemPage.getResourceTypes(this.props.accResourceGroups);
             const groups = types.map(t => this.renderResourceType(t));
             return (
                 <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-hidden="true">
                     <div className="modal-dialog accessibility-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.onCancel}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
                             </div>
                             <div className="modal-body">
                                 <p><span>Options highlighted in grey are not available for this item.</span></p>
-                                <form id="accessibility-form" onSubmit={this.props.onSave}>
+                                <form id="accessibility-form" onSubmit={this.onSave}>
                                     <div className="accessibility-groups">
                                         {groups}
                                     </div>
                                 </form>
                             </div>
                             <div className="modal-footer">
-                                <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.props.onSave}> Update</button>
+                                <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
                                 <button className="btn btn-primary" data-dismiss="modal" onClick={this.props.onReset} >Reset to Default</button>
-                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.props.onCancel}>Cancel</button>
+                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                             </div>
                         </div>
                     </div>
