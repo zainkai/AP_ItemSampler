@@ -18,7 +18,6 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         ItemsSearchController controllerBadReq;
         ItemsSearchViewModel itemsSearchViewModel;
         ItemsSearchViewModel itemsSearchViewModelBad;
-        List<ItemCardViewModel> itemCards;
         int goodItemKey = 89;
 
         public ItemsSearchControllerTests()
