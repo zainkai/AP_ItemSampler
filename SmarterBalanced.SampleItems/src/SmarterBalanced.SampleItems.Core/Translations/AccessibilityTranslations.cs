@@ -3,6 +3,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// </summary>
         /// <param name="items"></param>
         /// <returns>a comma-separated string of ISAAP codes.</returns>
-        public static string ToISAAP(this List<AccessibilityResourceViewModel> items)
+        public static string ToISAAP(this List<AccessibilityResource> items)
         {
             if(items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -37,37 +38,6 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             return iSAAPCode.Split(';').ToList();
         }
 
-        public static AccessibilitySelectionViewModel ToAccessibilitySelectionViewModel(this AccessibilitySelection selection)
-        {
-            var selectionVM = new AccessibilitySelectionViewModel(selection.Code, selection.Label, selection.Disabled);
-            return selectionVM;
-        }
-
-        /// <summary>
-        /// Translates a List of AccessibilityResources into a List of 
-        /// AccessibilityResourceViewModels.
-        /// </summary>
-        /// <param name="accessibilityResources"></param>
-        /// <returns>a List of AccessibilityResourceViewModels.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources)
-        {
-            var accessibilityResourceViewModels =
-                accessibilityResources
-                    .Select(ar => new AccessibilityResourceViewModel
-                        {
-                            SelectedCode = ar.DefaultSelection,
-                            DefaultCode = ar.DefaultSelection,
-                            Label = ar.Label,
-                            Description = ar.Description,
-                            Selections = ar.Selections.Select(ToAccessibilitySelectionViewModel).ToList(),
-                            Disabled = ar.Disabled,
-                            ResourceTypeLabel = ar.ResourceTypeLabel,
-                        })
-                    .ToList();
-
-            return accessibilityResourceViewModels;
-        }
-
         /// <summary>
         /// Translates a List of AccessibilityResources into a List of 
         /// AccessibilityResourceVIewModels with defaults set from the ISAAP code.
@@ -75,34 +45,49 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// <param name="accessibilityResources"></param>
         /// <param name="iSAAPCode"></param>
         /// <returns>a List of AccessibilityResources.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string[] codes)
+        private static ImmutableArray<AccessibilityResource> ApplyIsaap(ImmutableArray<AccessibilityResource> accessibilityResources, string[] codes)
         {
             if (accessibilityResources == null)
             {
                 throw new ArgumentNullException(nameof(accessibilityResources));
             }
 
-            var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
+            List<AccessibilityResource> newResources = new List<AccessibilityResource>();
 
-            foreach (var accResourceViewModel in accResourceViewModels)
+            foreach (var resource in accessibilityResources)
             {
-                var accListItems = accResourceViewModel.Selections;
+                var newResource = resource.DeepClone();
+                var accListItems = newResource.Selections;
                 var accListItem = accListItems.FirstOrDefault(sel => codes.Contains(sel.Code));
                 if (accListItem != null)
                 {
                     var selectedCode = accListItem.Code;
-                    accResourceViewModel.SelectedCode = selectedCode;
+                    newResource.SelectedCode = selectedCode;
                 }
                 else
                 {
-                    accResourceViewModel.SelectedCode = accResourceViewModel.DefaultCode;
+                    newResource.SelectedCode = newResource.DefaultSelection;
                 }
+                newResources.Add(newResource);
             }
 
-            return accResourceViewModels;
+            return newResources.ToImmutableArray();
         }
 
-
+        public static ImmutableArray<AccessibilityResourceGroup> SetIsaap(this ImmutableArray<AccessibilityResourceGroup> resourceGroups, string[] codes)
+        {
+            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
+            foreach(AccessibilityResourceGroup group in resourceGroups)
+            {
+                var newResources = ApplyIsaap(group.AccessibilityResources, codes);
+                groups.Add(new AccessibilityResourceGroup(
+                        label: group.Label,
+                        order: group.Order,
+                        accessibilityResources: newResources
+                    ));
+            }
+            return groups.ToImmutableArray();
+        }
     }
     
 }

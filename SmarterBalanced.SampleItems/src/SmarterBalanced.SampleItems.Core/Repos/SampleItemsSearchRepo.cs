@@ -28,6 +28,11 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         public IList<ItemCardViewModel> GetItemCards(ItemsSearchParams parms)
         {
+            if (parms == null)
+            {
+                return context.ItemCards;
+            }
+                
             var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA);
 
             int itemId;
