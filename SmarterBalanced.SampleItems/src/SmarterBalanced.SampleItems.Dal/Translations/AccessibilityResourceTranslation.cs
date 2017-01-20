@@ -26,12 +26,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                     var resourceType = (string)xs.Element("ResourceType") ?? string.Empty;
 
+                    var textElem = xs.Element("Text");
+
                     return new AccessibilityResource(
                         selectedCode: (string)xs.Element("Code"),
                         order: (int)xs.Element("Order"),
                         defaultSelection: defaultSelection,
-                        label: (string)xs.Element("Text").Element("Label"),
-                        description: (string)xs.Element("Text").Element("Description"),
+                        label: (string)textElem.Element("Label"),
+                        description: (string)textElem.Element("Description"),
                         disabled: xs.Element("Disabled") != null,
                         selections: selections,
                         resourceType: resourceType);
@@ -73,28 +75,33 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return families;
         }
 
-        /// <summary>
-        /// Parse XML Family accessibility resources and attach global resources to AccessibIlity Resources
-        /// </summary>
-        /// <param name="xmlResources"></param>
-        /// <param name="globalResources"></param>
-        /// <returns></returns>
-        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(
-            this IEnumerable<XElement> xmlFamilyResources,
-            IEnumerable<AccessibilityResource> globalResources)
+        public static AccessibilityResource ToAccessibilityResource(XElement elem)
         {
-            var partialResources = xmlFamilyResources
-                .Select(r => new AccessibilityResource(
-                    selectedCode: (string)r.Element("Code"),
-                    order: (int)r.Element("Order"),
+            var selectionsElem = elem.Elements("Selections");
+            var selections = selectionsElem == null
+                ? default(ImmutableArray<AccessibilitySelection>)
+                : selectionsElem.Select(s => s.ToSelection()).ToImmutableArray();
+
+            var resource = new AccessibilityResource(
+                    selectedCode: (string)elem.Element("Code"),
+                    order: (int?)elem.Element("Order") ?? 0,
                     defaultSelection: null,
                     label: null,
                     description: null,
                     resourceType: null,
-                    disabled: r.Element("Disabled") != null,
-                    selections: r.Elements("Selection")
-                        .Select(s => s.ToSelection())
-                        .ToImmutableArray()))
+                    disabled: elem.Element("Disabled") != null,
+                    selections: selections);
+
+            return resource;
+        }
+
+        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(
+            this IEnumerable<XElement> xmlFamilyResources,
+            IEnumerable<AccessibilityResource> globalResources)
+        {
+
+            var partialResources = xmlFamilyResources
+                .Select(r => ToAccessibilityResource(r))
                 .ToImmutableArray();
 
             return partialResources.MergeAllWith(globalResources);
