@@ -7,16 +7,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 {
     public class AccessibilityTranslationsTests
     {
-        List<AccessibilityResource> accessibilityResources;
-        List<AccessibilitySelection> accessibilitySelections;
-
+        ImmutableArray<AccessibilityResourceGroup> groups;
+        AccessibilityResourceGroup group1, group2;
+        Dictionary<string, string> cookie;
+        string[] isaap;
         public AccessibilityTranslationsTests()
         {
+            cookie = new Dictionary<string, string>()
+            {
+                {"AmericanSignLanguage", "TDS_ASL0" },
+                {"ColorContrast", "TDS_CCInvert" },
+                {"ClosedCaptioning", "TDS_ClosedCap1" },
+                {"Language", "ENU" }
+            };
+
             //accessibilitySelections = new List<AccessibilitySelection>
             //{
             //    new AccessibilitySelection()
@@ -41,6 +51,25 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             //        Disabled = false
             //    }
             //};
+            group1 = new AccessibilityResourceGroup("", 1,
+                ImmutableArray.Create(
+                    AccessibilityResource.Create(code: "AmericanSignLanguage", selectedCode: "TDS_ASL0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_ASL0", "", 1, false), 
+                        new AccessibilitySelection("TDS_ASL1", "", 2, false))),
+                    AccessibilityResource.Create(code: "ColorContrast", selectedCode: "TDS_CC0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_CC0", "", 1, false),
+                        new AccessibilitySelection("TDS_CCInvert", "", 2, false)))));
+            group2 = new AccessibilityResourceGroup("", 2,
+                ImmutableArray.Create(
+                    AccessibilityResource.Create(code: "ClosedCaptioning", selectedCode: "TDS_ClosedCap0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_ClosedCap0", "", 1, false),
+                        new AccessibilitySelection("TDS_ClosedCap1", "", 2, false))),
+
+                    AccessibilityResource.Create(code: "Language", selectedCode: "ENU", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("ENU", "", 1, false),
+                        new AccessibilitySelection("ESN", "", 2, false)))));
+            groups = ImmutableArray.Create(group1, group2);
+
 
             //accessibilityResources = new List<AccessibilityResource>
             //{
@@ -83,139 +112,21 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             //};
         }
 
-        #region ToIsaap
-
-        /// <summary>
-        /// Tests happy case AccessibilityResourceViewModels to ISAAP code
-        /// </summary>
-        [Fact(Skip ="TODO")]
-        public void TestItemsToISAAP()
+        [Fact]
+        public void TestApplyPreferencesNoIsaapNoCookie()
         {
-            //string isaap = AccessibilityTranslations.ToISAAP(accessibilityResourceViewModels);
-            //string expectedIsaap = $"{accessibilityResourceViewModels[0].SelectedCode};{accessibilityResourceViewModels[1].SelectedCode}";
-            //Assert.Equal(expectedIsaap, isaap);
+            var result=groups.ApplyPreferences(new string[] { }, new Dictionary<string, string>());
+
+            //TODO: figure out what should be happening to the data
         }
 
-        /// <summary>
-        /// Tests empty AccessibilityResourceViewModels to ISAAP code
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestEmptyItemsToISAAP()
+        [Fact]
+        public void TestApplyPreferencesNoIsaapYesCookie()
         {
-            //string isaap = AccessibilityTranslations.ToISAAP(new List<AccessibilityResourceViewModel>());
-            //Assert.Equal("", isaap);
+            var result = groups.ApplyPreferences(new string[] { }, cookie);
+            
+            //check to make sure that the second and third accessibility prefs are changed, but not 1 and 4
         }
-
-        #endregion
-
-        #region ToAccessibilityResourceViewModels with ISAAP
-
-        /// <summary>
-        /// Tests happy case accessibility resource translation to view model with isaap
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelWithISAAP()
-        {
-            //AccessibilityResource accResource = accessibilityResources[0];
-            //List<AccessibilityResource> accResources = new List<AccessibilityResource>
-            //{
-            //    accResource
-            //};
-            //string[] ISAAP = { "TDS_TEST3" };
-            //var expectedCode = "TDS_TEST3";
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accResources, ISAAP);
-
-            //Assert.Equal(accResources.Count(), accResourceViewModels.Count());
-
-            //AccessibilityResourceViewModel accResourceViewModel = accResourceViewModels[0];
-
-            //Assert.Equal(expectedCode, accResourceViewModel.SelectedCode);
-            //Assert.Equal(accResource.Label, accResourceViewModel.Label);
-            //Assert.Equal(accResource.Disabled, accResourceViewModel.Disabled);
-        }
-
-        /// <summary>
-        /// Tests accessibility resource translation to view model with nonexistent isaap
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelWithBadISAAP()
-        {
-            //AccessibilityResource accResource = accessibilityResources[0];
-            //List<AccessibilityResource> accResources = new List<AccessibilityResource>
-            //{
-            //    accResource
-            //};
-            //string[] ISAAP = { "NOT_THERE" };
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accResources, ISAAP);
-
-            //Assert.Equal(accResources.Count(), accResourceViewModels.Count());
-
-            //AccessibilityResourceViewModel accResourceViewModel = accResourceViewModels[0];
-
-            //Assert.Equal(null, accResourceViewModel.SelectedCode);
-            //Assert.Equal(accResource.Label, accResourceViewModel.Label);
-            //Assert.Equal(accResource.Disabled, accResourceViewModel.Disabled);
-        }
-
-        /// <summary>
-        /// Test happy case multiple accessibility resources with isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelsWithISAAP()
-        {
-            //string[] ISAAP = { "TDS_TEST3" };
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
-
-            //Assert.Equal(accessibilityResources.Count(), accResourceViewModels.Count());
-        }
-
-        /// <summary>
-        /// Test null accessibility resources with isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestNullAccessibilityResourceToViewModelsWithISAAP()
-        {
-            //string[] ISAAP = { "TDS_TEST3" };
-        
-            //Assert.Throws<ArgumentNullException>(() => AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(null, ISAAP));
-        }
-
-        /// <summary>
-        /// Test multiple accessibility resources with null isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelsWithEmptyISAAP()
-        {
-            //string[] ISAAP = new string[0];
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
-
-            //Assert.Equal(accessibilityResources.Count(), accResourceViewModels.Count());
-        }
-
-        /// <summary>
-        /// Test empty accessibility resources with isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestEmptyAccessibilityResourceToViewModelsWithISAAP()
-        {
-            //string[] ISAAP = { "TDS_TEST3" };
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(new List<AccessibilityResource>(), ISAAP);
-
-            //Assert.Equal(0, accResourceViewModels.Count());
-        }
-
-        #endregion
     }
 
 }

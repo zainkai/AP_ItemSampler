@@ -16,7 +16,11 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             string[] isaap,
             Dictionary<string, string> cookie)
         {
-            if (isaap.Length == 0)
+            if (isaap == null) throw new ArgumentNullException(nameof(isaap));
+            if (groups == null) throw new ArgumentNullException(nameof(groups));
+            if (cookie == null) throw new ArgumentNullException(nameof(cookie));
+
+            if (isaap.Length != 0)
             {
                 var isaapGroups = groups
                     .Select(g => g.WithResources(g.AccessibilityResources
