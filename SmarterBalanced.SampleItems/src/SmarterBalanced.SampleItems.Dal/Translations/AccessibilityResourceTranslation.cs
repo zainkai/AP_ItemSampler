@@ -80,7 +80,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             var selectionsElem = elem.Elements("Selections");
             var selections = selectionsElem == null
-                ? default(ImmutableArray<AccessibilitySelection>)
+                ? ImmutableArray<AccessibilitySelection>.Empty
                 : selectionsElem.Select(s => s.ToSelection()).ToImmutableArray();
 
             var resource = new AccessibilityResource(
@@ -131,40 +131,51 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return resources;
         }
 
-        /// <summary>
-        /// Copies a Global AccessibilityResource based on Family Resource values and selections.
-        /// </summary>
-        /// <param name="partialResource"> Accessbility Family Resources </param>
-        /// <param name="resource"> Global Accessiblity Resources </param>
-        /// <returns></returns>
-        public static AccessibilityResource MergeWith(this AccessibilityResource partialResource, AccessibilityResource resource)
+        public static AccessibilityResource MergeWith(this AccessibilityResource familyResource, AccessibilityResource globalResource)
         {
-            if (partialResource == null)
-                throw new ArgumentNullException(nameof(partialResource));
-            else if (resource == null)
-                throw new ArgumentNullException(nameof(resource));
+            if (familyResource == null)
+                throw new ArgumentNullException(nameof(familyResource));
+            else if (globalResource == null)
+                throw new ArgumentNullException(nameof(globalResource));
+            
+            var newSelections = globalResource.Selections.Select(sel =>
+            {
+                var familySel = familyResource.Selections.SingleOrDefault(fs => fs.Code == sel.Code);
+                var selDisabled = familyResource.Disabled || familySel == null;
+                var label = string.IsNullOrEmpty(familySel?.Label) ? sel.Label : familySel.Label;
 
-            // <Disabled /> means the entire resource is disabled
-            bool isResourceDisabled = partialResource.Disabled;
+                var newSelection = new AccessibilitySelection(
+                    code: sel.Code,
+                    label: label,
+                    order: sel.Order,
+                    disabled: selDisabled);
 
-            // TODO: immutability
-            //resource.Disabled = isResourceDisabled;
+                return newSelection;
+            }).ToImmutableArray();
+            
+            // If the default select item is disabled, pick a different one 
+            string newDefault;
+            if (!familyResource.Disabled && globalResource.Selections.Any(s => s.Code == globalResource.DefaultSelection && s.Disabled))
+            {
+                newDefault = globalResource.Selections.FirstOrDefault(s => !s.Disabled)?.Code ?? globalResource.DefaultSelection;
+            }
+            else
+            {
+                newDefault = globalResource.DefaultSelection;
+            }
 
-            //foreach (AccessibilitySelection selection in resource.Selections)
-            //{
-            //    AccessibilitySelection partialResourceSelection = partialResource.Selections.SingleOrDefault(s => s.Code == selection.Code);
-            //    selection.Disabled = (partialResourceSelection == null) || isResourceDisabled;
-            //    selection.Label = string.IsNullOrEmpty(partialResourceSelection?.Label) ? selection.Label : partialResourceSelection?.Label;
-            //}
+            var newResource = new AccessibilityResource(
+                code: globalResource.Code,
+                selectedCode: globalResource.SelectedCode,
+                order: globalResource.Order,
+                defaultSelection: newDefault,
+                selections: newSelections,
+                label: globalResource.Label,
+                description: globalResource.Description,
+                disabled: globalResource.Disabled,
+                resourceType: globalResource.ResourceType);
 
-            //// If the default select item is disabled, pick a different one 
-            //if (!isResourceDisabled && resource.Selections != null
-            //    && resource.Selections.Any(s => s.Code == resource.DefaultSelection && s.Disabled))
-            //{
-            //    resource.DefaultSelection = resource.Selections.FirstOrDefault(s => !s.Disabled)?.Code;
-            //}
-
-            return resource;
+            return globalResource;
         }
 
     }
