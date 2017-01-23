@@ -30,7 +30,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
                 return isaapGroups;
             }
-            else
+            else if (cookie.Count != 0)
             {
                 var cookieGroups = groups
                     .Select(g => g.WithResources(g.AccessibilityResources
@@ -39,6 +39,10 @@ namespace SmarterBalanced.SampleItems.Core.Translations
                     .ToImmutableArray();
 
                 return cookieGroups;
+            }
+            else
+            {
+                return groups;
             }
         }
 
