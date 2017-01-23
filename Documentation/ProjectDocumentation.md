@@ -18,7 +18,7 @@ necessary to start the application, as well as runtime configuration settings.
 
 #### Following is a description of important configurations within this object:
 
-`ContentItemDirectory`: Location of the **Items** directory within thecontent package. 
+`ContentItemDirectory`: Location of the **Items** directory within the content package. 
 Dependent on deployment environment setting (development, staging, production).
 
 `ContentRootDirectory`: Location of the content package. Dependent on deployment 
