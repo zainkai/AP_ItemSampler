@@ -312,7 +312,8 @@ namespace ItemSearchParams {
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                             <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
-                            <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}>
+                            <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}
+                                aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
                                 {this.getExpandAll() ? hideArrow : showArrow}
                                 {this.getExpandAll() ? " Hide" : " Show"} all
                             </div>
