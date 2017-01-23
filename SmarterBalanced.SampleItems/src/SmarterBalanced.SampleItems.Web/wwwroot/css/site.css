@@ -1,18 +1,12 @@
 ﻿body {
     padding-bottom: 20px;
     margin-bottom: 75px; /* bottom = footer height */
-    font-family: 'PT Serif', serif;
-}
-
-@font-face {
-    font-family: 'PT Serif';
-    src: url("../fonts/PT_Serif-Web-Regular.ttf");
+    font-family: 'PT Serif', serif; /* Font used on Smarterbalanced.org*/
 }
 
 html {
     position: relative;
     min-height: 100%;
-    font-family: 'PT Serif', serif;
 }
 
 footer {
