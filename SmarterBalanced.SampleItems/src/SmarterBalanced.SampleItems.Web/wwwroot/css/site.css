@@ -1,11 +1,18 @@
 ﻿body {
     padding-bottom: 20px;
     margin-bottom: 75px; /* bottom = footer height */
+    font-family: 'PT Serif', serif;
+}
+
+@font-face {
+    font-family: 'PT Serif';
+    src: url("../fonts/PT_Serif-Web-Regular.ttf");
 }
 
 html {
     position: relative;
     min-height: 100%;
+    font-family: 'PT Serif', serif;
 }
 
 footer {
@@ -92,7 +99,7 @@ footer {
     }
 
 #sb-logo {
-    height: 50px;
+    width: 183px;
 }
 
 .navbar-brand {
@@ -124,8 +131,8 @@ footer {
     align-items: baseline;
 }
 
-.nav-item {
-}
+/*.nav-item {
+}*/
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
