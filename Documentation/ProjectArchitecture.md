@@ -1,4 +1,4 @@
-# Smarter Balanced
+# Project Architecture
 Sample Items Website and Item Viewer Service Architecture
 
 ## System Architecture
