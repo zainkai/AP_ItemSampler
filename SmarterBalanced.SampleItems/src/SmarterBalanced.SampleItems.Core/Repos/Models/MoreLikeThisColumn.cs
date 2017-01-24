@@ -14,8 +14,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public MoreLikeThisColumn(string label, ImmutableArray<ItemCardViewModel> itemCards)
         {
-            this.Label = label;
-            this.ItemCards = itemCards;
+            Label = label;
+            ItemCards = itemCards;
         }
 
     }
