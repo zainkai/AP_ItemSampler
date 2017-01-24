@@ -122,10 +122,9 @@ namespace ItemPage {
             }
         }
 
-        // TODO: Update id with modal id
         openMoreLikeThisModal(e: React.KeyboardEvent) {
             if (e.keyCode === 13 || e.keyCode === 23) {
-                const modal: any = ($("#TODO-modal-container"));
+                const modal: any = ($("#more-like-this-modal-container"));
                 modal.modal();
             }
         }
@@ -152,17 +151,19 @@ namespace ItemPage {
                 <div>
                     <div className="btn-toolbar item-nav-group" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="btn-group mr-2 item-nav-bottom" role="group" aria-label="First group">
+
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
                                 About This Item
                             </a>
 
-                            <a className="btn item-nav-btn" data-target="#share-modal-container"
+                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
                                 More Like This
                             </a>
+
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
                                 onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
@@ -187,6 +188,8 @@ namespace ItemPage {
                         accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
                         onReset={this.props.onReset} />
+                    <MoreLikeThis.Modal
+                        item={this.props.aboutItemVM.itemCardViewModel}/>
                     <Share.ShareModal iSAAP={isaap}/>
                 </div>
             );
