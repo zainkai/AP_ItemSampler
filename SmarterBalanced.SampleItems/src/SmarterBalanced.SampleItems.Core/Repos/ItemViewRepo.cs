@@ -210,6 +210,15 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                         );
         }
 
+        private MoreLikeThisColumn ToColumn(IEnumerable<ItemCardViewModel> itemCards, GradeLevels grade)
+        {
+            string label = grade.ToDisplayString();
+            var column = new MoreLikeThisColumn(
+                label: label, itemCards: itemCards.ToImmutableArray());
+
+            return column;
+        }
+
         /// <summary>
         /// Gets up to 3 items same grade, grade above, and grade below. All items 
         /// </summary>
@@ -248,9 +257,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 .Take(numExpected);
 
             var moreLikeThisVM = new MoreLikeThisViewModel(
-                cardsGradeBelow.ToImmutableArray(),
-                cardsSameGrade.ToImmutableArray(),
-                cardsGradeAbove.ToImmutableArray()
+                ToColumn(cardsGradeBelow, gradeBelow),
+                ToColumn(cardsSameGrade, grade),
+                ToColumn(cardsGradeAbove, gradeAbove)
                 );
 
             return moreLikeThisVM;

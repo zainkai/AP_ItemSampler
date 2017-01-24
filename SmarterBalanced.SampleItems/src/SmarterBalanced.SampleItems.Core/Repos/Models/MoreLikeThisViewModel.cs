@@ -9,14 +9,14 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
     public class MoreLikeThisViewModel
     {
-        public ImmutableArray<ItemCardViewModel> GradeBelowItems { get; }
-        public ImmutableArray<ItemCardViewModel> SameGradeItems { get; }
-        public ImmutableArray<ItemCardViewModel> GradeAboveItems { get; }
+        public MoreLikeThisColumn GradeBelowItems { get; }
+        public MoreLikeThisColumn SameGradeItems { get; }
+        public MoreLikeThisColumn GradeAboveItems { get; }
 
         public MoreLikeThisViewModel(
-            ImmutableArray<ItemCardViewModel> gradeBelowItems,
-            ImmutableArray<ItemCardViewModel> sameGradeItems,
-            ImmutableArray<ItemCardViewModel> gradeAboveItems)
+            MoreLikeThisColumn gradeBelowItems,
+            MoreLikeThisColumn sameGradeItems,
+            MoreLikeThisColumn gradeAboveItems)
         {
             GradeAboveItems = gradeAboveItems;
             SameGradeItems = sameGradeItems;
