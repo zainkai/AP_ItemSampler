@@ -81,11 +81,19 @@ namespace ItemPage {
         accessibilityResources: AccessibilityResource[];
     }
 
+
+    export interface MoreLikeThisViewModel {
+        gradeBelowItems: ItemCardViewModel[];
+        sameGradeItems: ItemCardViewModel[];
+        gradeAboveItems: ItemCardViewModel[];
+    }
+
     export interface ViewModel {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         accResourceGroups: AccResourceGroup[];
         aboutItemVM: AboutItem.Props;
+        MoreLikeThisVM: MoreLikeThisViewModel;
     }
 
     export interface Props extends ViewModel {
@@ -188,8 +196,7 @@ namespace ItemPage {
                         accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
                         onReset={this.props.onReset} />
-                    <MoreLikeThis.Modal
-                        item={this.props.aboutItemVM.itemCardViewModel}/>
+                        { /* <MoreLikeThis.Modal item={this.props.moreLikeThisVM}/> */ }
                     <Share.ShareModal iSAAP={isaap}/>
                 </div>
             );

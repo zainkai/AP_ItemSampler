@@ -39,16 +39,6 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return Json(items);
         }
 
-        // TODO: Search for three items above and three items below given grade level
-        [HttpGet]
-        public IActionResult SearchSimilar(string itemID, GradeLevels gradeLevels)
-        {
-            var parms = new ItemsSearchParams(itemID, gradeLevels, null, null, null);
-            
-            // TODO: Implement search repo method for more like this
-            var items = new List<ItemCardViewModel>(); //sampleItemsSearchRepo.GetItemCardsLikeThis(parms);
-
-            return Json(items);
-        }
     }
+
 }

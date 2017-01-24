@@ -2,49 +2,10 @@
 
     interface Props {
         item: ItemCardViewModel;
+        moreLikeThisVM: ItemPage.MoreLikeThisViewModel;
     }
 
-    interface State { }
-
-    interface Params {
-        gradeLevel: GradeLevels;
-        itemId: string;
-    }
-
-    export class Modal extends React.Component<Props, State> {
-        constructor(props: Props) {
-            super(props);
-            this.state = {};
-            this.getSimilarItems();
-        }
-
-        // TODO
-        setSimilarItems() {
-
-        }
-
-        // TODO
-        onError() {
-            console.log("Error getting related items.");
-        }
-
-        getSimilarItems() {
-            const itemId = `${this.props.item.bankKey}-${this.props.item.itemKey}`;
-            const params = {
-                itemId: itemId,
-                gradeLevels: this.props.item.grade
-            };
-
-            $.ajax({
-                dataType: "json",
-                url: "/ItemsSearch/SearchSimilarItems",
-                traditional: true, // causes arrays to be serialized in a way supported by MVC
-                data: params,
-                success: this.setSimilarItems,
-                error: this.onError
-            });
-        }
-
+    export class Modal extends React.Component<Props, {}> {
         render() {
             return (
                 <div className="modal fade" id="more-like-this-modal-container" tabIndex={-1} role="dialog" aria-labelledby="More Like This Modal" aria-hidden="true">
@@ -58,7 +19,7 @@
                             </div>
                             <div className="modal-body">
                                 Items similar to {this.props.item.gradeLabel} item {`${this.props.item.bankKey}-${this.props.item.itemKey}`}:
-                                <br/>
+                                <br />
                                 TODO: Content
                             </div>
                             <div className="modal-footer">
@@ -69,5 +30,7 @@
                 </div>
                 );
         }
+
     }
+    
 }

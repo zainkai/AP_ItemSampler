@@ -173,8 +173,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
         }
 
-
-
         /// <returns>
         /// An ItemViewModel instance, or null if no item exists with
         /// the given combination of bankKey and itemKey.
@@ -207,8 +205,55 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                             itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
                             accessibilityCookieName: AppSettings.SettingsConfig.AccessibilityCookie,
                             aboutItemVM: aboutItem,
-                            accResourceGroups: accResources
+                            accResourceGroups: accResources,
+                            moreLikeThisVM: GetMoreLikeThis(itemDigest)
                         );
+        }
+
+        /// <summary>
+        /// Gets up to 3 items same grade, grade above, and grade below. All items 
+        /// </summary>
+        /// <param name="grade"></param>
+        /// <param name="subject"></param>
+        /// <param name="claim"></param>
+        /// <returns></returns>
+        public MoreLikeThisViewModel GetMoreLikeThis(ItemDigest itemDigest)
+        {
+            var subjectCode = itemDigest.Subject.Code;
+            var claimCode = itemDigest.Claim?.Code;
+            var grade = itemDigest.Grade;
+            var itemKey = itemDigest.ItemKey;
+            var bankKey = itemDigest.BankKey;
+
+            var matchingSubjectClaim = context.ItemCards.Where(i => i.SubjectCode == subjectCode && i.ClaimCode == claimCode);
+            // TODO: get Take() value from appsettings
+            int numExpected = 3;
+
+            var comparer = new MoreLikeThisComparer(subjectCode, claimCode);
+            GradeLevels gradeBelow = grade.GradeBelow(), gradeAbove = grade.GradeAbove();
+
+            var cardsGradeBelow = context.ItemCards
+                .Where(i => i.Grade == gradeBelow)
+                .OrderBy(i => i, comparer)
+                .Take(numExpected);
+
+            var cardsSameGrade = context.ItemCards
+                .Where(i => i.Grade == grade && i.ItemKey != itemKey)
+                .OrderBy(i => i, comparer)
+                .Take(numExpected);
+
+            var cardsGradeAbove = context.ItemCards
+                .Where(i => i.Grade == gradeAbove)
+                .OrderBy(i => i, comparer)
+                .Take(numExpected);
+
+            var moreLikeThisVM = new MoreLikeThisViewModel(
+                cardsGradeBelow.ToImmutableArray(),
+                cardsSameGrade.ToImmutableArray(),
+                cardsGradeAbove.ToImmutableArray()
+                );
+
+            return moreLikeThisVM;
         }
 
     }
