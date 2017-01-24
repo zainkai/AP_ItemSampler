@@ -23,7 +23,7 @@
         }
 
         render() {
-            const url = getItemUrl() + "&isaap=" + this.props.iSAAP
+            const url = getItemUrl() + "&isaap=" + encodeURIComponent(this.props.iSAAP);
             return (
                 <div className="modal fade" id="share-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
                     <div className="modal-dialog share-modal" role="document">
