@@ -1,16 +1,9 @@
-﻿
-const hideArrow = (
-    <span>
-        <span className="screen-reader-text">Hide</span>
-        <span aria-hidden="true">▼</span>
-    </span>
+﻿ const hideArrow = (
+        <span aria-label="Hide">▼</span>
 );
 
 const showArrow = (
-    <span>
-        <span className="screen-reader-text">Show</span>
-        <span aria-hidden="true">▶</span>
-    </span>
+        <span aria-label="Show">▶</span>
 );
 
 function parseQueryString(url: string): { [key: string]: string[] | undefined } {
@@ -260,6 +253,55 @@ namespace ItemSearchParams {
             }, () => this.beginChangeTimeout());
         }
 
+        keyPressResetFilters(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.resetFilters();
+            }
+        }
+
+        keyPressToggleExpandAll(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandAll();
+            }
+        }
+
+        keyPressToggleExpandItemId(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandItemIDInput();
+            }
+        }
+
+        keyPressToggleExpandGrades(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandGradeLevels();
+            }
+        }
+
+        keyPressToggleExpandSubjects(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandSubjects();
+            }
+        }
+
+        keyPressToggleExpandClaims(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandClaims();
+            }
+        }
+
+        toggleExpandItemTypes(e: React.KeyboardEvent) {
+            console.log(e.keyCode);
+            if (e.keyCode == 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandInteractionTypes();
+            }
+        }
+
         render() {
             history.replaceState(null, "", this.encodeQuery());
 
@@ -269,9 +311,11 @@ namespace ItemSearchParams {
                         <h1 className="search-title" tabIndex={0}>Search</h1>
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
-                            <div><a onClick={() => this.resetFilters()} tabIndex={0}>Reset filters</a></div>
-                            <div onClick={() => this.toggleExpandAll()} tabIndex={0}>
-                                {this.getExpandAll() ? "▼ Hide" : "▶ Show"} all
+                            <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
+                            <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}
+                                aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
+                                {this.getExpandAll() ? hideArrow : showArrow}
+                                {this.getExpandAll() ? " Hide" : " Show"} all
                             </div>
                         </div>
                     </div>
@@ -299,7 +343,8 @@ namespace ItemSearchParams {
 
             return (
                 <div className="search-category">
-                    <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()} tabIndex={0}>
+                    <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()}
+                        onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
                         {this.state.expandItemID ? hideArrow : showArrow} More
                     </label>
                     {input}
@@ -341,11 +386,11 @@ namespace ItemSearchParams {
                 </button>
             ];
 
-            // TODO: convert to use Collapsible element
             return (
                 <div className="search-category" style={{ flexGrow: 3 }}>
                     <label aria-expanded={this.state.expandGradeLevels}
                         onClick={() => this.toggleExpandGradeLevels()}
+                        onKeyPress={e => this.keyPressToggleExpandGrades(e)}
                         tabIndex={0}>
 
                         {this.state.expandGradeLevels ? hideArrow : showArrow} Grade Levels
@@ -381,6 +426,7 @@ namespace ItemSearchParams {
                 <div className="search-category" style={{ flexGrow: 2 }}>
                     <label aria-expanded={this.state.expandSubjects}
                         onClick={() => this.toggleExpandSubjects()}
+                        onKeyPress={e => this.keyPressToggleExpandSubjects(e)}
                         tabIndex={0}>
 
                         {this.state.expandSubjects ? hideArrow : showArrow} Subjects
@@ -424,6 +470,7 @@ namespace ItemSearchParams {
                 <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
                     <label aria-expanded={this.state.expandClaims}
                         onClick={() => this.toggleExpandClaims()}
+                        onKeyPress={e => this.keyPressToggleExpandClaims(e)}
                         tabIndex={0}>
 
                         {this.state.expandClaims ? hideArrow : showArrow} Claims
@@ -468,6 +515,7 @@ namespace ItemSearchParams {
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
                     <label aria-expanded={this.state.expandInteractionTypes}
                         onClick={() => this.toggleExpandInteractionTypes()}
+                        onKeyUp={e => this.toggleExpandItemTypes(e)}
                         tabIndex={0}>
 
                         {this.state.expandInteractionTypes ? hideArrow : showArrow} Item Types
