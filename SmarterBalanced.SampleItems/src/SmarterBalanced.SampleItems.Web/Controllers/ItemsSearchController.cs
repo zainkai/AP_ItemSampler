@@ -41,7 +41,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         // TODO: Search for three items above and three items below given grade level
         [HttpGet]
-        public IActionResult SearchLikeThis(string itemID, GradeLevels gradeLevels)
+        public IActionResult SearchSimilar(string itemID, GradeLevels gradeLevels)
         {
             var parms = new ItemsSearchParams(itemID, gradeLevels, null, null, null);
             

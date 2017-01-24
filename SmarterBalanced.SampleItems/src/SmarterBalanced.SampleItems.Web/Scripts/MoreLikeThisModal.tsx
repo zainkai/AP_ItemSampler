@@ -37,7 +37,7 @@
 
             $.ajax({
                 dataType: "json",
-                url: "/ItemsSearch/search",
+                url: "/ItemsSearch/SearchSimilarItems",
                 traditional: true, // causes arrays to be serialized in a way supported by MVC
                 data: params,
                 success: this.setSimilarItems,
