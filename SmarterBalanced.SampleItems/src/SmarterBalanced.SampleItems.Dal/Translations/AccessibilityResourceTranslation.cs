@@ -10,9 +10,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class AccessibilityResourceTranslation
     {
-        public static IList<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources)
+        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(this IEnumerable<XElement> singleSelectResources)
         {
-            IList<AccessibilityResource> accessibilityResources = singleSelectResources
+            var accessibilityResources = singleSelectResources
                 .Select(xs =>
                 {
                     var selections = xs.Elements("Selection")
@@ -41,8 +41,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 })
                 .Where(a => a.Selections.Any())
                 .OrderBy(a => a.Order)
-                .ToList(); 
-                        
+                .ToImmutableArray();
+
             return accessibilityResources;
         }
 
@@ -56,10 +56,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             return selection;
         }
-        
+
         public static ImmutableArray<AccessibilityResourceFamily> ToAccessibilityResourceFamilies(
             this IEnumerable<XElement> resourceFamilies,
-            IEnumerable<AccessibilityResource> globalResources)
+            IList<AccessibilityResource> globalResources)
         {
             ImmutableArray<AccessibilityResourceFamily> families = resourceFamilies
                 .Select(f => new AccessibilityResourceFamily(
@@ -70,7 +70,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                         .Select(g => g.Value)
                         .ToGradeLevels(),
                     resources: f.Elements("SingleSelectResource")
-                        .ToAccessibilityResources(globalResources)))
+                        .Select(r => ToAccessibilityResource(r))
+                        .MergeAllWith(globalResources)))
                 .ToImmutableArray();
 
             return families;
@@ -95,17 +96,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 selections: selections);
 
             return resource;
-        }
-
-        public static ImmutableArray<AccessibilityResource> ToAccessibilityResources(
-            this IEnumerable<XElement> xmlFamilyResources,
-            IEnumerable<AccessibilityResource> globalResources)
-        {
-            var partialResources = xmlFamilyResources
-                .Select(r => ToAccessibilityResource(r))
-                .ToImmutableArray();
-
-            return partialResources.MergeAllWith(globalResources);
         }
 
         /// <summary>
@@ -137,32 +127,32 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 throw new ArgumentNullException(nameof(familyResource));
             else if (globalResource == null)
                 throw new ArgumentNullException(nameof(globalResource));
-            
+
             var newSelections = globalResource.Selections.Select(sel =>
             {
                 var familySel = familyResource.Selections.SingleOrDefault(fs => fs.Code == sel.Code);
-                var selDisabled = familyResource.Disabled || familySel == null;
+                var selDisabled = familyResource.Disabled || familySel == null || familySel.Disabled;
                 var label = string.IsNullOrEmpty(familySel?.Label) ? sel.Label : familySel.Label;
 
                 var newSelection = new AccessibilitySelection(
                     code: sel.Code,
                     label: label,
-                    order: sel.Order,
+                    order: familySel?.Order ?? sel.Order,
                     disabled: selDisabled);
 
                 return newSelection;
             }).ToImmutableArray();
-            
-            // If the default select item is disabled, pick a different one 
-            string newDefault;
-            if (!familyResource.Disabled && globalResource.Selections.Any(s => s.Code == globalResource.DefaultSelection && s.Disabled))
-            {
-                newDefault = globalResource.Selections.FirstOrDefault(s => !s.Disabled)?.Code ?? globalResource.DefaultSelection;
-            }
-            else
-            {
-                newDefault = globalResource.DefaultSelection;
-            }
+
+            string explicitDefault = string.IsNullOrEmpty(familyResource.DefaultSelection)
+                ? globalResource.DefaultSelection
+                : familyResource.DefaultSelection;
+
+            var matchingSelection = newSelections.FirstOrDefault(s => s.Code == explicitDefault);
+            bool isDefaultInvalid = matchingSelection == null || matchingSelection.Disabled;
+
+            string newDefault = isDefaultInvalid
+                ? newSelections.FirstOrDefault(s => !s.Disabled)?.Code ?? string.Empty
+                : explicitDefault;
 
             var newResource = new AccessibilityResource(
                 code: globalResource.Code,
@@ -172,10 +162,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 selections: newSelections,
                 label: globalResource.Label,
                 description: globalResource.Description,
-                disabled: globalResource.Disabled,
+                disabled: familyResource.Disabled,
                 resourceType: globalResource.ResourceType);
 
-            return globalResource;
+            return newResource;
         }
 
     }

@@ -23,6 +23,21 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Order = order;
             Disabled = disabled;
         }
+
+        public static AccessibilitySelection Create(
+            string code = "",
+            string label = "",
+            int order = -1,
+            bool disabled = false)
+        {
+            var sel = new AccessibilitySelection(
+                code: code,
+                order: order,
+                disabled: disabled,
+                label: label);
+
+            return sel;
+        }
         
         public AccessibilitySelection WithDisabled(bool disabled)
         {

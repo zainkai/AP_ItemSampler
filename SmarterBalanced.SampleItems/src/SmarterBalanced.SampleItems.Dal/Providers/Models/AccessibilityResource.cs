@@ -37,7 +37,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Code = code;
             SelectedCode = selectedCode;
             Order = order;
-            DefaultSelection = DefaultSelection;
+            DefaultSelection = defaultSelection;
             Selections = selections;
             Label = label;
             Description = description;
@@ -53,6 +53,22 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 order: Order,
                 defaultSelection: DefaultSelection,
                 selections: Selections,
+                label: Label,
+                description: Description,
+                disabled: Disabled,
+                resourceType: ResourceType);
+
+            return newResource;
+        }
+
+        public AccessibilityResource WithSelections(ImmutableArray<AccessibilitySelection> selections)
+        {
+            var newResource = new AccessibilityResource(
+                code: Code,
+                selectedCode: SelectedCode,
+                order: Order,
+                defaultSelection: DefaultSelection,
+                selections: selections,
                 label: Label,
                 description: Description,
                 disabled: Disabled,

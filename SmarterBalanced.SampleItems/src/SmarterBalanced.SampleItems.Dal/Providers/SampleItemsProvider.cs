@@ -99,13 +99,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             ImmutableArray<AccessibilityResource> globalResources = accessibilityXml
                 .Element("MasterResourceFamily")
                 .Elements("SingleSelectResource")
-                .ToAccessibilityResources()
-                .ToImmutableArray();
+                .ToAccessibilityResources();
 
             return accessibilityXml
                 .Elements("ResourceFamily")
-                .ToAccessibilityResourceFamilies(globalResources)
-                .ToImmutableArray();
+                .ToAccessibilityResourceFamilies(globalResources);
         }
     }
 }
