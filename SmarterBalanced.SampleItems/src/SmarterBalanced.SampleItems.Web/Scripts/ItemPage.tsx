@@ -20,7 +20,7 @@ namespace ItemPage {
                 }
             }
         }
-        return str;
+        return encodeURIComponent(str);
     }
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
@@ -146,7 +146,7 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", encodeURIComponent(isaap));
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
             const accText = (window.innerWidth < 800) ? "" : "Accessibility";
             return (
                 <div>
