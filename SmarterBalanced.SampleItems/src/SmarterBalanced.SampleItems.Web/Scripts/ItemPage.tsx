@@ -20,7 +20,7 @@ namespace ItemPage {
                 }
             }
         }
-        return str;
+        return encodeURIComponent(str);
     }
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
