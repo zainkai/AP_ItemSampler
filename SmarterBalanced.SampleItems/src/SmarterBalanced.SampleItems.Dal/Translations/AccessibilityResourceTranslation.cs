@@ -121,6 +121,21 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return resources;
         }
 
+        public static AccessibilitySelection MergeSelection(AccessibilitySelection sel, AccessibilityResource familyResource)
+        {
+            var familySel = familyResource.Selections.SingleOrDefault(fs => fs.Code == sel.Code);
+            var selDisabled = familyResource.Disabled || familySel == null || familySel.Disabled;
+            var label = string.IsNullOrEmpty(familySel?.Label) ? sel.Label : familySel.Label;
+
+            var newSelection = new AccessibilitySelection(
+                code: sel.Code,
+                label: label,
+                order: familySel?.Order ?? sel.Order,
+                disabled: selDisabled);
+
+            return newSelection;
+        }
+
         public static AccessibilityResource MergeWith(this AccessibilityResource familyResource, AccessibilityResource globalResource)
         {
             if (familyResource == null)
@@ -128,20 +143,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             else if (globalResource == null)
                 throw new ArgumentNullException(nameof(globalResource));
 
-            var newSelections = globalResource.Selections.Select(sel =>
-            {
-                var familySel = familyResource.Selections.SingleOrDefault(fs => fs.Code == sel.Code);
-                var selDisabled = familyResource.Disabled || familySel == null || familySel.Disabled;
-                var label = string.IsNullOrEmpty(familySel?.Label) ? sel.Label : familySel.Label;
-
-                var newSelection = new AccessibilitySelection(
-                    code: sel.Code,
-                    label: label,
-                    order: familySel?.Order ?? sel.Order,
-                    disabled: selDisabled);
-
-                return newSelection;
-            }).ToImmutableArray();
+            var newSelections = globalResource.Selections
+                .Select(sel => MergeSelection(sel, familyResource))
+                .ToImmutableArray();
 
             string explicitDefault = string.IsNullOrEmpty(familyResource.DefaultSelection)
                 ? globalResource.DefaultSelection
