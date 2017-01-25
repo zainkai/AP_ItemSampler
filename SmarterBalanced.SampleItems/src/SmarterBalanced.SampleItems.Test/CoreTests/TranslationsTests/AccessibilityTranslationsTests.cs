@@ -79,7 +79,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                 selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
                 label: "familyResource",
                 description: "familyResource",
-                disabled: true,
+                disabled: false,
                 resourceType: "familyResource Type");
 
             globalResource = new AccessibilityResource(
@@ -240,6 +240,44 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(familyResource, null));
             Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(null, globalResource));
             Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(null, null));
+        }
+
+        #endregion
+
+        #region MergeSelection
+
+        [Fact]
+        public void TestMergeSelectionHappyCase()
+        {
+            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
+                    .Append(goodSelection)
+                    .ToImmutableArray());
+            var globalSelection = globalResource.Selections.FirstOrDefault(s => s.Code == goodSelection.Code);
+            var merged = AccessibilityResourceTranslation.MergeSelection(globalSelection, newFamilyRes);
+            var disabled = goodSelection.Disabled || newFamilyRes.Disabled || newFamilyRes.Selections.FirstOrDefault().Disabled;
+            var familySel = newFamilyRes.Selections[0];
+            Assert.Equal(goodSelection.Code, merged.Code);
+            Assert.Equal(disabled, merged.Disabled);
+            Assert.Equal(familySel.Label, merged.Label);
+            Assert.Equal(familySel.Order, merged.Order);
+        }
+
+        [Fact(Skip = "not ready yet")]
+        public void TestMergeSelectionVoidProps()
+        {
+            var familySel = AccessibilitySelection.Create(code:goodSelection.Code);
+            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
+                    .Append(goodSelection)
+                    .ToImmutableArray());
+            var globalSelection = globalResource.Selections.FirstOrDefault(s => s.Code == goodSelection.Code);
+            var merged = AccessibilityResourceTranslation.MergeSelection(globalSelection, newFamilyRes);
+            
+            var disabled = goodSelection.Disabled || newFamilyRes.Disabled || familySel.Disabled;
+           
+            Assert.Equal(goodSelection.Code, merged.Code);
+            Assert.Equal(disabled, merged.Disabled);
+            Assert.Equal(familySel.Label, merged.Label);
+            Assert.Equal(familySel.Order, merged.Order);
         }
 
         #endregion
