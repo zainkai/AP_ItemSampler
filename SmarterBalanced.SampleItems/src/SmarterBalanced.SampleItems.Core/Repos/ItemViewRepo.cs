@@ -235,8 +235,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var bankKey = itemDigest.BankKey;
 
             var matchingSubjectClaim = context.ItemCards.Where(i => i.SubjectCode == subjectCode && i.ClaimCode == claimCode);
-            // TODO: get Take() value from appsettings
-            int numExpected = 3;
+            int numExpected = AppSettings.SettingsConfig.NumMoreLikeThisItems;
 
             var comparer = new MoreLikeThisComparer(subjectCode, claimCode);
             GradeLevels gradeBelow = grade.GradeBelow(), gradeAbove = grade.GradeAbove();
