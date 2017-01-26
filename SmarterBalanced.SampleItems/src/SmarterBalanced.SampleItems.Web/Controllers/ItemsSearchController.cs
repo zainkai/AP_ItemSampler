@@ -23,6 +23,11 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         public IActionResult Index()
         {
             var model = sampleItemsSearchRepo.GetItemsSearchViewModel();
+            if(model == null)
+            {
+                return BadRequest();
+            }
+
             return View(model);
         }
 

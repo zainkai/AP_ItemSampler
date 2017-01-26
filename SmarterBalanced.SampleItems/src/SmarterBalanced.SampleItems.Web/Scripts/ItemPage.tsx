@@ -21,7 +21,7 @@ namespace ItemPage {
                 }
             }
         }
-        return str;
+        return encodeURIComponent(str);
     }
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
@@ -117,7 +117,7 @@ namespace ItemPage {
         }
 
         openAboutItemModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#about-item-modal-container"));
                 modal.modal();
             }
@@ -125,21 +125,21 @@ namespace ItemPage {
 
         // TODO: Update id with modal id
         openMoreLikeThisModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#TODO-modal-container"));
                 modal.modal();
             }
         }
 
         openShareModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#share-modal-container"));
                 modal.modal();
             }
         }
 
         openAccessibilityModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
             }
