@@ -25,18 +25,8 @@
     border-radius: 0px;
 }
 
-.accessibility-button-text:before {
-    content: ' Accessibility';
-}
-
 .expand-button {
     cursor: pointer;
-}
-
-@media screen and (max-width: 600px) {
-    .accessibility-button-text:before {
-        content: '';
-    }
 }
 
 .option-disabled {

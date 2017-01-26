@@ -147,7 +147,10 @@ namespace ItemPage {
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
-            const accText = (window.innerWidth < 800) ? "" : "Accessibility";
+            var windowWidth = 600;
+            const accText = (window.innerWidth < 350) ? "" : "Accessibility";
+            const abtText = (window.innerWidth < windowWidth) ? "About" : "About This Item";
+            const moreText = (window.innerWidth < windowWidth) ? "More" : "More Like This";
             return (
                 <div>
                     <div className="btn-toolbar item-nav-group" role="toolbar" aria-label="Toolbar with button groups">
@@ -155,13 +158,13 @@ namespace ItemPage {
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
-                                About This Item
+                                {abtText}
                             </a>
 
                             <a className="btn item-nav-btn" data-target="#share-modal-container"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
-                                More Like This
+                                {moreText}                               
                             </a>
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
                                 onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
@@ -175,7 +178,7 @@ namespace ItemPage {
                                 data-target="#accessibility-modal-container"
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                                <span className="accessibility-button-text"></span>
+                                {accText}
                             </a>
                         </div>
                     </div>
