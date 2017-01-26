@@ -7,6 +7,7 @@ using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Web.Controllers;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Xunit;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
@@ -44,11 +45,21 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             sampleItemsSearchRepoMock.Setup(x => x.GetItemCards()).Returns(itemCards);
             sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemCards(new ItemsSearchParams(It.IsAny<string>(), GradeLevels.High, mathSubjectList, interactionCodeList, claimList)))
+                                        GetItemCards(It.Is<ItemsSearchParams>(parms =>
+                                            parms.ItemId == string.Empty &&
+                                            parms.Grades == GradeLevels.High &&
+                                            Enumerable.SequenceEqual(parms.Subjects, mathSubjectList) &&
+                                            Enumerable.SequenceEqual(parms.InteractionTypes, interactionCodeList) &&
+                                            Enumerable.SequenceEqual(parms.ClaimIds, claimList))))
                                         .Returns(new List<ItemCardViewModel> { itemCards[1] });
 
             sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemCards(new ItemsSearchParams(It.IsAny<string>(), GradeLevels.High, new string[] { "ELA" }, interactionCodeList, claimList)))
+                                        GetItemCards(It.Is<ItemsSearchParams>(parms =>
+                                            parms.ItemId == string.Empty &&
+                                            parms.Grades == GradeLevels.High &&
+                                            Enumerable.SequenceEqual(parms.Subjects, new string[] { "ELA" }) &&
+                                            Enumerable.SequenceEqual(parms.InteractionTypes, interactionCodeList) &&
+                                            Enumerable.SequenceEqual(parms.ClaimIds, claimList))))
                                         .Returns(new List<ItemCardViewModel> { });
 
             var loggerFactory = new Mock<ILoggerFactory>();
@@ -59,7 +70,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         }
 
 
-        [Fact(Skip = "TODO: Fixme")]
+        [Fact]
         public void TestSearchHappyCase()
         {
             var result = controller.Search("", GradeLevels.High, mathSubjectList, interactionCodeList, claimList) as JsonResult;
@@ -71,7 +82,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         }
 
 
-        [Fact(Skip = "TODO: Fixme")]
+        [Fact]
         public void TestSearchNoResult()
         {
             var result = controller.Search("", GradeLevels.High, new string[] { "ELA" }, interactionCodeList, claimList) as JsonResult;

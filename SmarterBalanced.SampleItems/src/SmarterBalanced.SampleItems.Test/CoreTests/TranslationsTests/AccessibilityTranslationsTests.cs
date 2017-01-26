@@ -14,16 +14,76 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 {
     public class AccessibilityTranslationsTests
     {
+        AccessibilityResourceGroup group1 = new AccessibilityResourceGroup("", 1,
+                ImmutableArray.Create(
+                    AccessibilityResource.Create(code: "AmericanSignLanguage", selectedCode: "TDS_ASL0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_ASL0", "", 1, false),
+                        new AccessibilitySelection("TDS_ASL1", "", 2, false))),
+                    AccessibilityResource.Create(code: "ColorContrast", selectedCode: "TDS_CC0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_CC0", "", 1, false),
+                        new AccessibilitySelection("TDS_CCInvert", "", 2, false)))));
+
+        AccessibilityResourceGroup group2 = new AccessibilityResourceGroup("", 2,
+                ImmutableArray.Create(
+                    AccessibilityResource.Create(code: "ClosedCaptioning", selectedCode: "TDS_ClosedCap0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_ClosedCap0", "", 1, false),
+                        new AccessibilitySelection("TDS_ClosedCap1", "", 2, false))),
+
+                    AccessibilityResource.Create(code: "Language", selectedCode: "ENU", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("ENU", "", 1, false),
+                        new AccessibilitySelection("ESN", "", 2, false)))));
+
         ImmutableArray<AccessibilityResourceGroup> groups;
-        AccessibilityResourceGroup group1, group2;
-        Dictionary<string, string> cookie;
-        string[] isaap;
-        AccessibilityResource familyResource, globalResource;
-        AccessibilitySelection nullLabelSelection, goodSelection, disabledSelection, goodSelectionOtherCode;
-        ImmutableArray<AccessibilitySelection> emptySelection = ImmutableArray.Create(new AccessibilitySelection[] { });
+
+        Dictionary<string, string> cookie = new Dictionary<string, string>()
+        {
+            //{"AmericanSignLanguage", "TDS_ASL0" },
+            {"ColorContrast", "TDS_CCInvert" },
+            {"ClosedCaptioning", "TDS_ClosedCap1" },
+            //{"Language", "ENU" }
+        };
+
+        string[] isaap = new string[] {
+            "TDS_ASL1",
+            "ESN",
+        };
+
+        AccessibilityResource familyResource = new AccessibilityResource(
+            code: "TDS_CC",
+            selectedCode: "TDS_CC0",
+            order: 0,
+            defaultSelection: "TDS_CC0",
+            selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
+            label: "familyResource",
+            description: "familyResource",
+            disabled: false,
+            resourceType: "familyResource Type");
+
+        AccessibilityResource globalResource = new AccessibilityResource(
+            code: "TDS_CC",
+            selectedCode: "TDS_CC0",
+            order: 5,
+            defaultSelection: "TDS_CC0",
+            selections: ImmutableArray.Create(
+                new AccessibilitySelection("TDS_CC0", "Black on White", 2, false),
+                new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false),
+                new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false),
+                new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false)),
+            label: "globalResource",
+            description: "globalResource",
+            disabled: false,
+            resourceType: "globalResource Type");
+
+        AccessibilitySelection nullLabelSelection = new AccessibilitySelection("TDS_CC0", null, 1, false);
+        AccessibilitySelection goodSelection = new AccessibilitySelection("TDS_CCInvert", "Good Selection", 1, false);
+        AccessibilitySelection disabledSelection = new AccessibilitySelection("TDS_CCMedGrayLtGray", "Disabled Selection", 1, true);
+        AccessibilitySelection goodSelectionOtherCode = new AccessibilitySelection("TestCode", "Good Selection Other Code", 1, false);
+
+        ImmutableArray<AccessibilitySelection> emptySelection = ImmutableArray<AccessibilitySelection>.Empty;
+
         AccessibilityResource happyFamilyResource = new AccessibilityResource(
             code: "familyResource",
-            selectedCode: "TDS_CC0",
+            selectedCode: "TDS_CCInvert",
             order: 0,
             defaultSelection: "TDS_CC0",
             selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
@@ -34,70 +94,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 
         public AccessibilityTranslationsTests()
         {
-            cookie = new Dictionary<string, string>()
-            {
-                //{"AmericanSignLanguage", "TDS_ASL0" },
-                {"ColorContrast", "TDS_CCInvert" },
-                {"ClosedCaptioning", "TDS_ClosedCap1" },
-                //{"Language", "ENU" }
-            };
-
-            isaap = new string[] {
-                "TDS_ASL1",
-                "ESN",
-            };
-
-            group1 = new AccessibilityResourceGroup("", 1,
-                ImmutableArray.Create(
-                    AccessibilityResource.Create(code: "AmericanSignLanguage", selectedCode: "TDS_ASL0", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("TDS_ASL0", "", 1, false), 
-                        new AccessibilitySelection("TDS_ASL1", "", 2, false))),
-                    AccessibilityResource.Create(code: "ColorContrast", selectedCode: "TDS_CC0", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("TDS_CC0", "", 1, false),
-                        new AccessibilitySelection("TDS_CCInvert", "", 2, false)))));
-            group2 = new AccessibilityResourceGroup("", 2,
-                ImmutableArray.Create(
-                    AccessibilityResource.Create(code: "ClosedCaptioning", selectedCode: "TDS_ClosedCap0", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("TDS_ClosedCap0", "", 1, false),
-                        new AccessibilitySelection("TDS_ClosedCap1", "", 2, false))),
-
-                    AccessibilityResource.Create(code: "Language", selectedCode: "ENU", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("ENU", "", 1, false),
-                        new AccessibilitySelection("ESN", "", 2, false)))));
             groups = ImmutableArray.Create(group1, group2);
-
-            nullLabelSelection = new AccessibilitySelection("TDS_CC0", null, 1, false);
-            goodSelection = new AccessibilitySelection("TDS_CCInvert", "Good Selection", 1, false);
-            goodSelectionOtherCode = new AccessibilitySelection("TestCode", "Good Selection Other Code", 1, false);
-            disabledSelection = new AccessibilitySelection("TDS_CCMedGrayLtGray", "Disabled Selection", 1, true);
-
-            familyResource = new AccessibilityResource(
-                code: "familyResource",
-                selectedCode: "TDS_CC0",
-                order: 0,
-                defaultSelection: "TDS_CC0",
-                selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
-                label: "familyResource",
-                description: "familyResource",
-                disabled: false,
-                resourceType: "familyResource Type");
-
-            globalResource = new AccessibilityResource(
-                code: "globalResource",
-                selectedCode: "TDS_CC0",
-                order: 5,
-                defaultSelection: "TDS_CC0",
-                selections: ImmutableArray.Create(
-                    new AccessibilitySelection("TDS_CC0", "Black on White", 2, false),
-                    new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false),
-                    new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false),
-                    new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false)),
-                label: "globalResource",
-                description: "globalResource",
-                disabled: false,
-                resourceType: "globalResource Type");
-            
-            
         }
 
         #region ApplyPreferences
@@ -178,11 +175,11 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                     .ToImmutableArray());
             var merged = newFamilyRes.MergeWith(globalResource);
             
-            Assert.Equal(merged.Code, globalResource.Code);
+            Assert.Equal(merged.Code, "TDS_CC");
             Assert.Equal(merged.Description, globalResource.Description);
             Assert.Equal(merged.Label, newFamilyRes.Label);
-            Assert.Equal(merged.DefaultSelection, newFamilyRes.DefaultSelection);
-            Assert.Equal(merged.Order, newFamilyRes.Order);
+            Assert.Equal(merged.DefaultSelection, "TDS_CCInvert");
+            Assert.Equal(merged.Order, globalResource.Order); // TODO: it's looking more and more like a data type for PartialResource is needed
             Assert.Equal(merged.Disabled, newFamilyRes.Disabled);
             var res = merged.Selections.Where(r => r.Label == goodSelection.Label).ToList();
             Assert.Equal(1, res.Count);

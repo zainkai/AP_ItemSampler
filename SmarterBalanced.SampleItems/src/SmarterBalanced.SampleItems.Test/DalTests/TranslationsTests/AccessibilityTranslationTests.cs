@@ -124,23 +124,23 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// only disabled given a partial accessibility resource 
         /// that contains all of the select elements
         /// </summary>
-        [Fact(Skip = "FIXME")]
+        [Fact]
         public void TestToAccessibilityDisabledResource()
         {
             AccessibilityResource globalResource = Resources[1];
             AccessibilityResource partialResource = AccessibilityResource.Create(
-                code: "ACC1",
+                code: "ACC2",
                 disabled: true,
                 selections: ImmutableArray.Create(
-                    AccessibilitySelection.Create(code: "ACC1_SEL1"),
-                    AccessibilitySelection.Create(code: "ACC1_SEL2")));
+                    AccessibilitySelection.Create(code: "ACC2_SEL1"),
+                    AccessibilitySelection.Create(code: "ACC2_SEL2")));
 
             AccessibilityResource outputResource = partialResource.MergeWith(globalResource);
 
             Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
             Assert.True(outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
-            Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
+            Assert.Equal(string.Empty, outputResource.DefaultSelection);
             Assert.Equal(globalResource.Selections.Length, outputResource.Selections.Length);
 
             foreach (var sel in outputResource.Selections)
@@ -155,7 +155,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// are disabled given a partial accessibility resource that does not 
         /// contain any select elements
         /// </summary>
-        [Fact(Skip = "FIXME")]
+        [Fact]
         public void TestToAccessibilityDisabledAllSelections()
         {
             AccessibilityResource globalResource = Resources[1];
@@ -169,7 +169,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
-            Assert.Equal(null, outputResource.DefaultSelection);
+            Assert.Equal(string.Empty, outputResource.DefaultSelection);
             Assert.Equal(globalResource.Selections.Count(), outputResource.Selections.Count());
             foreach (var sel in outputResource.Selections)
             {

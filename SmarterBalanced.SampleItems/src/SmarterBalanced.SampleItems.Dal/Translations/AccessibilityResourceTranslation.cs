@@ -158,13 +158,17 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 ? newSelections.FirstOrDefault(s => !s.Disabled)?.Code ?? string.Empty
                 : explicitDefault;
 
+            string newLabel = string.IsNullOrEmpty(familyResource.Label)
+                ? globalResource.Label
+                : familyResource.Label;
+
             var newResource = new AccessibilityResource(
                 code: globalResource.Code,
                 selectedCode: globalResource.SelectedCode,
                 order: globalResource.Order,
                 defaultSelection: newDefault,
                 selections: newSelections,
-                label: globalResource.Label,
+                label: newLabel,
                 description: globalResource.Description,
                 disabled: familyResource.Disabled,
                 resourceType: globalResource.ResourceType);
