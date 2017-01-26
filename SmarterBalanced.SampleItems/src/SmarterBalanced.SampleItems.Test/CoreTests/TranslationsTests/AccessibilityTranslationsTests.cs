@@ -262,21 +262,19 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             Assert.Equal(familySel.Order, merged.Order);
         }
 
-        [Fact(Skip = "not ready yet")]
+        [Fact]
         public void TestMergeSelectionVoidProps()
         {
             var familySel = AccessibilitySelection.Create(code:goodSelection.Code);
-            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
-                    .Append(goodSelection)
+            var newFamilyRes = familyResource.WithSelections(emptySelection
+                    .Append(familySel)
                     .ToImmutableArray());
             var globalSelection = globalResource.Selections.FirstOrDefault(s => s.Code == goodSelection.Code);
             var merged = AccessibilityResourceTranslation.MergeSelection(globalSelection, newFamilyRes);
-            
-            var disabled = goodSelection.Disabled || newFamilyRes.Disabled || familySel.Disabled;
            
             Assert.Equal(goodSelection.Code, merged.Code);
-            Assert.Equal(disabled, merged.Disabled);
-            Assert.Equal(familySel.Label, merged.Label);
+            Assert.False(merged.Disabled);
+            Assert.Equal(globalSelection.Label, merged.Label);
             Assert.Equal(familySel.Order, merged.Order);
         }
 
