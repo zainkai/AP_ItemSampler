@@ -112,8 +112,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .more-like-this-modal {
-    width: 1100px;
+    width: 725px;
+}
+
+.more-like-this-modal h3{
+    margin-top: 0px;
+}
+
+.modal-body {
+    padding: 0px;
 }

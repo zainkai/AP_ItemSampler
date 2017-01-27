@@ -13,12 +13,20 @@
     export class Modal extends React.Component<Props, {}> {
 
         renderColumn(column: Column) {
+            const label = column.label == "NA" ?
+                "No items to be displayed."
+                : "No Items found for this grade.";
+
+            const items = column.itemCards.length ?
+                column.itemCards.map(c => <ItemCardCondensed {...c} />)
+                : label;
+
             return (
                 <div className="more-like-this-column">
                     <div><h3>{column.label}</h3></div>
-                    {column.itemCards.map(c => <ItemCard {...c} />)}
+                    {items}
                 </div>
-                )
+            );
         }
 
         render() {
