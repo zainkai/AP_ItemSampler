@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
+<head class="site-header-font">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -21,32 +21,48 @@
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
-<body>
+<body class="site-body-font body-background-image">
     <div class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="navbar-header nav-flex">
-                        <a class="nav-inner-flex navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
-                            <img alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
-                        </a>
-                        <a class="nav-inner-flex" asp-controller="Home" asp-action="Index">
-                                <h3 class="site-title">Sample Items Website</h3>
-                        </a>
-                        <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
-                                <h3 class="search-button">
-                                    <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
-                                    Search
-                                </h3>
-                        </a>
-                </div>
+            <div class="navbar-header nav-flex header-padding">
+                <a class="navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
+                    <img class="logo-line" alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
+                </a>
+                <a class="nav-inner-flex" asp-controller="Home" asp-action="Index">
+                    <h3 class="site-title site-title-font">Sample Items</h3>
+                </a>
+                <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
+                    <h3 class="site-header-font">Home</h3>
+                </a>
+                <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
+                    <h3 class="site-header-font">About Test Items</h3>
+                </a>
+                <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+                    <h3 class="search-button site-header-font">
+                        <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
+                        Search
+                    </h3>
+                </a>
+            </div>
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
-        <footer>
-            <hr />
-            <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
-        </footer>
+
     </div>
+    <footer>
+        <hr />
+        <a href="http://practice.smarterbalanced.org/" class="link-font">Practice and training tests are available here.</a>
+        <div class="list-inline center-block"  style="padding-top:20px">
+            <li>
+                <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
+            </li>
+            <li class="pull-right">
+                <a href="www.smarterbalanced.org" class="small-link-font"> www.SmarterBalanced.org</a>
+            </li>
+
+        </div>
+    </footer>
     <script src="~/scripts/Polyfill.js"></script>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
