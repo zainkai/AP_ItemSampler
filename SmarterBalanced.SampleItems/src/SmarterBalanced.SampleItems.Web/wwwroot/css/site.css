@@ -285,6 +285,10 @@ h4.card-title {
         background-color: #efefef;
     }
 
+    .tag:focus:not(.selected) {
+        background-color: #efefef;
+    }
+
 .form-group {
     margin-bottom: 0px;
 }
@@ -295,8 +299,12 @@ h4.card-title {
 }
 
     .selected:hover {
-        background-color: #63666A;
+        background-color: #404244;
         color: white;
+    }
+
+    .selected.tag:focus {
+        background-color: #404244;
     }
 
 .search-params {
