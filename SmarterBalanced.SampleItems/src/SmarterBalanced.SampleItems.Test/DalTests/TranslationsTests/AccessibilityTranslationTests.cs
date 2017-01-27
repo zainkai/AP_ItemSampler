@@ -252,29 +252,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         }
 
         /// <summary>
-        /// Tests that a global resource is matched with a family's resource
-        /// if the codes match
+        /// Tests that global resources are passed through an empty list
+        /// of partial resources in mergeAllWith()
         /// </summary>
         [Fact]
         public void TestToAccessibilityResourcesMatchingPartialResource()
         {
-            List<AccessibilityResource> partialResources = new List<AccessibilityResource>
-            {
-                //new AccessibilityResource
-                //{
-                //    Code = "ACC2",
-                //    Selections = new List<AccessibilitySelection>
-                //    {
-                //        new AccessibilitySelection
-                //        {
-                //            Code = "ACC2_SEL1"
-                //        }
-                //   }
-                //}
-            };
-
-            var resultResources = AccessibilityResourceTranslation.MergeAllWith(partialResources, Resources);
-
+            var resultResources = AccessibilityResourceTranslation.MergeAllWith(new List<AccessibilityResource>(), Resources);
             Assert.Equal(Resources.Count, resultResources.Length);
         }
         #endregion
