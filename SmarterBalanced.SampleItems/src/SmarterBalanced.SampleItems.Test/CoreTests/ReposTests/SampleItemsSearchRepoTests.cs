@@ -77,7 +77,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             }
         }
 
-
         /// <summary>
         /// Orders cards by bank key, then by item key
         /// </summary>
@@ -87,8 +86,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         {
             return cardsList.OrderBy(c => c.BankKey).ThenBy(c => c.ItemKey).ToList();
         }
-
-
 
         #region GetItemCards
         [Fact]
@@ -169,7 +166,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal(Sort(cards), Sort(cardsCheck));
         }
 
-        // NOTE: This test should fail. Try to fix the code when "parms" is null
         [Fact]
         public void TestNullSearchParamObj()
         {
@@ -179,9 +175,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal(cards.Count, context.ItemCards.Count());
             Assert.Equal(Sort(cards), Sort(context.ItemCards));
         }
-
-        // TODO: Test following cases:
-        //  - Test each ItemSearchParams property when null
 
         [Fact]
         public void TestGetItemCardsNull()
@@ -195,7 +188,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal(Sort(cards), Sort(cardsCheck));
         }
 
-        //  - Use Miletone 1 UAT cases as templates
         [Fact]
         public void TestSearchTwoClaims()
         {

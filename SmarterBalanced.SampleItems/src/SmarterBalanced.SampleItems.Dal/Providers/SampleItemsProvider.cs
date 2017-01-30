@@ -15,32 +15,38 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
     public static class SampleItemsProvider
     {
 
-        public static async Task<SampleItemsContext> LoadContext(AppSettings appSettings, ILogger logger)
+        public static SampleItemsContext LoadContext(AppSettings appSettings, ILogger logger)
         {
             string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
-            ImmutableArray<InteractionType> interactionTypes;
-            ImmutableArray<InteractionFamily> interactionFamilies;
+            
+            var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
 
+            var interactionTypeDoc = XmlSerialization.GetXDocumentElement(appSettings.SettingsConfig.InteractionTypesXMLPath, "InteractionTypes");
+            var accessibilityDoc = XmlSerialization.GetXDocumentElement(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
+            var subjectDoc = XmlSerialization.GetXDocument(appSettings.SettingsConfig.ClaimsXMLPath);
+            
+            var accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc);
 
-            Task<IEnumerable<FileInfo>> metaDataFilesTask = XmlSerialization.FindMetadataXmlFiles(contentDir);
-            Task<IEnumerable<FileInfo>> contentFilesTask = XmlSerialization.FindContentXmlFiles(contentDir);
-            Task<XElement> interactionTypeDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.InteractionTypesXMLPath, "InteractionTypes");
-            Task<XElement> accessibilityDoc = XmlSerialization.GetXDocumentElementAsync(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
-            Task<XDocument> subjectDoc = XmlSerialization.GetXDocumentAsync(appSettings.SettingsConfig.ClaimsXMLPath);
+            var interactionTypes = interactionTypeDoc.ToInteractionTypes();
+            ImmutableArray<InteractionFamily> interactionFamilies = interactionTypeDoc
+                .Element("Families")
+                .Elements("Family")
+                .Select(e => e.ToInteractionFamily())
+                .ToImmutableArray();
 
-            var accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc.Result, appSettings);
-            GetInteractionTypes(interactionTypeDoc.Result, out interactionTypes, out interactionFamilies);
-            var subjects = subjectDoc.Result.ToSubjects(interactionFamilies);
+            // TODO: consider using static Subject.Create or additional constructors instead of extension methods on XElement for organization's sake
+            var subjects = subjectDoc.ToSubjects(interactionFamilies);
 
             // TODO: ItemDigests need everything in the universe. any way to separate the parts?
-            var itemDigests = await LoadItemDigests(
+            var itemDigests = LoadItemDigests(
                 appSettings,
                 accessibilityResourceFamilies,
                 interactionTypes,
                 subjects,
-                metaDataFilesTask.Result,
-                contentFilesTask.Result,
-                appSettings);
+                metaDataFiles,
+                contentFiles,
+                appSettings).Result;
 
             var itemCards = itemDigests
                 .Select(i => i.ToItemCardViewModel())
@@ -88,36 +94,16 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return itemDigests;
         }
 
-        private static ImmutableArray<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml, AppSettings appSettings)
+        private static ImmutableArray<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml)
         {
-
             ImmutableArray<AccessibilityResource> globalResources = accessibilityXml
                 .Element("MasterResourceFamily")
                 .Elements("SingleSelectResource")
-                .ToAccessibilityResources(appSettings.SettingsConfig.AccessibilityTypeLabels)
-                .ToImmutableArray();
+                .ToAccessibilityResources();
 
             return accessibilityXml
                 .Elements("ResourceFamily")
-                .ToAccessibilityResourceFamilies(globalResources)
-                .ToImmutableArray();
-        }
-
-        private static void GetInteractionTypes(XElement interactionTypesDoc,
-            out ImmutableArray<InteractionType> interactionTypes,
-            out ImmutableArray<InteractionFamily> interactionFamily)
-        {
-            interactionTypes = interactionTypesDoc
-                .Element("Items")
-                .Elements("Item")
-                .Select(i => i.ToInteractionType())
-                .ToImmutableArray();
-
-            interactionFamily = interactionTypesDoc
-                .Element("Families")
-                .Elements("Family")
-                .Select(e => e.ToInteractionFamily())
-                .ToImmutableArray();
+                .ToAccessibilityResourceFamilies(globalResources);
         }
     }
 }

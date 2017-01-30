@@ -62,11 +62,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         public async void TestDeserializeXmlFiles()
         {
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> metadataFiles = await XmlSerialization.FindMetadataXmlFiles(contentDir);
+            IEnumerable<FileInfo> metadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             IEnumerable<ItemMetadata> metadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metadataFiles);
             Assert.Equal(metadataFiles.Count(), metadata.Count());
 
-            IEnumerable<FileInfo> contentFiles = await XmlSerialization.FindContentXmlFiles(contentDir);
+            IEnumerable<FileInfo> contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
             IEnumerable<ItemContents> contents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
             Assert.Equal(metadataFiles.Count(), contents.Count());
         }
@@ -79,7 +79,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         {
             int metadataFilesCount = 6;
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> metadataFiles = await XmlSerialization.FindMetadataXmlFiles(contentDir);
+            var metadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             Assert.Equal(metadataFilesCount, metadataFiles.Count());
         }
 
@@ -91,7 +91,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         {
             int contentFilesCount = 6;
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> contentFiles = await XmlSerialization.FindContentXmlFiles(contentDir);
+            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
             Assert.Equal(contentFilesCount, contentFiles.Count());
         }
     }

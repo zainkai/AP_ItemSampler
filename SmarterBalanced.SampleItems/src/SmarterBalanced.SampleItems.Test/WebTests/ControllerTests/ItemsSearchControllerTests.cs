@@ -8,78 +8,91 @@ using SmarterBalanced.SampleItems.Web.Controllers;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Xunit;
+using System.Linq;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
     public class ItemsSearchControllerTests
     {
         ItemsSearchController controller;
-        int goodBankKey = 99;
-        int badBankKey = 1;
+        ItemsSearchController controllerBadReq;
+        ItemsSearchViewModel itemsSearchViewModel;
+        ItemsSearchViewModel itemsSearchViewModelBad;
         int goodItemKey = 89;
-        int badItemKey = 2;
-        List<ItemCardViewModel> itemCards;
-        string[] mathSubjectList;
-        string[] interactionCodeList;
-        string[] claimList;
 
         public ItemsSearchControllerTests()
         {
-            string subjectCode = "MATH";
-            mathSubjectList = new string[] { subjectCode };
-            string interactionTypeCode = "TC2";
-            interactionCodeList = new string[] { interactionTypeCode };
-            string claimCode = "1";
-            claimList = new string[] { claimCode };
-
-            itemCards = new List<ItemCardViewModel>() {
-                ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade6),
-                ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: badItemKey, grade: GradeLevels.High),
-                ItemCardViewModel.Create(bankKey: badBankKey, itemKey: goodItemKey, grade: GradeLevels.Grade9),
-                ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey, grade: GradeLevels.Grade4,
-                        subjectCode: subjectCode,interactionTypeCode: interactionTypeCode)
-            };
-
+            itemsSearchViewModel = new ItemsSearchViewModel();
+            itemsSearchViewModelBad = null;
             var sampleItemsSearchRepoMock = new Mock<ISampleItemsSearchRepo>();
+            var sampleItemsSearchRepoBadRequestMock = new Mock<ISampleItemsSearchRepo>();
+            sampleItemsSearchRepoMock.Setup(x => x
+                .GetItemCards(It.Is<ItemsSearchParams>(p => p.ItemId == null)))
+                .Returns(new List<ItemCardViewModel>());
 
-            sampleItemsSearchRepoMock.Setup(x => x.GetItemCards()).Returns(itemCards);
-            sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemCards(new ItemsSearchParams(It.IsAny<string>(), GradeLevels.High, mathSubjectList, interactionCodeList, claimList)))
-                                        .Returns(new List<ItemCardViewModel> { itemCards[1] });
+            sampleItemsSearchRepoMock.Setup(x => x
+                .GetItemCards(It.Is<ItemsSearchParams>(p => p.ItemId == goodItemKey.ToString())))
+                .Returns(new List<ItemCardViewModel> { ItemCardViewModel.Create(itemKey: goodItemKey) });
 
-            sampleItemsSearchRepoMock.Setup(x => x.
-                                        GetItemCards(new ItemsSearchParams(It.IsAny<string>(), GradeLevels.High, new string[] { "ELA" }, interactionCodeList, claimList)))
-                                        .Returns(new List<ItemCardViewModel> { });
-
+            sampleItemsSearchRepoMock.Setup(x => x.GetItemsSearchViewModel()).Returns(itemsSearchViewModel);
+            sampleItemsSearchRepoBadRequestMock.Setup(x => x.GetItemsSearchViewModel()).Returns(itemsSearchViewModelBad);
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-
             controller = new ItemsSearchController(sampleItemsSearchRepoMock.Object, loggerFactory.Object);
+            controllerBadReq = new ItemsSearchController(sampleItemsSearchRepoBadRequestMock.Object, loggerFactory.Object);
         }
 
-
-        [Fact(Skip = "TODO: Fixme")]
-        public void TestSearchHappyCase()
+        /// <summary>
+        /// Tests that an ItemSearchViewModel is returned.
+        /// </summary>
+        [Fact]
+        public void TestIndex()
         {
-            var result = controller.Search("", GradeLevels.High, mathSubjectList, interactionCodeList, claimList) as JsonResult;
-            var resultList = result.Value as List<ItemCardViewModel>;
+            var result = controller.Index();
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<ItemsSearchViewModel>(viewResult.ViewData.Model);
 
-            Assert.Equal(1, resultList.Count);
-            Assert.Equal(goodBankKey, resultList[0].BankKey);
-            Assert.Equal(badItemKey, resultList[0].ItemKey);
+            Assert.Equal(itemsSearchViewModel, model);
         }
 
+        /// <summary>
+        /// Tests that a BadRequestResult is returned by Index
+        /// </summary>
+        [Fact]
+        public void TestIndexNull()
+        {
+            var result = controllerBadReq.Index();
 
-        [Fact(Skip = "TODO: Fixme")]
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        /// <summary>
+        /// Tests that an empty ItemCardViewModel List is returned, given no parms.
+        /// </summary>
+        [Fact]
         public void TestSearchNoResult()
         {
-            var result = controller.Search("", GradeLevels.High, new string[] { "ELA" }, interactionCodeList, claimList) as JsonResult;
+            var result = controller.Search(null, GradeLevels.High, null, null, null) as JsonResult;
             var resultList = result.Value as List<ItemCardViewModel>;
 
+            Assert.IsType<List<ItemCardViewModel>>(result.Value);
+            Assert.IsType<JsonResult>(result);
             Assert.Equal(0, resultList.Count);
         }
 
-    }
+        /// <summary>
+        /// Tests that an ItemCardViewModel is returned given a correct ItemKey
+        /// </summary>
+        [Fact]
+        public void TestSearchResult()
+        {
+            var result = controller.Search(goodItemKey.ToString(), GradeLevels.High, null, null, null) as JsonResult;
+            var resultList = result.Value as List<ItemCardViewModel>;
 
+            Assert.Equal(resultList.Count, 1);
+            Assert.Equal(resultList[0].ItemKey, goodItemKey);
+        }
+    }
 }
