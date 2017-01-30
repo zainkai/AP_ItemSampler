@@ -35,7 +35,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
 
-                    AssignAccessibilityResourceGroups(itemDigest, resourceFamilies, settings);
+                    itemDigest.AccessibilityResourceGroups =
+                        CreateAccessibilityGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
 
                     digests.Add(itemDigest);
                 }
@@ -131,8 +132,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 Claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId()),
                 CommonCoreStandardsId = identifier.CommonCoreStandard,
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
-                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y" ? true : false,
-                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y" ? true : false
+                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
+                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y"
             };
 
             return digest;
@@ -197,65 +198,64 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
-        /// <summary>
-        /// Assigns a list of AccessibilityResources to an item digest.
-        /// If the item has auxilliary resources disabled, the resources are updated accordingly.
-        /// </summary>
-        private static void AssignAccessibilityResourceGroups(
+        private static AccessibilityResource ApplyFlags(
+            this AccessibilityResource resource,
+            bool aslSupported,
+            bool allowCalculator)
+        {
+            if (!aslSupported && resource.Code == "AmericanSignLanguage")
+            {
+                var newResource = resource.ToDisabled();
+                return newResource;
+            }
+
+            if (!allowCalculator && resource.Code == "Calculator")
+            {
+                var newResource = resource.ToDisabled();
+                return newResource;
+            }
+            
+            return resource;
+        } 
+        
+        private static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
             ItemDigest itemDigest,
             IList<AccessibilityResourceFamily> resourceFamilies,
-            AppSettings settings)
+            IList<AccessibilityType> accessibilityTypes)
         {
-            var resources = resourceFamilies
-                .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
-                    && t.Grades.Contains(itemDigest.Grade)
-                )?.Resources ?? default(ImmutableArray<AccessibilityResource>);
+            var family = resourceFamilies
+                .FirstOrDefault(f =>
+                    f.Subjects.Any(c => c == itemDigest.Subject?.Code) &&
+                    f.Grades.Contains(itemDigest.Grade));
 
-            if (resources.IsDefault)
+            if (family == null)
             {
-                return;
+                return ImmutableArray<AccessibilityResourceGroup>.Empty;
             }
 
-            if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
-            {
-                resources = resources.Select(t => t.DeepClone()).ToImmutableArray();
+            var flaggedResources = family.Resources
+                .Select(r => r.ApplyFlags(
+                    aslSupported: itemDigest.AslSupported,
+                    allowCalculator: itemDigest.AllowCalculator))
+                .ToImmutableArray();
 
-                if (!itemDigest.AslSupported)
+            var groups = accessibilityTypes
+                .Select(at =>
                 {
-                    DisableResource(resources, "AmericanSignLanguage");
-                }
+                    var groupResources = flaggedResources
+                    .Where(r => r.ResourceType == at.Id)
+                    .ToImmutableArray();
 
-                if (!itemDigest.AllowCalculator)
-                {
-                    DisableResource(resources, "Calculator");
-                }
-            }
+                    var group = new AccessibilityResourceGroup(
+                        label: at.Label,
+                        order: at.Order,
+                        accessibilityResources: groupResources);
 
-            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
-            foreach(AccessibilityType type in settings.SettingsConfig.AccessibilityTypes)
-            {
-                var groupResources = resources.Where(r => r.ResourceType == type.Id).OrderBy(r => r.Order);
-                groups.Add(new AccessibilityResourceGroup(
-                    type.Label,
-                    type.Order,
-                    groupResources
-                        .OrderBy(r => r.Order)
-                        .ToImmutableArray()));
-            }
+                    return group;
+                })
+                .ToImmutableArray();
 
-            itemDigest.AccessibilityResourceGroups = groups.OrderBy(g => g.Order).ToImmutableArray();
+            return groups;
         }
-        
-        private static void DisableResource(IEnumerable<AccessibilityResource> resources, string code)
-        {
-            var resource = resources.FirstOrDefault(t => t.Code == code);
-            if (resource != null)
-            {
-                resource.Disabled = true;
-                resource.Selections.ForEach(s => s.Disabled = true);
-            }
-        }
-
     }
-
 }

@@ -56,14 +56,10 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         /// </summary>
         /// <param name="directory"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<FileInfo>> FindMetadataXmlFiles(string directory)
+        public static FileInfo[] FindMetadataXmlFiles(string directory)
         {
-            IEnumerable<FileInfo> files;
-            var getFiles = Task.Run(() =>
-            {
-                return new DirectoryInfo(directory).GetFiles("metadata.xml", SearchOption.AllDirectories);
-            });
-            files = await getFiles;
+            var directoryInfo = new DirectoryInfo(directory);
+            var files = directoryInfo.GetFiles("metadata.xml", SearchOption.AllDirectories);
             return files;
         }
 
@@ -72,15 +68,15 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         /// </summary>
         /// <param name="directory"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<FileInfo>> FindContentXmlFiles(string directory)
+        public static IEnumerable<FileInfo> FindContentXmlFiles(string directory)
         {
             Regex filePattern = new Regex(@"item-\d+-\d+.xml");
-            var getFiles = Task.Run(() =>
-            {
-                return new DirectoryInfo(directory).GetFiles("*.xml", SearchOption.AllDirectories).Where(file => filePattern.IsMatch(file.Name));
-            });
+            var directoryInfo = new DirectoryInfo(directory);
+            
+            var files = directoryInfo
+                .GetFiles("*.xml", SearchOption.AllDirectories)
+                .Where(file => filePattern.IsMatch(file.Name));
 
-            IEnumerable<FileInfo> files = await getFiles;
             return files;
         }
 
@@ -89,26 +85,9 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
             return XDocument.Load(location).Element(rootElement);
         }
 
-        public static Task<XElement> GetXDocumentElementAsync(string location, string rootElement)
-        {
-            return Task.Run(() =>
-            {
-                return GetXDocumentElement(location, rootElement);
-            });
-        }
-
         public static XDocument GetXDocument(string location)
         {
             return XDocument.Load(location);
         }
-
-        public static Task<XDocument> GetXDocumentAsync(string location)
-        {
-            return Task.Run(() =>
-            {
-                return GetXDocument(location);
-            });
-        }
-
     }
 }

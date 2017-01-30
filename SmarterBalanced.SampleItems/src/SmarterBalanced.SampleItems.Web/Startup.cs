@@ -58,7 +58,7 @@ namespace SmarterBalanced.SampleItems.Web
             Configuration.Bind(appSettings);
             try
             {
-                context = SampleItemsProvider.LoadContext(appSettings, logger).Result;
+                context = SampleItemsProvider.LoadContext(appSettings, logger);
             }
             catch (Exception e)
             {
