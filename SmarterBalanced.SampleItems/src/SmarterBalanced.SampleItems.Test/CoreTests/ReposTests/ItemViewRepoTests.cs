@@ -12,47 +12,48 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 {
     public class ItemViewRepoTests
     {
-        ItemDigest mathDigest, elaDigest, duplicateDigest;
-        ImmutableArray<ItemDigest> itemDigests;
-        ItemViewRepo itemViewRepo;
-        SampleItemsContext context;
-        int goodItemKey;
-        int goodBankKey;
-        int badItemKey;
-        int badBankKey;
-        int duplicateItemKey, duplicateBankKey;
-        ItemCardViewModel mathCard, elaCard, duplicateCard;
+        ItemDigest MathDigest, ElaDigest, DuplicateDigest;
+        ImmutableArray<ItemDigest> ItemDigests;
+        ItemViewRepo ItemViewRepo;
+        SampleItemsContext Context;
+        int GoodItemKey;
+        int BadItemKey;
+        int GoodBankKey;
+        int BadBankKey;
+        int DuplicateItemKey, DuplicateBankKey;
+        ItemCardViewModel MathCard, ElaCard, DuplicateCard;
 
         public ItemViewRepoTests()
         {
-            goodBankKey = 1;
-            goodItemKey = 2;
-            badBankKey = 3;
-            goodItemKey = 4;
-            duplicateBankKey = 5;
-            duplicateItemKey = 6;
-            mathCard = ItemCardViewModel.Create(bankKey: goodBankKey, itemKey: goodItemKey);
-            elaCard = ItemCardViewModel.Create(bankKey: badBankKey, itemKey: badItemKey);
-            duplicateCard = ItemCardViewModel.Create(bankKey: duplicateBankKey, itemKey: duplicateItemKey);
-            mathDigest = new ItemDigest() { BankKey = goodBankKey, ItemKey = goodItemKey };
-            elaDigest = new ItemDigest() { BankKey = badBankKey, ItemKey = badItemKey };
-            duplicateDigest = new ItemDigest() { BankKey = duplicateBankKey, ItemKey = duplicateItemKey };
-            itemDigests = ImmutableArray.Create(mathDigest, elaDigest, duplicateDigest, duplicateDigest);
-            var itemCards = ImmutableArray.Create(mathCard, elaCard, duplicateCard, duplicateCard);
+            GoodBankKey = 1;
+            GoodItemKey = 2;
+            BadBankKey = 3;
+            BadItemKey = 9;
+            GoodItemKey = 4;
+            DuplicateBankKey = 5;
+            DuplicateItemKey = 6;
+            MathCard = ItemCardViewModel.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
+            ElaCard = ItemCardViewModel.Create(bankKey: BadBankKey, itemKey: BadItemKey);
+            DuplicateCard = ItemCardViewModel.Create(bankKey: DuplicateBankKey, itemKey: DuplicateItemKey);
+            MathDigest = new ItemDigest() { BankKey = GoodBankKey, ItemKey = GoodItemKey };
+            ElaDigest = new ItemDigest() { BankKey = BadBankKey, ItemKey = BadItemKey };
+            DuplicateDigest = new ItemDigest() { BankKey = DuplicateBankKey, ItemKey = DuplicateItemKey };
+            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest);
+            var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard);
 
-            context = SampleItemsContext.Create(itemDigests: itemDigests, itemCards: itemCards);
+            Context = SampleItemsContext.Create(itemDigests: ItemDigests, itemCards: itemCards);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            itemViewRepo = new ItemViewRepo(context, loggerFactory.Object);
+            ItemViewRepo = new ItemViewRepo(Context, loggerFactory.Object);
         }
 
         [Fact]
         public void TestGetItemDigest()
         {
-            var result = itemViewRepo.GetItemDigest(goodBankKey, goodItemKey);
-            var resultCheck = context.ItemDigests.FirstOrDefault(i => i.ItemKey == goodItemKey && i.BankKey == goodBankKey);
+            var result = ItemViewRepo.GetItemDigest(GoodBankKey, GoodItemKey);
+            var resultCheck = Context.ItemDigests.FirstOrDefault(i => i.ItemKey == GoodItemKey && i.BankKey == GoodBankKey);
 
             Assert.NotNull(result);
             Assert.Equal(result, resultCheck);
@@ -64,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             bool thrown = true;
             try
             {
-                var result = itemViewRepo.GetItemDigest(duplicateBankKey, duplicateItemKey);
+                var result = ItemViewRepo.GetItemDigest(DuplicateBankKey, DuplicateItemKey);
                 thrown = false;
             }
             catch { }
@@ -75,8 +76,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCard()
         {
-            var result = itemViewRepo.GetItemCardViewModel(badBankKey, badItemKey);
-            var resultCheck=context.ItemCards.FirstOrDefault(i => i.ItemKey == badItemKey && i.BankKey == badBankKey);
+            var result = ItemViewRepo.GetItemCardViewModel(BadBankKey, BadItemKey);
+            var resultCheck=Context.ItemCards.FirstOrDefault(i => i.ItemKey == BadItemKey && i.BankKey == BadBankKey);
 
             Assert.NotNull(result);
             Assert.Equal(result, resultCheck);
@@ -88,7 +89,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             bool thrown = true;
             try
             {
-                var result = itemViewRepo.GetItemCardViewModel(duplicateBankKey, duplicateItemKey);
+                var result = ItemViewRepo.GetItemCardViewModel(DuplicateBankKey, DuplicateItemKey);
                 thrown = false;
             }
             catch { }
@@ -98,6 +99,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         //TODO:
         //- add tests for if itemcards and itemdigests have more than one item matching?
-        //-
+        //- add tests for more like this methods
     }
 }
