@@ -13,5 +13,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         ItemViewModel GetItemViewModel(int bankKey, int itemKey, string[] iSAAPCodes,
             string cookieValue);
+
+        MoreLikeThisViewModel GetMoreLikeThis(ItemDigest itemDigest);
     }
 }
