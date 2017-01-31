@@ -3,56 +3,67 @@
         <Item>
             <Code>EBSR</Code>
             <Label>Evidence-Based Selected Response</Label>
+            <Description></Description>
 			<Order>1</Order>
         </Item>
             <Item>
             <Code>EQ</Code>
             <Label>Equation</Label>
+            <Description></Description>
             <Order>2</Order>
         </Item>
         <Item>
             <Code>ER</Code>
             <Label>Extended Response</Label>
+            <Description></Description>
             <Order>3</Order>
         </Item>
         <Item>
             <Code>SA</Code>
             <Label>Short Answer</Label>
+            <Description></Description>
 			<Order>4</Order>
         </Item>
         <Item>
             <Code>GI</Code>
             <Label>Grid Item</Label>
+            <Description></Description>
             <Order>5</Order>
         </Item>
         <Item>
             <Code>HTQ</Code>
             <Label>Hot Text</Label>
+            <Description></Description>
 			<Order>6</Order>
         </Item>
         <Item>
             <Code>MC</Code>
             <Label>Multiple Choice</Label>
+            <Description></Description>
 			<Order>7</Order>
         </Item>
         <Item>
             <Code>MS</Code>
             <Label>Multi Select</Label>
+            <Description></Description>
 			<Order>8</Order>
         </Item>
         <Item>
             <Code>MI</Code>
             <Label>Matching Item</Label>
+            <Description></Description>
 			<Order>9</Order>
         </Item>
         <Item>
             <Code>TI</Code>
             <Label>Table Item</Label>
+            <Description></Description>
 			<Order>10</Order>
         </Item>
         <Item>
             <Code>WER</Code>
             <Label>Writing Extended Response</Label>
+            <Description></Description>
 			<Order>11</Order>
         </Item>
     </Items>
