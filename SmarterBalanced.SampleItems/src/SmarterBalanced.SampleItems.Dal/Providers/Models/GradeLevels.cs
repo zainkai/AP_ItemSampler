@@ -59,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             }
         }
 
-        static readonly ImmutableArray<GradeLevels> singleGrades =
+        public static readonly ImmutableArray<GradeLevels> singleGrades =
             ImmutableArray.Create(
                 GradeLevels.Grade3,
                 GradeLevels.Grade4,
