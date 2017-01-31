@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using Microsoft.Extensions.Logging;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
@@ -19,21 +20,21 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             logger = loggerFactory.CreateLogger<AboutItemRepo>();
         }
 
-        public AboutItemsViewModel GetAboutItemsViewModel()
+        public ImmutableArray<InteractionType> GetAboutItemsViewModel()
         {
             var interactionTypes = context.InteractionTypes;
-            string itemURL = GetItemViewerUrl(interactionTypes.FirstOrDefault());
-            AboutItemsViewModel model = new AboutItemsViewModel(interactionTypes, itemURL);
-            return model;
+            return interactionTypes;
         }
 
-        public string GetItemViewerUrl(InteractionType interactionType)
+        public string GetItemViewerUrl(string interactionTypeCode)
         {
             var itemDigest = context.ItemDigests
                 .Where(i => i.Grade != GradeLevels.NA)
                 .OrderBy(i => (int)i.Grade)
-                .FirstOrDefault(item => item.InteractionType.Code == interactionType.Code);
+                .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);
             return GetItemViewerUrl(itemDigest);
         }
+
+
     }
 }

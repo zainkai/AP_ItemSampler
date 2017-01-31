@@ -1,14 +1,15 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
-    interface IAboutItemRepo : IItemViewRepo
+    public interface IAboutItemRepo : IItemViewRepo
     {
-        AboutItemsViewModel GetAboutItemsViewModel();
-        ItemCardViewModel GetItemCardViewModel(InteractionType interactionType);
+        ImmutableArray<InteractionType> GetAboutItemsViewModel();
+        string GetItemViewerUrl(string interactionTypeCode);
     }
 }
