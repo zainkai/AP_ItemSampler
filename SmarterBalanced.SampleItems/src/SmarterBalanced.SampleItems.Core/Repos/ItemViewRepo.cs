@@ -39,7 +39,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
         /// </summary>
-        private string GetItemViewerUrl(ItemDigest digest)
+        protected string GetItemViewerUrl(ItemDigest digest)
         {
             if (digest == null)
             {
@@ -63,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var aboutItem = new AboutItemViewModel(
+            var aboutItem = new AboutThisItemViewModel(
                 rubrics: itemDigest.Rubrics,
                 itemCard: itemCardViewModel);
 

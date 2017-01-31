@@ -36,7 +36,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                         };
             ItemCardViewModel card = digest.ToItemCardViewModel();
 
-            var aboutItem = new AboutItemViewModel(
+            var aboutItem = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
                 itemCard: card);
 
@@ -49,7 +49,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
             ItemCardViewModel cardCookie = digest.ToItemCardViewModel();
 
-            var aboutItemCookie = new AboutItemViewModel(
+            var aboutItemCookie = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
                 itemCard: cardCookie);
 

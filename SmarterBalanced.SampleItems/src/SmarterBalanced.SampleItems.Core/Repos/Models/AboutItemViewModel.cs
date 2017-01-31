@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
-    public class AboutItemViewModel
+    public class AboutThisItemViewModel
     {
 
         public ItemCardViewModel ItemCardViewModel { get; }
         public ImmutableArray<Rubric> Rubrics { get; }
 
-        public AboutItemViewModel(
+        public AboutThisItemViewModel(
             ImmutableArray<Rubric> rubrics, ItemCardViewModel itemCard)
         {
             ItemCardViewModel = itemCard;
