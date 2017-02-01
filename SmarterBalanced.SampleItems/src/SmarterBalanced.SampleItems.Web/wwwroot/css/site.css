@@ -395,10 +395,6 @@ h4.card-title {
     padding: 8px;
 }
 
-.btn-primary {
-    background-color: #2baf46;
-    border-color: #166626;
-}
 
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -410,9 +406,6 @@ h4.card-title {
                                   not supported by any browser */
 }
 
-.btn-primary:hover {
-    background-color: #166626;
-}
 
 .collapsible-body {
     padding-left: 14px;
@@ -518,12 +511,12 @@ h4.card-title {
     font-family: "PT Serif", Times, serif;
     color: #007393;
     font-size: 14px;
-    text-align:right;
+    text-align: right;
 }
 
 .site-header-font {
     font-family: "PT Sans", Times, Sans-serif;
-    font-size: 34px;
+    font-size: 24px;
     margin: 0px;
     color: #007393;
 }
@@ -538,4 +531,27 @@ h4.card-title {
     margin: 0 auto;
     text-align: right;
     white-space: nowrap;
+}
+
+.home-container {
+    height: 70%;
+    width: 25%;
+    opacity: 0.75;
+    font-size: 20px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+    left: 3%;
+    position: absolute;
+}
+
+.home-container-button {
+    opacity: 1;
+    position: absolute;
+    width: 50%;
+    text-align:center;
+    display:block;
+}
+
+.navbar-pull-right {
+    right: 100px !important;
 }

@@ -28,37 +28,38 @@
                 <a class="navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
                     <img class="logo-line" alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
                 </a>
-                <a class="nav-inner-flex" asp-controller="Home" asp-action="Index">
+                <div class="nav-inner-flex">
                     <h3 class="site-title site-title-font">Sample Items</h3>
-                </a>
-                <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
-                    <h3 class="site-header-font">Home</h3>
-                </a>
-                <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
-                    <h3 class="site-header-font">About Test Items</h3>
-                </a>
-                <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
-                    <h3 class="search-button site-header-font">
-                        <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
-                        Search
-                    </h3>
-                </a>
+                </div>
+                <div class="nav-flex">
+                    <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
+                        <h3 class="site-header-font">Home</h3>
+                    </a>
+                    <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
+                        <h3 class="site-header-font">About Test Items</h3>
+                    </a>
+                    <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+                        <h3 class="search-button site-header-font">
+                            <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
+                            Search
+                        </h3>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
-
     </div>
     <footer>
         <hr />
         <a href="http://practice.smarterbalanced.org/" class="link-font">Practice and training tests are available here.</a>
-        <div class="list-inline center-block"  style="padding-top:20px">
+        <div class="list-inline center-block" style="padding-top:20px">
             <li>
                 <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
             </li>
             <li class="pull-right">
-                <a href="www.smarterbalanced.org" class="small-link-font"> www.SmarterBalanced.org</a>
+                <a href="//www.smarterbalanced.org" class="small-link-font"> www.SmarterBalanced.org</a>
             </li>
 
         </div>
