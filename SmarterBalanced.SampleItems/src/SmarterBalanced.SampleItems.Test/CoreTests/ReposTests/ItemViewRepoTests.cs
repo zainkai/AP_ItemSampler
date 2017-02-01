@@ -132,14 +132,11 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         //TODO:
         //- add tests for if itemcards and itemdigests have more than one item matching?
-        //- add tests for more like this methods
 
-        //MoreLikeThis:
-        
         [Fact]
         public void TestMoreLikeThisHappyCase()
         {
-            var itemDigest = new ItemDigest() { Subject = Math, Claim = Claim1, Grade=GradeLevels.Grade6};
+            var itemDigest = new ItemDigest() { Subject = Math, Claim = Claim1, Grade = GradeLevels.Grade6 };
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
@@ -188,7 +185,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreUnknownSubject()
         {
-            var itemDigest = new ItemDigest() { Claim = Claim1, Subject = NotASubject, Grade=GradeLevels.Grade4 };
+            var itemDigest = new ItemDigest() { Claim = Claim1, Subject = NotASubject, Grade = GradeLevels.Grade4 };
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
@@ -206,69 +203,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal(System.Math.Min(expectedBelow, 3), countBelow);
 
             var countSame = more.SameGradeItems.ItemCards.Count(c => c.ClaimCode == Claim1.Code);
-            var expectedSame = Context.ItemCards.Count(c => c.ClaimCode == Claim1.Code && c.Grade==GradeLevels.Grade4);
+            var expectedSame = Context.ItemCards.Count(c => c.ClaimCode == Claim1.Code && c.Grade == GradeLevels.Grade4);
 
             Assert.Equal(System.Math.Min(expectedSame, 3), countSame);
-        }
-
-        //Comparer:
-
-        [Fact]
-        public void TestMoreLikeThisComparer()
-        {
-            var comparer = new MoreLikeThisComparer("Math", "1");
-            var card1 = ItemCardViewModel.Create(subjectCode: "Math", claimCode: "1");
-            var card2 = ItemCardViewModel.Create(subjectCode: "Math", claimCode: "2");
-            var card3 = ItemCardViewModel.Create(subjectCode: "Ela", claimCode: "2");
-            var cards = new List<ItemCardViewModel>() { card2, card1, card3 };
-            var ordered = cards.OrderBy(c => c, comparer).ToList();
-
-            Assert.NotNull(ordered);
-            Assert.Equal(cards.Count, ordered.Count);
-
-            Assert.Equal(ordered[0], card1);
-            Assert.Equal(ordered[1], card2);
-            Assert.Equal(ordered[2], card3);
-        }
-
-        [Fact]
-        public void TestComparerEmptyList()
-        {
-            var comparer = new MoreLikeThisComparer("Math", "1");
-            var cards = new List<ItemCardViewModel>();
-            var ordered = cards.OrderBy(c => c, comparer).ToList();
-
-            Assert.NotNull(ordered);
-            Assert.Empty(ordered);
-        }
-
-        [Fact]
-        public void TestComparerNullSubject()
-        {
-            var comparer = new MoreLikeThisComparer(null, "1");
-            var card1 = ItemCardViewModel.Create(subjectCode: "Math", claimCode: "1");
-            var card2 = ItemCardViewModel.Create(subjectCode: "Math", claimCode: "2");
-            var card3 = ItemCardViewModel.Create(subjectCode: "Ela", claimCode: "2");
-            var cards = new List<ItemCardViewModel>() { card2, card1, card3 };
-            var ordered = cards.OrderBy(c => c, comparer).ToList();
-
-            Assert.NotNull(ordered);
-            Assert.Equal(cards.Count, ordered.Count);
-        }
-
-        [Fact]
-        public void TestComparerNullClaim()
-        {
-            var comparer = new MoreLikeThisComparer("Ela", null);
-            var card1 = ItemCardViewModel.Create(subjectCode: "Math", claimCode: "1");
-            var card2 = ItemCardViewModel.Create(subjectCode: "Math", claimCode: "2");
-            var card3 = ItemCardViewModel.Create(subjectCode: "Ela", claimCode: "2");
-            var cards = new List<ItemCardViewModel>() { card2, card1, card3 };
-            var ordered = cards.OrderBy(c => c, comparer).ToList();
-
-            Assert.NotNull(ordered);
-            Assert.Equal(cards.Count, ordered.Count);
-            Assert.Equal(ordered[0], card3);
         }
     }
 }

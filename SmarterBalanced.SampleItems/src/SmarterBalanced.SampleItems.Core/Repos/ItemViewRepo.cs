@@ -108,7 +108,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             int numExpected = context.AppSettings.SettingsConfig.NumMoreLikeThisItems;
 
             var comparer = new MoreLikeThisComparer(subjectCode, claimCode);
-            GradeLevels gradeBelow = grade.GradeBelow(), gradeAbove = grade.GradeAbove();
+            GradeLevels gradeBelow = grade.GradeBelow();
+            GradeLevels gradeAbove = grade.GradeAbove();
 
             var cardsGradeBelow = context.ItemCards
                 .Where(i => i.Grade == gradeBelow)
