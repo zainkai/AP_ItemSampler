@@ -15,7 +15,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
     public class ItemViewRepoTests
     {
         ItemDigest MathDigest, ElaDigest, DuplicateDigest;
-        Subject Math, Ela;
+        Subject Math, Ela, NotASubject;
         Claim Claim1, Claim2;
         ImmutableArray<ItemDigest> ItemDigests;
         ItemViewRepo ItemViewRepo;
@@ -48,6 +48,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
             Ela = new Subject("Ela", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
+            NotASubject= new Subject("NotASubject", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
             Claim1 = new Claim("1", "", "");
             Claim2 = new Claim("2", "", "");
 
@@ -159,6 +160,58 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         }
 
         [Fact]
+        public void TestMoreNAGrade()
+        {
+            var itemDigest = new ItemDigest() { Claim = Claim1, Subject = Ela };
+            var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
+
+            Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
+            Assert.Equal(3, more.GradeBelowItems.ItemCards.Count());
+            Assert.Equal(3, more.SameGradeItems.ItemCards.Count());
+
+            foreach (var card in more.GradeAboveItems.ItemCards)
+            {
+                Assert.Equal(GradeLevels.NA, card.Grade);
+            }
+            foreach (var card in more.SameGradeItems.ItemCards)
+            {
+                Assert.Equal(GradeLevels.NA, card.Grade);
+            }
+            foreach (var card in more.GradeBelowItems.ItemCards)
+            {
+                Assert.Equal(GradeLevels.NA, card.Grade);
+            }
+        }
+
+        [Fact]
+        public void TestMoreUnknownSubject()
+        {
+            var itemDigest = new ItemDigest() { Claim = Claim1, Subject = NotASubject, Grade=GradeLevels.Grade4 };
+            var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
+
+            Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
+            Assert.Equal(3, more.GradeBelowItems.ItemCards.Count());
+            Assert.Equal(3, more.SameGradeItems.ItemCards.Count());
+
+            var countAbove = more.GradeAboveItems.ItemCards.Count(c => c.ClaimCode == Claim1.Code);
+            var expectedAbove = Context.ItemCards.Count(c => c.ClaimCode == Claim1.Code && c.Grade == GradeLevels.Grade5);
+
+            Assert.Equal(System.Math.Min(expectedAbove, 3), countAbove);
+
+            var countBelow = more.GradeBelowItems.ItemCards.Count(c => c.ClaimCode == Claim1.Code);
+            var expectedBelow = Context.ItemCards.Count(c => c.ClaimCode == Claim1.Code && c.Grade == GradeLevels.Grade3);
+
+            Assert.Equal(System.Math.Min(expectedBelow, 3), countBelow);
+
+            var countSame = more.SameGradeItems.ItemCards.Count(c => c.ClaimCode == Claim1.Code);
+            var expectedSame = Context.ItemCards.Count(c => c.ClaimCode == Claim1.Code && c.Grade==GradeLevels.Grade4);
+
+            Assert.Equal(System.Math.Min(expectedSame, 3), countSame);
+        }
+
+
+
+        [Fact]
         public void TestMoreLikeThisComparer()
         {
             var comparer = new MoreLikeThisComparer("Math", "1");
@@ -167,10 +220,24 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             var card3 = ItemCardViewModel.Create(subjectCode: "Ela", claimCode: "2");
             var cards = new List<ItemCardViewModel>() { card2, card1, card3 };
             var ordered = cards.OrderBy(c => c, comparer).ToList();
-            
+
+            Assert.NotNull(ordered);
+            Assert.Equal(cards.Count, ordered.Count);
+
             Assert.Equal(ordered[0], card1);
             Assert.Equal(ordered[1], card2);
             Assert.Equal(ordered[2], card3);
+        }
+
+        [Fact]
+        public void TestComparerEmptyList()
+        {
+            var comparer = new MoreLikeThisComparer("Math", "1");
+            var cards = new List<ItemCardViewModel>();
+            var ordered = cards.OrderBy(c => c, comparer).ToList();
+
+            Assert.NotNull(ordered);
+            Assert.Empty(ordered);
         }
         
     }
