@@ -7,221 +7,272 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using System.Collections.Immutable;
+using SmarterBalanced.SampleItems.Dal.Translations;
 
 namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 {
     public class AccessibilityTranslationsTests
     {
-        List<AccessibilityResource> accessibilityResources;
-        List<AccessibilitySelection> accessibilitySelections;
+        AccessibilityResourceGroup group1 = new AccessibilityResourceGroup("", 1,
+                ImmutableArray.Create(
+                    AccessibilityResource.Create(code: "AmericanSignLanguage", selectedCode: "TDS_ASL0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_ASL0", "", 1, false),
+                        new AccessibilitySelection("TDS_ASL1", "", 2, false))),
+                    AccessibilityResource.Create(code: "ColorContrast", selectedCode: "TDS_CC0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_CC0", "", 1, false),
+                        new AccessibilitySelection("TDS_CCInvert", "", 2, false)))));
+
+        AccessibilityResourceGroup group2 = new AccessibilityResourceGroup("", 2,
+                ImmutableArray.Create(
+                    AccessibilityResource.Create(code: "ClosedCaptioning", selectedCode: "TDS_ClosedCap0", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("TDS_ClosedCap0", "", 1, false),
+                        new AccessibilitySelection("TDS_ClosedCap1", "", 2, false))),
+
+                    AccessibilityResource.Create(code: "Language", selectedCode: "ENU", selections: ImmutableArray.Create(
+                        new AccessibilitySelection("ENU", "", 1, false),
+                        new AccessibilitySelection("ESN", "", 2, false)))));
+
+        ImmutableArray<AccessibilityResourceGroup> groups;
+
+        Dictionary<string, string> cookie = new Dictionary<string, string>()
+        {
+            //{"AmericanSignLanguage", "TDS_ASL0" },
+            {"ColorContrast", "TDS_CCInvert" },
+            {"ClosedCaptioning", "TDS_ClosedCap1" },
+            //{"Language", "ENU" }
+        };
+
+        string[] isaap = new string[] {
+            "TDS_ASL1",
+            "ESN",
+        };
+
+        AccessibilityResource familyResource = new AccessibilityResource(
+            code: "TDS_CC",
+            selectedCode: "TDS_CC0",
+            order: 0,
+            defaultSelection: "TDS_CC0",
+            selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
+            label: "familyResource",
+            description: "familyResource",
+            disabled: false,
+            resourceType: "familyResource Type");
+
+        AccessibilityResource globalResource = new AccessibilityResource(
+            code: "TDS_CC",
+            selectedCode: "TDS_CC0",
+            order: 5,
+            defaultSelection: "TDS_CC0",
+            selections: ImmutableArray.Create(
+                new AccessibilitySelection("TDS_CC0", "Black on White", 2, false),
+                new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false),
+                new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false),
+                new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false)),
+            label: "globalResource",
+            description: "globalResource",
+            disabled: false,
+            resourceType: "globalResource Type");
+
+        AccessibilitySelection nullLabelSelection = new AccessibilitySelection("TDS_CC0", null, 1, false);
+        AccessibilitySelection goodSelection = new AccessibilitySelection("TDS_CCInvert", "Good Selection", 1, false);
+        AccessibilitySelection disabledSelection = new AccessibilitySelection("TDS_CCMedGrayLtGray", "Disabled Selection", 1, true);
+        AccessibilitySelection goodSelectionOtherCode = new AccessibilitySelection("TestCode", "Good Selection Other Code", 1, false);
+
+        ImmutableArray<AccessibilitySelection> emptySelection = ImmutableArray<AccessibilitySelection>.Empty;
+
+        AccessibilityResource happyFamilyResource = new AccessibilityResource(
+            code: "familyResource",
+            selectedCode: "TDS_CCInvert",
+            order: 0,
+            defaultSelection: "TDS_CC0",
+            selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
+            label: "familyResource",
+            description: "familyResource",
+            disabled: false,
+            resourceType: "familyResource Type");
 
         public AccessibilityTranslationsTests()
         {
-            accessibilitySelections = new List<AccessibilitySelection>
-            {
-                new AccessibilitySelection()
-                {
-                    Code = "TDS_TEST1",
-                    Order = 1,
-                    Label = "TEST 1",
-                    Disabled = false
-                },
-                new AccessibilitySelection()
-                {
-                    Code = "TDS_TEST2",
-                    Order = 2,
-                    Label = "TEST 2",
-                    Disabled = false
-                },
-                new AccessibilitySelection()
-                {
-                    Code = "TDS_TEST3",
-                    Order = 3,
-                    Label = "TEST 3",
-                    Disabled = false
-                }
-            };
-
-            accessibilityResources = new List<AccessibilityResource>
-            {
-                new AccessibilityResource()
-                {
-                    Order = 1,
-                    DefaultSelection = null,
-                    Selections = accessibilitySelections,
-                    Label = "Resource 1",
-                    Disabled = false
-                },
-                new AccessibilityResource()
-                {
-                    Order = 2,
-                    DefaultSelection = "TDS_TEST1",
-                    Selections = accessibilitySelections,
-                    Label = "Resource 2",
-                    Disabled = false
-                }
-            };
-
-            //accessibilityResourceViewModels = new List<AccessibilityResourceViewModel>
-            //{
-            //    new AccessibilityResourceViewModel()
-            //    {
-            //        DefaultCode = "TDS_TEST1",
-            //        SelectedCode = "TDS_TEST1",
-            //        Selections = accessibilitySelections,
-            //        Label = "Resource 1",
-            //        Disabled = false
-            //    },
-            //    new AccessibilityResourceViewModel()
-            //    {
-            //        DefaultCode = "TDS_TEST2",
-            //        SelectedCode = "TDS_TEST2",
-            //        Selections = accessibilitySelections,
-            //        Label = "Resource 2",
-            //        Disabled = false
-            //    }
-            //};
+            groups = ImmutableArray.Create(group1, group2);
         }
 
-        #region ToIsaap
+        #region ApplyPreferences
 
-        /// <summary>
-        /// Tests happy case AccessibilityResourceViewModels to ISAAP code
-        /// </summary>
-        [Fact(Skip ="TODO")]
-        public void TestItemsToISAAP()
+        private string SelectedCode(ImmutableArray<AccessibilityResourceGroup> result, string resourceCode)
         {
-            //string isaap = AccessibilityTranslations.ToISAAP(accessibilityResourceViewModels);
-            //string expectedIsaap = $"{accessibilityResourceViewModels[0].SelectedCode};{accessibilityResourceViewModels[1].SelectedCode}";
-            //Assert.Equal(expectedIsaap, isaap);
+            var resources = new List<AccessibilityResource>();
+            foreach(var rg in result)
+            {
+                resources.AddRange(rg.AccessibilityResources);
+            }
+            return resources.FirstOrDefault(r => r.Code == resourceCode).SelectedCode;
         }
 
-        /// <summary>
-        /// Tests null AccessibilityResourceViewModels to ISAAP code
-        /// </summary>
         [Fact]
-        public void TestNullItemsToISAAP()
+        public void TestApplyPreferencesNoIsaapNoCookie()
         {
-            Assert.Throws<ArgumentNullException>(() => AccessibilityTranslations.ToISAAP(null));
+            var result=groups.ApplyPreferences(new string[] { }, new Dictionary<string, string>());
+
+            Assert.NotNull(result);
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL0");
+            Assert.Equal(SelectedCode(result, "ColorContrast"), "TDS_CC0");
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap0");
+            Assert.Equal(SelectedCode(result, "Language"), "ENU");
         }
 
-        /// <summary>
-        /// Tests empty AccessibilityResourceViewModels to ISAAP code
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestEmptyItemsToISAAP()
+        [Fact]
+        public void TestApplyPreferencesNoIsaapYesCookie()
         {
-            //string isaap = AccessibilityTranslations.ToISAAP(new List<AccessibilityResourceViewModel>());
-            //Assert.Equal("", isaap);
+            var result = groups.ApplyPreferences(new string[] { }, cookie);
+
+            Assert.NotNull(result);
+
+            //check to make sure that the second and third accessibility prefs are changed, but not 1 and 4
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL0");
+            Assert.Equal(SelectedCode(result, "ColorContrast"), "TDS_CCInvert");//changed
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap1");//changed
+            Assert.Equal(SelectedCode(result, "Language"), "ENU");
+        }
+
+        [Fact]
+        public void TestApplyPreferencesYesIsaapNoCookie()
+        {
+            var result = groups.ApplyPreferences(isaap, new Dictionary<string, string>());
+
+            Assert.NotNull(result);
+
+            //check to make sure that the 1st and 4th accessibility prefs are changed, but not 2 and 3
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL1");//changed
+            Assert.Equal(SelectedCode(result, "ColorContrast"), "TDS_CC0");
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap0");
+            Assert.Equal(SelectedCode(result, "Language"), "ESN");//changed
+        }
+
+        [Fact]
+        public void TestApplyPreferencesYesIsaapYesCookie()
+        {
+            var result = groups.ApplyPreferences(isaap, cookie);
+
+            Assert.NotNull(result);
+
+            //check to make sure that the 1st and 4th accessibility prefs are changed, but not 2 and 3
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL1");//changed
+            Assert.Equal(SelectedCode(result, "ColorContrast"), "TDS_CC0");
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap0");
+            Assert.Equal(SelectedCode(result, "Language"), "ESN");//changed
         }
 
         #endregion
 
-        #region ToAccessibilityResourceViewModels with ISAAP
+        #region MergeWith
 
-        /// <summary>
-        /// Tests happy case accessibility resource translation to view model with isaap
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelWithISAAP()
+        [Fact]
+        public void TestMergeWithHappyCase()
         {
-            //AccessibilityResource accResource = accessibilityResources[0];
-            //List<AccessibilityResource> accResources = new List<AccessibilityResource>
-            //{
-            //    accResource
-            //};
-            //string[] ISAAP = { "TDS_TEST3" };
-            //var expectedCode = "TDS_TEST3";
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accResources, ISAAP);
-
-            //Assert.Equal(accResources.Count(), accResourceViewModels.Count());
-
-            //AccessibilityResourceViewModel accResourceViewModel = accResourceViewModels[0];
-
-            //Assert.Equal(expectedCode, accResourceViewModel.SelectedCode);
-            //Assert.Equal(accResource.Label, accResourceViewModel.Label);
-            //Assert.Equal(accResource.Disabled, accResourceViewModel.Disabled);
+            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
+                    .Append(goodSelection)
+                    .ToImmutableArray());
+            var merged = newFamilyRes.MergeWith(globalResource);
+            
+            Assert.Equal(merged.Code, "TDS_CC");
+            Assert.Equal(merged.Description, globalResource.Description);
+            Assert.Equal(merged.Label, newFamilyRes.Label);
+            Assert.Equal(merged.DefaultSelection, "TDS_CCInvert");
+            Assert.Equal(merged.Order, globalResource.Order); // TODO: it's looking more and more like a data type for PartialResource is needed
+            Assert.Equal(merged.Disabled, newFamilyRes.Disabled);
+            var res = merged.Selections.Where(r => r.Label == goodSelection.Label).ToList();
+            Assert.Equal(1, res.Count);
+            Assert.Equal(4, merged.Selections.Count());
         }
 
-        /// <summary>
-        /// Tests accessibility resource translation to view model with nonexistent isaap
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelWithBadISAAP()
+        [Fact]
+        public void TestMergeWithExtraSelection()
         {
-            //AccessibilityResource accResource = accessibilityResources[0];
-            //List<AccessibilityResource> accResources = new List<AccessibilityResource>
-            //{
-            //    accResource
-            //};
-            //string[] ISAAP = { "NOT_THERE" };
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accResources, ISAAP);
+            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
+                    .Append(goodSelectionOtherCode)
+                    .ToImmutableArray());
 
-            //Assert.Equal(accResources.Count(), accResourceViewModels.Count());
-
-            //AccessibilityResourceViewModel accResourceViewModel = accResourceViewModels[0];
-
-            //Assert.Equal(null, accResourceViewModel.SelectedCode);
-            //Assert.Equal(accResource.Label, accResourceViewModel.Label);
-            //Assert.Equal(accResource.Disabled, accResourceViewModel.Disabled);
+            var merged = newFamilyRes.MergeWith(globalResource);
+            Assert.DoesNotContain(merged.Selections, s => s.Label == goodSelectionOtherCode.Label);
+            Assert.DoesNotContain(merged.Selections, s => !s.Disabled);
         }
 
-        /// <summary>
-        /// Test happy case multiple accessibility resources with isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelsWithISAAP()
+        [Fact]
+        public void TestMergeWithUseDefaults()
         {
-            //string[] ISAAP = { "TDS_TEST3" };
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
+            var newFamilyRes = AccessibilityResource.Create(code: "hello", selections: emptySelection
+                    .Append(goodSelection).ToImmutableArray());
+            var merged = newFamilyRes.MergeWith(globalResource);
 
-            //Assert.Equal(accessibilityResources.Count(), accResourceViewModels.Count());
+            Assert.Equal(merged.Code, globalResource.Code);
+            Assert.Equal(merged.Description, globalResource.Description);
+            Assert.Equal(merged.Label, globalResource.Label);
+            Assert.Equal(merged.DefaultSelection, goodSelection.Code);
+            Assert.Equal(merged.Order, globalResource.Order);
+            Assert.Equal(merged.Disabled, globalResource.Disabled);
+            Assert.Equal(4, merged.Selections.Count());
         }
 
-        /// <summary>
-        /// Test null accessibility resources with isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestNullAccessibilityResourceToViewModelsWithISAAP()
+        [Fact]
+        public void TestMergeWithDisabledSelection()
         {
-            //string[] ISAAP = { "TDS_TEST3" };
-        
-            //Assert.Throws<ArgumentNullException>(() => AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(null, ISAAP));
+
+            var newFamilyRes = happyFamilyResource.WithSelections(familyResource.Selections
+                    .Append(disabledSelection)
+                    .Append(goodSelection)
+                    .ToImmutableArray());
+
+            var merged = newFamilyRes.MergeWith(globalResource);
+            Assert.Equal(4, merged.Selections.Length);
+
+            var disabledSelections = merged.Selections.Where(r => r.Disabled).ToList();
+            Assert.Equal(3, disabledSelections.Count);
+            Assert.Contains(disabledSelections, s => s.Code == disabledSelection.Code);
         }
 
-        /// <summary>
-        /// Test multiple accessibility resources with null isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestAccessibilityResourceToViewModelsWithEmptyISAAP()
+        [Fact]
+        public void TestMergeWithThrowsOnNulls()
         {
-            //string[] ISAAP = new string[0];
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(accessibilityResources, ISAAP);
-
-            //Assert.Equal(accessibilityResources.Count(), accResourceViewModels.Count());
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(familyResource, null));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(null, globalResource));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(null, null));
         }
 
-        /// <summary>
-        /// Test empty accessibility resources with isaap translation to view models
-        /// </summary>
-        [Fact(Skip = "TODO")]
-        public void TestEmptyAccessibilityResourceToViewModelsWithISAAP()
-        {
-            //string[] ISAAP = { "TDS_TEST3" };
-            //List<AccessibilityResourceViewModel> accResourceViewModels =
-            //    AccessibilityTranslations
-            //    .ToAccessibilityResourceViewModels(new List<AccessibilityResource>(), ISAAP);
+        #endregion
 
-            //Assert.Equal(0, accResourceViewModels.Count());
+        #region MergeSelection
+
+        [Fact]
+        public void TestMergeSelectionHappyCase()
+        {
+            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
+                    .Append(goodSelection)
+                    .ToImmutableArray());
+            var globalSelection = globalResource.Selections.FirstOrDefault(s => s.Code == goodSelection.Code);
+            var merged = AccessibilityResourceTranslation.MergeSelection(globalSelection, newFamilyRes);
+            var disabled = goodSelection.Disabled || newFamilyRes.Disabled || newFamilyRes.Selections.FirstOrDefault().Disabled;
+            var familySel = newFamilyRes.Selections[0];
+            Assert.Equal(goodSelection.Code, merged.Code);
+            Assert.Equal(disabled, merged.Disabled);
+            Assert.Equal(familySel.Label, merged.Label);
+            Assert.Equal(familySel.Order, merged.Order);
+        }
+
+        [Fact]
+        public void TestMergeSelectionVoidProps()
+        {
+            var familySel = AccessibilitySelection.Create(code:goodSelection.Code);
+            var newFamilyRes = familyResource.WithSelections(emptySelection
+                    .Append(familySel)
+                    .ToImmutableArray());
+            var globalSelection = globalResource.Selections.FirstOrDefault(s => s.Code == goodSelection.Code);
+            var merged = AccessibilityResourceTranslation.MergeSelection(globalSelection, newFamilyRes);
+           
+            Assert.Equal(goodSelection.Code, merged.Code);
+            Assert.False(merged.Disabled);
+            Assert.Equal(globalSelection.Label, merged.Label);
+            Assert.Equal(familySel.Order, merged.Order);
         }
 
         #endregion

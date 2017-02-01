@@ -21,5 +21,15 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Order = order;
             AccessibilityResources = accessibilityResources;
         }
+
+        public AccessibilityResourceGroup WithResources(ImmutableArray<AccessibilityResource> resources)
+        {
+            var newGroup = new AccessibilityResourceGroup(
+                label: Label,
+                order: Order,
+                accessibilityResources: resources);
+
+            return newGroup;
+        }
     }
 }

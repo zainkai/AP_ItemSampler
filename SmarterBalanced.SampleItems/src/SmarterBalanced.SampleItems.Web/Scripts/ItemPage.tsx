@@ -1,9 +1,10 @@
 ﻿interface AccessibilityResource {
+    code: string; // ID for this resource
     defaultSelection: string;
     description: string;
     disabled: boolean;
     label: string;
-    selectedCode: string;
+    selectedCode: string; // ID of the current selection
     resourceTypeLabel: string;
     order: number;
     selections: Dropdown.Selection[];
@@ -20,7 +21,7 @@ namespace ItemPage {
                 }
             }
         }
-        return str;
+        return encodeURIComponent(str);
     }
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
@@ -36,17 +37,17 @@ namespace ItemPage {
         };
     }
 
-    function generateAccCookieValue(accGroups: AccResourceGroup[]): string {
-        let cookieValue = "";
-        let newGroups = [];
-        for (let group of accGroups) {
-            newGroups.push({
-                label: group.label,
-                order: group.order,
-                accessibilityResources: group.accessibilityResources.map(trimAccResource)
-            });
+    function toCookie(accGroups: AccResourceGroup[]): string {
+        let prefs: AccessibilityModal.ResourceSelections = {};
+        for (const group of accGroups) {
+            for (const resource of group.accessibilityResources) {
+                prefs[resource.code] = resource.selectedCode;
+            }
         }
-        return JSON.stringify(newGroups);
+
+        const json = JSON.stringify(prefs);
+        const cookie = btoa(json);
+        return cookie;
     }
 
     function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
@@ -116,7 +117,7 @@ namespace ItemPage {
         }
 
         openAboutItemModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#about-item-modal-container"));
                 modal.modal();
             }
@@ -124,21 +125,21 @@ namespace ItemPage {
 
         // TODO: Update id with modal id
         openMoreLikeThisModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#TODO-modal-container"));
                 modal.modal();
             }
         }
 
         openShareModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#share-modal-container"));
                 modal.modal();
             }
         }
 
         openAccessibilityModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
             }
@@ -216,8 +217,8 @@ namespace ItemPage {
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newGroups;
 
-            let cookieValue = generateAccCookieValue(this.itemProps.accResourceGroups);
-            document.cookie = this.itemProps.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
+            let cookieValue = toCookie(this.itemProps.accResourceGroups);
+            document.cookie = this.itemProps.accessibilityCookieName.concat("=", cookieValue, "; path=/");
 
             this.render();
         }
