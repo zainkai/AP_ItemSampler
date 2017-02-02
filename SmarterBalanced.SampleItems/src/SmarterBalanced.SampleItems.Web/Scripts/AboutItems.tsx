@@ -62,6 +62,21 @@ namespace AboutItems {
             this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as state)
         }
 
+        renderAboutTestItemsText() {
+            let aboutTestItemsText = "Smarter Balanced assessments use a variety of item types to accurately measure what students know and can do. To learn more and see an example, select an item type below.";
+            return (<div>{aboutTestItemsText}</div>);
+        }
+
+        renderDescription() {
+            let desc = "";
+            for (let it of this.props.interactionTypes) {
+                if (it.code === this.state.selectedCode) {
+                    desc = it.description;
+                }
+            }
+            return (<div>{desc}</div>);
+        }
+
         renderInteractionTypesSelect() {
             let items = [];
             for (let i of this.props.interactionTypes) {
@@ -74,14 +89,22 @@ namespace AboutItems {
                 <select onChange={this.handleChange}>
                     {items}
                 </select>
-                );
+            );
         }
 
         render() {
             return (
-                <div>
-                    {this.renderInteractionTypesSelect()}
-                    <ItemFrame url={this.state.itemUrl} />
+                <div className="abt-items-parent">
+                    <div className="abt-test-items-info">
+                        <div className="abt-test-items-text">
+                            {this.renderAboutTestItemsText()}
+                        </div>
+                        {this.renderInteractionTypesSelect()}
+                        {this.renderDescription()}
+                    </div>
+                    <div className="abt-item-frame">
+                        <ItemFrame url={this.state.itemUrl} />
+                    </div>
                 </div>
             );
         }
@@ -90,7 +113,7 @@ namespace AboutItems {
 }
 
 
-function initializeAboutItems(viewModel: AboutThisItemViewModel){
+function initializeAboutItems(viewModel: AboutThisItemViewModel) {
     ReactDOM.render(
         <AboutItems.AIComponent {...viewModel} />,
         document.getElementById("about-items") as HTMLElement
