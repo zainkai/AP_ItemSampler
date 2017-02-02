@@ -180,9 +180,7 @@ namespace ItemPage {
                             </a>
                         </div>
                     </div>
-                    <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
-                        accessibilityString={isaap}
-                        url={ivsUrl} /> {/* TODO: remove redundant prop */}
+                    <ItemFrame url={ivsUrl} />
                     <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
                         accResourceGroups={this.props.accResourceGroups}

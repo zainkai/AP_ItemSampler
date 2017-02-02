@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using Microsoft.Extensions.Logging;
-using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
-    public class AboutItemsRepo : ItemViewRepo
+    public class AboutItemsRepo : ItemViewRepo, IAboutItemsRepo
     {
         private readonly SampleItemsContext context;
         private readonly ILogger logger;
@@ -36,13 +32,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             }
 
             var itemDigest = context.ItemDigests
-                .Where(i => i.Grade != GradeLevels.NA)
+                .Where(i => i.Grade != GradeLevels.NA && i.InteractionType != null)
                 .OrderBy(i => (int)i.Grade)
                 .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);
 
             return GetItemViewerUrl(itemDigest);
         }
 
-
     }
+
 }

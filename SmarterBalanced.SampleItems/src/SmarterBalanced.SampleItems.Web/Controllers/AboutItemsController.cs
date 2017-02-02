@@ -7,8 +7,6 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using Microsoft.Extensions.Logging;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class AboutItemsController : Controller
@@ -31,10 +29,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return View(viewModel);
         }
 
-         public IActionResult GetItemUrl(string interactionType)
+        [HttpGet]
+        public IActionResult GetItemUrl(string interactionTypeCode)
         {
-            var itemUrl = repo.GetItemViewerUrl(interactionType);
+            var itemUrl = repo.GetItemViewerUrl(interactionTypeCode);
             return Json(itemUrl);
         }
+
     }
+
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Diagnostics;
 using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using System;
@@ -82,6 +83,7 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddSingleton(appSettings);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
+            services.AddScoped<IAboutItemsRepo, AboutItemsRepo>();
             services.AddScoped<IDiagnosticManager, DiagnosticManager>();
         }
 

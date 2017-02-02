@@ -13,17 +13,75 @@ interface AboutThisItemViewModel {
 
 namespace AboutItems {
 
-    export class AIComponent extends React.Component<AboutThisItemViewModel, {}>{
+    interface state {
+        selectedCode: string;
+        itemUrl: string;
+    }
+
+    export class AIComponent extends React.Component<AboutThisItemViewModel, state>{
         constructor(props: AboutThisItemViewModel) {
             super(props);
+
+            const code = this.props.interactionTypes.length ? this.props.interactionTypes[0].code : "";
+            this.state = {
+                selectedCode: code,
+                itemUrl: this.props.itemUrl
+            };
+
+            this.handleChange = this.handleChange.bind(this);
+            this.setNewUrl = this.setNewUrl.bind(this);
+        }
+
+        handleChange(e: any) {
+            const newCode = e.currentTarget.value
+            if (newCode === this.state.selectedCode) {
+                return;
+            }
+
+            this.getNewUrl(newCode);
+
+            this.setState(Object.assign({}, this.state, { selectedCode: newCode }) as state)
+        }
+
+        getNewUrl(newCode: string) {
+            const params = {
+                interactionTypeCode: newCode
+            };
+
+            $.ajax({
+                dataType: "JSON",
+                type: "GET",
+                url: "/AboutItems/GetItemUrl",
+                data: params,
+                success: this.setNewUrl
+            });
+        }
+
+        setNewUrl(newUrl: string) {
+            // TODO: Handle if url was null (no item found)
+            this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as state)
+        }
+
+        renderInteractionTypesSelect() {
+            let items = [];
+            for (let i of this.props.interactionTypes) {
+                items.push(
+                    <option key={i.code} value={i.code}> {i.label} </option>
+                );
+            }
+
+            return (
+                <select onChange={this.handleChange}>
+                    {items}
+                </select>
+                );
         }
 
         render() {
             return (
                 <div>
-                    TODO:
-                    - Interaction types select list
-                    - iframe with URL
+                    {this.renderInteractionTypesSelect()}
+                    <ItemFrame url={this.state.itemUrl} />
                 </div>
             );
         }
@@ -32,7 +90,7 @@ namespace AboutItems {
 }
 
 
-function initialzeAboutItems(viewModel: AboutThisItemViewModel){
+function initializeAboutItems(viewModel: AboutThisItemViewModel){
     ReactDOM.render(
         <AboutItems.AIComponent {...viewModel} />,
         document.getElementById("about-items") as HTMLElement
