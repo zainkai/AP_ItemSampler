@@ -10,19 +10,19 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public string AccessibilityCookieName { get; }
 
-        public AboutThisItemViewModel AboutItemVM { get; }
+        public AboutThisItemViewModel AboutThisItemVM { get; }
 
         public ImmutableArray<AccessibilityResourceGroup> AccResourceGroups { get; }
 
         public ItemViewModel(
             string itemViewerServiceUrl,
             string accessibilityCookieName,
-            AboutThisItemViewModel aboutItemVM,
+            AboutThisItemViewModel aboutThisItemVM,
             ImmutableArray<AccessibilityResourceGroup> accResourceGroups)
         {
             ItemViewerServiceUrl = itemViewerServiceUrl;
             AccessibilityCookieName = accessibilityCookieName;
-            AboutItemVM = aboutItemVM;
+            AboutThisItemVM = aboutThisItemVM;
             AccResourceGroups = accResourceGroups;
         }
     }

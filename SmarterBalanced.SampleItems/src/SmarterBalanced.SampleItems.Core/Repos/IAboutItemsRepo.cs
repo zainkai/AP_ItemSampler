@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
-    public interface IAboutItemRepo : IItemViewRepo
+    public interface IAboutItemsRepo : IItemViewRepo
     {
-        ImmutableArray<InteractionType> GetAboutItemsViewModel();
+        AboutItemsViewModel GetAboutItemsViewModel();
         string GetItemViewerUrl(string interactionTypeCode);
     }
 }

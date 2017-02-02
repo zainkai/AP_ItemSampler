@@ -13,11 +13,11 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 {
     public class AboutItemsController : Controller
     {
-        private readonly IAboutItemRepo repo;
+        private readonly IAboutItemsRepo repo;
         private readonly AppSettings appSettings;
         private readonly ILogger logger;
 
-        public AboutItemsController(IAboutItemRepo aboutItemRepo, AppSettings settings, ILoggerFactory loggerFactory)
+        public AboutItemsController(IAboutItemsRepo aboutItemRepo, AppSettings settings, ILoggerFactory loggerFactory)
         {
             repo = aboutItemRepo;
             appSettings = settings;
@@ -27,14 +27,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            var interactionTypes = repo.GetAboutItemsViewModel();
-            var itemUrl = repo.GetItemViewerUrl(interactionTypes.FirstOrDefault()?.Code);
-
-            return View(Json( 
-                    new {
-                        interactionTypes,
-                        itemUrl
-                        }));
+            var viewModel = repo.GetAboutItemsViewModel();
+            return View(viewModel);
         }
 
          public IActionResult GetItemUrl(string interactionType)

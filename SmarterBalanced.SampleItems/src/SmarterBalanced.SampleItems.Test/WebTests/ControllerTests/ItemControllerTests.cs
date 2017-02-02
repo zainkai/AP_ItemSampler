@@ -36,7 +36,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                         };
             ItemCardViewModel card = digest.ToItemCardViewModel();
 
-            var aboutItem = new AboutThisItemViewModel(
+            var aboutThisItemVM = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
                 itemCard: card);
 
@@ -71,13 +71,13 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
                 accessibilityCookieName: accCookieName,
-                aboutItemVM: aboutItem,
+                aboutThisItemVM: aboutThisItemVM,
                 accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>));
 
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
-                aboutItemVM: aboutItemCookie,
+                aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray());
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();

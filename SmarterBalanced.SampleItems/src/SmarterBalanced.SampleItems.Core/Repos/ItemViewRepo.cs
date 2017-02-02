@@ -63,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var aboutItem = new AboutThisItemViewModel(
+            var aboutThisItem = new AboutThisItemViewModel(
                 rubrics: itemDigest.Rubrics,
                 itemCard: itemCardViewModel);
 
@@ -72,7 +72,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
-                aboutItemVM: aboutItem,
+                aboutThisItemVM: aboutThisItem,
                 accResourceGroups: groups);
 
             return itemViewModel;

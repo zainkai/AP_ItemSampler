@@ -86,7 +86,7 @@ namespace ItemPage {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         accResourceGroups: AccResourceGroup[];
-        aboutItemVM: AboutItem.Props;
+        aboutThisItemVM: AboutThisItem.Props;
     }
 
     export interface Props extends ViewModel {
@@ -183,7 +183,7 @@ namespace ItemPage {
                     <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
                         accessibilityString={isaap}
                         url={ivsUrl} /> {/* TODO: remove redundant prop */}
-                    <AboutItem.AIComponent {...this.props.aboutItemVM} />
+                    <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
                         accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
