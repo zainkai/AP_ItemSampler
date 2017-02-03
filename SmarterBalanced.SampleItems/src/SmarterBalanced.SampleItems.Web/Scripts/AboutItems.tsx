@@ -62,11 +62,6 @@ namespace AboutItems {
             this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as state)
         }
 
-        renderAboutTestItemsText() {
-            let aboutTestItemsText = "Smarter Balanced assessments use a variety of item types to accurately measure what students know and can do. To learn more and see an example, select an item type below.";
-            return (<div>{aboutTestItemsText}</div>);
-        }
-
         renderDescription() {
             let desc = "";
             for (let it of this.props.interactionTypes) {
@@ -74,7 +69,7 @@ namespace AboutItems {
                     desc = it.description;
                 }
             }
-            return (<div>{desc}</div>);
+            return (<div className="abt-items-desc">{desc}</div>);
         }
 
         renderInteractionTypesSelect() {
@@ -97,16 +92,16 @@ namespace AboutItems {
                 <div className="abt-items-parent">
                     <div className="abt-test-items-info">
                         <div className="abt-test-items-text">
-                            {this.renderAboutTestItemsText()}
+                            Smarter Balanced assessments use a variety of item
+                             types to accurately measure what students know and can do.
+                             To learn more and see an example, select an item type below.
                         </div>
                         <div className="abt-items-iteraction-dropdown">
                             <div className="form-group">
-                            {this.renderInteractionTypesSelect() }
+                                {this.renderInteractionTypesSelect() }
                             </div>
                         </div>
-                        <div className="abt-items-desc">
                             {this.renderDescription()}
-                        </div>
                     </div>
                     <div className="abt-item-frame">
                         <ItemFrame url={this.state.itemUrl} />

@@ -497,6 +497,8 @@ h4.card-title {
     padding-top: 10px;
 }
 
-.abt-items-text {
-    background-color: #f2f2f2
+.abt-items-desc {
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin-top: 20px;
 }
