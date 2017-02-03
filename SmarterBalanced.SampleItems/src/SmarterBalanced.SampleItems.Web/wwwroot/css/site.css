@@ -477,7 +477,26 @@ h4.card-title {
 }
 
 .abt-test-items-parent {
+    overflow: auto;
 }
 
 .abt-test-items-info {
+    float: left;
+    padding-right: 20px;
+    width: 300px;
+}
+
+.abt-item-frame {
+    width: auto;
+    margin-left: 300px;
+
+}
+
+.abt-items-iteraction-dropdown {
+    width: inherit;
+    padding-top: 10px;
+}
+
+.abt-items-text {
+    background-color: #f2f2f2
 }

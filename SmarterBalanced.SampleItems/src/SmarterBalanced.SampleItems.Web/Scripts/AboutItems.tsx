@@ -86,7 +86,7 @@ namespace AboutItems {
             }
 
             return (
-                <select onChange={this.handleChange}>
+                <select className="form-control" onChange={this.handleChange}>
                     {items}
                 </select>
             );
@@ -99,8 +99,14 @@ namespace AboutItems {
                         <div className="abt-test-items-text">
                             {this.renderAboutTestItemsText()}
                         </div>
-                        {this.renderInteractionTypesSelect()}
-                        {this.renderDescription()}
+                        <div className="abt-items-iteraction-dropdown">
+                            <div className="form-group">
+                            {this.renderInteractionTypesSelect() }
+                            </div>
+                        </div>
+                        <div className="abt-items-desc">
+                            {this.renderDescription()}
+                        </div>
                     </div>
                     <div className="abt-item-frame">
                         <ItemFrame url={this.state.itemUrl} />
