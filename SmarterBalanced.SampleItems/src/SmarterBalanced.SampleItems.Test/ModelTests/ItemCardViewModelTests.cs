@@ -61,6 +61,7 @@ namespace SmarterBalanced.SampleItems.Test.ModelTests
             var card3 = ItemCardViewModel.Create(subjectCode: "Ela", claimCode: "2");
             var cards = new List<ItemCardViewModel>() { card2, card1, card3 };
             var ordered = cards.OrderBy(c => c, comparer).ToList();
+
             Assert.NotNull(ordered);
             Assert.Equal(cards.Count, ordered.Count);
             Assert.Equal(ordered[0], card3);

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using SmarterBalanced.SampleItems.Core.Repos;
-using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
@@ -43,8 +42,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathDigest = new ItemDigest() { BankKey = GoodBankKey, ItemKey = GoodItemKey };
             ElaDigest = new ItemDigest() { BankKey = BadBankKey, ItemKey = BadItemKey };
             DuplicateDigest = new ItemDigest() { BankKey = DuplicateBankKey, ItemKey = DuplicateItemKey };
-            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest);
-            var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard);
+            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest);
+            var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
             Ela = new Subject("Ela", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
@@ -82,6 +81,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             return moreCards.ToImmutableArray();
         }
 
+        #region GetItemDigest/Card
+
         [Fact]
         public void TestGetItemDigest()
         {
@@ -95,15 +96,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemDigestDuplicate()
         {
-            bool thrown = true;
-            try
-            {
-                var result = ItemViewRepo.GetItemDigest(DuplicateBankKey, DuplicateItemKey);
-                thrown = false;
-            }
-            catch { }
-            if (!thrown)
-                throw new System.Exception("Multiple items exception not thrown.");
+            Assert.Throws<InvalidOperationException>(()=>ItemViewRepo.GetItemDigest(DuplicateBankKey, DuplicateItemKey));
         }
 
         [Fact]
@@ -119,19 +112,15 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardDuplicate()
         {
-            bool thrown = true;
-            try
-            {
-                var result = ItemViewRepo.GetItemCardViewModel(DuplicateBankKey, DuplicateItemKey);
-                thrown = false;
-            }
-            catch { }
-            if (!thrown)
-                throw new Exception("Multiple items exception not thrown.");
+            Assert.Throws<InvalidOperationException>(() => ItemViewRepo.GetItemCardViewModel(DuplicateBankKey, DuplicateItemKey));
         }
+
+        #endregion
 
         //TODO:
         //- add tests for if itemcards and itemdigests have more than one item matching?
+
+        #region MoreLikeThis
 
         [Fact]
         public void TestMoreLikeThisHappyCase()
@@ -206,6 +195,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             var expectedSame = Context.ItemCards.Count(c => c.ClaimCode == Claim1.Code && c.Grade == GradeLevels.Grade4);
 
             Assert.Equal(System.Math.Min(expectedSame, 3), countSame);
+
         }
+        #endregion
     }
 }

@@ -104,8 +104,9 @@
 .more-like-this {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .more-like-this-column {
@@ -113,11 +114,12 @@
     flex-direction: column;
     align-items: center;
     padding-top: 0px;
-    padding-bottom: 0px;
+    padding-bottom: 15px;
 }
 
 .more-like-this-modal {
-    width: 725px;
+    max-width: 725px;
+    width: auto;
 }
 
 .more-like-this-modal h3{
