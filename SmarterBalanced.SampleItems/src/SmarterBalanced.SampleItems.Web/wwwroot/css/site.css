@@ -476,29 +476,37 @@ h4.card-title {
     font-size: 80%;
 }
 
-.abt-test-items-parent {
-    overflow: auto;
+.aboutitems-parents {
+    position: relative;
+    display: inline-flex;
 }
 
-.abt-test-items-info {
-    float: left;
-    padding-right: 20px;
-    width: 300px;
+.aboutitems-info {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 20px;
+    max-width: 40%;
 }
 
-.abt-item-frame {
-    width: auto;
-    margin-left: 300px;
-
+.aboutitem-iframe {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-left: 40px;
+    width: 60%;
+    max-width: 60%;
 }
 
-.abt-items-iteraction-dropdown {
+.aboutitems-dropdown {
     width: inherit;
     padding-top: 10px;
 }
 
-.abt-items-desc {
+.aboutitems-desc {
     background-color: #f2f2f2;
     padding: 20px;
     margin-top: 20px;
+}
+
+.aboutitems-text {
+    align-content:center;
 }

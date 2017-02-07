@@ -69,7 +69,10 @@ namespace AboutItems {
                     desc = it.description;
                 }
             }
-            return (<div className="abt-items-desc">{desc}</div>);
+            return (
+            <div className="aboutitems-desc">
+                {desc}
+            </div>);
         }
 
         renderInteractionTypesSelect() {
@@ -89,28 +92,27 @@ namespace AboutItems {
 
         render() {
             return (
-                <div className="abt-items-parent">
-                    <div className="abt-test-items-info">
-                        <div className="abt-test-items-text">
+                <div className="aboutitems-parents">
+
+                    <div className="aboutitems-info">
+                        <div className="aboutitems-text">
                             Smarter Balanced assessments use a variety of item
                              types to accurately measure what students know and can do.
                              To learn more and see an example, select an item type below.
                         </div>
-                        <div className="abt-items-iteraction-dropdown">
-                            <div className="form-group">
-                                {this.renderInteractionTypesSelect() }
-                            </div>
+                        <div className="aboutitems-dropdown form-group">
+                            {this.renderInteractionTypesSelect()}
                         </div>
-                            {this.renderDescription()}
+                        {this.renderDescription()}
                     </div>
-                    <div className="abt-item-frame">
+
+                    <div className="aboutitem-iframe">
                         <ItemFrame url={this.state.itemUrl} />
                     </div>
                 </div>
             );
         }
     }
-
 }
 
 

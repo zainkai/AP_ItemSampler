@@ -3,67 +3,109 @@
         <Item>
             <Code>EBSR</Code>
             <Label>Evidence-Based Selected Response</Label>
-            <Description></Description>
+            <Description>
+              EBSR items combine two sets of stems and response options into a single item. Unlike
+              MultipleChoice and Multi-Select item types, EBSR items cannot be displayed in horizontal or
+              stacked layouts. EBSR items can only display response options vertically.
+              For Smarter Balanced, the first part of an EBSR item is multiple choice where only one
+              answer can be selected. In the second part, multiple answers may be selected though the
+              instructions may specify a limit to the student. In the example below, the student is only
+              expected to select one answer from the second part.
+            </Description>
 			<Order>1</Order>
         </Item>
             <Item>
             <Code>EQ</Code>
             <Label>Equation</Label>
-            <Description></Description>
+            <Description>
+              The Equation item response area consists of one or more entry boxes and an on-screen key
+              panel containing mathematical characters. These items are 769 pixels wide or use 100% of
+              the available response area width (whichever is smaller). The default height is 254 pixels.
+              The item indicates which of 11 pre-defined layouts should be used for the math input key
+              panel.
+            </Description>
             <Order>2</Order>
         </Item>
         <Item>
             <Code>ER</Code>
             <Label>Extended Response</Label>
-            <Description></Description>
+            <Description>
+              The response areas for Extended Response (ER) and Short Answer (SA) item types essentially
+              have the same appearance. Extended Response (ER) areas accommodate more text than
+              Short Answer response areas. You can configure the character limit for both item types.
+            </Description>
             <Order>3</Order>
         </Item>
         <Item>
             <Code>SA</Code>
             <Label>Short Answer</Label>
-            <Description></Description>
+            <Description>
+              The response areas for Extended Response (ER) and Short Answer (SA) item types essentially
+              have the same appearance. Extended Response (ER) areas accommodate more text than
+              Short Answer response areas. You can configure the character limit for both item types.
+            </Description>
 			<Order>4</Order>
         </Item>
         <Item>
             <Code>GI</Code>
             <Label>Grid Item</Label>
-            <Description></Description>
+            <Description>
+              Smarter Balanced uses three variations of the Grid Item type, each with a distinct
+              appearance and interaction mode.
+            </Description>
             <Order>5</Order>
         </Item>
         <Item>
             <Code>HTQ</Code>
             <Label>Hot Text</Label>
-            <Description></Description>
+            <Description>
+              The response area for Hot Text items consists of a section of text containing interactive
+              words or phrases that students can either select (highlight) by clicking or rearrange by
+              clicking and dragging.
+            </Description>
 			<Order>6</Order>
         </Item>
         <Item>
             <Code>MC</Code>
             <Label>Multiple Choice</Label>
-            <Description></Description>
+            <Description>For multiple choice responses, only one answer can be selected among several possibilities. </Description>
 			<Order>7</Order>
         </Item>
         <Item>
             <Code>MS</Code>
             <Label>Multi Select</Label>
-            <Description></Description>
+            <Description>
+              For the Multi Select (MS) option, students are given a number of items to select to answer
+              the questions. For the example below, two of the listed items will be selected.
+            </Description>
 			<Order>8</Order>
         </Item>
         <Item>
             <Code>MI</Code>
             <Label>Matching Item</Label>
-            <Description></Description>
+            <Description>
+              For the Match Interaction (MI) types, text or images in rows are matched values in columns.
+              The student selects the boxes where a match is valid.
+            </Description>
 			<Order>9</Order>
         </Item>
         <Item>
             <Code>TI</Code>
             <Label>Table Item</Label>
-            <Description></Description>
+            <Description>
+              For Table Interaction (TI) item types, students are provided with a table that includes a
+              separate area of cells in which students may enter text.
+            </Description>
 			<Order>10</Order>
         </Item>
         <Item>
             <Code>WER</Code>
             <Label>Writing Extended Response</Label>
-            <Description></Description>
+            <Description>
+              Writing Extended Response (WER) item types provide more space for students to provide a
+              longer written response. It also includes text formatting tools – bold, underline, italic,
+              numbered and bulleted lists, indentation, clipboard, undo, redo, and spell checking.
+            </Description>
 			<Order>11</Order>
         </Item>
     </Items>
