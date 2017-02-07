@@ -11,6 +11,7 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/Navbar.css" />
     </environment>
 
     <environment names="Staging, Production">
@@ -21,16 +22,20 @@
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
-<body class="site-body-font body-background-image">
-    <div class="navbar navbar-default">
+<body class="site-body-font">
+
+    <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="navbar-header nav-flex header-padding">
+            
+            <div class="navbar-header">
+                
                 <a class="navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
                     <img class="logo-line" alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
                 </a>
                 <div class="nav-inner-flex">
-                    <h3 class="site-title site-title-font">Sample Items</h3>
+                    <h3 class="site-title">Sample Items</h3>
                 </div>
+            
                 <div class="nav-flex">
                     <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
                         <h3 class="site-header-font">Home</h3>
@@ -46,22 +51,23 @@
                     </a>
                 </div>
             </div>
+
         </div>
-    </div>
+    </nav>
+
     <div class="container body-content">
         @RenderBody()
     </div>
     <footer>
         <hr />
         <a href="http://practice.smarterbalanced.org/" class="link-font">Practice and training tests are available here.</a>
-        <div class="list-inline center-block" style="padding-top:20px">
+        <div class="list-inline footer-copyright">
             <li>
                 <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
             </li>
             <li class="pull-right">
                 <a href="//www.smarterbalanced.org" class="small-link-font"> www.SmarterBalanced.org</a>
             </li>
-
         </div>
     </footer>
     <script src="~/scripts/Polyfill.js"></script>

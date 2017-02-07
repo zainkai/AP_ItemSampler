@@ -19,10 +19,15 @@
     max-width: 550px;
 }
 
+.sample-response {
+    margin-left: 10px;
+}
+
 .accessibility-button { 
     float: right;
-    font-size: 24px;
+    font-size: 18px;
     border-radius: 0px;
+    margin-bottom: 5px !important;
 }
 
 .accessibility-button-text:before {
@@ -92,7 +97,7 @@
 
 .item-nav-btn {
     font-size: 14px;
-    padding: 0px 2px 0px 2px;
+    padding: 0px 10px 0px 10px;
     color: black;
 }
 

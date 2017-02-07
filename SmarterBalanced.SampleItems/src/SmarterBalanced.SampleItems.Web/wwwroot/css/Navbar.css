@@ -1,0 +1,109 @@
+﻿/*.navbar-stuff {
+    background-color: white;
+    border-color: #e8ebef;
+    border-bottom-width: 2px;
+    min-height: 75px;
+    padding: 10px 20px 20px 20px;
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+}*/
+
+.site-title {
+    color: #63666A;
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: central;
+    font-family: "PT Sans", Times, Sans-serif;
+    font-size: 34px;
+}
+
+#sb-logo {
+    height: 50px;
+}
+
+.navbar-brand {
+    margin: 0px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.nav-flex {
+
+}
+
+    @media screen and (max-width: 800px) {
+        .nav-flex {
+            flex-wrap: wrap;
+        }
+    }
+
+.nav-inner-flex {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 100%;
+    justify-content: flex-end;
+    align-items: baseline;
+    white-space: nowrap;
+}
+
+    .nav-inner-flex:hover {
+        text-decoration: none;
+    }
+
+.rescale-glyphicon {
+    font-size: 80%;
+}
+
+.site-header-font {
+    font-family: "PT Sans", Times, Sans-serif;
+    font-size: 24px;
+    margin: 0px;
+    color: #007393;
+}
+
+.logo-line {
+    padding-right: 20px;
+    border-right: 1px solid #63666A;
+}
+
+/*.search-button {
+    width: 100%;
+    margin: 0 auto;
+    text-align: right;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 850px) {
+    .search-button {
+        text-align: left;
+    }
+
+    .site-title {
+        text-align: left;
+        padding: 10px;
+    }
+}*/
+
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding-left: 10px;
+    max-height: 120px;
+    right: 0;
+    background: white;
+}
+
+.footer-copyright {
+    margin: 10px 10px 10px 0px;
+}
+
+footer hr {
+    margin-top: 0px;
+}
