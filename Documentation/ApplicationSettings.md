@@ -1,14 +1,4 @@
-# Code-Level Documentation
-
-# Application Overview
-The Sample Items Website is a Microsoft ASP.NET Core MVC web application that displays
-sample test question items.
-
-The content for the site is provided by a content package supplied by the Smarter Balanced 
-Assessment Consortium. It consists of XML files that describe the test question items 
-(the "content package"). 
-
-## Application Settings and Configurations
+### Application Settings and Configurations
 Within the `SmarterBalanced.SampleItems.Web` project, configurations are set 
 in the file `appsettings.json`. This file contains all of the configurations and settings 
 that are used throughout the application.
@@ -16,7 +6,7 @@ that are used throughout the application.
 Within `appsettings.json`, the `SettingsConfig` object contains configurations 
 necessary to start the application, as well as runtime configuration settings.
 
-#### Following is a description of important configurations within this object:
+##### Following is a description of important configurations within this object:
 
 `ContentItemDirectory`: Location of the **Items** directory within the content package. 
 Dependent on deployment environment setting (development, staging, production).
