@@ -1,4 +1,4 @@
-/// <binding ProjectOpened='all' />
+/// <binding ProjectOpened='all, watch' />
 'use strict';
 module.exports = function (grunt) {
     grunt.initConfig({
@@ -12,6 +12,19 @@ module.exports = function (grunt) {
         //    }
         //},
 
+        less: {
+            development: {
+                files: {
+                    'wwwroot/css/Navbar.css': 'Styles/Navbar.less'
+                }
+            },
+            production: {
+                files: {
+                    'wwwroot/css/Navbar.css': 'Styles/Navbar.less'
+                }
+            }
+        },
+        
         cssmin: {
             options: {
                 shorthandCompacting: false,
@@ -33,8 +46,8 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            files: ["Scripts/*"],
-            tasks: ["tsrecompile"]
+            files: ["Scripts/*.ts", "Styles/*.less"],
+            tasks: ["all"]
         },
         
         karma: {
@@ -52,8 +65,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-less');
 
-    grunt.registerTask("all", ['clean', 'ts', 'cssmin']); //,'uglify']); // TODO: Minify JS eventually
+    grunt.registerTask("all", ['clean', 'ts', 'cssmin', 'less']); //,'uglify']); // TODO: Minify JS eventually
     grunt.registerTask("tsrecompile", ['clean', 'ts']);
     grunt.registerTask("test", ['karma']);
 

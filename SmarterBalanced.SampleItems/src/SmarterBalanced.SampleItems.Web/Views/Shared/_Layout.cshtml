@@ -25,33 +25,32 @@
 <body class="site-body-font">
 
     <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            
-            <div class="navbar-header">
-                
-                <a class="navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
-                    <img class="logo-line" alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
-                </a>
-                <div class="nav-inner-flex">
-                    <h3 class="site-title">Sample Items</h3>
-                </div>
-            
-                <div class="nav-flex">
-                    <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
-                        <h3 class="site-header-font">Home</h3>
-                    </a>
-                    <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "Home")">
-                        <h3 class="site-header-font">About Test Items</h3>
-                    </a>
-                    <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
-                        <h3 class="search-button site-header-font">
-                            <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
-                            Search
-                        </h3>
-                    </a>
+        <div class="sbNav">
+            <div>
+                <div class="sbNav-titleGroup">
+                    <div class="sbNav-titleGroup-item">
+                        <a target="_blank" href="http://www.smarterbalanced.org/">
+                            <img alt="Smarter Balanced Logo" src="~/images/SmarterBalanced_logo.png">
+                        </a>
+                    </div>
+                    <div class="sbNav-titleGroup-item">
+                        <h3>Sample Items</h3>
+                    </div>
                 </div>
             </div>
 
+            <div class="sbNav-linksGroup" aria-expanded="false">
+                <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "Home")">
+                    Home
+                </a>
+                <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "Home")">
+                    About Test Items
+                </a>
+                <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    Search
+                </a>
+            </div>
         </div>
     </nav>
 
