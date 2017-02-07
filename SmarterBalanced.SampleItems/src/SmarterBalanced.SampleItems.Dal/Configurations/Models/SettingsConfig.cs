@@ -20,5 +20,6 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public List<AccessibilityType> AccessibilityTypes { get; set; }
         public string BrowserWarningCookie { get; set; }
         public string UserAgentRegex { get; set; }
+        public int NumMoreLikeThisItems { get; set; }
     }
 }

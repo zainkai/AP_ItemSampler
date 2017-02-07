@@ -14,5 +14,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             int itemKey,
             string[] iSAAPCodes,
             Dictionary<string, string> cookieValue);
+
+        MoreLikeThisViewModel GetMoreLikeThis(ItemDigest itemDigest);
     }
 }

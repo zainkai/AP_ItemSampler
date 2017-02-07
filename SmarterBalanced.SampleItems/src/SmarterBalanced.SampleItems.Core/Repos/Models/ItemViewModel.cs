@@ -14,16 +14,20 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public ImmutableArray<AccessibilityResourceGroup> AccResourceGroups { get; }
 
+        public MoreLikeThisViewModel MoreLikeThisVM { get; }
+
         public ItemViewModel(
             string itemViewerServiceUrl,
             string accessibilityCookieName,
             AboutItemViewModel aboutItemVM,
-            ImmutableArray<AccessibilityResourceGroup> accResourceGroups)
+            ImmutableArray<AccessibilityResourceGroup> accResourceGroups,
+            MoreLikeThisViewModel moreLikeThisVM)
         {
             ItemViewerServiceUrl = itemViewerServiceUrl;
             AccessibilityCookieName = accessibilityCookieName;
             AboutItemVM = aboutItemVM;
             AccResourceGroups = accResourceGroups;
+            MoreLikeThisVM = moreLikeThisVM;
         }
     }
 }

@@ -75,7 +75,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         /// Test that the FindMetadataXmlFiles method finds the correct number of files
         /// </summary>
         [Fact]
-        public async void TestFindMetadataXmlFiles()
+        public void TestFindMetadataXmlFiles()
         {
             int metadataFilesCount = 6;
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
@@ -87,7 +87,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         /// Test that the FindContentXmlFiles method finds the correct number of files
         /// </summary>
         [Fact]
-        public async void TestFindContentXmlFiles()
+        public void TestFindContentXmlFiles()
         {
             int contentFilesCount = 6;
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
