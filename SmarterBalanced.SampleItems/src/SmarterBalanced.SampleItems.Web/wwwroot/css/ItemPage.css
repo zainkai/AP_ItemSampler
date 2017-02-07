@@ -79,3 +79,53 @@
 .btn-cancel:hover {
     background-color: #106481;
 }
+
+.item-nav-group {
+    position: relative;
+    margin-bottom: 3px;
+}
+
+.item-nav-bottom {
+    position: absolute;
+    bottom: 0;    
+}
+
+.item-nav-btn {
+    font-size: 14px;
+    padding: 0px 2px 0px 2px;
+    color: black;
+}
+
+.accessibility-btn {
+    font-size: 18px;
+    padding: 2px 2px 2px 2px;
+}
+
+.more-like-this {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+
+.more-like-this-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0px;
+    padding-bottom: 15px;
+}
+
+.more-like-this-modal {
+    max-width: 725px;
+    width: auto;
+}
+
+.more-like-this-modal h3{
+    margin-top: 0px;
+}
+
+.modal-body {
+    padding: 15px;
+}

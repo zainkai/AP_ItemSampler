@@ -11,7 +11,7 @@ class ItemFrame extends React.Component<FrameProps, {}> {
 
     render() {
         return (
-            <div className="itemViewerFrame">
+            <div className="itemViewerFrame" tabIndex={0}>
                 <iframe id="itemviewer-iframe" className="itemviewer-iframe"
                     src={this.props.url}></iframe>
             </div>

@@ -182,7 +182,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     interactionTypeCodes: ImmutableArray.Create<string>())
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, new AppSettings());
+            var settings = new AppSettings
+            {
+                SettingsConfig = new SettingsConfig
+                {
+                    AccessibilityTypes = new List<AccessibilityType>()
+                }
+            };
+
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

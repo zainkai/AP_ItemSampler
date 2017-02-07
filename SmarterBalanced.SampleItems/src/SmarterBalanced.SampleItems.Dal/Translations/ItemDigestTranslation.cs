@@ -22,7 +22,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
-            IList<InteractionType> interactionTypes, IList<Subject> subjects, AppSettings appSettings)
+            IList<InteractionType> interactionTypes, IList<Subject> subjects,
+            AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
@@ -32,9 +33,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, appSettings);
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
 
-                    AssignAccessibilityResources(itemDigest, resourceFamilies);
+                    itemDigest.AccessibilityResourceGroups =
+                        CreateAccessibilityGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
 
                     digests.Add(itemDigest);
                 }
@@ -130,8 +132,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 Claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId()),
                 CommonCoreStandardsId = identifier.CommonCoreStandard,
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
-                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y" ? true : false,
-                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y" ? true : false
+                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
+                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y"
             };
 
             return digest;
@@ -196,54 +198,64 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
-        /// <summary>
-        /// Assigns a list of AccessibilityResources to an item digest.
-        /// If the item has auxilliary resources disabled, the resources are updated accordingly.
-        /// </summary>
-        private static void AssignAccessibilityResources(ItemDigest itemDigest, IList<AccessibilityResourceFamily> resourceFamilies)
+        private static AccessibilityResource ApplyFlags(
+            this AccessibilityResource resource,
+            bool aslSupported,
+            bool allowCalculator)
         {
-            List<AccessibilityResource> resources = resourceFamilies
-                .FirstOrDefault(t => t.Subjects.Any(c => c == itemDigest.Subject?.Code)
-                    && t.Grades.Contains(itemDigest.Grade)
-                )?.Resources;
-
-            if (resources == null)
+            if (!aslSupported && resource.Code == "AmericanSignLanguage")
             {
-                return;
+                var newResource = resource.ToDisabled();
+                return newResource;
             }
 
-            if (!itemDigest.AslSupported || !itemDigest.AllowCalculator)
+            if (!allowCalculator && resource.Code == "Calculator")
             {
-                resources = resources.Select(t => t.DeepClone()).ToList();
-
-                if (!itemDigest.AslSupported)
-                {
-                    DisableResource(resources, "AmericanSignLanguage");
-                }
-
-                if (!itemDigest.AllowCalculator)
-                {
-                    DisableResource(resources, "Calculator");
-                }
+                var newResource = resource.ToDisabled();
+                return newResource;
             }
-
-            itemDigest.AccessibilityResources = resources;
-        }
-
-        /// <summary>
-        /// Disables a given resource
-        /// </summary>
-        /// <param name="resource"></param>
-        private static void DisableResource(List<AccessibilityResource> resources, string code)
+            
+            return resource;
+        } 
+        
+        private static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
+            ItemDigest itemDigest,
+            IList<AccessibilityResourceFamily> resourceFamilies,
+            IList<AccessibilityType> accessibilityTypes)
         {
-            var resource = resources.FirstOrDefault(t => t.Code == code);
-            if (resource != null)
-            {
-                resource.Disabled = true;
-                resource.Selections.ForEach(s => s.Disabled = true);
-            }
-        }
+            var family = resourceFamilies
+                .FirstOrDefault(f =>
+                    f.Subjects.Any(c => c == itemDigest.Subject?.Code) &&
+                    f.Grades.Contains(itemDigest.Grade));
 
+            if (family == null)
+            {
+                return ImmutableArray<AccessibilityResourceGroup>.Empty;
+            }
+
+            var flaggedResources = family.Resources
+                .Select(r => r.ApplyFlags(
+                    aslSupported: itemDigest.AslSupported,
+                    allowCalculator: itemDigest.AllowCalculator))
+                .ToImmutableArray();
+
+            var groups = accessibilityTypes
+                .Select(at =>
+                {
+                    var groupResources = flaggedResources
+                    .Where(r => r.ResourceType == at.Id)
+                    .ToImmutableArray();
+
+                    var group = new AccessibilityResourceGroup(
+                        label: at.Label,
+                        order: at.Order,
+                        accessibilityResources: groupResources);
+
+                    return group;
+                })
+                .ToImmutableArray();
+
+            return groups;
+        }
     }
-
 }

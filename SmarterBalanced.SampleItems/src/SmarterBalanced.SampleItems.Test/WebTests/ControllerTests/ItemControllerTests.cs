@@ -58,7 +58,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             string accCookieName = "accessibilitycookie";
 
-            var accessibilityResourceViewModels = new List<AccessibilityResourceViewModel>();
+            var accessibilityResourceGroups = new List<AccessibilityResourceGroup>();
 
             var appSettings = new AppSettings()
             {
@@ -72,19 +72,21 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
                 accessibilityCookieName: accCookieName,
                 aboutItemVM: aboutItem,
-                accResourceVMs: accessibilityResourceViewModels);
+                accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
+                moreLikeThisVM: default(MoreLikeThisViewModel));
 
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
                 aboutItemVM: aboutItemCookie,
-                accResourceVMs: accessibilityResourceViewModels);
+                accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
+                moreLikeThisVM: default(MoreLikeThisViewModel));
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
             itemViewRepoMock
                 .Setup(repo =>
-                    repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<string>()))
+                    repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<Dictionary<string, string>>()))
                 .Returns(itemViewModel);
 
             itemViewRepoMock
@@ -93,15 +95,14 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                         bankKey,
                         itemKey,
                         It.Is<string[]>(ss => Enumerable.SequenceEqual(ss, iSAAP.Split(';'))),
-                        It.IsAny<string>()))
+                        It.IsAny<Dictionary<string, string>>()))
                 .Returns(itemViewModel);
-            itemViewRepoMock.Setup(repo => repo.AppSettings).Returns(appSettings);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
-            controller = new ItemController(itemViewRepoMock.Object, loggerFactory.Object);
+            controller = new ItemController(itemViewRepoMock.Object, appSettings, loggerFactory.Object);
         }
 
         /// <summary>
@@ -154,5 +155,13 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             Assert.Equal(itemViewModel, model);
         }
+
+
+        // TODO: Test index redirect
+        [Fact(Skip = "TODO: test index redirect")]
+        public void TestIndex()
+        {
+        }
     }
+
 }

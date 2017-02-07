@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -57,15 +58,23 @@ namespace SmarterBalanced.SampleItems.Web
             Configuration.Bind(appSettings);
             try
             {
-                context = SampleItemsProvider.LoadContext(appSettings, logger).Result;
+                context = SampleItemsProvider.LoadContext(appSettings, logger);
             }
             catch (Exception e)
             {
-                logger.LogCritical($"{e.Message} occured when loading the context");
+                logger.LogCritical($"{e.Message} occurred when loading the context");
                 throw e;
             }
 
             services.AddApplicationInsightsTelemetry(Configuration);
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+                options.Level = System.IO.Compression.CompressionLevel.Fastest);
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
             services.AddMvc();
             services.AddRouting();
 
@@ -80,6 +89,7 @@ namespace SmarterBalanced.SampleItems.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseApplicationInsightsExceptionTelemetry();
+            app.UseResponseCompression();
             app.UseStaticFiles();
 
             if (env.IsDevelopment())

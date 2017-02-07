@@ -9,9 +9,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public interface IItemViewRepo
     {
-        AppSettings AppSettings { get; }
+        ItemViewModel GetItemViewModel(
+            int bankKey,
+            int itemKey,
+            string[] iSAAPCodes,
+            Dictionary<string, string> cookieValue);
 
-        ItemViewModel GetItemViewModel(int bankKey, int itemKey, string[] iSAAPCodes,
-            string cookieValue);
+        MoreLikeThisViewModel GetMoreLikeThis(ItemDigest itemDigest);
     }
 }
