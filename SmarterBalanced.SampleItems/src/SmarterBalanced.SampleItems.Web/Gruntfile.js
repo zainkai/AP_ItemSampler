@@ -38,10 +38,10 @@ module.exports = function (grunt) {
             target: {
                 files: {
                     "wwwroot/css/site.min.css": ["wwwroot/css/site.css"],
-                    "wwwroot/css/HomePage.min.css": ["wwwroot/css/HomePage.css"],
-                    "wwwroot/css/ItemPage.min.css": ["wwwroot/css/ItemPage.css"],
-                    "wwwroot/css/Navbar.min.css": ["wwwroot/css/Navbar.css"],
-                    "wwwroot/css/SearchPage.min.css": ["wwwroot/css/SearchPage.css"]
+                    "wwwroot/css/home.min.css": ["wwwroot/css/home.css"],
+                    "wwwroot/css/item.min.css": ["wwwroot/css/item.css"],
+                    "wwwroot/css/nav.min.css": ["wwwroot/css/nav.css"],
+                    "wwwroot/css/search.min.css": ["wwwroot/css/search.css"]
                 }
             }
         },
