@@ -1,6 +1,4 @@
 ﻿interface FrameProps {
-    baseUrl: string;
-    accessibilityString: string;
     url: string;
 }
 
