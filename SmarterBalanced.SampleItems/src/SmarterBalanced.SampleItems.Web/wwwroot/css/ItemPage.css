@@ -16,7 +16,8 @@
 
 .accessibility-modal {
     width: auto;
-    max-width: 550px;
+    max-width: 785px;
+    min-width: 300px;
 }
 
 .sample-response {
@@ -30,18 +31,8 @@
     margin-bottom: 5px !important;
 }
 
-.accessibility-button-text:before {
-    content: ' Accessibility';
-}
-
 .expand-button {
     cursor: pointer;
-}
-
-@media screen and (max-width: 600px) {
-    .accessibility-button-text:before {
-        content: '';
-    }
 }
 
 .option-disabled {

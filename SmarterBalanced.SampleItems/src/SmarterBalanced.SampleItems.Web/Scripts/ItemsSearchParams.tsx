@@ -333,12 +333,13 @@ namespace ItemSearchParams {
         renderItemID() {
             const input = this.state.expandItemID
                 ?
-                    <input type="text" className="form-control"
+                    <input type="tel" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         onKeyUp={e => this.onItemIDKeyUp(e)}
                         value={this.state.itemId}>
                     </input>
+
                 : undefined;
 
             return (
