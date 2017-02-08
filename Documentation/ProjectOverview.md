@@ -15,7 +15,7 @@ Mozilla Public License Version 2.0
 The Sample Items Website project is composed of three layers: Web, Core, and Dal.
 
 **Web** is the startup project and contains controllers, views, style, and other
-web-tools.
+web dependencies. See the **Dependencies** section for more information.
 
 **Core** provides business logic to Web via repositories. It also houses the business
 logic for the diagnosticAPI and model translations.

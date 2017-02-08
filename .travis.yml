@@ -20,7 +20,6 @@ script:
   - grunt all
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/
   - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
-  # TODO: Run typescript tests
 
 matrix:
   include:

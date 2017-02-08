@@ -280,7 +280,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Mozilla Public License Version 2.0</p>
 <h2 id="project-architecture">Project Architecture</h2>
 <p>The Sample Items Website project is composed of three layers: Web, Core, and Dal.</p>
-<p><strong>Web</strong> is the startup project and contains controllers, views, style, and other web-tools.</p>
+<p><strong>Web</strong> is the startup project and contains controllers, views, style, and other web dependencies. See the <strong>Dependencies</strong> section for more information.</p>
 <p><strong>Core</strong> provides business logic to Web via repositories. It also houses the business logic for the diagnosticAPI and model translations.</p>
 <p><strong>Dal</strong> provides data to the Core layer. All data is supplied by a &quot;content package&quot; which is a set of XML files that represent test question items. This XML is parsed into the immutable <code>ItemDigest</code> and <code>ItemCard</code> models, which are used throughout the application.</p>
 <p>Other XML data is used, such as <code>AccessibilityAccommodationConfigurations</code>, <code>ClaimConfigurations</code>, and <code>InteractionTypeConfigurations</code>. These configure information such as order and labels for accessibility and interaction types.</p>
@@ -312,7 +312,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><code>AccommodationsXMLPath</code>: Location of the accessibility configurations XML document.</p>
 <p><code>InteractionTypesXMLPath</code>: Location of the interaction types configuration XML document.</p>
 <p><code>ClaimsXMLPath</code>: Location of the claims configuration XML document.</p>
-<p>Additionally, the <code>RubricPlaceHolderText</code> object contains strings that are filtered out of item Code Deploy is triggered by Travis CI using the deploy section in the <code>.travis.yml</code> file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.<br />
+<p>Additionally, the <code>RubricPlaceHolderText</code> object contains strings that are filtered out of item ## Internal Dependencies</p>
+<h3 id="npm">NPM</h3>
+<p>NPM is required to install Grunt, Grunt packages, Less, and TypeScript. See <code>package.json</code> in the <strong>Web</strong> project for configurations.</p>
+<h3 id="bower">Bower</h3>
+<p>Bower is required to add Bootstrap, JQuery, and React. See <code>bower.json</code> in the <strong>Web</strong> project for configurations.</p>
+<h3 id="grunt">Grunt</h3>
+<p>Grunt is used to perform tasks with Visual Studio events as well as with build events. Grunt: - Compiles TypeScript files into JavaScript on save and build - Compiles Less CSS into CSS on save and build - Minifies CSS on build - Removes temp files</p>
+<p>For Grunt configurations, see <code>Gruntfile.js</code> in the <strong>Web</strong> project.</p>
+<h2 id="external-dependencies">External Dependencies</h2>
+<h3 id="docker">Docker</h3>
+<p>Docker is used to simplify and unify the build and runtime environment for the application.</p>
+<p>See <code>Dockerfile</code> in the <strong>Web</strong> project for Docker configurations. The <strong>Web</strong> project also contains a <code>.dockerignore</code>.</p>
+<h3 id="travisci">TravisCI</h3>
+<p>TravisCI is used to verify the state of the application every time a developer pushes to a branch in the GitHub repository. It first installs project dependencies, pulls and builds the project, and then runs tests.</p>
+<p>After the previous steps succeed, Travis builds a Docker image with the application and pushes it to AWS.</p>
+<p>On the <strong>dev</strong>, <strong>stage</strong>, and <strong>master</strong> branches, Travis triggers a build process in AWS that combines the content package, hosted in an S3 bucket, with the application Docker image and performs a rolling update to the running versions of these branches.</p>
+<p>See the <code>travis.yml</code> file in the root directory project for configurations.</p>
+<p>Code Deploy is triggered by Travis CI using the deploy section in the <code>.travis.yml</code> file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.<br />
 The Travis build publishes the application using <code>dotnet publish</code>, and zips it into an archive, then pushes it to an Amazon S3 bucket, then triggers a Code Deploy deployment. The Code Deploy deployment deploys the application to a running EC2 instance that was set up using the instructions below.</p>
 <h3 id="ec2-instance-setup">EC2 Instance setup</h3>
 <p>The EC2 instance running the Sample Items Website needs an IAM role granting it read permissions to S3 and full access to Code Deploy. It requires <a href="https://www.nginx.com/resources/wiki/">Nginx</a>, [Supervisor], .NET Core, and the Amazon Code Deploy Agent to be installed on the instance. Nginx is used for reverse proxy.</p>
