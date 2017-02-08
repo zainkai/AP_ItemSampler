@@ -24,18 +24,18 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         InteractionType ItEla, ItMath;
         public SampleItemsSearchRepoTests()
         {
-            goodItemKey = 2343;
-            goodBankKey = 8398;
-            badItemKey = 9234;
-            badBankKey = 1123;
-            claim1 = new Claim("claim1", "1", "ELA Claim 1");
-            claim2 = new Claim("claim2", "2", "Math Claim 1");
-            itMath = new InteractionType("2", "Math Itype", 2);
-            itEla = new InteractionType("1", "Ela Itype", 1);
-            math = Subject.Create("Math", "Mathematics", "Math", ImmutableArray.Create(claim2), ImmutableArray.Create(itMath.Code));
-            ela = Subject.Create("ELA", "English", "ELA", ImmutableArray.Create(claim1), ImmutableArray.Create(itEla.Code));
-            var interactionTypes = ImmutableArray.Create(itEla, itMath);
-            var subjects = ImmutableArray.Create(ela, math);
+            GoodItemKey = 2343;
+            GoodBankKey = 8398;
+            BadItemKey = 9234;
+            BadBankKey = 1123;
+            Claim1 = new Claim("claim1", "1", "ELA Claim 1");
+            Claim2 = new Claim("claim2", "2", "Math Claim 1");
+            ItMath = new InteractionType("2", "Math Itype", "", 2);
+            ItEla = new InteractionType("1", "Ela Itype", "", 1);
+            Math = Subject.Create("Math", "Mathematics", "Math", ImmutableArray.Create(Claim2), ImmutableArray.Create(ItMath.Code));
+            Ela = Subject.Create("ELA", "English", "ELA", ImmutableArray.Create(Claim1), ImmutableArray.Create(ItEla.Code));
+            var interactionTypes = ImmutableArray.Create(ItEla, ItMath);
+            var subjects = ImmutableArray.Create(Ela, Math);
             var itemCards = ImmutableArray.Create(
                         ItemCardViewModel.Create(bankKey: GoodBankKey, itemKey: GoodItemKey, grade: GradeLevels.Grade6,
                                                  subjectCode: Math.Code, interactionTypeCode: ItMath.Code, claimCode: Claim1.Code),

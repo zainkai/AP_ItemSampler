@@ -19,10 +19,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         public ItemViewModel(
             string itemViewerServiceUrl,
             string accessibilityCookieName,
-           
             ImmutableArray<AccessibilityResourceGroup> accResourceGroups,
             MoreLikeThisViewModel moreLikeThisVM,
-            AboutThisItemViewModel aboutThisItemV)
+            AboutThisItemViewModel aboutThisItemVM)
         {
             ItemViewerServiceUrl = itemViewerServiceUrl;
             AccessibilityCookieName = accessibilityCookieName;
