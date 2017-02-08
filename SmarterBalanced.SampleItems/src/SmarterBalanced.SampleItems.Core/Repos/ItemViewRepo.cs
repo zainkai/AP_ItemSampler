@@ -39,7 +39,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
         /// </summary>
-        private string GetItemViewerUrl(ItemDigest digest)
+        protected string GetItemViewerUrl(ItemDigest digest)
         {
             if (digest == null)
             {
@@ -63,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var aboutItem = new AboutItemViewModel(
+            var aboutThisItem = new AboutThisItemViewModel(
                 rubrics: itemDigest.Rubrics,
                 itemCard: itemCardViewModel);
 
@@ -72,10 +72,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
-                aboutItemVM: aboutItem,
+               
                 accResourceGroups: groups,
-                moreLikeThisVM: GetMoreLikeThis(itemDigest)
-                );
+                moreLikeThisVM: GetMoreLikeThis(itemDigest),
+                aboutThisItemVM: aboutThisItem);
 
             return itemViewModel;
         }

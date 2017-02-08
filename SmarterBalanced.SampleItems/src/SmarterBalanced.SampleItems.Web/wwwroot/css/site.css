@@ -180,3 +180,38 @@ h4.card-title {
     font-size: 14px;
     text-align: right;
 }
+
+.aboutitems-parents {
+    position: relative;
+    display: inline-flex;
+}
+
+.aboutitems-info {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 20px;
+    max-width: 40%;
+}
+
+.aboutitem-iframe {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-left: 40px;
+    width: 60%;
+    max-width: 60%;
+}
+
+.aboutitems-dropdown {
+    width: inherit;
+    padding-top: 10px;
+}
+
+.aboutitems-desc {
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.aboutitems-text {
+    align-content:center;
+}

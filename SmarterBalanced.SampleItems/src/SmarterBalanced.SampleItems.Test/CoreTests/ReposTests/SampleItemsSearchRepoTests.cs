@@ -30,8 +30,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             BadBankKey = 1123;
             Claim1 = new Claim("claim1", "1", "ELA Claim 1");
             Claim2 = new Claim("claim2", "2", "Math Claim 1");
-            ItMath = new InteractionType("2", "Math Itype", 2);
-            ItEla = new InteractionType("1", "Ela Itype", 1);
+            ItMath = new InteractionType("2", "Math Itype", "", 2);
+            ItEla = new InteractionType("1", "Ela Itype", "", 1);
             Math = Subject.Create("Math", "Mathematics", "Math", ImmutableArray.Create(Claim2), ImmutableArray.Create(ItMath.Code));
             Ela = Subject.Create("ELA", "English", "ELA", ImmutableArray.Create(Claim1), ImmutableArray.Create(ItEla.Code));
             var interactionTypes = ImmutableArray.Create(ItEla, ItMath);

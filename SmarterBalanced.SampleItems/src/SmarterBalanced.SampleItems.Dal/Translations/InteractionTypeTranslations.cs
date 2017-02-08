@@ -26,6 +26,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var interactionType = new InteractionType(
                 code: (string)elem.Element("Code"),
                 label: (string)elem.Element("Label"),
+                description: (string)elem.Element("Description"),
                 order: elem.Element("Order") == null ? 0 : (int)elem.Element("Order"));
 
             return interactionType;
