@@ -1,4 +1,5 @@
-### Application Settings and Configurations
+
+## Application Settings and Configurations
 Within the `SmarterBalanced.SampleItems.Web` project, configurations are set 
 in the file `appsettings.json`. This file contains all of the configurations and settings 
 that are used throughout the application.

@@ -1,3 +1,5 @@
+
+## Deployment
 Code Deploy is triggered by Travis CI using the deploy section in the `.travis.yml` file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.  
 The Travis build publishes the application using `dotnet publish`, and zips it into an archive, then pushes it to an Amazon S3 bucket, then triggers a Code Deploy deployment. The Code Deploy deployment deploys the application to a running EC2 instance that was set up using the instructions below. 
 

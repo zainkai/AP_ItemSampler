@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="generator" content="pandoc" />
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
@@ -43,6 +43,9 @@ code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Ann
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
   </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
   <style>
   @media print {
     *,
@@ -272,19 +275,38 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   </style>
 </head>
 <body>
-<h2 id="sample-items-website">Sample Items Website</h2>
+<h1>Sample Items Website</h1>
+<h3>Table of Contents</h3>
+<nav id="TOC">
+<ul>
+<li><a href="#application-overview">Application Overview</a><ul>
+<li><a href="#license">License</a></li>
+<li><a href="#installation">Installation</a></li>
+</ul></li>
+<li><a href="#project-architecture">Project Architecture</a></li>
+<li><a href="#application-settings-and-configurations">Application Settings and Configurations</a></li>
+<li><a href="#internal-dependencies">Internal Dependencies</a><ul>
+<li><a href="#npm">NPM</a></li>
+<li><a href="#bower">Bower</a></li>
+<li><a href="#grunt">Grunt</a></li>
+</ul></li>
+<li><a href="#external-dependencies">External Dependencies</a><ul>
+<li><a href="#docker">Docker</a></li>
+<li><a href="#travisci">TravisCI</a></li>
+</ul></li>
+<li><a href="#deployment">Deployment</a><ul>
+<li><a href="#ec2-instance-setup">EC2 Instance setup</a></li>
+<li><a href="#code-deploy-setup">Code Deploy Setup</a></li>
+<li><a href="#s3-setup">S3 setup</a></li>
+<li><a href="#appspec.yml">appspec.yml</a></li>
+</ul></li>
+</ul>
+</nav>
 <h2 id="application-overview">Application Overview</h2>
 <p>The Sample Items Website is a Microsoft ASP.NET Core MVC web application that displays sample test question items.</p>
 <p>The content for the site is provided by a content package supplied by the Smarter Balanced Assessment Consortium. It consists of XML files that describe the test question items (the &quot;content package&quot;).</p>
-<h4 id="license">License</h4>
+<h3 id="license">License</h3>
 <p>Mozilla Public License Version 2.0</p>
-<h2 id="project-architecture">Project Architecture</h2>
-<p>The Sample Items Website project is composed of three layers: Web, Core, and Dal.</p>
-<p><strong>Web</strong> is the startup project and contains controllers, views, style, and other web dependencies. See the <strong>Dependencies</strong> section for more information.</p>
-<p><strong>Core</strong> provides business logic to Web via repositories. It also houses the business logic for the diagnosticAPI and model translations.</p>
-<p><strong>Dal</strong> provides data to the Core layer. All data is supplied by a &quot;content package&quot; which is a set of XML files that represent test question items. This XML is parsed into the immutable <code>ItemDigest</code> and <code>ItemCard</code> models, which are used throughout the application.</p>
-<p>Other XML data is used, such as <code>AccessibilityAccommodationConfigurations</code>, <code>ClaimConfigurations</code>, and <code>InteractionTypeConfigurations</code>. These configure information such as order and labels for accessibility and interaction types.</p>
-<p><strong>Test</strong> is the test project for Sample Items Website. It contains unit tests and integration tests for each of the three aforementioned layers.</p>
 <h3 id="installation">Installation</h3>
 <ul>
 <li>Clone the project
@@ -298,7 +320,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Place this in the location specified in src/Web/appsettings.json (<code>ContentRootDirectory</code>)</li>
 </ul></li>
 </ul>
-<h3 id="application-settings-and-configurations">Application Settings and Configurations</h3>
+<h2 id="project-architecture">Project Architecture</h2>
+<p>The Sample Items Website project is composed of three layers: Web, Core, and Dal.</p>
+<p><strong>Web</strong> is the startup project and contains controllers, views, style, and other web dependencies. See the <strong>Dependencies</strong> section for more information.</p>
+<p><strong>Core</strong> provides business logic to Web via repositories. It also houses the business logic for the diagnosticAPI and model translations.</p>
+<p><strong>Dal</strong> provides data to the Core layer. All data is supplied by a &quot;content package&quot; which is a set of XML files that represent test question items. This XML is parsed into the immutable <code>ItemDigest</code> and <code>ItemCard</code> models, which are used throughout the application.</p>
+<p>Other XML data is used, such as <code>AccessibilityAccommodationConfigurations</code>, <code>ClaimConfigurations</code>, and <code>InteractionTypeConfigurations</code>. These configure information such as order and labels for accessibility and interaction types.</p>
+<p><strong>Test</strong> is the test project for Sample Items Website. It contains unit tests and integration tests for each of the three aforementioned layers.</p>
+<h2 id="application-settings-and-configurations">Application Settings and Configurations</h2>
 <p>Within the <code>SmarterBalanced.SampleItems.Web</code> project, configurations are set in the file <code>appsettings.json</code>. This file contains all of the configurations and settings that are used throughout the application.</p>
 <p>Within <code>appsettings.json</code>, the <code>SettingsConfig</code> object contains configurations necessary to start the application, as well as runtime configuration settings.</p>
 <h5 id="following-is-a-description-of-important-configurations-within-this-object">Following is a description of important configurations within this object:</h5>
@@ -312,7 +341,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><code>AccommodationsXMLPath</code>: Location of the accessibility configurations XML document.</p>
 <p><code>InteractionTypesXMLPath</code>: Location of the interaction types configuration XML document.</p>
 <p><code>ClaimsXMLPath</code>: Location of the claims configuration XML document.</p>
-<p>Additionally, the <code>RubricPlaceHolderText</code> object contains strings that are filtered out of item ## Internal Dependencies</p>
+<p>Additionally, the <code>RubricPlaceHolderText</code> object contains strings that are filtered out of item</p>
+<h2 id="internal-dependencies">Internal Dependencies</h2>
 <h3 id="npm">NPM</h3>
 <p>NPM is required to install Grunt, Grunt packages, Less, and TypeScript. See <code>package.json</code> in the <strong>Web</strong> project for configurations.</p>
 <h3 id="bower">Bower</h3>
@@ -329,6 +359,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>After the previous steps succeed, Travis builds a Docker image with the application and pushes it to AWS.</p>
 <p>On the <strong>dev</strong>, <strong>stage</strong>, and <strong>master</strong> branches, Travis triggers a build process in AWS that combines the content package, hosted in an S3 bucket, with the application Docker image and performs a rolling update to the running versions of these branches.</p>
 <p>See the <code>travis.yml</code> file in the root directory project for configurations.</p>
+<h2 id="deployment">Deployment</h2>
 <p>Code Deploy is triggered by Travis CI using the deploy section in the <code>.travis.yml</code> file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.<br />
 The Travis build publishes the application using <code>dotnet publish</code>, and zips it into an archive, then pushes it to an Amazon S3 bucket, then triggers a Code Deploy deployment. The Code Deploy deployment deploys the application to a running EC2 instance that was set up using the instructions below.</p>
 <h3 id="ec2-instance-setup">EC2 Instance setup</h3>

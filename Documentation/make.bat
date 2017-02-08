@@ -1,1 +1,0 @@
-pandoc -H style.html -s -o documentation.html ProjectOverview.md ApplicationSettings.md Dependencies.md CodeDeployAWS.md

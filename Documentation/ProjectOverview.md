@@ -1,4 +1,3 @@
-## Sample Items Website
 
 ## Application Overview
 The Sample Items Website is a Microsoft ASP.NET Core MVC web application that displays
@@ -8,8 +7,16 @@ The content for the site is provided by a content package supplied by the Smarte
 Assessment Consortium. It consists of XML files that describe the test question items 
 (the "content package"). 
 
-#### License
+### License
 Mozilla Public License Version 2.0
+
+### Installation
+- Clone the project
+    - Don't forget to initialize the project submodules ([instructions](https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules))
+- Install the latest version of Microsoft .NET Core for your operating system ([link](https://www.microsoft.com/net/download/core#/current))
+- Install the latest TypeScript compiler ([link](https://www.typescriptlang.org/index.html#download-links))
+- Download the latest sample item content package (TODO: Link?)
+    - Place this in the location specified in src/Web/appsettings.json (`ContentRootDirectory`)
 
 ## Project Architecture
 The Sample Items Website project is composed of three layers: Web, Core, and Dal.
@@ -31,11 +38,3 @@ information such as order and labels for accessibility and interaction types.
 
 **Test** is the test project for Sample Items Website. It contains unit tests
 and integration tests for each of the three aforementioned layers.
-
-### Installation
-- Clone the project
-    - Don't forget to initialize the project submodules ([instructions](https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules))
-- Install the latest version of Microsoft .NET Core for your operating system ([link](https://www.microsoft.com/net/download/core#/current))
-- Install the latest TypeScript compiler ([link](https://www.typescriptlang.org/index.html#download-links))
-- Download the latest sample item content package (TODO: Link?)
-    - Place this in the location specified in src/Web/appsettings.json (`ContentRootDirectory`)
