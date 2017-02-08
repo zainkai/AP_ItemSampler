@@ -10,11 +10,23 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class InteractionTypeTranslations
     {
-        public static InteractionType ToInteractionType(this XElement elem)
+        public static ImmutableArray<InteractionType> ToInteractionTypes(this XElement elem)
+        {
+            var interactionTypes = elem
+                .Element("Items")
+                .Elements("Item")
+                .Select(i => i.ToInteractionType())
+                .ToImmutableArray();
+
+            return interactionTypes;
+        }
+
+        private static InteractionType ToInteractionType(this XElement elem)
         {
             var interactionType = new InteractionType(
                 code: (string)elem.Element("Code"),
                 label: (string)elem.Element("Label"),
+                description: (string)elem.Element("Description"),
                 order: elem.Element("Order") == null ? 0 : (int)elem.Element("Order"));
 
             return interactionType;

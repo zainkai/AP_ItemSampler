@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Diagnostics;
 using SmarterBalanced.SampleItems.Core.Repos;
+using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using System;
@@ -57,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Web
             Configuration.Bind(appSettings);
             try
             {
-                context = SampleItemsProvider.LoadContext(appSettings, logger).Result;
+                context = SampleItemsProvider.LoadContext(appSettings, logger);
             }
             catch (Exception e)
             {
@@ -66,6 +68,14 @@ namespace SmarterBalanced.SampleItems.Web
             }
 
             services.AddApplicationInsightsTelemetry(Configuration);
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+                options.Level = System.IO.Compression.CompressionLevel.Fastest);
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
             services.AddMvc();
             services.AddRouting();
 
@@ -73,6 +83,7 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddSingleton(appSettings);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
+            services.AddScoped<IAboutItemsRepo, AboutItemsRepo>();
             services.AddScoped<IDiagnosticManager, DiagnosticManager>();
         }
 
@@ -80,6 +91,7 @@ namespace SmarterBalanced.SampleItems.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseApplicationInsightsExceptionTelemetry();
+            app.UseResponseCompression();
             app.UseStaticFiles();
 
             if (env.IsDevelopment())

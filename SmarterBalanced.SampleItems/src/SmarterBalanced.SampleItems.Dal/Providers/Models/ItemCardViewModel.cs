@@ -85,4 +85,45 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         }
 
     }
+
+    public class MoreLikeThisComparer : IComparer<ItemCardViewModel>
+    {
+        private readonly string subjectCode;
+        private readonly string claimCode;
+
+        public MoreLikeThisComparer(string subjectCode, string claimCode)
+        {
+            this.subjectCode = subjectCode;
+            this.claimCode = claimCode;
+        }
+
+        private int Weight(ItemCardViewModel itemCardVM)
+        {
+            int weight = 2;
+            if (itemCardVM.SubjectCode == subjectCode)
+                weight--;
+
+            if (itemCardVM.ClaimCode == claimCode)
+                weight--;
+
+            return weight;
+        }
+
+        /// <summary>
+        /// Compares ItemCardViewModel by subject and claim similarity
+        /// </summary>
+        /// <remarks>
+        /// positive return value: x is bigger (x - y)
+        /// negative return value: y is bigger
+        /// "bigger" means it will appear later when sorted in ascending order
+        /// </remarks>
+        public int Compare(ItemCardViewModel x, ItemCardViewModel y)
+        {
+            int weightDiff = Weight(x) - Weight(y);
+
+            return weightDiff;
+        }
+
+    }
+
 }

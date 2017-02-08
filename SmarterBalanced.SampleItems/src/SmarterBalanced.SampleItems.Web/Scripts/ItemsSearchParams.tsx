@@ -1,16 +1,9 @@
-﻿
-const hideArrow = (
-    <span>
-        <span className="screen-reader-text">Hide</span>
-        <span aria-hidden="true">▼</span>
-    </span>
+﻿ const hideArrow = (
+        <span aria-label="Hide">▼</span>
 );
 
 const showArrow = (
-    <span>
-        <span className="screen-reader-text">Show</span>
-        <span aria-hidden="true">▶</span>
-    </span>
+        <span aria-label="Show">▶</span>
 );
 
 function parseQueryString(url: string): { [key: string]: string[] | undefined } {
@@ -261,46 +254,50 @@ namespace ItemSearchParams {
         }
 
         keyPressResetFilters(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.resetFilters();
             }
         }
 
         keyPressToggleExpandAll(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandAll();
             }
         }
 
         keyPressToggleExpandItemId(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandItemIDInput();
             }
         }
 
         keyPressToggleExpandGrades(e: React.KeyboardEvent) {
-            if (e.keyCode === 0 || e.keyCode === 13) {
+            console.log(e.keyCode);
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandGradeLevels();
             }
         }
 
         keyPressToggleExpandSubjects(e: React.KeyboardEvent) {
             console.log(e.keyCode);
-            if (e.keyCode === 0 || e.keyCode === 13) {
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandSubjects();
             }
         }
 
         keyPressToggleExpandClaims(e: React.KeyboardEvent) {
             console.log(e.keyCode);
-            if (e.keyCode === 0 || e.keyCode === 13) {
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandClaims();
             }
         }
 
         toggleExpandItemTypes(e: React.KeyboardEvent) {
             console.log(e.keyCode);
-            if (e.keyCode === 0 || e.keyCode === 13) {
+            if (e.keyCode == 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandInteractionTypes();
             }
         }
@@ -314,8 +311,9 @@ namespace ItemSearchParams {
                         <h1 className="search-title" tabIndex={0}>Search</h1>
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
-                            <div><a onClick={() => this.resetFilters()} onKeyUp={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
-                            <div onClick={() => this.toggleExpandAll()} onKeyUp={e => this.keyPressToggleExpandAll(e)} tabIndex={0}>
+                            <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
+                            <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}
+                                aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
                                 {this.getExpandAll() ? hideArrow : showArrow}
                                 {this.getExpandAll() ? " Hide" : " Show"} all
                             </div>
@@ -335,12 +333,13 @@ namespace ItemSearchParams {
         renderItemID() {
             const input = this.state.expandItemID
                 ?
-                    <input type="text" className="form-control"
+                    <input type="tel" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         onKeyUp={e => this.onItemIDKeyUp(e)}
                         value={this.state.itemId}>
                     </input>
+
                 : undefined;
 
             return (

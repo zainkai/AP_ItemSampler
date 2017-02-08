@@ -19,18 +19,18 @@ interface RubricEntry {
 
 interface Rubric {
     language: string;
-    rubricEntries: RubricEntry[];
+    rubricEntries: RubricEntry[]; 
     samples: RubricSample[];
 }
 
-namespace AboutItem {
+namespace AboutThisItem {
     export interface Props {
         rubrics: Rubric[];
         itemCardViewModel: ItemCardViewModel
         // depthOfKnowledge: string; // TODO: Add when supported by xml
     }
 
-    export class AIComponent extends React.Component<Props, {}> {
+    export class ATIComponent extends React.Component<Props, {}> {
         render() {
             const rubrics = this.props.rubrics.map((ru, i) => <RubricComponent {...ru} key={String(i)} />);
             return (
@@ -44,7 +44,7 @@ namespace AboutItem {
                                 <h4 className="modal-title">About This Item</h4>
                             </div>
                             <div className="modal-body">
-                                <AboutItemDetailComponent {...this.props.itemCardViewModel} />
+                                <AboutThisItemDetailComponent {...this.props.itemCardViewModel} />
                                 {rubrics}
                             </div>
                             <div className="modal-footer">
@@ -111,7 +111,7 @@ class SampleResponseComponent extends React.Component<SampleResponse, {}> {
     }
 }
 
-class AboutItemDetailComponent extends React.Component<ItemCardViewModel, {}> {
+class AboutThisItemDetailComponent extends React.Component<ItemCardViewModel, {}> {
     render() {
         const { bankKey, itemKey } = this.props;
         return (

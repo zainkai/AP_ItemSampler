@@ -11,82 +11,63 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 {
     public static class AccessibilityTranslations
     {
-        /// <summary>
-        /// Translates a list of AccessibilityResourceViewModels into
-        /// a comma-separated string of ISAAP codes.
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns>a comma-separated string of ISAAP codes.</returns>
-        public static string ToISAAP(this List<AccessibilityResource> items)
+        public static ImmutableArray<AccessibilityResourceGroup> ApplyPreferences(
+            this ImmutableArray<AccessibilityResourceGroup> groups,
+            string[] isaap,
+            Dictionary<string, string> cookie)
         {
-            if(items == null)
-                throw new ArgumentNullException(nameof(items));
+            if (isaap == null) throw new ArgumentNullException(nameof(isaap));
+            if (groups == null) throw new ArgumentNullException(nameof(groups));
+            if (cookie == null) throw new ArgumentNullException(nameof(cookie));
 
-            return string.Join(";", items.Select(t => t.SelectedCode));
+            if (isaap.Length != 0)
+            {
+                var isaapGroups = groups
+                    .Select(g => g.WithResources(g.AccessibilityResources
+                        .Select(r => r.ApplyIsaap(isaap))
+                        .ToImmutableArray()))
+                    .ToImmutableArray();
+
+                return isaapGroups;
+            }
+            else if (cookie.Count != 0)
+            {
+                var cookieGroups = groups
+                    .Select(g => g.WithResources(g.AccessibilityResources
+                        .Select(r => r.ApplyCookie(cookie))
+                        .ToImmutableArray()))
+                    .ToImmutableArray();
+
+                return cookieGroups;
+            }
+            else
+            {
+                return groups;
+            }
         }
 
-        /// <summary>
-        /// Converts ISAAP format to list of strings
-        /// </summary>
-        /// <param name="iSAAPCode"></param>
-        /// <returns>List of strings</returns>
-        public static List<string> ToISAAPList(string iSAAPCode)
+        private static AccessibilityResource ApplyIsaap(this AccessibilityResource resource, string[] isaap)
         {
-            if (string.IsNullOrEmpty(iSAAPCode))
-                return new List<string>();
+            var newSelection = resource.Selections.FirstOrDefault(sel => isaap.Contains(sel.Code));
+            if (newSelection == null)
+            {
+                return resource;
+            }
 
-            return iSAAPCode.Split(';').ToList();
+            var newResource = resource.WithSelectedCode(newSelection.Code);
+            return newResource;
         }
 
-        /// <summary>
-        /// Translates a List of AccessibilityResources into a List of 
-        /// AccessibilityResourceVIewModels with defaults set from the ISAAP code.
-        /// </summary>
-        /// <param name="accessibilityResources"></param>
-        /// <param name="iSAAPCode"></param>
-        /// <returns>a List of AccessibilityResources.</returns>
-        private static ImmutableArray<AccessibilityResource> ApplyIsaap(ImmutableArray<AccessibilityResource> accessibilityResources, string[] codes)
+        private static AccessibilityResource ApplyCookie(this AccessibilityResource resource, Dictionary<string, string> cookie)
         {
-            if (accessibilityResources == null)
+            string newSelectedCode;
+            if (cookie.TryGetValue(resource.Code, out newSelectedCode))
             {
-                throw new ArgumentNullException(nameof(accessibilityResources));
+                var newResource = resource.WithSelectedCode(newSelectedCode);
+                return newResource;
             }
 
-            List<AccessibilityResource> newResources = new List<AccessibilityResource>();
-
-            foreach (var resource in accessibilityResources)
-            {
-                var newResource = resource.DeepClone();
-                var accListItems = newResource.Selections;
-                var accListItem = accListItems.FirstOrDefault(sel => codes.Contains(sel.Code));
-                if (accListItem != null)
-                {
-                    var selectedCode = accListItem.Code;
-                    newResource.SelectedCode = selectedCode;
-                }
-                else
-                {
-                    newResource.SelectedCode = newResource.DefaultSelection;
-                }
-                newResources.Add(newResource);
-            }
-
-            return newResources.ToImmutableArray();
-        }
-
-        public static ImmutableArray<AccessibilityResourceGroup> SetIsaap(this ImmutableArray<AccessibilityResourceGroup> resourceGroups, string[] codes)
-        {
-            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
-            foreach(AccessibilityResourceGroup group in resourceGroups)
-            {
-                var newResources = ApplyIsaap(group.AccessibilityResources, codes);
-                groups.Add(new AccessibilityResourceGroup(
-                        label: group.Label,
-                        order: group.Order,
-                        accessibilityResources: newResources
-                    ));
-            }
-            return groups.ToImmutableArray();
+            return resource;
         }
     }
     

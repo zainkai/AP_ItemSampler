@@ -46,7 +46,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var interactionTypes = new List<InteractionType>
             {
-                new InteractionType(code: "EQ", label: "", order: 0)
+                new InteractionType(code: "EQ", label: "", description: "", order: 0)
             };
 
             var subjects = new List<Subject>
@@ -169,7 +169,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var interactionTypes = new List<InteractionType>
             {
-                new InteractionType(code: testInteractionType, label: "", order: 0)
+                new InteractionType(code: testInteractionType, label: "", description: "", order: 0)
             };
 
             var subjects = new List<Subject>
@@ -182,7 +182,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     interactionTypeCodes: ImmutableArray.Create<string>())
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, new AppSettings());
+            var settings = new AppSettings
+            {
+                SettingsConfig = new SettingsConfig
+                {
+                    AccessibilityTypes = new List<AccessibilityType>()
+                }
+            };
+
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

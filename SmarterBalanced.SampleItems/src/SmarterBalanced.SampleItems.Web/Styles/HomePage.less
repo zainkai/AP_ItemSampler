@@ -1,0 +1,38 @@
+﻿@import "Constants.less";
+
+body {
+    background-image: url('../images/backgroundimg.jpg');
+    background-repeat: no-repeat;
+}
+
+.home-container {
+    height: 70%;
+    max-width: 500px;
+    font-size: 20px;
+    padding: 20px 40px 30px 40px;
+    opacity: 0.9;
+    border-radius: 10px;
+    background-color: #eee;
+    color: black;
+    margin-bottom: 25px;
+}
+
+@media screen and (max-width: @small) {
+    .home-container {
+        padding: 10px;
+        border-radius: 0;
+    }
+
+    .container {
+        padding: 0;
+    }
+}
+
+.home-title {
+    font-size: 63px;
+}
+
+.home-container-button {
+    text-align: center;
+    display: inline-block;
+}

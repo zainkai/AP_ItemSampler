@@ -9,20 +9,23 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     {
         public string Code { get; }
         public string Label { get; }
+        public string Description { get; }
         public int Order { get; }
 
-        public InteractionType(string code, string label, int order)
+        public InteractionType(string code, string label, string description, int order)
         {
             Code = code;
             Label = label;
+            Description = description;
             Order = order;
         }
 
-        public static InteractionType Create(string code = "", string label = "", int order = -1)
+        public static InteractionType Create(string code = "", string label = "", string description = "", int order = -1)
         {
             return new InteractionType(
                 code,
                 label,
+                description,
                 order
             );
         }
