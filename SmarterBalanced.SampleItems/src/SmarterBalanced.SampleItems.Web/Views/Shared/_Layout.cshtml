@@ -8,13 +8,13 @@
     <link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.ico">
     <link rel="apple-touch-icon-precomposed" type="image/x-icon" href="~/images/touch.png">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans|PT+Serif" rel="stylesheet">
-    <environment names="Development">
+    <environment names="Development, Staging">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/Navbar.css" />
     </environment>
 
-    <environment names="Staging, Production">
+    <environment names="Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
