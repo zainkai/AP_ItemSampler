@@ -34,7 +34,11 @@ module.exports = function (grunt) {
             },
             target: {
                 files: {
-                    "wwwroot/css/site.min.css": ["wwwroot/css/site.css"]
+                    "wwwroot/css/site.min.css": ["wwwroot/css/site.css"],
+                    "wwwroot/css/HomePage.min.css": ["wwwroot/css/HomePage.css"],
+                    "wwwroot/css/ItemPage.min.css": ["wwwroot/css/ItemPage.css"],
+                    "wwwroot/css/NavBar.min.css": ["wwwroot/css/NavBar.css"],
+                    "wwwroot/css/SearchPage.min.css": ["wwwroot/css/SearchPage.css"]
                 }
             }
         },
