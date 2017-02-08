@@ -48,6 +48,8 @@ module.exports = function (grunt) {
         },
 
         watch: {
+            files: ["Scripts/*"],
+            tasks: ["tsrecompile"]
             files: ["Scripts/*.ts", "Styles/*.less"],
             tasks: ["all"]
         },
@@ -71,6 +73,5 @@ module.exports = function (grunt) {
 
     grunt.registerTask("all", ['clean', 'ts', 'cssmin', 'less']); //,'uglify']); // TODO: Minify JS eventually
     grunt.registerTask("tsrecompile", ['clean', 'ts']);
-    grunt.registerTask("test", ['karma']);
 
 };
