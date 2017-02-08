@@ -70,9 +70,8 @@ namespace AboutItems {
                 }
             }
             return (
-            <div className="aboutitems-desc">
-                {desc}
-            </div>);
+                <div dangerouslySetInnerHTML={{ __html: desc }} className= "aboutitems-desc" />
+            );
         }
 
         //renderInteractionTypesSelect() {
