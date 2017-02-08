@@ -1,5 +1,11 @@
 /// <binding ProjectOpened='all, watch' />
 'use strict';
+
+const lessFiles = {
+    'wwwroot/css/Navbar.css': 'Styles/Navbar.less',
+    'wwwroot/css/HomePage.css': 'Styles/HomePage.less'
+};
+
 module.exports = function (grunt) {
     grunt.initConfig({
         clean: ["wwwroot/scripts/*", "temp/"],
@@ -14,14 +20,10 @@ module.exports = function (grunt) {
 
         less: {
             development: {
-                files: {
-                    'wwwroot/css/Navbar.css': 'Styles/Navbar.less'
-                }
+                files: lessFiles
             },
             production: {
-                files: {
-                    'wwwroot/css/Navbar.css': 'Styles/Navbar.less'
-                }
+                files: lessFiles
             }
         },
         

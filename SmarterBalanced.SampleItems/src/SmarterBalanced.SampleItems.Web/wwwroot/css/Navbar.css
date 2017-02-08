@@ -1,3 +1,8 @@
+@media screen and (max-width: 760px) {
+  .navbar {
+    margin: 0;
+  }
+}
 .sbNav {
   display: flex;
   flex-flow: row;
@@ -63,7 +68,7 @@ footer {
   left: 0;
   bottom: 0;
   padding-left: 10px;
-  max-height: 120px;
+  max-height: 170px;
   right: 0;
   background: white;
 }

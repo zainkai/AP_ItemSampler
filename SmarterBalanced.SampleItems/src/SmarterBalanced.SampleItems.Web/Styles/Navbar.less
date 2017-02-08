@@ -1,6 +1,10 @@
-﻿
-@small: 760px;
-@medium: 800px;
+﻿@import "Constants.less";
+
+@media screen and (max-width: @small) {
+    .navbar {
+        margin: 0;
+    }
+}
 
 .sbNav {
     display: flex;
@@ -80,7 +84,7 @@ footer {
     left: 0;
     bottom: 0;
     padding-left: 10px;
-    max-height: 120px;
+    max-height: 170px;
     right: 0;
     background: white;
 }
