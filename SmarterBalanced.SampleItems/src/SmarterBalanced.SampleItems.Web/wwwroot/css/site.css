@@ -215,3 +215,7 @@ h4.card-title {
 .aboutitems-text {
     align-content:center;
 }
+
+h1, h2, h3, h4, h5 {
+    font-family: "PT Sans", Times, serif;
+}
