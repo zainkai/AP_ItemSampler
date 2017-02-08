@@ -71,14 +71,17 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
                 accessibilityCookieName: accCookieName,
-                aboutThisItemVM: aboutThisItemVM,
-                accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>));
+                accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
+                moreLikeThisVM: default(MoreLikeThisViewModel),
+                aboutThisItemVM: aboutThisItemVM);
 
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
                 aboutThisItemVM: aboutItemCookie,
-                accResourceGroups: accessibilityResourceGroups.ToImmutableArray());
+                accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
+             
+                moreLikeThisVM: default(MoreLikeThisViewModel));
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
@@ -153,5 +156,13 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             Assert.Equal(itemViewModel, model);
         }
+
+
+        // TODO: Test index redirect
+        [Fact(Skip = "TODO: test index redirect")]
+        public void TestIndex()
+        {
+        }
     }
+
 }

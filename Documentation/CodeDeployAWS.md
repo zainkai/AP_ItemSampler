@@ -1,7 +1,9 @@
+
+## Deployment
 Code Deploy is triggered by Travis CI using the deploy section in the `.travis.yml` file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.  
 The Travis build publishes the application using `dotnet publish`, and zips it into an archive, then pushes it to an Amazon S3 bucket, then triggers a Code Deploy deployment. The Code Deploy deployment deploys the application to a running EC2 instance that was set up using the instructions below. 
 
-## EC2 Instance setup
+### EC2 Instance setup
 The EC2 instance running the Sample Items Website needs an IAM role granting it read permissions to S3 and full access to Code Deploy.
 It requires [Nginx](https://www.nginx.com/resources/wiki/), [Supervisor], .NET Core, and the Amazon Code Deploy Agent to be installed on the instance.
 Nginx is used for reverse proxy. 
@@ -42,7 +44,7 @@ chmod +x ./install
 sudo ./install auto
 ```
 
-### IAM Role
+#### IAM Role
 Create an IAM role with the AmazonS3ReadOnlyAccess and AWSCodeDeployFullAccess policies.
 Add the following custom policy:
 ```json
@@ -61,7 +63,7 @@ Add the following custom policy:
     ]
 }
 ```
-### What to install
+#### What to install
 In order to deploy and run the Sample Items website the instance must have the following installed.
 
 - [AWS Code Deploy Agent](https://docs.aws.amazon.com/codedeploy/latest/userguide/how-to-run-agent-install.html)
@@ -69,7 +71,7 @@ In order to deploy and run the Sample Items website the instance must have the f
 - Nginx
 - Supervisor
 
-## Code Deploy Setup
+### Code Deploy Setup
  - In the AWS web console navigate to Code Deploy
  - Click "Create New Application"
  - Choose an application name. This must match the `application` used in the `.travis.yml` file under the `codedeploy` provider.
@@ -79,8 +81,8 @@ In order to deploy and run the Sample Items website the instance must have the f
  - Set the Service Role to IAM role you created above.
  - Choose "Create Application"
 
-## S3 setup
+### S3 setup
 Create an S3 bucket to store the zip archive created by the Travis CI build. The name and region must match those specified in the `s3` provider in the `.travis.yml` file.
 
-## appspec.yml
+### appspec.yml
 The appspec  is the file that defines how the code deploy agent deploys the application. For the Sample Items Website it copies the configuration files for Nginx and Supervisor, and the application into the correct places, then starts Nginx and Supervisor to run the application.

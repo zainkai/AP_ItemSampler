@@ -59,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             }
         }
 
-        static readonly ImmutableArray<GradeLevels> singleGrades =
+        public static readonly ImmutableArray<GradeLevels> singleGrades =
             ImmutableArray.Create(
                 GradeLevels.Grade3,
                 GradeLevels.Grade4,
@@ -124,5 +124,32 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
             return gradeLevels;
         }
+
+        private static bool IsSingleGrade(this GradeLevels grade)
+        {
+            int raw = (int)grade;
+            return grade != GradeLevels.NA && raw == (raw & -raw);
+        }
+
+
+        public static GradeLevels GradeAbove(this GradeLevels grade)
+        {
+            int raw = (int)grade;
+            if (grade.IsSingleGrade() && raw < (int)GradeLevels.Grade12)
+            {
+                return (GradeLevels)(raw << 1);
+            }
+
+            return GradeLevels.NA;
+        }
+
+        public static GradeLevels GradeBelow(this GradeLevels grade)
+        {
+            return grade.IsSingleGrade()
+                ? (GradeLevels)((int)grade >> 1)
+                : GradeLevels.NA;
+        }
+
     }
+
 }
