@@ -37,7 +37,7 @@ module.exports = function (grunt) {
                     "wwwroot/css/site.min.css": ["wwwroot/css/site.css"],
                     "wwwroot/css/HomePage.min.css": ["wwwroot/css/HomePage.css"],
                     "wwwroot/css/ItemPage.min.css": ["wwwroot/css/ItemPage.css"],
-                    "wwwroot/css/NavBar.min.css": ["wwwroot/css/NavBar.css"],
+                    "wwwroot/css/Navbar.min.css": ["wwwroot/css/Navbar.css"],
                     "wwwroot/css/SearchPage.min.css": ["wwwroot/css/SearchPage.css"]
                 }
             }
