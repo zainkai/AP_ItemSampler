@@ -1,5 +1,18 @@
 ﻿@import "Constants.less";
 
+html, body {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-flow: column;
+}
+
+.container {
+    flex: 1;
+}
+
 @media screen and (max-width: @small) {
     .navbar {
         margin: 0;
@@ -81,19 +94,27 @@
 }
 
 footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    padding-left: 10px;
-    max-height: 170px;
-    right: 0;
-    background: white;
+    background-color: #f8f8f8;
+    border: 1px solid #e7e7e7;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px;
 }
 
 .footer-copyright {
-    margin: 10px 10px 10px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5px;
 }
 
-footer hr {
-    margin-top: 0px;
+.footer-practiceTests {
+    align-self: flex-start;
+    font-size: 24px;
+    text-decoration: underline;
+}
+
+.footer-sbLink {
+    text-decoration: underline;
 }

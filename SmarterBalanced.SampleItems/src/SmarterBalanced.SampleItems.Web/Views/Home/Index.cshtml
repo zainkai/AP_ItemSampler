@@ -19,11 +19,19 @@
 
     <div class="text-center">
 
-        <a class="btn-lg btn-primary home-container-button">Browse Test Items</a>
+        <a class="btn-lg btn-primary home-container-button"
+           href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+
+            Browse Test Items
+        </a>
 
         <br /><br />
 
-        <a class="btn-lg btn-success home-container-button">Learn More About Items</a>
+        <a class="btn-lg btn-success home-container-button"
+           href="@Url.Action(action: "Index", controller: "AboutItems")">
+        
+            Learn More About Items
+        </a>
 
     </div>
 

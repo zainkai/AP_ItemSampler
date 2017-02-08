@@ -2,7 +2,7 @@
 'use strict';
 
 const lessFiles = {
-    'wwwroot/css/Navbar.css': 'Styles/Navbar.less',
+    'wwwroot/css/nav.css': 'Styles/nav.less',
     'wwwroot/css/HomePage.css': 'Styles/HomePage.less'
 };
 
@@ -52,8 +52,8 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            files: ["Scripts/*", "Styles/*.less"],
-            tasks: ["tsrecompile", "all"],
+            files: ["Styles/*.less"],
+            tasks: ["less"],
         },
         
         karma: {
