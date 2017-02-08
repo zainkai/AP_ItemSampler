@@ -1,10 +1,11 @@
 ﻿@import "Constants.less";
 
-html, body {
-    min-height: 100%;
+html {
+    height: 100%;
 }
 
 body {
+    min-height: 100%;
     display: flex;
     flex-flow: column;
 }
@@ -117,4 +118,10 @@ footer {
 
 .footer-sbLink {
     text-decoration: underline;
+}
+
+@media screen and (max-width: @small) {
+    .footer-copyright {
+        flex-direction: column;
+    }
 }
