@@ -48,10 +48,8 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            files: ["Scripts/*"],
-            tasks: ["tsrecompile"]
-            files: ["Scripts/*.ts", "Styles/*.less"],
-            tasks: ["all"]
+            files: ["Scripts/*", "Styles/*.less"],
+            tasks: ["tsrecompile", "all"],
         },
         
         karma: {
