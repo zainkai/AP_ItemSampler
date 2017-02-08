@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
+<head class="site-header-font">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,6 +11,7 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/Navbar.css" />
     </environment>
 
     <environment names="Staging, Production">
@@ -21,32 +22,51 @@
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
-<body>
-    <div class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header nav-flex">
-                        <a class="nav-inner-flex navbar-brand" target="_blank" href="http://www.smarterbalanced.org/">
-                            <img alt="Smarter Balanced Logo" id="sb-logo" src="~/images/SmarterBalanced_logo.png">
-                        </a>
-                        <a class="nav-inner-flex" asp-controller="Home" asp-action="Index">
-                                <h3 class="site-title">Sample Items Website</h3>
-                        </a>
-                        <a class="nav-inner-flex" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
-                                <h3 class="search-button">
-                                    <span class="glyphicon glyphicon-search rescale-glyphicon" aria-hidden="true"></span>
-                                    Search
-                                </h3>
-                        </a>
+<body class="site-body-font">
+
+    <nav class="navbar navbar-default">
+        <div class="sbNav">
+            <div class="sbNav-titleGroup">
+                <div class="sbNav-titleGroup-item">
+                    <a target="_blank" href="http://www.smarterbalanced.org/">
+                        <img alt="Smarter Balanced Logo" src="~/images/SmarterBalanced_logo.png">
+                    </a>
                 </div>
+                <div class="sbNav-titleGroup-item">
+                    <h3>Sample Items</h3>
+                </div>
+            </div>
+
+            <div class="sbNav-linksGroup" aria-expanded="false">
+                <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "Home")">
+                    Home
+                </a>
+                <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "Home")">
+                    About Test Items
+                </a>
+                <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    Search
+                </a>
+            </div>
         </div>
-    </div>
+    </nav>
+
     <div class="container body-content">
         @RenderBody()
-        <footer>
-            <hr />
-            <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
-        </footer>
     </div>
+    <footer>
+        <hr />
+        <a href="http://practice.smarterbalanced.org/" class="link-font">Practice and training tests are available here.</a>
+        <div class="list-inline footer-copyright">
+            <li>
+                <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
+            </li>
+            <li class="pull-right">
+                <a href="//www.smarterbalanced.org" class="small-link-font"> www.SmarterBalanced.org</a>
+            </li>
+        </div>
+    </footer>
     <script src="~/scripts/Polyfill.js"></script>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

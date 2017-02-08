@@ -16,27 +16,23 @@
 
 .accessibility-modal {
     width: auto;
-    max-width: 550px;
+    max-width: 785px;
+    min-width: 300px;
+}
+
+.sample-response {
+    margin-left: 10px;
 }
 
 .accessibility-button { 
     float: right;
-    font-size: 24px;
+    font-size: 18px;
     border-radius: 0px;
-}
-
-.accessibility-button-text:before {
-    content: ' Accessibility';
+    margin-bottom: 5px !important;
 }
 
 .expand-button {
     cursor: pointer;
-}
-
-@media screen and (max-width: 600px) {
-    .accessibility-button-text:before {
-        content: '';
-    }
 }
 
 .option-disabled {
@@ -92,7 +88,7 @@
 
 .item-nav-btn {
     font-size: 14px;
-    padding: 0px 2px 0px 2px;
+    padding: 0px 10px 0px 10px;
     color: black;
 }
 
