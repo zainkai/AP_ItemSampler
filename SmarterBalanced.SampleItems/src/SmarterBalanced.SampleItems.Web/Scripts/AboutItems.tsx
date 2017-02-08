@@ -74,20 +74,20 @@ namespace AboutItems {
             );
         }
 
-        renderInteractionTypesSelect() {
-            let items = [];
-            for (let i of this.props.interactionTypes) {
-                items.push(
-                    <option key={i.code} value={i.code}> {i.label} </option>
-                );
-            }
+        //renderInteractionTypesSelect() {
+        //    let items = [];
+        //    for (let i of this.props.interactionTypes) {
+        //        items.push(
+        //            <option key={i.code} value={i.code}> {i.label} </option>
+        //        );
+        //    }
 
-            return (
-                <select className="form-control" onChange={this.handleChange}>
-                    {items}
-                </select>
-            );
-        }
+        //    return (
+        //        <select className="form-control" onChange={this.handleChange}>
+        //            {items}
+        //        </select>
+        //    );
+        //}
 
         render() {
             return (
@@ -100,7 +100,7 @@ namespace AboutItems {
                              To learn more and see an example, select an item type below.
                         </div>
                         <div className="aboutitems-dropdown form-group">
-                            {this.renderInteractionTypesSelect()}
+                            {/*this.renderInteractionTypesSelect()*/}
                         </div>
                         {this.renderDescription()}
                     </div>
