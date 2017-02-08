@@ -9,23 +9,17 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     {
         public int BankKey { get; }
         public int ItemKey { get; }
-
         public string Title { get; }
-
         public GradeLevels Grade { get; }
         public string GradeLabel { get; }
-
         public string SubjectCode { get; }
         public string SubjectLabel { get; }
-
         public string ClaimCode { get; }
         public string ClaimLabel { get; }
-
         public string Target { get; }
-
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
-
+        public string CommonCoreStandardsId { get; }
         public ItemCardViewModel(
             int bankKey,
             int itemKey,
@@ -38,7 +32,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string claimLabel,
             string target,
             string interactionTypeCode,
-            string interactionTypeLabel)
+            string interactionTypeLabel,
+            string commonCoreStandardsId)
         {
             BankKey = bankKey;
             ItemKey = itemKey;
@@ -52,6 +47,42 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Target = target;
             InteractionTypeCode = interactionTypeCode;
             InteractionTypeLabel = interactionTypeLabel;
+            CommonCoreStandardsId = commonCoreStandardsId;
         }
+
+        /// <summary>
+        /// Used for testing so that it's not necessary to specify all parameters.
+        /// </summary>
+        public static ItemCardViewModel Create(
+           int bankKey = -1,
+           int itemKey = -1,
+           string title = "",
+           GradeLevels grade = GradeLevels.NA,
+           string gradeLabel = "",
+           string subjectCode = "",
+           string subjectLabel = "",
+           string claimCode = "",
+           string claimLabel = "",
+           string target = "",
+           string interactionTypeCode = "",
+           string interactionTypeLabel = "",
+           string commonCoreStandardsId = "")
+        {
+            return new ItemCardViewModel(
+                bankKey: bankKey,
+                itemKey: itemKey,
+                title: title,
+                grade: grade,
+                gradeLabel: gradeLabel,
+                subjectCode: subjectCode,
+                subjectLabel: subjectLabel,
+                claimCode: claimCode,
+                claimLabel: claimLabel,
+                target: target,
+                interactionTypeCode: interactionTypeCode,
+                interactionTypeLabel: interactionTypeLabel,
+                commonCoreStandardsId: commonCoreStandardsId);
+        }
+
     }
 }

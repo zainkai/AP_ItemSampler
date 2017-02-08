@@ -20,26 +20,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return interactionType;
         }
 
-        public static List<InteractionType> ToInteractionTypes(this IEnumerable<XElement> itemElements)
-        {
-            var interactionTypes = itemElements
-                .Select(i => i.ToInteractionType())
-                .ToList();
-
-            return interactionTypes;
-        }
-
-        public static List<InteractionFamily> ToInteractionFamilies(this XElement interactionTypesDoc)
-        {
-            var interactionFamilies = interactionTypesDoc
-                .Element("Families")
-                .Elements("Family")
-                .Select(e => e.ToInteractionFamily())
-                .ToList();
-
-            return interactionFamilies;
-        }
-
         public static InteractionFamily ToInteractionFamily(this XElement familyElement)
         {
             var interactionTypeCodes = familyElement

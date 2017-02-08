@@ -12,6 +12,7 @@ interface ItemCardViewModel {
     target: string;
     interactionTypeCode: string;
     interactionTypeLabel: string;
+    commonCoreStandardsId: string;
 }
 
 function itemPageLink(bankKey: number, itemKey: number) {
@@ -19,10 +20,20 @@ function itemPageLink(bankKey: number, itemKey: number) {
 }
 
 class ItemCard extends React.Component<ItemCardViewModel, {}> {
+
+    handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent) {
+        if (e.keyCode === 13) {
+            itemPageLink(bankKey, itemKey);
+        }
+    }
+
     render() {
         const { bankKey, itemKey } = this.props;
         return (
-            <div className={'card card-block ' + this.props.subjectCode.toLowerCase()} onClick={e => itemPageLink(bankKey, itemKey)}>
+            <div className={"card card-block " + this.props.subjectCode.toLowerCase()}
+                onClick={e => itemPageLink(bankKey, itemKey)}
+                onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}
+                tabIndex={0}>
                 <div className="card-contents">
                     <h4 className="card-title">{this.props.title}</h4>
                     <p className="card-text subject">
@@ -42,7 +53,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
                         <span className="card-text-value"> {this.props.target}</span>
                     </p>
                     <p className="card-text interaction-type">
-                        <span className="card-text-label">Interaction Type:</span>
+                        <span className="card-text-label">Item Type:</span>
                         <span className="card-text-value"> {this.props.interactionTypeLabel}</span>
                     </p>
                     <p className="card-text item-id">
@@ -54,3 +65,4 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
         );
     }
 }
+

@@ -275,9 +275,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityResourcesNotModified()
         {
             List<AccessibilityResource> noPartialResources = new List<AccessibilityResource>();
-            List<AccessibilityResource> resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, Resources);
+            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, Resources);
 
-            Assert.Equal(Resources.Count(), resultResources.Count());
+            Assert.Equal(Resources.Count, resultResources.Length);
         }
 
 
@@ -295,8 +295,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 inputResource
             };
 
-            List<AccessibilityResource> resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, inputResources);
-            Assert.Equal(inputResources.Count(), resultResources.Count());
+            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, inputResources);
+            Assert.Equal(inputResources.Count, resultResources.Length);
 
             AccessibilityResource outputResource = resultResources[0];
 
@@ -330,9 +330,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 }
             };
 
-            List<AccessibilityResource> resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(partialResources, Resources);
+            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(partialResources, Resources);
 
-            Assert.Equal(Resources.Count(), resultResources.Count());
+            Assert.Equal(Resources.Count, resultResources.Length);
         }
         #endregion
 

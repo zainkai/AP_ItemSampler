@@ -3,6 +3,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         /// </summary>
         /// <param name="items"></param>
         /// <returns>a comma-separated string of ISAAP codes.</returns>
-        public static string ToISAAP(this List<AccessibilityResourceViewModel> items)
+        public static string ToISAAP(this List<AccessibilityResource> items)
         {
             if(items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -38,88 +39,55 @@ namespace SmarterBalanced.SampleItems.Core.Translations
         }
 
         /// <summary>
-        /// Translates a List of AccessibilitySelections into a List of SelectListItems,
-        /// setting default values if applicable.
-        /// </summary>
-        /// <param name="accessibilitySelections"></param>
-        /// <returns>a List of SelectListItems.</returns>
-        private static List<SelectListItem> ToSelectListItems(List<AccessibilitySelection> accessibilitySelections)
-        {
-            if (accessibilitySelections == null)
-                accessibilitySelections = new List<AccessibilitySelection>();
-
-            List<SelectListItem> selectListItems = accessibilitySelections
-                .OrderBy(t => t.Order)
-                .Select(t => new SelectListItem
-                {
-                    Disabled = t.Disabled,
-                    Value = t.Code,
-                    Text = t.Label
-                })
-                .ToList();
-
-            return selectListItems;
-        }
-
-        /// <summary>
-        /// Translates a List of AccessibilityResources into a List of 
-        /// AccessibilityResourceViewModels.
-        /// </summary>
-        /// <param name="accessibilityResources"></param>
-        /// <returns>a List of AccessibilityResourceViewModels.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources)
-        {
-            List<AccessibilityResourceViewModel> accessibilityResourceViewModels = accessibilityResources.Select(t =>
-                new AccessibilityResourceViewModel
-                {
-                    SelectedCode = t.DefaultSelection,
-                    DefaultCode = t.DefaultSelection,
-                    Label = t.Label,
-                    Description = t.Description,
-                    AccessibilityListItems = ToSelectListItems(t?.Selections),
-                    Disabled = t.Disabled
-                }).ToList();
-
-            return accessibilityResourceViewModels;
-        }
-
-        /// <summary>
         /// Translates a List of AccessibilityResources into a List of 
         /// AccessibilityResourceVIewModels with defaults set from the ISAAP code.
         /// </summary>
         /// <param name="accessibilityResources"></param>
         /// <param name="iSAAPCode"></param>
         /// <returns>a List of AccessibilityResources.</returns>
-        public static List<AccessibilityResourceViewModel> ToAccessibilityResourceViewModels(this List<AccessibilityResource> accessibilityResources, string iSAAPCode)
+        private static ImmutableArray<AccessibilityResource> ApplyIsaap(ImmutableArray<AccessibilityResource> accessibilityResources, string[] codes)
         {
             if (accessibilityResources == null)
-                throw new ArgumentNullException(nameof(accessibilityResources));
-
-            var accResourceViewModels = ToAccessibilityResourceViewModels(accessibilityResources);
-
-            var codes = ToISAAPList(iSAAPCode);
-
-            foreach (var accResourceViewModel in accResourceViewModels)
             {
-                var accListItems = accResourceViewModel.AccessibilityListItems;
+                throw new ArgumentNullException(nameof(accessibilityResources));
+            }
 
-                // TODO: how do we handle multiple matching list items?
-                var accListItem = accListItems.FirstOrDefault(t => codes.Contains(t.Value));
+            List<AccessibilityResource> newResources = new List<AccessibilityResource>();
+
+            foreach (var resource in accessibilityResources)
+            {
+                var newResource = resource.DeepClone();
+                var accListItems = newResource.Selections;
+                var accListItem = accListItems.FirstOrDefault(sel => codes.Contains(sel.Code));
                 if (accListItem != null)
                 {
-                    var selectedCode = accListItem.Value;
-                    accResourceViewModel.SelectedCode = selectedCode;
+                    var selectedCode = accListItem.Code;
+                    newResource.SelectedCode = selectedCode;
                 }
                 else
                 {
-                    accResourceViewModel.SelectedCode = accResourceViewModel.DefaultCode;
+                    newResource.SelectedCode = newResource.DefaultSelection;
                 }
+                newResources.Add(newResource);
             }
 
-            return accResourceViewModels;
+            return newResources.ToImmutableArray();
         }
 
-
+        public static ImmutableArray<AccessibilityResourceGroup> SetIsaap(this ImmutableArray<AccessibilityResourceGroup> resourceGroups, string[] codes)
+        {
+            List<AccessibilityResourceGroup> groups = new List<AccessibilityResourceGroup>();
+            foreach(AccessibilityResourceGroup group in resourceGroups)
+            {
+                var newResources = ApplyIsaap(group.AccessibilityResources, codes);
+                groups.Add(new AccessibilityResourceGroup(
+                        label: group.Label,
+                        order: group.Order,
+                        accessibilityResources: newResources
+                    ));
+            }
+            return groups.ToImmutableArray();
+        }
     }
     
 }

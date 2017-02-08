@@ -1,84 +1,19 @@
 ﻿@model SmarterBalanced.SampleItems.Core.Repos.Models.ItemViewModel
 
-<div class="local-nav">
-    <ul class="list-inline">
-        <li><a href="" data-toggle="modal" data-target="#viewMore">View More</a></li>
-        <li><a href="" data-toggle="modal" data-target="#aboutThisItem">About This Item</a></li>
-        <li><a href="" data-toggle="modal" data-target="#accessibility">Item Accessibility</a></li>
-    </ul>
-</div>
+<div id="item-container"></div>
 
-<hr/>
+<link rel="stylesheet" href="~/css/ItemPage.css" />
 
-<div class="row">
-
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <iframe id="itemviewer-iframe" class="itemviewer-iframe" src="@Model.ItemViewerServiceUrl"></iframe>
-    </div>
-</div>
-
-<div id="viewMore" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- "View More" Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">View More</h4>
-            </div>
-            <div class="modal-body">
-                <p>Other items will be displayed here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="aboutThisItem" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- "About This Item" Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">About This Item</h4>
-            </div>
-            <div class="modal-body">
-                <p>Text about this item will be displayed here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="accessibility" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Local Accessibility Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Item Accessibility</h4>
-            </div>
-            <div id="accessibilityContent" class="modal-body">
-                @Html.Partial("_LocalAccessibility", Model.LocalAccessibilityViewModel)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="~/scripts/ItemAccessibility.js"></script>
-
+@section Scripts {
+<script src="~/scripts/GradeLevels.js"></script>
+<script src="~/scripts/Collapsible.js"></script>
+<script src="~/scripts/AboutItem.js"></script>
+<script src="~/scripts/ShareModal.js"></script>
+<script src="~/scripts/AccessibilityModal.js"></script>
+<script src="~/scripts/ItemViewerFrame.js"></script>
+<script src="~/scripts/DropDown.js"></script>
+<script src="~/scripts/ItemPage.js"></script>
 <script>
-    var url = '@Html.Raw(Url.Action("ResetToGlobalAccessibility", "Item",
-        new { bankKey = Model.ItemDigest.BankKey, itemKey = Model.ItemDigest.ItemKey }))';
-
-    initializeItemAccessibility(url);
+    initializeItemPage(@Json.Serialize(Model));
 </script>
+}

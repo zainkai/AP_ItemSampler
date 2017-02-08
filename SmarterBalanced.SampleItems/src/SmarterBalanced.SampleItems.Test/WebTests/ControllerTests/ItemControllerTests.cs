@@ -8,6 +8,9 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Collections.Immutable;
+using SmarterBalanced.SampleItems.Dal.Translations;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -25,21 +28,37 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
-            var itemDigest = new ItemDigest
+            ItemDigest digest = new ItemDigest
+                        {
+                            BankKey = bankKey,
+                            ItemKey = itemKey,
+                            Grade = GradeLevels.NA
+                        };
+            ItemCardViewModel card = digest.ToItemCardViewModel();
+
+            var aboutItem = new AboutItemViewModel(
+                rubrics: ImmutableArray.Create<Rubric>(),
+                itemCard: card);
+
+
+            ItemDigest digestCookie = new ItemDigest
             {
                 BankKey = bankKey,
-                ItemKey = itemKey,
-                Grade = GradeLevels.Grade6
+                ItemKey = 0,
+                Grade = GradeLevels.NA
             };
+            ItemCardViewModel cardCookie = digest.ToItemCardViewModel();
+
+            var aboutItemCookie = new AboutItemViewModel(
+                rubrics: ImmutableArray.Create<Rubric>(),
+                itemCard: cardCookie);
+
 
             iSAAP = "TDS_test;TDS_test2;";
 
             string accCookieName = "accessibilitycookie";
 
-            var localAccessibilityViewModel = new LocalAccessibilityViewModel()
-            {
-                AccessibilityResourceViewModels = new List<AccessibilityResourceViewModel>()
-            };
+            var accessibilityResourceGroups = new List<AccessibilityResourceGroup>();
 
             var appSettings = new AppSettings()
             {
@@ -49,25 +68,34 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 }
             };
 
-            itemViewModel = new ItemViewModel()
-            {
-                ItemDigest = itemDigest,
-                ItemViewerServiceUrl = $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
-                LocalAccessibilityViewModel = localAccessibilityViewModel
-               
-            };
+            itemViewModel = new ItemViewModel(
+                itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
+                accessibilityCookieName: accCookieName,
+                aboutItemVM: aboutItem,
+                accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>));
 
-            itemViewModelCookie = new ItemViewModel()
-            {
-                LocalAccessibilityViewModel = localAccessibilityViewModel
+            itemViewModelCookie = new ItemViewModel(
+                itemViewerServiceUrl: string.Empty,
+                accessibilityCookieName: string.Empty,
+                aboutItemVM: aboutItemCookie,
+                accResourceGroups: accessibilityResourceGroups.ToImmutableArray());
 
-            };
             var itemViewRepoMock = new Mock<IItemViewRepo>();
           
-            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, iSAAP)).Returns(itemViewModel);
-            itemViewRepoMock.Setup(x => x.GetItemViewModel(bankKey, itemKey, null)).Returns(itemViewModelCookie);
-            itemViewRepoMock.Setup(x => x.AppSettings).Returns(appSettings);
+            itemViewRepoMock
+                .Setup(repo =>
+                    repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<string>()))
+                .Returns(itemViewModel);
+
+            itemViewRepoMock
+                .Setup(repo =>
+                    repo.GetItemViewModel(
+                        bankKey,
+                        itemKey,
+                        It.Is<string[]>(ss => Enumerable.SequenceEqual(ss, iSAAP.Split(';'))),
+                        It.IsAny<string>()))
+                .Returns(itemViewModel);
+            itemViewRepoMock.Setup(repo => repo.AppSettings).Returns(appSettings);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
@@ -124,55 +152,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
 
-            Assert.Equal(itemViewModelCookie, model);
-        }
-
-        /// <summar>
-        /// Tests that a BadRequestResult is returned given a null bank key
-        /// </summary>
-        [Fact]
-        public void ResetToGlobalAccessibilityNullBankKey()
-        {
-            var result = controller.Details(null, itemKey, iSAAP);
-
-            Assert.IsType<BadRequestResult>(result);
-        }
-
-        /// <summary>
-        /// Tests that a BadRequestResult is returned given a null item  key
-        /// </summary>
-        [Fact]
-        public void ResetToGlobalAccessibilityNullItemKey()
-        {
-            var result = controller.ResetToGlobalAccessibility(bankKey, null);
-
-            Assert.IsType<BadRequestResult>(result);
-        }
-
-        /// <summary>
-        /// Tests that a BadRequestResult is returned given a bad key
-        /// </summary>
-        [Fact]
-        public void ResetToGlobalAccessibilityBadKey()
-        {
-            var result = controller.ResetToGlobalAccessibility(bankKey + 1, itemKey + 1);
-
-            Assert.IsType<BadRequestResult>(result);
-        }
-
-        /// <summary>
-        /// Tests that a BadRequestResult is returned given a bad key
-        /// </summary>
-        [Fact]
-        public void ResetToGlobalAccessibilityHappy()
-        {
-            var result = controller.ResetToGlobalAccessibility(bankKey, itemKey);
-
-            var viewResult = Assert.IsType<PartialViewResult>(result);
-            Assert.Equal("_LocalAccessibility", viewResult.ViewName);
-
-            var model = Assert.IsType<LocalAccessibilityViewModel>(viewResult.ViewData.Model);
-            Assert.Equal(itemViewModel.LocalAccessibilityViewModel, model);
+            Assert.Equal(itemViewModel, model);
         }
     }
 }

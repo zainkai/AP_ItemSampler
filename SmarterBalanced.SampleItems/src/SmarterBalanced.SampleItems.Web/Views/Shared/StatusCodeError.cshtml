@@ -2,5 +2,15 @@
     ViewData["Title"] = "Error";
 }
 
-<h2 class="text-danger">@ViewData["Error"] Error</h2>
+<header class="warning">
+    <h1 class="warning"><span>Sorry!</span></h1>
+</header>
 
+<h4 class="warning"><strong>Error:</strong> @ViewData["Error"]</h4>
+<p class="warning">The page you’re looking for can’t be found. Try searching or returning home! </p>
+
+<style>
+    .warning {
+        text-align: center;
+    }
+</style>
