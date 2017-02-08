@@ -11,14 +11,15 @@ Stage | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?b
 Dev  | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?branch=dev)](https://travis-ci.org/osu-cass/SampleItemsWebsite)
 
 ## Getting Started
-Below is our recommended development environment, although it is not required.
-- Windows 10
-- Visual Studio Enterprise 2015
+The majority of this project was developed using Windows 10 and Visual Studio Enterprise 2015. 
+This development environment is not required to run or contribute to the application.
+
+For more detailed documentation, see the **Documentation** folder in the root of the project.
 
 ## Installation
 - Clone the project
     - Don't forget to initialize the project submodules ([instructions](https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules))
-- Install Microsoft .NET Core for your operating system ([link](https://www.microsoft.com/net/download/core#/current))
+- Install the latest version of Microsoft .NET Core for your operating system ([link](https://www.microsoft.com/net/download/core#/current))
 - Install the latest TypeScript compiler ([link](https://www.typescriptlang.org/index.html#download-links))
 - Download the latest sample item content package (TODO: Link?)
     - Place this in the location specified in src/Web/appsettings.json (`ContentRootDirectory`)
