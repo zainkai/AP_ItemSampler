@@ -12,15 +12,20 @@ const lessFiles = {
 
 module.exports = function (grunt) {
     grunt.initConfig({
-        clean: ["wwwroot/scripts/*", "temp/"],
+        clean: {
+            css: ["wwwroot/css/*"],
+            ts: ["wwwroot/scripts/*", "temp"]
+        },
 
-        // TODO: Minify JS eventually
-        //uglify: {
-        //    all: {
-        //        src: ["wwwroot/scripts/*.js"],
-        //        dest: "wwwroot/scripts/*.min.js"
-        //    }
-        //},
+        uglify: {
+            files: {
+                src: 'wwwroot/scripts/*.js',  // source files mask
+                dest: 'wwwroot/scripts/',    // destination folder
+                expand: true,    // allow dynamic building
+                flatten: true,   // remove all unnecessary nesting
+                ext: '.min.js'   // replace .js to .min.js
+            }
+        },
 
         less: {
             development: {
@@ -30,7 +35,7 @@ module.exports = function (grunt) {
                 files: lessFiles
             }
         },
-        
+
         cssmin: {
             options: {
                 shorthandCompacting: false,
@@ -57,28 +62,22 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            files: ["Styles/*.less"],
-            tasks: ["less"],
-        },
-        
-        karma: {
-            unit: {
-                configFile: 'Scripts/karma.conf.js'
+            less: {
+                files: ["Styles/*.less"],
+                tasks: ["less"]
             }
         }
-        //TODO: add watch for css.min, issue with watch.
-
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-ts');
-    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-ts');
 
-    grunt.registerTask("all", ['clean', 'ts', 'cssmin', 'less']); //,'uglify']); // TODO: Minify JS eventually
-    grunt.registerTask("tsrecompile", ['clean', 'ts']);
+    grunt.registerTask("all", ['clean', 'ts', 'less', 'cssmin', 'uglify']);
+    grunt.registerTask("tsrecompile", ['clean:ts', 'ts', 'uglify']);
+    grunt.registerTask("lessrecompile", ['clean:css', 'less', 'cssmin']);
 
 };

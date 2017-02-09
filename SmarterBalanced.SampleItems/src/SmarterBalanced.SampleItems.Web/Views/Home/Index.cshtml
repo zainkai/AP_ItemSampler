@@ -2,6 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
+
 <div class="home-container">
     <div>
         <h1 class="home-title"><b>Welcome!</b></h1>
@@ -36,5 +37,9 @@
     </div>
 
 </div>
-
-<link rel="stylesheet" href="~/css/home.css" />
+<environment names="Development">
+    <link rel="stylesheet" href="~/css/home.css" />
+</environment>
+<environment names="Staging, Production">
+    <link rel="stylesheet" href="~/css/home.min.css" />
+</environment>

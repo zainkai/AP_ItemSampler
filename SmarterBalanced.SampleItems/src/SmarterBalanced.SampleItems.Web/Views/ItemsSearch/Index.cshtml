@@ -5,17 +5,32 @@
     ViewData["Title"] = "Search";
 }
 <div id="search-container"></div>
+<environment names="Development">
+    <link rel="stylesheet" href="~/css/search.css" />
+</environment>
+<environment names="Staging, Production">
+    <link rel="stylesheet" href="~/css/search.min.css" />
+</environment>
 
-<link rel="stylesheet" href="~/css/search.css" />
 
 @section Scripts {
-<script src="~/scripts/Collapsible.js"></script>
-<script src="~/scripts/GradeLevels.js"></script>
-<script src="~/scripts/ItemsSearchParams.js"></script>
-<script src="~/scripts/ItemCard.js"></script>
-<script src="~/scripts/ItemsSearch.js"></script>
-<script>
-    var viewModel = @Json.Serialize(Model);
-    initializeItemsSearch(viewModel);
-</script>
+
+    <environment names="Development">
+        <script src="~/scripts/Collapsible.js"></script>
+        <script src="~/scripts/GradeLevels.js"></script>
+        <script src="~/scripts/ItemsSearchParams.js"></script>
+        <script src="~/scripts/ItemCard.js"></script>
+        <script src="~/scripts/ItemsSearch.js"></script>
+    </environment>
+    <environment names="Staging, Production">
+        <script src="~/scripts/Collapsible.min.js"></script>
+        <script src="~/scripts/GradeLevels.min.js"></script>
+        <script src="~/scripts/ItemsSearchParams.min.js"></script>
+        <script src="~/scripts/ItemCard.min.js"></script>
+        <script src="~/scripts/ItemsSearch.min.js"></script>
+    </environment>
+    <script>
+        var viewModel = @Json.Serialize(Model);
+        initializeItemsSearch(viewModel);
+    </script>
 }
