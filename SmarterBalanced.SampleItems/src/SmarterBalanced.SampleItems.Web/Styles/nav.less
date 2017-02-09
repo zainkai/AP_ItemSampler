@@ -1,5 +1,16 @@
 ﻿@import "Constants.less";
 
+.navbar {
+	border-radius: 0px; // SB
+	padding: 1em; // SB
+	box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135); // SB
+}
+
+.navbar-default {
+    background-color: #ffffff; // SB
+    border-color: #ffffff; // SB
+}
+
 @media screen and (max-width: @small) {
     .navbar {
         margin: 0;
@@ -43,9 +54,10 @@
 }
 
 .sbNav-linksGroup-item {
-    font-size: 22px;
+    font-size: 18px; // SB
     color: #007393;
-    margin: 10px;
+    margin: 10px 20px; // SB
+    white-space: nowrap;
 }
 
 .sbNav-linksGroup-item:hover {
@@ -56,6 +68,7 @@
     color: #63666A;
     margin: 0 auto;
     font-size: 28px;
+    letter-spacing: -.02em; // SB
     font-family: "PT Sans", Times, serif;
 }
 
@@ -81,12 +94,12 @@
 }
 
 footer {
-    background-color: #f8f8f8;
-    border: 1px solid #e7e7e7;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 8px;
+	padding: 0em 2em; // SB
 }
 
 .footer-copyright {
@@ -98,7 +111,7 @@ footer {
 
 .footer-practiceTests {
     align-self: flex-start;
-    font-size: 24px;
+    font-size: 14px; // SB
     text-decoration: underline;
 }
 
