@@ -43,7 +43,14 @@ namespace SmarterBalanced.SampleItems.Web
             factory.AddDebug();
             if (!env.IsDevelopment())
             {
-                factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+                try
+                {
+                    factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+                }
+                catch (AmazonServiceException e)
+                {
+                    logger.LogWarning("Unable to load AWS logging, due to credentials");
+                }
             }
         }
 
