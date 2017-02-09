@@ -1,4 +1,15 @@
-﻿@import "Constants.less";
+﻿@import "constants.less";
+
+.navbar {
+	border-radius: 0px; // SB
+	padding: 1em; // SB
+	box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135); // SB
+}
+
+.navbar-default {
+    background-color: #ffffff; // SB
+    border-color: #ffffff; // SB
+}
 
 @media screen and (max-width: @small) {
     .navbar {
@@ -43,9 +54,10 @@
 }
 
 .sbNav-linksGroup-item {
-    font-size: 22px;
+    font-size: 18px; // SB
     color: #007393;
-    margin: 10px;
+    margin: 10px 20px; // SB
+    white-space: nowrap;
 }
 
 .sbNav-linksGroup-item:hover {
@@ -56,6 +68,7 @@
     color: #63666A;
     margin: 0 auto;
     font-size: 28px;
+    letter-spacing: -.02em; // SB
     font-family: "PT Sans", Times, serif;
 }
 
@@ -81,19 +94,33 @@
 }
 
 footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    padding-left: 10px;
-    max-height: 170px;
-    right: 0;
-    background: white;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+	padding: 0em 2em; // SB
 }
 
 .footer-copyright {
-    margin: 10px 10px 10px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5px;
 }
 
-footer hr {
-    margin-top: 0px;
+.footer-practiceTests {
+    align-self: flex-start;
+    font-size: 14px; // SB
+    text-decoration: underline;
+}
+
+.footer-sbLink {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: @small) {
+    .footer-copyright {
+        flex-direction: column;
+    }
 }
