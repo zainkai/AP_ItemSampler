@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Amazon.Runtime;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +50,9 @@ namespace SmarterBalanced.SampleItems.Web
                 }
                 catch (AmazonServiceException e)
                 {
-                    logger.LogWarning("Unable to load AWS logging, due to credentials");
+                    logger.LogWarning("Unable to load AWS logging, due to credentials or file");
+                    logger.LogWarning(e.Message);
+
                 }
             }
         }
