@@ -48,11 +48,9 @@ namespace SmarterBalanced.SampleItems.Web
                 {
                     factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
                 }
-                catch (AmazonServiceException e)
+                catch (AmazonServiceException)
                 {
                     logger.LogWarning("Unable to load AWS logging, due to credentials or file");
-                    logger.LogWarning(e.Message);
-
                 }
             }
         }
