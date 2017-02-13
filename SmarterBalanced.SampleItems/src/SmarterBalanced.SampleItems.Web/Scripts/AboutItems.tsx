@@ -83,7 +83,7 @@ namespace AboutItems {
             }
 
             return (
-                <select className="form-control" onChange={this.handleChange}>
+                <select className="aboutitems-dropdown" onChange={this.handleChange}>
                     {items}
                 </select>
             );
@@ -99,9 +99,7 @@ namespace AboutItems {
                              types to accurately measure what students know and can do.
                              To learn more and see an example, select an item type below.
                         </div>
-                        <div className="aboutitems-dropdown form-group">
-                            {this.renderInteractionTypesSelect()}
-                        </div>
+                        {this.renderInteractionTypesSelect()}
                         {this.renderDescription()}
                     </div>
 
