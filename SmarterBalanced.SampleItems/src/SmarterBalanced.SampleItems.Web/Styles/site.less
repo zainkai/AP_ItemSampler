@@ -1,4 +1,5 @@
-﻿
+﻿@import "constants.less";
+
 html {
     height: 100%;
 }
@@ -14,9 +15,17 @@ body {
     flex: 1;
 }
 
-@media (min-width: 1400px) {
+.container {
+    max-width: 1800px;
+    width: auto;
+    margin: 0 1em 1em 1em;
+    align-self: stretch;
+}
+
+@media (max-width: @small) {
     .container {
-        width: 1400px;
+        margin: 0;
+        padding: 0;
     }
 }
 
