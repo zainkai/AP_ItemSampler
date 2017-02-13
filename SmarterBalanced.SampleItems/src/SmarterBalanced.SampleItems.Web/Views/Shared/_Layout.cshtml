@@ -11,7 +11,7 @@
     <environment names="Development, Staging">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" href="~/css/Navbar.css" />
+        <link rel="stylesheet" href="~/css/nav.css" />
     </environment>
 
     <environment names="Production">
@@ -19,12 +19,11 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/Navbar.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/nav.min.css" asp-append-version="true" />
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
-<body class="site-body-font">
-
+<body>
     <nav class="navbar navbar-default">
         <div class="sbNav">
             <div class="sbNav-titleGroup">
@@ -53,21 +52,18 @@
         </div>
     </nav>
 
-    <div class="container body-content">
+    <div class="container">
         @RenderBody()
     </div>
+
     <footer>
-        <hr />
-        <a href="http://practice.smarterbalanced.org/" class="link-font">Practice and training tests are available here.</a>
-        <div class="list-inline footer-copyright">
-            <li>
-                <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
-            </li>
-            <li class="pull-right">
-                <a href="//www.smarterbalanced.org" class="small-link-font"> www.SmarterBalanced.org</a>
-            </li>
+        <a class="footer-practiceTests" href="http://practice.smarterbalanced.org/">Practice and training tests are available here.</a>
+        <div class="footer-copyright">
+            <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
+            <a class="footer-sbLink" href="//www.smarterbalanced.org"> www.SmarterBalanced.org</a>
         </div>
     </footer>
+
     <script src="~/scripts/Polyfill.js"></script>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
