@@ -6,6 +6,25 @@ body {
     background-size: cover;
 }
 
+@media screen and (max-width: @medium) {
+    body {
+        background-size: inherit;
+    }
+}
+
+.container {
+    align-self: flex-start;
+    margin: 20px;
+}
+
+@media screen and (max-width: @phone-portrait) {
+    .container {
+        align-self: center;
+        padding: 0;
+        margin: 0;
+    }
+}
+
 .home-container {
     height: 70%;
     max-width: 500px;
@@ -19,14 +38,12 @@ body {
     margin-bottom: 25px;
 }
 
-@media screen and (max-width: @small) {
+@media screen and (max-width: @phone-portrait) {
     .home-container {
-        padding: 10px;
+        padding: 14px;
         border-radius: 0;
-    }
-
-    .container {
-        padding: 0;
+        margin: 0;
+        box-shadow: none;
     }
 } 
 
