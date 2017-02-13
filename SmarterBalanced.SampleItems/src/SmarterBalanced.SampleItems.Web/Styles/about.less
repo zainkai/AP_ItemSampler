@@ -1,4 +1,6 @@
-﻿body {
+﻿@import "constants.less";
+
+body {
 	background-color: #f3f3f3;
 }
 
@@ -6,32 +8,36 @@ h1 {
 	letter-spacing: -.02em;
 }
 
-#about-items {
-    padding-bottom: 10px;
+.container {
+    align-self: center;
 }
 
 .aboutitems-parents {
-    padding: 3em; // SB
+    padding: 1.5em;
     background-color: #ffffff; // SB
     border-radius: 6px; // SB
     box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135); // SB
-    position: relative;
-    display: inline-flex;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+@media (max-width: @phone-portrait) {
+    .aboutitems-parents {
+        padding: 0;
+        border-radius: 0;
+    }
 }
 
 .aboutitems-info {
-    display: inline-block;
     vertical-align: middle;
-    margin-bottom: 20px;
-    max-width: 40%;
+    flex: 1 300px;
+    margin: 1.5em;
 }
 
 .aboutitem-iframe {
-    display: inline-block;
-    margin-bottom: 20px;
-    margin-left: 40px;
-    width: 60%;
-    max-width: 60%;
+    flex: 1 800px;
+    margin: 1.5em;
 }
 
 .aboutitems-dropdown {
