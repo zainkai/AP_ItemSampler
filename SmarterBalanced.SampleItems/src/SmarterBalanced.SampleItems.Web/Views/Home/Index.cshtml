@@ -2,6 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
+
 <div class="home-container">
     <div>
         <h1 class="home-title"><b>Welcome!</b></h1>
@@ -19,14 +20,26 @@
 
     <div class="text-center">
 
-        <a class="btn-lg btn-primary home-container-button">Browse Test Items</a>
+        <a class="btn-lg btn-primary home-container-button"
+           href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+
+            Browse Test Items
+        </a>
 
         <br /><br />
 
-        <a class="btn-lg btn-success home-container-button">Learn More About Items</a>
+        <a class="btn-lg btn-success home-container-button"
+           href="@Url.Action(action: "Index", controller: "AboutItems")">
+        
+            Learn More About Items
+        </a>
 
     </div>
 
 </div>
-
-<link rel="stylesheet" href="~/css/HomePage.css" />
+<environment names="Development">
+    <link rel="stylesheet" href="~/css/home.css" />
+</environment>
+<environment names="Staging, Production">
+    <link rel="stylesheet" href="~/css/home.min.css" />
+</environment>

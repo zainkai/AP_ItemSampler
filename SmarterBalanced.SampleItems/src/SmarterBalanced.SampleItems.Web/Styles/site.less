@@ -1,19 +1,57 @@
-﻿body {
-    padding-bottom: 20px;
-    margin-bottom: 120px; /* bottom = footer height */
-    font-family: "PT Serif", Times, serif;
-}
+﻿@import "constants.less";
 
 html {
-    position: relative;
-    min-height: 100%;
+    height: 100%;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+body {
+    font-family: "PT Serif", Times, serif;
+    min-height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+.container {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 1em 1em 1em;
+    align-self: center;
+}
+
+.container {
+}
+
+@media (max-width: @small) {
+    .container {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.btn-primary { // SB
+	background-color: #007393;
+	border-color: #007393;
+	box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135);
+}
+.btn-primary:hover { // SB
+	background-color: #005C76;
+	border-color: #005C76;
+	text-decoration: none;
+	cursor: pointer;
+	box-shadow: none;
+}
+.btn-success { // SB
+	background-color: #2b731b;
+	border-color: #2b731b;
+	box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135);
+}
+.btn-success:hover { // SB
+	background-color: #225b15;
+	border-color: #225b15;
+	text-decoration: none;
+	cursor: pointer;
+	box-shadow: none;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -21,12 +59,6 @@ input,
 select,
 textarea {
     max-width: 280px;
-}
-
-@media (min-width: 1400px) {
-    .container {
-        width: 1400px;
-    }
 }
 
 .itemviewer-iframe {
@@ -51,7 +83,7 @@ textarea {
     -webkit-transition-duration: 0.2s; /* Safari */
     transition-duration: 0.2s;
     cursor: pointer;
-    margin: 30px;
+    margin: 26px;
     font-size: 16px;
 }
 
@@ -66,6 +98,7 @@ textarea {
     .card.condensed {
         margin: 10px;
         width: 215px;
+        font-size: 95%; // SB
     }
     
     .card.condensed h4.card-title {
@@ -80,7 +113,6 @@ textarea {
     .card.condensed .card-contents p:first-of-type {
         padding-top: 5px;
     }
-
 
 .ela h4.card-title {
     background-color: #007393;
@@ -165,55 +197,6 @@ h4.card-title {
 .collapsible-label, a.collapsible-label:hover, a.collapsible-label:active, a.collapsible-label:visited {
     font-size: 1.2em;
     text-decoration: none !important;
-}
-
-.link-font {
-    font-family: "PT Serif", Times, serif;
-    color: #007393;
-    font-size: 24px;
-    text-decoration: underline;
-}
-
-.small-link-font {
-    font-family: "PT Serif", Times, serif;
-    color: #007393;
-    font-size: 14px;
-    text-align: right;
-}
-
-.aboutitems-parents {
-    position: relative;
-    display: inline-flex;
-}
-
-.aboutitems-info {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 20px;
-    max-width: 40%;
-}
-
-.aboutitem-iframe {
-    display: inline-block;
-    margin-bottom: 20px;
-    margin-left: 40px;
-    width: 60%;
-    max-width: 60%;
-}
-
-.aboutitems-dropdown {
-    width: inherit;
-    padding-top: 10px;
-}
-
-.aboutitems-desc {
-    background-color: #f2f2f2;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.aboutitems-text {
-    align-content:center;
 }
 
 h1, h2, h3, h4, h5 {

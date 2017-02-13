@@ -32,6 +32,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             };
             var aboutItemsRepoMock = new Mock<IAboutItemsRepo>();
             aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel()).Returns(aboutItemsViewModel);
+            aboutItemsRepoMock.Setup(x => x.GetItemViewerUrl(""));
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
@@ -49,10 +50,13 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             Assert.Equal(model, aboutItemsViewModel);
         }
 
-        [Fact(Skip = "ToDo")]
-        public void TestIndexNull()
+        [Fact]
+        public void TestGetItemViewerUrl()
         {
+            var result = aboutItemsController.GetItemUrl("");
+            JsonResult resJson = Assert.IsType<JsonResult>(result);
 
+            Assert.Equal(null, resJson.Value);
         }
     }
 }
