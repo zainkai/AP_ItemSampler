@@ -9,11 +9,13 @@ body {
     min-height: 100%;
     display: flex;
     flex-flow: column;
+    background-color: #f3f3f3;
 }
 
 .container {
     flex: 1;
     max-width: 1400px;
+    width: 100%;
     margin: 0 1em 1em 1em;
     align-self: center;
 }
@@ -57,9 +59,21 @@ textarea {
     max-width: 280px;
 }
 
+.itemViewerFrame {
+    position: relative;
+    background-color: #ffffff;
+}
+
 .itemviewer-iframe {
     height: 70vh;
     width: 100%;
+}
+
+.itemviewer-iframe-spinner {
+    position: absolute;
+    top: calc(~'50% - 60px');
+    left: calc(~'50% - 60px');
+    z-index: 1;
 }
 
 .screen-reader-text {
