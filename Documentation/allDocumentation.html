@@ -284,6 +284,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#installation">Installation</a></li>
 </ul></li>
 <li><a href="#project-architecture">Project Architecture</a></li>
+<li><a href="#project-setup">Project Setup</a><ul>
+<li><a href="#general-steps">General Steps</a></li>
+<li><a href="#running">Running</a></li>
+</ul></li>
 <li><a href="#application-settings-and-configurations">Application Settings and Configurations</a></li>
 <li><a href="#internal-dependencies">Internal Dependencies</a><ul>
 <li><a href="#npm">NPM</a></li>
@@ -293,6 +297,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#external-dependencies">External Dependencies</a><ul>
 <li><a href="#docker">Docker</a></li>
 <li><a href="#travisci">TravisCI</a></li>
+<li><a href="#content-package">Content package</a></li>
 </ul></li>
 <li><a href="#deployment">Deployment</a><ul>
 <li><a href="#ec2-instance-setup">EC2 Instance setup</a></li>
@@ -327,6 +332,38 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><strong>Dal</strong> provides data to the Core layer. All data is supplied by a &quot;content package&quot; which is a set of XML files that represent test question items. This XML is parsed into the immutable <code>ItemDigest</code> and <code>ItemCard</code> models, which are used throughout the application.</p>
 <p>Other XML data is used, such as <code>AccessibilityAccommodationConfigurations</code>, <code>ClaimConfigurations</code>, and <code>InteractionTypeConfigurations</code>. These configure information such as order and labels for accessibility and interaction types.</p>
 <p><strong>Test</strong> is the test project for Sample Items Website. It contains unit tests and integration tests for each of the three aforementioned layers.</p>
+<h2 id="project-setup">Project Setup</h2>
+<h3 id="general-steps">General Steps</h3>
+<ul>
+<li>Clone the project
+<ul>
+<li>Don't forget to initialize the project submodules (<a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules">instructions</a>)</li>
+</ul></li>
+<li>Install the latest version of Microsoft .NET Core for your operating system (<a href="https://www.microsoft.com/net/download/core#/current">link</a>)</li>
+<li>Install the latest TypeScript compiler (<a href="https://www.typescriptlang.org/index.html#download-links">link</a>)</li>
+<li>Download the latest sample item content package
+<ul>
+<li>Place this in the location specified in src/Web/appsettings.json (<code>ContentRootDirectory</code>)</li>
+</ul></li>
+</ul>
+<h3 id="running">Running</h3>
+<h4 id="using-visual-studio-2015">Using Visual Studio 2015</h4>
+<ul>
+<li>Open the project in Visual Studio 2015</li>
+<li>Click the run button</li>
+</ul>
+<h4 id="using-command-line">Using Command Line</h4>
+<ul>
+<li>Set environment variable <code>ASPNETCORE_ENVIRONMENT</code> to <code>Development</code>
+<ul>
+<li>in Windows: <code>setx ASPNETCORE_ENVIRONMENT &quot;Development&quot;</code>, then close and reopen the command prompt</li>
+</ul></li>
+<li><code>cd SampleItemsWebsite\SmarterBalanced.SampleItems</code></li>
+<li><code>dotnet restore</code></li>
+<li><code>cd src\SmarterBalanced.SampleItems.Web</code></li>
+<li><code>dotnet run</code></li>
+<li>Navigate to <code>http://localhost:&lt;port&gt;</code> in your browser to view the running site</li>
+</ul>
 <h2 id="application-settings-and-configurations">Application Settings and Configurations</h2>
 <p>Within the <code>SmarterBalanced.SampleItems.Web</code> project, configurations are set in the file <code>appsettings.json</code>. This file contains all of the configurations and settings that are used throughout the application.</p>
 <p>Within <code>appsettings.json</code>, the <code>SettingsConfig</code> object contains configurations necessary to start the application, as well as runtime configuration settings.</p>
@@ -359,6 +396,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>After the previous steps succeed, Travis builds a Docker image with the application and pushes it to AWS.</p>
 <p>On the <strong>dev</strong>, <strong>stage</strong>, and <strong>master</strong> branches, Travis triggers a build process in AWS that combines the content package, hosted in an S3 bucket, with the application Docker image and performs a rolling update to the running versions of these branches.</p>
 <p>See the <code>travis.yml</code> file in the root directory project for configurations.</p>
+<h3 id="content-package">Content package</h3>
+<p>The content for the site is provided by a content package supplied by the Smarter Balanced Assessment Consortium. It consists of XML files that describe the test question items (the &quot;content package&quot;).</p>
+<p>Currently, content packages can be accessed at <a href="ftp://ftps.smarterbalanced.org/~sbacpublic/Public/PracticeAndTrainingTests/" class="uri">ftp://ftps.smarterbalanced.org/~sbacpublic/Public/PracticeAndTrainingTests/</a>.</p>
 <h2 id="deployment">Deployment</h2>
 <p>Code Deploy is triggered by Travis CI using the deploy section in the <code>.travis.yml</code> file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.<br />
 The Travis build publishes the application using <code>dotnet publish</code>, and zips it into an archive, then pushes it to an Amazon S3 bucket, then triggers a Code Deploy deployment. The Code Deploy deployment deploys the application to a running EC2 instance that was set up using the instructions below.</p>
