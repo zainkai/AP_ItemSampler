@@ -156,12 +156,18 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             Assert.Equal(itemViewModel, model);
         }
-
-
-        // TODO: Test index redirect
-        [Fact(Skip = "TODO: test index redirect")]
+        
+        /// <summary>
+        /// Tests that Index returns correct RedirectToAction controller and action name
+        /// </summary>
+        [Fact]
         public void TestIndex()
         {
+            var result = controller.Index();
+            var resultRedirect = Assert.IsType<RedirectToActionResult>(result);
+
+            Assert.Equal("Index", resultRedirect.ActionName);
+            Assert.Equal("itemsSearch", resultRedirect.ControllerName);
         }
     }
 
