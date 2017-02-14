@@ -115,35 +115,35 @@ class AboutThisItemDetailComponent extends React.Component<ItemCardViewModel, {}
     render() {
         const { bankKey, itemKey } = this.props;
         return (
-            <div className={"item-details"}>
-                <p className="subject" tabIndex={0}>
-                    <span className="text-label">Subject:</span>
-                    <span className="text-value"> {this.props.subjectLabel}</span>
-                </p>
-                <p className="grade" tabIndex={0}>
-                    <span className="text-label">Grade:</span>
-                    <span className="text-value"> {this.props.gradeLabel}</span>
-                </p>
-                <p className="claim" tabIndex={0}>
-                    <span className="text-label">Claim:</span>
-                    <span className="text-value"> {this.props.claimLabel}</span>
-                </p>
-                <p className="target" tabIndex={0}>
-                    <span className="text-label">Target:</span>
-                    <span className="text-value"> {this.props.target}</span>
-                </p>
-                <p className="interaction-type" tabIndex={0}>
-                    <span className="text-label">Item Type:</span>
-                    <span className="text-value"> {this.props.interactionTypeLabel}</span>
-                </p>
-                <p className="item-id" tabIndex={0}>
-                    <span className="text-label">Item Id:</span>
-                    <span className="text-value"> {this.props.itemKey}</span>
-                </p>
-                <p className="ccss" tabIndex={0}>
-                    <span className="text-label">Common Core State Standard:</span>
-                    <span className="text-value"> {this.props.commonCoreStandardsId}</span>
-                </p>
+            <div className={`card card-block card-static ${this.props.subjectCode.toLowerCase()}`}
+                tabIndex={0}>
+                <div className="card-contents">
+                    <h4 className="card-title">{this.props.title}</h4>
+                    <p className="card-text subject">
+                        <span className="card-text-label">Subject:</span>
+                        <span className="card-text-value"> {this.props.subjectLabel}</span>
+                    </p>
+                    <p className="card-text grade">
+                        <span className="card-text-label">Grade:</span>
+                        <span className="card-text-value"> {this.props.gradeLabel}</span>
+                    </p>
+                    <p className="card-text claim">
+                        <span className="card-text-label">Claim:</span>
+                        <span className="card-text-value"> {this.props.claimLabel}</span>
+                    </p>
+                    <p className="card-text target">
+                        <span className="card-text-label">Target:</span>
+                        <span className="card-text-value"> {this.props.target}</span>
+                    </p>
+                    <p className="card-text interaction-type">
+                        <span className="card-text-label">Item Type:</span>
+                        <span className="card-text-value"> {this.props.interactionTypeLabel}</span>
+                    </p>
+                    <p className="card-text item-id">
+                        <span className="card-text-label">Item Id:</span>
+                        <span className="card-text-value"> {this.props.itemKey}</span>
+                    </p>
+                </div>
             </div>
         );
     }
