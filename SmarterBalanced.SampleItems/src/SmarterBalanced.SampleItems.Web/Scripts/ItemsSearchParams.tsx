@@ -1,9 +1,9 @@
-﻿ const hideArrow = (
-        <span aria-label="Hide">▼</span>
+﻿const hideArrow = (
+    <span aria-label="Hide">▼</span>
 );
 
 const showArrow = (
-        <span aria-label="Show">▶</span>
+    <span aria-label="Show">▶</span>
 );
 
 function parseQueryString(url: string): { [key: string]: string[] | undefined } {
@@ -34,6 +34,7 @@ namespace ItemSearchParams {
         subjects?: string[];
         claims?: string[];
         interactionTypes?: string[];
+        performanceOnly?: boolean;
 
         expandItemID?: boolean;
         expandGradeLevels?: boolean;
@@ -59,6 +60,7 @@ namespace ItemSearchParams {
             const subjects = queryObject["subjects"] || [];
             const claims = queryObject["claims"] || [];
             const interactionTypes = queryObject["interactionTypes"] || [];
+            const performanceOnly = !!queryObject["PerfOnly"];  // TODO Cast as boolean
 
             this.state = {
                 itemId: itemId,
@@ -66,6 +68,7 @@ namespace ItemSearchParams {
                 subjects: subjects,
                 claims: claims,
                 interactionTypes: interactionTypes,
+                performanceOnly: performanceOnly,
 
                 expandItemID: itemId.length !== 0,
                 expandGradeLevels: gradeLevels !== GradeLevels.NA,
@@ -144,6 +147,12 @@ namespace ItemSearchParams {
                 gradeLevels: this.state.gradeLevels ^ grades // tslint:disable-line:no-bitwise
             }, () => this.beginChangeTimeout());
 
+        }
+
+        togglePerformanceOnly() {
+            this.setState({
+                performanceOnly: !this.state.performanceOnly
+            }, () => this.beginChangeTimeout());
         }
 
         toggleSubject(subject: string) {
@@ -331,17 +340,25 @@ namespace ItemSearchParams {
         }
 
         renderItemID() {
-            const input = this.state.expandItemID
-                ?
+            const performanceOnlySelected = this.state.performanceOnly;
+            const filters = (
+                <div>
                     <input type="tel" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         onKeyUp={e => this.onItemIDKeyUp(e)}
                         value={this.state.itemId}>
                     </input>
+                    <button role="button" key={"PerfOnly"} className={(performanceOnlySelected ? "selected" : "") + " tag"}
+                        onClick={() => this.togglePerformanceOnly()}
+                        tabIndex={0}
+                        aria-pressed={performanceOnlySelected}>
 
-                : undefined;
-
+                        Performance Items Only
+                    </button>
+                </div>
+            );
+            const input = this.state.expandItemID ? filters : undefined;
             return (
                 <div className="search-category">
                     <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()}
