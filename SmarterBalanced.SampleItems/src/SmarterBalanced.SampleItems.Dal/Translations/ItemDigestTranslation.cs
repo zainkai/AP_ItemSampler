@@ -44,7 +44,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     throw new SampleItemsContextException("Multiple ItemContents with ItemKey: " + metadata.Metadata.ItemKey + " found.");
                 }
-                // TODO: log a warning if item count is 0
             });
 
             return digests;
