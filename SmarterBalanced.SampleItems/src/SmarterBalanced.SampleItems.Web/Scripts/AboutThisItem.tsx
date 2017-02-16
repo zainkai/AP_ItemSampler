@@ -28,6 +28,7 @@ namespace AboutThisItem {
         rubrics: Rubric[];
         itemCardViewModel: ItemCardViewModel
         // depthOfKnowledge: string; // TODO: Add when supported by xml
+        targetDescription: string;
     }
 
     export class ATIComponent extends React.Component<Props, {}> {
@@ -44,7 +45,7 @@ namespace AboutThisItem {
                                 <h4 className="modal-title">About This Item</h4>
                             </div>
                             <div className="modal-body">
-                                <AboutThisItemDetailComponent {...this.props.itemCardViewModel} />
+                                <AboutThisItemDetailComponent {...this.props} />
                                 {rubrics}
                             </div>
                             <div className="modal-footer">
@@ -111,38 +112,41 @@ class SampleResponseComponent extends React.Component<SampleResponse, {}> {
     }
 }
 
-class AboutThisItemDetailComponent extends React.Component<ItemCardViewModel, {}> {
+class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, {}> {
     render() {
-        const { bankKey, itemKey } = this.props;
         return (
             <div className={"item-details"}>
                 <p className="subject" tabIndex={0}>
                     <span className="text-label">Subject:</span>
-                    <span className="text-value"> {this.props.subjectLabel}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.subjectLabel}</span>
                 </p>
                 <p className="grade" tabIndex={0}>
                     <span className="text-label">Grade:</span>
-                    <span className="text-value"> {this.props.gradeLabel}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.gradeLabel}</span>
                 </p>
                 <p className="claim" tabIndex={0}>
                     <span className="text-label">Claim:</span>
-                    <span className="text-value"> {this.props.claimLabel}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.claimLabel}</span>
                 </p>
                 <p className="target" tabIndex={0}>
                     <span className="text-label">Target:</span>
-                    <span className="text-value"> {this.props.target}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.target}</span>
                 </p>
                 <p className="interaction-type" tabIndex={0}>
                     <span className="text-label">Item Type:</span>
-                    <span className="text-value"> {this.props.interactionTypeLabel}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.interactionTypeLabel}</span>
                 </p>
                 <p className="item-id" tabIndex={0}>
                     <span className="text-label">Item Id:</span>
-                    <span className="text-value"> {this.props.itemKey}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.itemKey}</span>
                 </p>
                 <p className="ccss" tabIndex={0}>
                     <span className="text-label">Common Core State Standard:</span>
-                    <span className="text-value"> {this.props.commonCoreStandardsId}</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.commonCoreStandardsId}</span>
+                </p>
+                <p className="target-description" tabIndex={0}>
+                    <span className="text-label">Target:</span>
+                    <span className="text-value"> {this.props.targetDescription}</span>
                 </p>
             </div>
         );
