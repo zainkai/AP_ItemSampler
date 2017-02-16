@@ -48,8 +48,6 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
             return DeserializeXml<T>(fileInfo);
         }
 
-
-
         /// <summary>
         /// Deserializes a list of XML files into a list of objects of type T.
         /// </summary>

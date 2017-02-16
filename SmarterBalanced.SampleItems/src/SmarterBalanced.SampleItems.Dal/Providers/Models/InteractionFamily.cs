@@ -17,12 +17,14 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             SubjectCode = subjectCode;
             InteractionTypeCodes = interactionTypeCodes;
         }
+
         public static InteractionFamily Create(ImmutableArray<string> interactionTypeCodes, string subjectCode = "" )
         {
             return new InteractionFamily(
                 subjectCode: subjectCode, 
                 interactionTypeCodes: interactionTypeCodes);
         }
+
         public static InteractionFamily Create(XElement familyElement)
         {
             var interactionTypeCodes = familyElement
@@ -37,8 +39,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
             return interactionFamily;
         }
-
-
 
     }
 }
