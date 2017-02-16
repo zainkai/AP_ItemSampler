@@ -133,5 +133,27 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             }
             return new StandardIdentifier(claim, null);
         }
+        public static StandardIdentifier StandardKeyToIdentifier(string standardKey)
+        {
+            if (string.IsNullOrEmpty(standardKey))
+            {
+                throw new ArgumentException("The standards string must not be null or empty");
+            }
+
+            string[] parts = standardKey.Split('|');
+
+            if (parts.Length != 3)
+            {
+                throw new ArgumentException("Standard does not have two parts |.");
+            }
+
+            return new StandardIdentifier(
+                               claim: parts[0],
+                               target: parts[1],
+                               commonCoreStandard: parts[2]
+                               );
+
+        }
     }
+
 }

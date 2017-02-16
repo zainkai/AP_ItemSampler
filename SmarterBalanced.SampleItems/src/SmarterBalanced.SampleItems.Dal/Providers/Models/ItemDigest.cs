@@ -31,5 +31,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int? AssociatedStimulus { get; set; }
         public bool AslSupported { get; set; }
         public bool AllowCalculator { get; set; }
+        public string TargetDescription { get; set; }
     }
 }
