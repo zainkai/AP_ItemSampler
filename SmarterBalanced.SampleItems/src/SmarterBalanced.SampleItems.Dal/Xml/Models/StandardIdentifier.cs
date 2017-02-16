@@ -14,6 +14,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public string TargetSet { get; }
         public string Emphasis { get; }
         public string CommonCoreStandard { get; }
+        public string SubjectCode { get; }
 
         public StandardIdentifier(string claim,
             string target,
