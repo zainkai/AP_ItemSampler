@@ -27,7 +27,7 @@ namespace AboutThisItem {
     export interface Props {
         rubrics: Rubric[];
         itemCardViewModel: ItemCardViewModel
-        // depthOfKnowledge: string; // TODO: Add when supported by xml
+        depthOfKnowledge: string;
         targetDescription: string;
     }
 
@@ -139,6 +139,10 @@ class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, 
                 <p className="item-id" tabIndex={0}>
                     <span className="text-label">Item Id:</span>
                     <span className="text-value"> {this.props.itemCardViewModel.itemKey}</span>
+                </p>
+                <p className="dok" tabIndex={0}>
+                    <span className="text-label">Depth of Knowledge:</span>
+                    <span className="text-value"> {this.props.depthOfKnowledge}</span>
                 </p>
                 <p className="ccss" tabIndex={0}>
                     <span className="text-label">Common Core State Standard:</span>

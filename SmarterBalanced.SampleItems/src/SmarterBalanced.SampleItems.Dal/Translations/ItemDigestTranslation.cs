@@ -145,7 +145,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
                 AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
-                TargetDescription = target?.Description
+                TargetDescription = target?.Description,
+                DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge
             };
 
             return digest;
