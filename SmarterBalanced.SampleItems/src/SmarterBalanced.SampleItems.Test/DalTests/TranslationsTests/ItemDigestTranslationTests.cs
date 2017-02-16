@@ -13,6 +13,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 {
     public class ItemDigestTranslationTests
     {
+        //TODO: Add test for target
         /// <summary>
         /// Test translating a single ItemMetadata object and a single ItemContents object into an ItemDigest object
         /// </summary>
@@ -70,9 +71,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                                     SettingsConfig = new SettingsConfig(),
                                     RubricPlaceHolderText = placeholderText
                                 };
+            
 
-
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, appSettings);
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, ImmutableArray.Create<Target>(), appSettings);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -109,7 +110,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
             contents.Item.Contents = new List<Gen.Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), new AppSettings()));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), ImmutableArray.Create<Target>(), new AppSettings()));
         }
 
 
@@ -190,7 +191,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 }
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, settings);
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, ImmutableArray.Create<Target>(), settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

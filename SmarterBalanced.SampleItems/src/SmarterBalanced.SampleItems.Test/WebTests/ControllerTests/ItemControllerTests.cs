@@ -38,7 +38,10 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             var aboutThisItemVM = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
-                itemCard: card);
+                itemCard: card,
+                depthOfKnowledge: "",
+                targetDescription: ""
+               );
 
 
             ItemDigest digestCookie = new ItemDigest
@@ -51,7 +54,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             var aboutItemCookie = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
-                itemCard: cardCookie);
+                itemCard: cardCookie,
+                depthOfKnowledge: "",
+                targetDescription: "");
 
 
             iSAAP = "TDS_test;TDS_test2;";

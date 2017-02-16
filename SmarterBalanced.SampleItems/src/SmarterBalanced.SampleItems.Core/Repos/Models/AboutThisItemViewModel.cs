@@ -22,5 +22,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             TargetDescription = targetDescription;
             DepthOfKnowledge = depthOfKnowledge;
         }
+
     }
 }
