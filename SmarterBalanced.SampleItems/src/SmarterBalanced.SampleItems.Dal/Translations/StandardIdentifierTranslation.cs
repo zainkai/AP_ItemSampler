@@ -36,37 +36,47 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 throw new ArgumentException("The standards string does not contain a publication and claim spearated by a colon.");
             }
 
+            StandardIdentifier standardIdentifier = null;
+
             string publication = publicationAndKey[0];
             string[] parts = publicationAndKey[1].Split('|');
 
             switch (publication)
             {
                 case "SBAC-ELA-v1":
-                    return ElaV1Standard(parts);
+                    standardIdentifier = ElaV1Standard(parts);
+                    break;
 
                 case "SBAC-MA-v1":
-                    return MaV4Standard(parts);
+                    standardIdentifier = MaV4Standard(parts);
+                    break;
 
                 case "SBAC-MA-v4":
-                    return MaV4Standard(parts);
+                    standardIdentifier = MaV4Standard(parts);
+                    break;
 
                 case "SBAC-MA-v5":
-                    return MaV5Standard(parts);
+                    standardIdentifier = MaV5Standard(parts);
+                    break;
 
                 case "SBAC-MA-v6":
-                    return MaV6Standard(parts);
-
-                default:
-                    return StandardIdentifier.Create(
-                        claim: parts[0]);
-                    ;
+                    standardIdentifier = MaV6Standard(parts);
+                    break;
             }
+
+            if(standardIdentifier == null)
+            {
+                standardIdentifier = StandardIdentifier.Create(
+                        claim: parts[0]);
+            }
+
+            return standardIdentifier;
 
         }
 
         public static StandardIdentifier ElaV1Standard(string[] parts)
         {
-            if (parts == null && parts.Length != 5)
+            if (parts == null || parts.Length != 3)
             {
                 return null;
             }
@@ -80,7 +90,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MaV1Standard(string[] parts)
         {
-            if (parts == null && parts.Length != 5)
+            if (parts == null || parts.Length != 5)
             {
                 return null;
             }
@@ -95,7 +105,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MaV4Standard(string[] parts)
         {
-            if (parts == null && parts.Length != 5)
+            if (parts == null || parts.Length != 5)
             {
                 return null;
             }
@@ -111,7 +121,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MaV5Standard(string[] parts)
         {
-            if (parts == null && parts.Length != 5)
+            if (parts == null || parts.Length != 5)
             {
                 return null;
             }
@@ -127,7 +137,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MaV6Standard(string[] parts)
         {
-            if (parts == null && parts.Length != 4)
+            if (parts == null || parts.Length != 4)
             {
                 return null;
             }
@@ -142,7 +152,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier ElaCoreStandardToTarget(string[] parts)
         {
-            if (parts == null && parts.Length != 4)
+            if (parts == null || parts.Length != 2)
             {
                 return null;
             }
@@ -155,7 +165,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier ElaCoreStandardToCcss(string[] parts)
         {
-            if (parts == null && parts.Length != 3)
+            if (parts == null || parts.Length != 3)
             {
                 return null;
             }
@@ -171,7 +181,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MathCoreStandardToTarget(string[] parts)
         {
-            if (parts == null && parts.Length != 3)
+            if (parts == null || parts.Length != 3)
             {
                 return null;
             }
@@ -185,7 +195,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MathCoreStandardToCcss(string[] parts)
         {
-            if (parts == null && parts.Length != 5)
+            if (parts == null || parts.Length != 5)
             {
                 return null;
             }

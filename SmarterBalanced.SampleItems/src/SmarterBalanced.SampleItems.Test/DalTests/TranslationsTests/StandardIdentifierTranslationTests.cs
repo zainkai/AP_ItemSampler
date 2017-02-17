@@ -112,5 +112,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             Assert.Throws<ArgumentException>(() => StandardIdentifierTranslation.StandardStringtoStandardIdentifier(string.Empty));
         }
+
+        //TODO: Add invalid strings for each of the ma and ela types
+        //TODO: add standards testing
     }
 }

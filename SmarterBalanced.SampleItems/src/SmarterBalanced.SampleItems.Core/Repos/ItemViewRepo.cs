@@ -66,7 +66,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var aboutThisItem = new AboutThisItemViewModel(
                 rubrics: itemDigest.Rubrics,
                 itemCard: itemCardViewModel,
-                targetDescription: itemDigest.TargetDescription,
+                targetDescription: itemDigest.CoreStandards?.TargetDescription,
                 depthOfKnowledge: itemDigest.DepthOfKnowledge);
 
             var groups = itemDigest.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);

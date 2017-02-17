@@ -17,7 +17,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int ItemKey { get; set; }
         public string ItemType { get; set; }
 
-    
 
         public GradeLevels Grade { get; set; }
         public Subject Subject { get; set; }

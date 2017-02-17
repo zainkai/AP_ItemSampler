@@ -23,10 +23,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 subjectLabel: digest.Subject?.ShortLabel,
                 claimCode: digest.Claim?.Code,
                 claimLabel: digest.Claim?.Label,
-                target: digest.TargetId,
+                target: digest.CoreStandards?.TargetId,
                 interactionTypeCode: digest.InteractionType?.Code,
                 interactionTypeLabel: digest.InteractionType?.Label,
-                commonCoreStandardsId: digest.CommonCoreStandardsId);
+                commonCoreStandardsId: digest.CoreStandards?.CommonCoreStandardsId);
 
             return card;
         }

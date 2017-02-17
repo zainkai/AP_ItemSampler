@@ -1,7 +1,7 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Translations;
-using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
+using SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,24 +26,24 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
-            contents.Item = new Gen.ItemXmlFieldRepresentation();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = testItemKey;
             metadata.Metadata.Grade = testGrade;
             metadata.Metadata.TargetAssessmentType = "Test target string";
             metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
             metadata.Metadata.Subject = "MATH";
-            metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
             metadata.Metadata.StandardPublications.Add(
-                new Gen.StandardPublication
+                new StandardPublication
                 {
                     PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                 });
 
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
-            contents.Item.Contents = new List<Gen.Content>();
+            contents.Item.Contents = new List<Content>();
 
             var interactionTypes = new List<InteractionType>
             {
@@ -73,7 +73,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                                 };
             
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, ImmutableArray.Create<CoreStandardsRow>(), appSettings);
+            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, null, appSettings);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -92,25 +92,25 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
-            contents.Item = new Gen.ItemXmlFieldRepresentation();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = 1;
             metadata.Metadata.Grade = "7";
             metadata.Metadata.TargetAssessmentType = "Test target string";
             metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
             metadata.Metadata.Subject = "MATH";
-            metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
             metadata.Metadata.StandardPublications.Add(
-                new Gen.StandardPublication
+                new StandardPublication
                 {
                     PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                 });
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            contents.Item.Contents = new List<Gen.Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), ImmutableArray.Create<CoreStandardsRow>(), new AppSettings()));
+            contents.Item.Contents = new List<Content>();
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), null, new AppSettings()));
         }
 
 
@@ -142,8 +142,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 ItemMetadata metadata = new ItemMetadata();
                 ItemContents contents = new ItemContents();
 
-                metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
-                contents.Item = new Gen.ItemXmlFieldRepresentation();
+                metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+                contents.Item = new ItemXmlFieldRepresentation();
 
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];
@@ -152,9 +152,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 metadata.Metadata.SufficientEvidenceOfClaim = testClaimEvidence + itemKeys[i];
                 metadata.Metadata.InteractionType = testInteractionType;
                 metadata.Metadata.Subject = testSubject;
-                metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+                metadata.Metadata.StandardPublications = new List<StandardPublication>();
                 metadata.Metadata.StandardPublications.Add(
-                    new Gen.StandardPublication
+                    new StandardPublication
                     {
                         PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                     });
@@ -162,7 +162,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 //Test contents attributes
                 contents.Item.ItemKey = itemKeys[i];
                 contents.Item.ItemBank = banksKeys[i];
-                contents.Item.Contents = new List<Gen.Content>();
+                contents.Item.Contents = new List<Content>();
 
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
@@ -191,7 +191,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 }
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, ImmutableArray.Create<CoreStandardsRow>(), settings);
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(),
+                            interactionTypes, subjects, null, settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 

@@ -37,14 +37,14 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         }
 
         public static StandardIdentifier Create(
-            string claim = "",
-            string target = "",
-            string contentDomain = "",
-            string contentCategory = "",
-            string targetSet = "",
-            string emphasis = "",
-            string commonCoreStandard = "",
-            string subjectCode = "")
+            string claim = null,
+            string target = null,
+            string contentDomain = null,
+            string contentCategory = null,
+            string targetSet = null,
+            string emphasis = null,
+            string commonCoreStandard = null,
+            string subjectCode = null)
         {
             return new StandardIdentifier(
             claim: claim,
