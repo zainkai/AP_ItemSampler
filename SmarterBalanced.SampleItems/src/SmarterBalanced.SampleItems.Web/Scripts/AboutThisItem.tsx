@@ -27,7 +27,9 @@ namespace AboutThisItem {
     export interface Props {
         rubrics: Rubric[];
         itemCardViewModel: ItemCardViewModel
-        // depthOfKnowledge: string; // TODO: Add when supported by xml
+        depthOfKnowledge: string;
+        targetDescription: string;
+        commonCoreStandardsDescription: string
     }
 
     export class ATIComponent extends React.Component<Props, {}> {
@@ -44,7 +46,7 @@ namespace AboutThisItem {
                                 <h4 className="modal-title">About This Item</h4>
                             </div>
                             <div className="modal-body">
-                                <AboutThisItemDetailComponent {...this.props.itemCardViewModel} />
+                                <AboutThisItemDetailComponent {...this.props} />
                                 {rubrics}
                             </div>
                             <div className="modal-footer">
@@ -111,30 +113,46 @@ class SampleResponseComponent extends React.Component<SampleResponse, {}> {
     }
 }
 
-class AboutThisItemDetailComponent extends React.Component<ItemCardViewModel, {}> {
-    renderField(label: string, value: string | number, className: string): JSX.Element | null {
-        if (!value) {
-            return null;
-        }
-
-        return (
-            <p className={`card-text ${className}`} tabIndex={0}>
-                <span className="card-text-label">{label}:</span>
-                <span className="card-text-value"> {value}</span>
-            </p>
-        );
-    }
-
+class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, {}> {
     render() {
         return (
-            <div>
-                {this.renderField("Subject", this.props.subjectLabel, "subject")}
-                {this.renderField("Grade", this.props.gradeLabel, "grade")}
-                {this.renderField("Claim", this.props.claimLabel, "claim")}
-                {this.renderField("Target", this.props.target, "target")}
-                {this.renderField("Item Type", this.props.interactionTypeLabel, "interaction-type")}
-                {this.renderField("Item Id", this.props.itemKey, "item-id")}
-                {this.renderField("Common Core State Standard", this.props.commonCoreStandardsId, "target")}
+            <div className={"item-details"}>
+                <p className="subject" tabIndex={0}>
+                    <span className="text-label">Subject:</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.subjectLabel}</span>
+                </p>
+                <p className="grade" tabIndex={0}>
+                    <span className="text-label">Grade:</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.gradeLabel}</span>
+                </p>
+                <p className="claim" tabIndex={0}>
+                    <span className="text-label">Claim:</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.claimLabel}</span>
+                </p>
+                <p className="target" tabIndex={0}>
+                    <span className="text-label">Target:</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.target}</span>
+                </p>
+                <p className="interaction-type" tabIndex={0}>
+                    <span className="text-label">Item Type:</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.interactionTypeLabel}</span>
+                </p>
+                <p className="item-id" tabIndex={0}>
+                    <span className="text-label">Item Id:</span>
+                    <span className="text-value"> {this.props.itemCardViewModel.itemKey}</span>
+                </p>
+                <p className="dok" tabIndex={0}>
+                    <span className="text-label">Depth of Knowledge:</span>
+                    <span className="text-value"> {this.props.depthOfKnowledge}</span>
+                </p>
+                <p className="ccss" tabIndex={0}>
+                    <span className="text-label">Common Core State Standard:</span>
+                    <span className="text-value"> {this.props.commonCoreStandardsDescription}</span>
+                </p>
+                <p className="target-description" tabIndex={0}>
+                    <span className="text-label">Target:</span>
+                    <span className="text-value"> {this.props.targetDescription}</span>
+                </p>
             </div>
         );
     }

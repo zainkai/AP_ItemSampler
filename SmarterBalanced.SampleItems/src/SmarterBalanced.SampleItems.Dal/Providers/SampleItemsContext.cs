@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.IO;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
-using SmarterBalanced.SampleItems.Dal.Xml;
 using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers

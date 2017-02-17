@@ -23,6 +23,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
             IList<InteractionType> interactionTypes, IList<Subject> subjects,
+             CoreStandardsXml standardsXml,
             AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
@@ -33,7 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, standardsXml, settings);
 
                     itemDigest.AccessibilityResourceGroups =
                         CreateAccessibilityGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
@@ -57,10 +58,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, AppSettings appSettings)
+                                    IList<Subject> subjects, CoreStandardsXml standardsXml, AppSettings appSettings)
         {
             var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
-            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics);
+            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, standardsXml);
         }
 
         /// <summary>
@@ -69,16 +70,59 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, ImmutableArray<Rubric> rubrics)
+                                    IList<Subject> subjects, ImmutableArray<Rubric> rubrics,
+                                    CoreStandardsXml standardsXml)
         {
 
-            StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
             string subjectId = itemMetadata.Metadata.Subject;
             var subject = subjects.FirstOrDefault(s => s.Code == subjectId);
+            StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
             string interactionTypeCode = itemMetadata.Metadata.InteractionType;
             var interactiontype = interactionTypes.FirstOrDefault(t => t.Code == interactionTypeCode);
 
-            return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics);
+            //TODO: fix standards
+            CoreStandards coreStandards = CoreStandardFromIdentififer(standardsXml, identifier);
+          
+
+            return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, coreStandards);
+        }
+
+        //TODO: refactor
+        public static CoreStandards CoreStandardFromIdentififer(CoreStandardsXml standardsXml, StandardIdentifier itemIdentifier)
+        {
+
+            CoreStandardsRow targetRow = null;
+            CoreStandardsRow ccssRow = null;
+            if(standardsXml != null && standardsXml.TargetRows.Any())
+            {
+                foreach (CoreStandardsRow row in standardsXml.TargetRows)
+                {
+                    var rowIdentifier = row.StandardIdentifier;
+                    if (StandardIdentifierTargetComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                    {
+                        targetRow = row;
+                    }
+                }
+            }
+
+            if (standardsXml != null && standardsXml.CcssRows.Any())
+            {
+                foreach (CoreStandardsRow row in standardsXml?.CcssRows)
+                {
+                    var rowIdentifier = row.StandardIdentifier;
+                    if (StandardIdentifierCcssComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                    {
+                        ccssRow = row;
+                    }
+                }
+            }
+
+            return CoreStandards.Create(
+                  targetId: itemIdentifier?.Target,
+                  targetIdLabel: itemIdentifier?.ToTargetId(),
+                  commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
+                  commonCoreStandardsDescription: ccssRow?.Description,
+                  targetDescription: targetRow?.Description);
         }
 
         /// <summary>
@@ -99,12 +143,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             }
         }
 
+
         /// <summary>
         /// Translates metadata, itemcontents and lookups to item digest
         /// </summary>
         public static ItemDigest ToItemDigest(ItemMetadata itemMetadata, ItemContents itemContents,
                                                 StandardIdentifier identifier, Subject subject,
-                                                InteractionType interactionType, ImmutableArray<Rubric> rubrics)
+                                                InteractionType interactionType, ImmutableArray<Rubric> rubrics, CoreStandards coreStandards)
         {
             if (itemMetadata == null) { throw new ArgumentNullException(nameof(itemMetadata)); }
             if (itemMetadata.Metadata == null) { throw new ArgumentNullException(nameof(itemMetadata.Metadata)); }
@@ -128,12 +173,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
                 Subject = subject,
-                TargetId = identifier.ToTargetId(),
                 Claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId()),
-                CommonCoreStandardsId = identifier.CommonCoreStandard,
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
                 AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
-                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y"
+                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
+                DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
+                CoreStandards = coreStandards
             };
 
             return digest;

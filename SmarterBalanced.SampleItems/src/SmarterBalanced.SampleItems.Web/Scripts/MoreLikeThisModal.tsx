@@ -15,7 +15,7 @@
         renderColumn(column: Column) {
             const label = column.label == "NA" ?
                 "No items to be displayed."
-                : "No Items found for this grade.";
+                : "No items found for this grade.";
 
             const items = column.itemCards.length ?
                 column.itemCards.map(c => <ItemCardCondensed {...c} />)

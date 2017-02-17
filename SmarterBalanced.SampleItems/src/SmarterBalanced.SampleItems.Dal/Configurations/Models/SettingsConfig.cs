@@ -21,5 +21,6 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public string BrowserWarningCookie { get; set; }
         public string UserAgentRegex { get; set; }
         public int NumMoreLikeThisItems { get; set; }
+        public string CoreStandardsXMLPath { get; set; }
     }
 }
