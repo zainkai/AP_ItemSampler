@@ -18,9 +18,9 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public string Description { get; }
         public string LevelType { get; }
         public StandardIdentifier StandardIdentifier { get; set; }
-        public CoreStandardsRow(string type, string key, string name, string description, string levelType, StandardIdentifier identifier)
+        public CoreStandardsRow(string subjectCode, string key, string name, string description, string levelType, StandardIdentifier identifier)
         {
-            SubjectCode = type;
+            SubjectCode = subjectCode;
             Key = key;
             Name = name;
             Description = description;
@@ -28,16 +28,16 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             LevelType = levelType;
         }
         public static CoreStandardsRow Create(
-            string type = "",
+            string subjectCode = "",
             string key = "",
             string name = "",
             string description = "",
             string levelType = "",
-            string subjectCode = "",
+            string LevelType = "",
             StandardIdentifier identifier = null)
         {
             return new CoreStandardsRow(
-                type: type,
+                subjectCode: subjectCode,
                 key: key,
                 name: name,
                 description: description,
@@ -49,11 +49,11 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         {
 
             var row = Create(
-                type: (string)element.Attribute("Type"),
+                subjectCode: (string)element.Attribute("Subject"),
                 key: (string)element.Attribute("Key"),
                 name: (string)element.Attribute("Name"),
                 description: (string)element.Attribute("Description"),
-                levelType: (string)element.Attribute("Description"));
+                levelType: (string)element.Attribute("LevelType"));
 
             row.StandardIdentifier = StandardIdentifierTranslation.CoreStandardToIdentifier(row);
 
