@@ -101,7 +101,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         {
             var coreDoc = XmlSerialization.GetXDocument(targetFile);
 
-
             ImmutableArray<CoreStandardsRow> allRows = coreDoc.Element("Levels").Elements()
                                                 .Select(t => CoreStandardsRow.Create(t))
                                                 .ToImmutableArray();
@@ -137,7 +136,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
         private static ImmutableArray<InteractionFamily> LoadInteractionFamilies(XElement elementRoot)
         {
-
            var interactionFamilies = elementRoot
                             .Element("Families")
                             .Elements("Family")
