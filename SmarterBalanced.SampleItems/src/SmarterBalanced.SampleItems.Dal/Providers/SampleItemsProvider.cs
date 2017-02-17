@@ -102,12 +102,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             var coreDoc = XmlSerialization.GetXDocument(targetFile);
 
 
-            ImmutableArray<CoreStandardsRow> allRows = coreDoc.Elements("Levels")
+            ImmutableArray<CoreStandardsRow> allRows = coreDoc.Element("Levels").Elements()
                                                 .Select(t => CoreStandardsRow.Create(t))
                                                 .ToImmutableArray();
 
             var ccss = allRows.Where(r => r.LevelType == "CCSS").ToImmutableArray();
-            var targets = allRows.Where(r => r.LevelType == "CCSS").ToImmutableArray();
+            var targets = allRows.Where(r => r.LevelType == "Target").ToImmutableArray();
 
             return new CoreStandardsXml(
                 targetRows: targets,

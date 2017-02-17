@@ -81,11 +81,45 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var interactiontype = interactionTypes.FirstOrDefault(t => t.Code == interactionTypeCode);
 
             //TODO: fix standards
-            var coreStandards = CoreStandards.Create(
-                    targetId: identifier.ToTargetId(),
-                    commonCoreStandardsId: identifier.CommonCoreStandard);
+            CoreStandards coreStandards = CoreStandardFromIdentififer(standardsXml, identifier);
+          
 
             return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, coreStandards);
+        }
+
+        public static CoreStandards CoreStandardFromIdentififer(CoreStandardsXml standardsXml, StandardIdentifier itemIdentifier)
+        {
+
+            //get target match
+            CoreStandardsRow targetRow = null;
+            foreach(CoreStandardsRow row in standardsXml.TargetRows)
+            {
+                var rowIdentifier = row.StandardIdentifier;
+                if(StandardIdentifierTargetComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                {
+                    targetRow = row;
+                }
+            }
+
+
+
+            //get ccss match
+
+            CoreStandardsRow ccssRow = null;
+            foreach (CoreStandardsRow row in standardsXml.CcssRows)
+            {
+                var rowIdentifier = row.StandardIdentifier;
+                if (StandardIdentifierCcssComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                {
+                    ccssRow = row;
+                }
+            }
+
+
+            return CoreStandards.Create(
+                  targetId: itemIdentifier.ToTargetId(),
+                  commonCoreStandardsId: itemIdentifier.CommonCoreStandard);
+
         }
 
         /// <summary>

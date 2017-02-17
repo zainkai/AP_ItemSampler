@@ -12,7 +12,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         private string claim1 = "c1";
         private string claim2 = "c2";
 
-        private string subjectMath = "MA";
+        private string subjectMath = "MATH";
         private string subjectEla = "ELA";
 
         private string contentDomain1 = "cd1";
@@ -36,7 +36,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             string emphasis = null,
             string commonCoreStandard = null)
         {
-            return new StandardIdentifier(
+            return StandardIdentifier.Create(
                 subjectCode: subjectCode,
                 claim: claim ?? claim1,
                 contentDomain: contentDomain ?? contentDomain1,

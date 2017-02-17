@@ -24,8 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             string contentCategory,
             string targetSet,
             string emphasis,
-            string commonCoreStandard,
-            string subjectCode)
+            string commonCoreStandard)
         {
             Claim = claim;
             ContentDomain = contentDomain;
@@ -78,7 +77,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
                 return false;
             }
 
-            if(x.SubjectCode == "MA") // TODO: Verify MA or MATH?
+            if(x.SubjectCode == "MATH")
             {
                 return x.Claim == y.Claim &&
                     x.ContentDomain == y.ContentDomain &&
