@@ -87,33 +87,40 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, coreStandards);
         }
 
+        //TODO: refactor
         public static CoreStandards CoreStandardFromIdentififer(CoreStandardsXml standardsXml, StandardIdentifier itemIdentifier)
         {
 
             CoreStandardsRow targetRow = null;
             CoreStandardsRow ccssRow = null;
-            foreach(CoreStandardsRow row in standardsXml.TargetRows)
+            if(standardsXml != null && standardsXml.TargetRows.Any())
             {
-                var rowIdentifier = row.StandardIdentifier;
-                if(StandardIdentifierTargetComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                foreach (CoreStandardsRow row in standardsXml.TargetRows)
                 {
-                    targetRow = row;
+                    var rowIdentifier = row.StandardIdentifier;
+                    if (StandardIdentifierTargetComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                    {
+                        targetRow = row;
+                    }
                 }
             }
 
-            foreach (CoreStandardsRow row in standardsXml.CcssRows)
+            if (standardsXml != null && standardsXml.CcssRows.Any())
             {
-                var rowIdentifier = row.StandardIdentifier;
-                if (StandardIdentifierCcssComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                foreach (CoreStandardsRow row in standardsXml?.CcssRows)
                 {
-                    ccssRow = row;
+                    var rowIdentifier = row.StandardIdentifier;
+                    if (StandardIdentifierCcssComparer.Instance.Equals(rowIdentifier, itemIdentifier))
+                    {
+                        ccssRow = row;
+                    }
                 }
             }
 
             return CoreStandards.Create(
-                  targetId: itemIdentifier.Target,
-                  targetIdLabel: itemIdentifier.ToTargetId(),
-                  commonCoreStandardsId: itemIdentifier.CommonCoreStandard,
+                  targetId: itemIdentifier?.Target,
+                  targetIdLabel: itemIdentifier?.ToTargetId(),
+                  commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
                   commonCoreStandardsDescription: ccssRow?.Description,
                   targetDescription: targetRow?.Description);
         }
