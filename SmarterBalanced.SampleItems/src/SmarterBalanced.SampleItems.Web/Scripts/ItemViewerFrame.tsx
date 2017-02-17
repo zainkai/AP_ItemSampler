@@ -9,7 +9,7 @@ interface FrameState {
 class ItemFrame extends React.Component<FrameProps, FrameState> {
     constructor(props: FrameProps) {
         super(props);
-        this.state = { loading: true; }
+        this.state = { loading: true }
     }
 
     startLoad = () => {
