@@ -8,51 +8,56 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace SmarterBalanced.SampleItems.Dal.Providers.Models
+namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 {
-    public sealed class Target
+    public sealed class CoreStandardsRow 
     {
-        public string Type { get; }
+        public string SubjectCode { get; }
         public string Key { get; }
         public string Name { get; }
         public string Description { get; }
-        public StandardIdentifier StandardIdentifier {get;}
-        public Target(string type, string key, string name, string description, StandardIdentifier identifier)
+        public string LevelType { get; }
+        public StandardIdentifier StandardIdentifier { get; set; }
+        public CoreStandardsRow(string type, string key, string name, string description, string levelType, StandardIdentifier identifier)
         {
-            Type = type;
+            SubjectCode = type;
             Key = key;
             Name = name;
             Description = description;
             StandardIdentifier = identifier;
+            LevelType = levelType;
         }
-        public static Target Create(
+        public static CoreStandardsRow Create(
             string type = "",
             string key = "",
             string name = "",
             string description = "",
+            string levelType = "",
+            string subjectCode = "",
             StandardIdentifier identifier = null)
         {
-            return new Target(
+            return new CoreStandardsRow(
                 type: type,
                 key: key,
                 name: name,
                 description: description,
+                levelType: levelType,
                 identifier: identifier);
         }
-        public static Target Create(XElement element)
-        {
-            string key = (string)element.Attribute("Key");
 
-            var standard = StandardIdentifierTranslation.StandardKeyToIdentifier(key);
-            var target = Create(
+        public static CoreStandardsRow Create(XElement element)
+        {
+
+            var row = Create(
                 type: (string)element.Attribute("Type"),
-                key: key,
+                key: (string)element.Attribute("Key"),
                 name: (string)element.Attribute("Name"),
                 description: (string)element.Attribute("Description"),
-                identifier: standard
-                );
+                levelType: (string)element.Attribute("Description"));
 
-            return target;
+            row.StandardIdentifier = StandardIdentifierTranslation.CoreStandardToIdentifier(row);
+
+            return row;
         }
 
     }

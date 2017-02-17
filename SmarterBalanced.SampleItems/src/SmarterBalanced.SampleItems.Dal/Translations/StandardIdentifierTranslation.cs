@@ -29,130 +29,212 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 throw new ArgumentException("The standards string must not be null or empty");
             }
 
-            string claim, publication;
+            string[] publicationAndKey = standards.Split(':');
 
-            string[] parts = standards.Split('|');
-
-            //The part of the string before the first pipe should always contain the publication and claim
-            string[] publicationAndClaim = parts[0].Split(':');
-
-            if(publicationAndClaim.Length < 2)
+            if (publicationAndKey.Length < 2)
             {
                 throw new ArgumentException("The standards string does not contain a publication and claim spearated by a colon.");
             }
-            publication = publicationAndClaim[0];
-            claim = publicationAndClaim[1];
 
-            if (string.IsNullOrEmpty(claim))
-            {
-                throw new ArgumentException("The standards string does not contain a claim.");
-            }
+            string publication = publicationAndKey[0];
+            string[] parts = publicationAndKey[1].Split('|');
 
-            //Depending on the standard there are different fields in different orders
-            //separated by pipes as listed above
             switch (publication)
             {
                 case "SBAC-ELA-v1":
-                    //The ELA string should be split into 3 parts
-                    if (parts.Length == 3)
-                    {
-                        var target = parts[1];
-                        var commonCoreStandard = parts[2];
-                        return new StandardIdentifier(
-                            claim,
-                            target,
-                            commonCoreStandard: commonCoreStandard
-                            );
-                    }
-                    break;
+                    return ElaV1Standard(parts);
+
                 case "SBAC-MA-v1":
-                    if(parts.Length == 5)
-                    {
-                        var target = parts[2];
-                        var contentDomain = parts[1];
-                        var commonCoreStandard = parts[4];
-                        return new StandardIdentifier(
-                            claim,
-                            target,
-                            commonCoreStandard: commonCoreStandard,
-                            contentDomain: contentDomain
-                            );
-                    }
-                    break;
+                    return MaV4Standard(parts);
+
                 case "SBAC-MA-v4":
-                    //The math v4 string should be split into 5 parts
-                    if (parts.Length == 5)
-                    {
-                        var target = parts[2];
-                        var standard = parts[4];
-                        var contentDomain = parts[1];
-                        var emphasis = parts[3];
-                        return new StandardIdentifier(
-                            claim,
-                            target,
-                            contentDomain,
-                            emphasis: emphasis,
-                            commonCoreStandard: standard
-                            );
-                    }
-                    break;
+                    return MaV4Standard(parts);
+
                 case "SBAC-MA-v5":
-                    //The math v5 string should be split into 5 parts
-                    if (parts.Length == 5)
-                    {
-                        var target = parts[2];
-                        var commonCoreStandard = parts[4];
-                        var contentDomain = parts[1];
-                        var emphasis = parts[3];
-                        return new StandardIdentifier(
-                            claim,
-                            target,
-                            contentDomain: contentDomain,
-                            emphasis: emphasis,
-                            commonCoreStandard: commonCoreStandard
-                            );
-                    }
-                    break;
+                    return MaV5Standard(parts);
+
                 case "SBAC-MA-v6":
-                    //The math v6 string should be split into 4 parts
-                    if (parts.Length == 4)
-                    {
-                        var target = parts[3];
-                        var category = parts[1];
-                        var targetSet = parts[2];
-                        return new StandardIdentifier(
-                            claim,
-                            target,
-                            contentCategory: category,
-                            targetSet: targetSet
-                            );
-                    }
-                    break;
+                    return MaV6Standard(parts);
+
                 default:
-                    break;
+                    return StandardIdentifier.Create(
+                        claim: parts[0]);
+                    ;
             }
-            return new StandardIdentifier(claim, null);
+
         }
-        public static StandardIdentifier StandardKeyToIdentifier(string standardKey)
+
+        public static StandardIdentifier ElaV1Standard(string[] parts)
         {
-            if (string.IsNullOrEmpty(standardKey))
+            if (parts == null && parts.Length != 5)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[1],
+                    commonCoreStandard: parts[2],
+                    subjectCode: "ELA");
+        }
+
+        public static StandardIdentifier MaV1Standard(string[] parts)
+        {
+            if (parts == null && parts.Length != 5)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[2],
+                    commonCoreStandard: parts[4],
+                    contentDomain: parts[1],
+                    subjectCode: "MATH");
+        }
+
+        public static StandardIdentifier MaV4Standard(string[] parts)
+        {
+            if (parts == null && parts.Length != 5)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[2],
+                    contentDomain: parts[1],
+                    emphasis: parts[3],
+                    commonCoreStandard: parts[4],
+                    subjectCode: "MATH");
+        }
+
+        public static StandardIdentifier MaV5Standard(string[] parts)
+        {
+            if (parts == null && parts.Length != 5)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[2],
+                    contentDomain: parts[1],
+                    emphasis: parts[3],
+                    commonCoreStandard: parts[4],
+                    subjectCode: "MATH");
+        }
+
+        public static StandardIdentifier MaV6Standard(string[] parts)
+        {
+            if (parts == null && parts.Length != 4)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[3],
+                    contentCategory: parts[1],
+                    targetSet: parts[2],
+                    subjectCode: "MATH");
+        }
+
+        public static StandardIdentifier ElaCoreStandardToTarget(string[] parts)
+        {
+            if (parts == null && parts.Length != 4)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[1],
+                    subjectCode: "ELA");
+        }
+
+        public static StandardIdentifier ElaCoreStandardToCcss(string[] parts)
+        {
+            if (parts == null && parts.Length != 3)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[1],
+                    commonCoreStandard: parts[2],
+                    subjectCode: "ELA");
+        }
+
+
+
+        public static StandardIdentifier MathCoreStandardToTarget(string[] parts)
+        {
+            if (parts == null && parts.Length != 3)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[2],
+                    contentDomain: parts[1],
+                    subjectCode: "MATH");
+        }
+
+        public static StandardIdentifier MathCoreStandardToCcss(string[] parts)
+        {
+            if (parts == null && parts.Length != 5)
+            {
+                return null;
+            }
+
+            return StandardIdentifier.Create(
+                    claim: parts[0],
+                    target: parts[2],
+                    commonCoreStandard: parts[4],
+                    contentDomain: parts[1],
+                    subjectCode: "MATH");
+        }
+
+
+
+        public static StandardIdentifier CoreStandardToIdentifier(CoreStandardsRow row)
+        {
+            if (row == null || string.IsNullOrEmpty(row.Key))
             {
                 throw new ArgumentException("The standards string must not be null or empty");
             }
 
-            string[] parts = standardKey.Split('|');
+            string[] parts = row.Key.Split('|');
 
-            if (parts.Length != 3)
+            StandardIdentifier identifier = null;
+
+            if (row.SubjectCode == "ELA")
             {
-                throw new ArgumentException("Standard does not have two parts |.");
+                if(row.LevelType == "CCSS")
+                {
+                    identifier = ElaCoreStandardToCcss(parts);
+                }
+                else if(row.LevelType == "Target")
+                {
+                    identifier = ElaCoreStandardToTarget(parts);
+                }
+            }
+            else if (row.SubjectCode == "MATH")
+            {
+                if (row.LevelType == "CCSS")
+                {
+                    identifier = MathCoreStandardToCcss(parts);
+                }
+                else if (row.LevelType == "Target")
+                {
+                    identifier = MathCoreStandardToTarget(parts);
+                }
             }
 
-            return new StandardIdentifier(
-                               claim: parts[0],
-                               target: parts[1],
-                               commonCoreStandard: parts[2]
-                               );
-
+            return identifier;
         }
     }
 

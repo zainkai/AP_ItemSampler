@@ -19,7 +19,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         public static SampleItemsContext LoadContext(AppSettings appSettings, ILogger logger)
         {
 
-            ImmutableArray<Target> targets = LoadTargets(appSettings.SettingsConfig.TargetXMLPath);
+            CoreStandardsXml standardsXml = LoadCoreStandards(appSettings.SettingsConfig.CoreStandardsXMLPath);
             var accessibilityResourceFamilies = LoadAccessibility(appSettings.SettingsConfig.AccommodationsXMLPath);
             var interactionGroup = LoadInteractionGroup(appSettings.SettingsConfig.InteractionTypesXMLPath);
             ImmutableArray<Subject> subjects = LoadSubjects(appSettings.SettingsConfig.ClaimsXMLPath, interactionGroup.InteractionFamilies);
@@ -29,7 +29,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 accessibilityResourceFamilies,
                 interactionGroup.InteractionTypes,
                 subjects,
-                targets,
+                standardsXml,
                 appSettings).Result;
 
             var itemCards = itemDigests
@@ -55,7 +55,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
             IList<InteractionType> interactionTypes,
             IList<Subject> subjects,
-            ImmutableArray<Target> targets,
+           CoreStandardsXml coreStandards,
             AppSettings appSettings)
         {
             string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
@@ -74,7 +74,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                     accessibilityResourceFamilies,
                     interactionTypes,
                     subjects,
-                    targets,
+                    coreStandards,
                     appSettings)
                 .Where(i => i.Grade != GradeLevels.NA)
                 .ToImmutableArray();
@@ -97,15 +97,23 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 .ToAccessibilityResourceFamilies(globalResources);
         }
 
-        private static ImmutableArray<Target> LoadTargets(string targetFile)
+        private static CoreStandardsXml LoadCoreStandards(string targetFile)
         {
-            var targetDoc = XmlSerialization.GetXDocument(targetFile);
-            ImmutableArray<Target> targets = targetDoc.Element("Targets")
-                                                .Elements("Target")
-                                                .Select(t => Target.Create(t))
+            var coreDoc = XmlSerialization.GetXDocument(targetFile);
+
+
+            ImmutableArray<CoreStandardsRow> allRows = coreDoc.Elements("Levels")
+                                                .Select(t => CoreStandardsRow.Create(t))
                                                 .ToImmutableArray();
-            return targets;
+
+            var ccss = allRows.Where(r => r.LevelType == "CCSS").ToImmutableArray();
+            var targets = allRows.Where(r => r.LevelType == "CCSS").ToImmutableArray();
+
+            return new CoreStandardsXml(
+                targetRows: targets,
+                ccssRows: ccss);
         }
+
 
         private static ImmutableArray<Subject> LoadSubjects(string subjectFile, ImmutableArray<InteractionFamily> interactionFamilies)
         {
@@ -116,6 +124,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return subjects;
 
         }
+
         private static InteractionGroup LoadInteractionGroup(string interactionTypesFile)
         {
             var interactionTypeDoc = XmlSerialization.GetXDocument(interactionTypesFile);
@@ -148,6 +157,5 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return interactionTypes;
         }
 
-        
     }
 }

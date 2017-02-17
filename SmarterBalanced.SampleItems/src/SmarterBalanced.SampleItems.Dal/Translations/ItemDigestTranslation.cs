@@ -23,7 +23,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
             IList<InteractionType> interactionTypes, IList<Subject> subjects,
-             ImmutableArray<Target> targets,
+             CoreStandardsXml standardsXml,
             AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
@@ -58,7 +58,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, ImmutableArray<Target> targets, AppSettings appSettings)
+                                    IList<Subject> subjects, ImmutableArray<CoreStandardsRow> targets, AppSettings appSettings)
         {
             var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
             return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, targets);
@@ -71,7 +71,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         private static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
                                     IList<Subject> subjects, ImmutableArray<Rubric> rubrics,
-                                    ImmutableArray<Target> targets)
+                                    ImmutableArray<CoreStandardsRow> targets)
         {
 
             string subjectId = itemMetadata.Metadata.Subject;
@@ -79,10 +79,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
             string interactionTypeCode = itemMetadata.Metadata.InteractionType;
             var interactiontype = interactionTypes.FirstOrDefault(t => t.Code == interactionTypeCode);
-            Target target = null;
+            CoreStandardsRow target = null;
             if(subject != null)
             {
-                target = targets.FirstOrDefault(t => t.Type == subject.Code &&
+                target = targets.FirstOrDefault(t => t.SubjectCode == subject.Code &&
                                     t.StandardIdentifier.Target == identifier.Target &&
                                     t.StandardIdentifier.Claim == identifier.Claim &&
                                     t.StandardIdentifier.CommonCoreStandard == identifier.CommonCoreStandard);
@@ -115,7 +115,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ToItemDigest(ItemMetadata itemMetadata, ItemContents itemContents,
                                                 StandardIdentifier identifier, Subject subject,
-                                                InteractionType interactionType, ImmutableArray<Rubric> rubrics, Target target)
+                                                InteractionType interactionType, ImmutableArray<Rubric> rubrics, CoreStandards coreStandards)
         {
             if (itemMetadata == null) { throw new ArgumentNullException(nameof(itemMetadata)); }
             if (itemMetadata.Metadata == null) { throw new ArgumentNullException(nameof(itemMetadata.Metadata)); }
@@ -139,14 +139,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
                 Subject = subject,
-                TargetId = identifier.ToTargetId(),
                 Claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId()),
-                CommonCoreStandardsId = identifier.CommonCoreStandard,
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
                 AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
-                TargetDescription = target?.Description,
-                DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge
+                DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
+                CoreStandards = coreStandards
             };
 
             return digest;
