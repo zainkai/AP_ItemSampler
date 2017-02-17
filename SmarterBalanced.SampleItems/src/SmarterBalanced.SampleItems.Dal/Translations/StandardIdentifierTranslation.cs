@@ -26,14 +26,18 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             if (string.IsNullOrEmpty(standards))
             {
-                throw new ArgumentException("The standards string must not be null or empty");
+                // TODO: log error
+                return null;
             }
 
             string[] publicationAndKey = standards.Split(':');
 
             if (publicationAndKey.Length < 2)
             {
-                throw new ArgumentException("The standards string does not contain a publication and claim spearated by a colon.");
+                return null;
+
+                // TODO: log error instead
+                //throw new ArgumentException("The standards string does not contain a publication and claim spearated by a colon.");
             }
 
             StandardIdentifier standardIdentifier = null;
@@ -177,8 +181,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     subjectCode: "ELA");
         }
 
-
-
         public static StandardIdentifier MathCoreStandardToTarget(string[] parts)
         {
             if (parts == null || parts.Length != 3)
@@ -207,8 +209,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     contentDomain: parts[1],
                     subjectCode: "MATH");
         }
-
-
 
         public static StandardIdentifier CoreStandardToIdentifier(CoreStandardsRow row)
         {

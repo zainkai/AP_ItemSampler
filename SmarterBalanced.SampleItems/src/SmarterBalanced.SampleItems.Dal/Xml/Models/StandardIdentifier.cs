@@ -72,12 +72,13 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         /// </summary>
         public bool Equals(StandardIdentifier x, StandardIdentifier y)
         {
-            if(x.SubjectCode != y.SubjectCode)
+            if (x == null || y == null ||
+                (x.SubjectCode != y.SubjectCode))
             {
                 return false;
             }
 
-            if(x.SubjectCode == "MATH")
+            if (x.SubjectCode == "MATH")
             {
                 return x.Claim == y.Claim &&
                     x.ContentDomain == y.ContentDomain &&
@@ -111,7 +112,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         /// </summary>
         public bool Equals(StandardIdentifier x, StandardIdentifier y)
         {
-            if (x.SubjectCode != y.SubjectCode)
+            if (x == null || y == null || 
+                (x.SubjectCode != y.SubjectCode))
             {
                 return false;
             }

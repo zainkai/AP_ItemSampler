@@ -73,7 +73,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                                     IList<Subject> subjects, ImmutableArray<Rubric> rubrics,
                                     CoreStandardsXml standardsXml)
         {
-
             string subjectId = itemMetadata.Metadata.Subject;
             var subject = subjects.FirstOrDefault(s => s.Code == subjectId);
             StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
@@ -82,7 +81,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             //TODO: fix standards
             CoreStandards coreStandards = CoreStandardFromIdentififer(standardsXml, identifier);
-          
 
             return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, coreStandards);
         }
@@ -95,26 +93,16 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             CoreStandardsRow ccssRow = null;
             if(standardsXml != null && standardsXml.TargetRows.Any())
             {
-                foreach (CoreStandardsRow row in standardsXml.TargetRows)
-                {
-                    var rowIdentifier = row.StandardIdentifier;
-                    if (StandardIdentifierTargetComparer.Instance.Equals(rowIdentifier, itemIdentifier))
-                    {
-                        targetRow = row;
-                    }
-                }
+                targetRow = standardsXml.TargetRows
+                    .FirstOrDefault(t =>
+                    StandardIdentifierTargetComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
             }
 
             if (standardsXml != null && standardsXml.CcssRows.Any())
             {
-                foreach (CoreStandardsRow row in standardsXml?.CcssRows)
-                {
-                    var rowIdentifier = row.StandardIdentifier;
-                    if (StandardIdentifierCcssComparer.Instance.Equals(rowIdentifier, itemIdentifier))
-                    {
-                        ccssRow = row;
-                    }
-                }
+                targetRow = standardsXml.TargetRows
+                    .FirstOrDefault(t =>
+                    StandardIdentifierCcssComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
             }
 
             return CoreStandards.Create(
@@ -132,8 +120,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             try
             {
-                var identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(
-                    itemMetadata.Metadata.StandardPublications.First().PrimaryStandard);
+                // FIXME TODO: should iterate all standardPublications until an identifier is successfully filled?
+                //              Or just take first that isn't "Undesignated"?
+                var primaryStandard = itemMetadata.Metadata.StandardPublications
+                    .Where(s => !s.PrimaryStandard.EndsWith("Undesignated"))
+                    .FirstOrDefault()
+                    ?.PrimaryStandard;
+
+                var identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(primaryStandard);
                 return identifier;
             }
             catch (InvalidOperationException ex)
@@ -142,7 +136,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     $"Publication field for item {itemContents.Item.ItemBank}-{itemMetadata.Metadata.ItemKey} is empty.", ex);
             }
         }
-
 
         /// <summary>
         /// Translates metadata, itemcontents and lookups to item digest
@@ -189,7 +182,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static string ToClaimId(this StandardIdentifier identifier)
         {
-            return (string.IsNullOrEmpty(identifier.Claim)) ? string.Empty : identifier.Claim.Split('-').FirstOrDefault();
+            return (string.IsNullOrEmpty(identifier?.Claim)) ? string.Empty : identifier.Claim.Split('-').FirstOrDefault();
         }
 
         /// <summary>
@@ -197,7 +190,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static string ToTargetId(this StandardIdentifier identifier)
         {
-            return (string.IsNullOrEmpty(identifier.Target)) ? string.Empty : identifier.Target.Split('-').FirstOrDefault();
+            return (string.IsNullOrEmpty(identifier?.Target)) ? string.Empty : identifier.Target.Split('-').FirstOrDefault();
         }
 
         /// <summary>
