@@ -54,21 +54,23 @@
               <![CDATA[<p>Smarter Balanced uses three variations of the Grid Item type, each with a distinct
               appearance and interaction mode.</p>
               
-              <p>The Grid Item - Graphing variant response area consists of a grid in which students plot
+			  <ul>
+              <li><b>Graphing variant</b> consists of a grid in which students plot
               points and/or lines. The available tools include a select, delete, add point, and connect line.
               Depending on the item, the point or line tool may not appear. A text box below the grid offers
               hints on what the student can do with each tool. The response area may have a background image on which the student plots points or lines
               as in this example. Grid Item – Graphing Variants may constrain points and lines; for example they may be
               constrained to a number line. The background, whether a simple grid, a graph with axes, or
-              another image is simply a bitmap.</p>
+              another image is simply a bitmap.</li>
               
-              <p>The Grid Item – Hot Spot Variant response area consists of a space in which images are
+              <li><b>Hot Spot variant</b> consists of a space in which images are
               displayed. Clicking on certain hot spot areas causes images appear or disappear.
-              Transparent sections of the images allow the background to show through.</p>
+              Transparent sections of the images allow the background to show through.</li>
               
-              <p>The Grid Item – Drag and Drop variant has a workspace with a background image. Other
+              <li><b>Drag and Drop variant</b> has a workspace with a background image. Other
               images can be dragged and dropped into the workspace. The drop locations may or may not
-              be constrained. When they are constrained, dropped images snap to nearby locaitons.</p>]]>
+              be constrained. When they are constrained, dropped images snap to nearby locaitons.</li>
+			  </ul>]]>
             </Description>
             <Order>5</Order>
         </Item>

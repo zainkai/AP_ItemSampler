@@ -112,38 +112,29 @@ class SampleResponseComponent extends React.Component<SampleResponse, {}> {
 }
 
 class AboutThisItemDetailComponent extends React.Component<ItemCardViewModel, {}> {
-    render() {
-        const { bankKey, itemKey } = this.props;
+    renderField(label: string, value: string | number, className: string): JSX.Element | null {
+        if (!value) {
+            return null;
+        }
+
         return (
-            <div className={"item-details"}>
-                <p className="subject" tabIndex={0}>
-                    <span className="text-label">Subject:</span>
-                    <span className="text-value"> {this.props.subjectLabel}</span>
-                </p>
-                <p className="grade" tabIndex={0}>
-                    <span className="text-label">Grade:</span>
-                    <span className="text-value"> {this.props.gradeLabel}</span>
-                </p>
-                <p className="claim" tabIndex={0}>
-                    <span className="text-label">Claim:</span>
-                    <span className="text-value"> {this.props.claimLabel}</span>
-                </p>
-                <p className="target" tabIndex={0}>
-                    <span className="text-label">Target:</span>
-                    <span className="text-value"> {this.props.target}</span>
-                </p>
-                <p className="interaction-type" tabIndex={0}>
-                    <span className="text-label">Item Type:</span>
-                    <span className="text-value"> {this.props.interactionTypeLabel}</span>
-                </p>
-                <p className="item-id" tabIndex={0}>
-                    <span className="text-label">Item Id:</span>
-                    <span className="text-value"> {this.props.itemKey}</span>
-                </p>
-                <p className="ccss" tabIndex={0}>
-                    <span className="text-label">Common Core State Standard:</span>
-                    <span className="text-value"> {this.props.commonCoreStandardsId}</span>
-                </p>
+            <p className={`card-text ${className}`} tabIndex={0}>
+                <span className="card-text-label">{label}:</span>
+                <span className="card-text-value"> {value}</span>
+            </p>
+        );
+    }
+
+    render() {
+        return (
+            <div>
+                {this.renderField("Subject", this.props.subjectLabel, "subject")}
+                {this.renderField("Grade", this.props.gradeLabel, "grade")}
+                {this.renderField("Claim", this.props.claimLabel, "claim")}
+                {this.renderField("Target", this.props.target, "target")}
+                {this.renderField("Item Type", this.props.interactionTypeLabel, "interaction-type")}
+                {this.renderField("Item Id", this.props.itemKey, "item-id")}
+                {this.renderField("Common Core State Standard", this.props.commonCoreStandardsId, "target")}
             </div>
         );
     }

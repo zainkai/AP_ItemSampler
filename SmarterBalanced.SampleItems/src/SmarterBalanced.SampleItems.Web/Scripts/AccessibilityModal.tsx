@@ -62,6 +62,11 @@
             this.setState({ resourceSelections: {} });
         }
 
+        onReset = (e: React.FormEvent) => {
+            this.setState({ resourceSelections: {} });
+            this.props.onReset();
+        }
+
         renderResourceType(type: string) {
             let resources = this.props.accResourceGroups.filter(group => group.label === type)[0].accessibilityResources;
 
@@ -137,7 +142,7 @@
                             </div>
                             <div className="modal-footer">
                                 <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
-                                <button className="btn btn-primary" data-dismiss="modal" onClick={this.props.onReset} >Reset to Default</button>
+                                <button className="btn btn-primary" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
                                 <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                             </div>
                         </div>

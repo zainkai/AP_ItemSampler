@@ -92,12 +92,12 @@ namespace AboutItems {
         render() {
             return (
                 <div className="aboutitems-parents">
-
                     <div className="aboutitems-info">
+                        <h1>About Test Items</h1>
                         <div className="aboutitems-text">
                             Smarter Balanced assessments use a variety of item
                              types to accurately measure what students know and can do.
-                             To learn more and see an example, select an item type below.
+                             To learn more and see an example item, select an item type below.
                         </div>
                         <div className="aboutitems-dropdown form-group">
                             {this.renderInteractionTypesSelect()}
