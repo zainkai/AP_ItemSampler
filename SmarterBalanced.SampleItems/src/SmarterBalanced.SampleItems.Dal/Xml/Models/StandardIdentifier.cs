@@ -43,6 +43,12 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public static StandardIdentifierTargetComparer Instance { get; } = new StandardIdentifierTargetComparer();
         private StandardIdentifierTargetComparer() { }
 
+        /// <summary>
+        /// MATH must match:
+        ///      Claim, Content Domain, and Target
+        /// ELA must match:
+        ///     Claim and Target
+        /// </summary>
         public bool Equals(StandardIdentifier x, StandardIdentifier y)
         {
             if(x.SubjectCode != y.SubjectCode)
@@ -52,14 +58,14 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
             if(x.SubjectCode == "MA") // TODO: Verify MA or MATH?
             {
-                return x.Target == y.Target &&
-                    x.Claim == y.Claim &&
-                    x.ContentDomain == y.ContentDomain;
+                return x.Claim == y.Claim &&
+                    x.ContentDomain == y.ContentDomain &&
+                    x.Target == y.Target;
             }
             else if (x.SubjectCode == "ELA")
             {
-                return x.Target == y.Target &&
-                    x.Claim == y.Claim;
+                return x.Claim == y.Claim &&
+                    x.Target == y.Target;
             }
 
             return false;
@@ -70,17 +76,18 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             return obj.GetHashCode();
         }
     }
-    /// MATH:
-    ///     CommonCoreStandard must match Claim, ContentDomain, Target, 
-    ///         Emphasis, and CommonCoreStandard
-    /// ELA:
-    ///     Target must match Claim and Target
-    ///     CommonCoreStandard must match Claim, Target, and CommonCoreStandard
+ 
     public class StandardIdentifierCcssComparer : IEqualityComparer<StandardIdentifier>
     {
         public static StandardIdentifierCcssComparer Instance { get; } = new StandardIdentifierCcssComparer();
         private StandardIdentifierCcssComparer() { }
 
+        /// <summary>
+        /// MATH must match:
+        ///      Claim, Content Domain, Emphasis, CCSS and Target
+        /// ELA must match:
+        ///     Claim, CCSS, and Target
+        /// </summary>
         public bool Equals(StandardIdentifier x, StandardIdentifier y)
         {
             if (x.SubjectCode != y.SubjectCode)
@@ -92,8 +99,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             {
                 return x.Claim == y.Claim &&
                     x.ContentDomain == y.ContentDomain &&
-                    x.Target == y.Target &&
                     x.Emphasis == y.Emphasis &&
+                    x.Target == y.Target &&
                     x.CommonCoreStandard == y.CommonCoreStandard;
             }
             else if (x.SubjectCode == "ELA")
@@ -111,6 +118,5 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             return obj.GetHashCode();
         }
     }
-
 
 }

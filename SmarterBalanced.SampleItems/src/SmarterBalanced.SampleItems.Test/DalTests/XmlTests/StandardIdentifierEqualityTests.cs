@@ -13,7 +13,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         private string claim2 = "c2";
 
         private string subjectMath = "MA";
-        private string subjectELA = "ELA";
+        private string subjectEla = "ELA";
 
         private string contentDomain1 = "cd1";
         private string contentDomain2 = "cd2";
@@ -96,6 +96,37 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             Assert.False(StandardIdentifierCcssComparer.Instance.Equals(x, y));
             Assert.False(StandardIdentifierTargetComparer.Instance.Equals(x, y));
         }
+
+        [Fact]
+        public void TestElaEqual()
+        {
+            StandardIdentifier x = DefaultWith(subjectCode: subjectEla);
+            StandardIdentifier y = DefaultWith(subjectCode: subjectEla);
+
+            Assert.True(StandardIdentifierCcssComparer.Instance.Equals(x, y));
+            Assert.True(StandardIdentifierTargetComparer.Instance.Equals(x, y));
+        }
+
+        [Fact]
+        public void TestElaNotEqualTarget()
+        {
+            StandardIdentifier x = DefaultWith(subjectCode: subjectEla);
+            StandardIdentifier y = DefaultWith(subjectCode: subjectEla, target: target2);
+
+            Assert.False(StandardIdentifierCcssComparer.Instance.Equals(x, y));
+            Assert.True(StandardIdentifierTargetComparer.Instance.Equals(x, y));
+        }
+
+        [Fact]
+        public void TestElaNotEqualCcss()
+        {
+            StandardIdentifier x = DefaultWith(subjectCode: subjectEla);
+            StandardIdentifier y = DefaultWith(subjectCode: subjectEla, commonCoreStandard: Ccss2);
+
+            Assert.False(StandardIdentifierCcssComparer.Instance.Equals(x, y));
+            Assert.True(StandardIdentifierTargetComparer.Instance.Equals(x, y));
+        }
+
     }
 
 
