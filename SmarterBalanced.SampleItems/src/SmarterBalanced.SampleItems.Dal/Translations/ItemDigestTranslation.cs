@@ -34,7 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, targets, settings);
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, standardsXml, settings);
 
                     itemDigest.AccessibilityResourceGroups =
                         CreateAccessibilityGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
@@ -58,10 +58,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, ImmutableArray<CoreStandardsRow> targets, AppSettings appSettings)
+                                    IList<Subject> subjects, CoreStandardsXml standardsXml, AppSettings appSettings)
         {
             var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
-            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, targets);
+            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, standardsXml);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         private static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
                                     IList<Subject> subjects, ImmutableArray<Rubric> rubrics,
-                                    ImmutableArray<CoreStandardsRow> targets)
+                                    CoreStandardsXml standardsXml)
         {
 
             string subjectId = itemMetadata.Metadata.Subject;
@@ -79,16 +79,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
             string interactionTypeCode = itemMetadata.Metadata.InteractionType;
             var interactiontype = interactionTypes.FirstOrDefault(t => t.Code == interactionTypeCode);
-            CoreStandardsRow target = null;
-            if(subject != null)
-            {
-                target = targets.FirstOrDefault(t => t.SubjectCode == subject.Code &&
-                                    t.StandardIdentifier.Target == identifier.Target &&
-                                    t.StandardIdentifier.Claim == identifier.Claim &&
-                                    t.StandardIdentifier.CommonCoreStandard == identifier.CommonCoreStandard);
-            }
 
-            return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, target);
+            //TODO: fix standards
+            var coreStandards = CoreStandards.Create(
+                    targetId: identifier.ToTargetId(),
+                    commonCoreStandardsId: identifier.CommonCoreStandard);
+
+            return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, coreStandards);
         }
 
         /// <summary>
