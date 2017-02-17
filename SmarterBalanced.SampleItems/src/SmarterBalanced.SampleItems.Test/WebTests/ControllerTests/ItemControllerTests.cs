@@ -29,19 +29,19 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemKey = 485954;
 
             ItemDigest digest = new ItemDigest
-                        {
-                            BankKey = bankKey,
-                            ItemKey = itemKey,
-                            Grade = GradeLevels.NA
-                        };
+            {
+                BankKey = bankKey,
+                ItemKey = itemKey,
+                Grade = GradeLevels.NA
+            };
             ItemCardViewModel card = digest.ToItemCardViewModel();
 
             var aboutThisItemVM = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
                 itemCard: card,
                 depthOfKnowledge: "",
-                targetDescription: ""
-               );
+                targetDescription: "",
+                commonCoreStandardsDescription: "");
 
 
             ItemDigest digestCookie = new ItemDigest
@@ -56,7 +56,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 rubrics: ImmutableArray.Create<Rubric>(),
                 itemCard: cardCookie,
                 depthOfKnowledge: "",
-                targetDescription: "");
+                targetDescription: "",
+                commonCoreStandardsDescription: "");
+
 
 
             iSAAP = "TDS_test;TDS_test2;";
@@ -85,11 +87,11 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 accessibilityCookieName: string.Empty,
                 aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
-             
+
                 moreLikeThisVM: default(MoreLikeThisViewModel));
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
-          
+
             itemViewRepoMock
                 .Setup(repo =>
                     repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<Dictionary<string, string>>()))
@@ -161,7 +163,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             Assert.Equal(itemViewModel, model);
         }
-        
+
         /// <summary>
         /// Tests that Index returns correct RedirectToAction controller and action name
         /// </summary>

@@ -29,6 +29,7 @@ namespace AboutThisItem {
         itemCardViewModel: ItemCardViewModel
         depthOfKnowledge: string;
         targetDescription: string;
+        commonCoreStandardsDescription: string
     }
 
     export class ATIComponent extends React.Component<Props, {}> {
@@ -146,7 +147,7 @@ class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, 
                 </p>
                 <p className="ccss" tabIndex={0}>
                     <span className="text-label">Common Core State Standard:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.commonCoreStandardsId}</span>
+                    <span className="text-value"> {this.props.commonCoreStandardsDescription}</span>
                 </p>
                 <p className="target-description" tabIndex={0}>
                     <span className="text-label">Target:</span>

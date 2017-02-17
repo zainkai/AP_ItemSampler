@@ -28,11 +28,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         }
 
         public static CoreStandards Create(
-          string targetDescription = null,
-          string targetId = null,
-          string targetIdLabel = null,
-          string commonCoreStandardsId = null,
-          string commonCoreStandardsDescription = null)
+          string targetDescription = "",
+          string targetId = "",
+          string targetIdLabel = "",
+          string commonCoreStandardsId = "",
+          string commonCoreStandardsDescription = "")
         {
             return new CoreStandards(
                 targetDescription: targetDescription,

@@ -105,7 +105,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
         /// <summary>
         /// MATH must match:
-        ///      Claim, Content Domain, Emphasis, CCSS and Target
+        ///      Claim, Content Domain, CCSS and Target
         /// ELA must match:
         ///     Claim, CCSS, and Target
         /// </summary>
@@ -120,7 +120,6 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             {
                 return x.Claim == y.Claim &&
                     x.ContentDomain == y.ContentDomain &&
-                    x.Emphasis == y.Emphasis &&
                     x.Target == y.Target &&
                     x.CommonCoreStandard == y.CommonCoreStandard;
             }

@@ -90,8 +90,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static CoreStandards CoreStandardFromIdentififer(CoreStandardsXml standardsXml, StandardIdentifier itemIdentifier)
         {
 
-            //get target match
             CoreStandardsRow targetRow = null;
+            CoreStandardsRow ccssRow = null;
             foreach(CoreStandardsRow row in standardsXml.TargetRows)
             {
                 var rowIdentifier = row.StandardIdentifier;
@@ -101,11 +101,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
             }
 
-
-
-            //get ccss match
-
-            CoreStandardsRow ccssRow = null;
             foreach (CoreStandardsRow row in standardsXml.CcssRows)
             {
                 var rowIdentifier = row.StandardIdentifier;
@@ -115,11 +110,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 }
             }
 
-
             return CoreStandards.Create(
-                  targetId: itemIdentifier.ToTargetId(),
-                  commonCoreStandardsId: itemIdentifier.CommonCoreStandard);
-
+                  targetId: itemIdentifier.Target,
+                  targetIdLabel: itemIdentifier.ToTargetId(),
+                  commonCoreStandardsId: itemIdentifier.CommonCoreStandard,
+                  commonCoreStandardsDescription: ccssRow?.Description,
+                  targetDescription: targetRow?.Description);
         }
 
         /// <summary>
