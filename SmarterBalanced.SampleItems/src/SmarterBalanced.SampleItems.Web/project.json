@@ -57,6 +57,7 @@
       "../../AccessibilityAccommodationConfigurations/",
       "../../InteractionTypeConfigurations/",
       "../../ClaimConfigurations/",
+      "../../CoreStandardsConfigurations/",
       "docker-compose.yml",
       "appsettings*.json",
       "Dockerfile",

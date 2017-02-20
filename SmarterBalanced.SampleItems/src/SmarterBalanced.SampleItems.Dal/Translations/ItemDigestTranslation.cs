@@ -23,6 +23,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
             IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
             IList<InteractionType> interactionTypes, IList<Subject> subjects,
+             CoreStandardsXml standardsXml,
             AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
@@ -33,7 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, settings);
+                    ItemDigest itemDigest = ItemToItemDigest(metadata, matchingItems.First(), interactionTypes, subjects, standardsXml, settings);
 
                     itemDigest.AccessibilityResourceGroups =
                         CreateAccessibilityGroups(itemDigest, resourceFamilies, settings.SettingsConfig.AccessibilityTypes);
@@ -57,10 +58,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, AppSettings appSettings)
+                                    IList<Subject> subjects, CoreStandardsXml standardsXml, AppSettings appSettings)
         {
-            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
-            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics);
+            int? maxPoints = itemMetadata.Metadata.MaximumNumberOfPoints;
+            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(maxPoints, appSettings)).Where(r => r != null).ToImmutableArray();
+            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, standardsXml, appSettings);
         }
 
         /// <summary>
@@ -69,27 +71,62 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
-                                    IList<Subject> subjects, ImmutableArray<Rubric> rubrics)
+                                    IList<Subject> subjects, ImmutableArray<Rubric> rubrics,
+                                    CoreStandardsXml standardsXml, AppSettings appSettings)
         {
-
-            StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
             string subjectId = itemMetadata.Metadata.Subject;
             var subject = subjects.FirstOrDefault(s => s.Code == subjectId);
+            StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents, appSettings.SettingsConfig.SupportedPublications);
             string interactionTypeCode = itemMetadata.Metadata.InteractionType;
             var interactiontype = interactionTypes.FirstOrDefault(t => t.Code == interactionTypeCode);
 
-            return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics);
+            //TODO: fix standards
+            CoreStandards coreStandards = CoreStandardFromIdentififer(standardsXml, identifier);
+
+            return ToItemDigest(itemMetadata, itemContents, identifier, subject, interactiontype, rubrics, coreStandards);
+        }
+
+        //TODO: refactor
+        public static CoreStandards CoreStandardFromIdentififer(CoreStandardsXml standardsXml, StandardIdentifier itemIdentifier)
+        {
+
+            CoreStandardsRow targetRow = null;
+            CoreStandardsRow ccssRow = null;
+            if(standardsXml != null && standardsXml.TargetRows.Any())
+            {
+                targetRow = standardsXml.TargetRows
+                    .FirstOrDefault(t =>
+                    StandardIdentifierTargetComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
+            }
+
+            if (standardsXml != null && standardsXml.CcssRows.Any())
+            {
+                ccssRow = standardsXml.CcssRows
+                    .FirstOrDefault(t =>
+                    StandardIdentifierCcssComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
+            }
+
+            return CoreStandards.Create(
+                  targetId: itemIdentifier?.Target,
+                  targetIdLabel: itemIdentifier?.ToTargetId(),
+                  commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
+                  commonCoreStandardsDescription: ccssRow?.Description,
+                  targetDescription: targetRow?.Description);
         }
 
         /// <summary>
         /// Gets the standard identifier from the given item metadata
         /// </summary>
-        private static StandardIdentifier ToStandardIdentifier(this ItemMetadata itemMetadata, ItemContents itemContents)
+        private static StandardIdentifier ToStandardIdentifier(this ItemMetadata itemMetadata, ItemContents itemContents, string[] supportedPubs)
         {
             try
             {
-                var identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(
-                    itemMetadata.Metadata.StandardPublications.First().PrimaryStandard);
+                var primaryStandard = itemMetadata.Metadata.StandardPublications
+                    .Where(s => !s.PrimaryStandard.EndsWith("Undesignated") && supportedPubs.Any(p => p.Equals(s.Publication)))
+                    .FirstOrDefault()
+                    ?.PrimaryStandard;
+
+                var identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(primaryStandard);
                 return identifier;
             }
             catch (InvalidOperationException ex)
@@ -104,7 +141,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         public static ItemDigest ToItemDigest(ItemMetadata itemMetadata, ItemContents itemContents,
                                                 StandardIdentifier identifier, Subject subject,
-                                                InteractionType interactionType, ImmutableArray<Rubric> rubrics)
+                                                InteractionType interactionType, ImmutableArray<Rubric> rubrics, CoreStandards coreStandards)
         {
             if (itemMetadata == null) { throw new ArgumentNullException(nameof(itemMetadata)); }
             if (itemMetadata.Metadata == null) { throw new ArgumentNullException(nameof(itemMetadata.Metadata)); }
@@ -128,12 +165,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
                 Subject = subject,
-                TargetId = identifier.ToTargetId(),
                 Claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId()),
-                CommonCoreStandardsId = identifier.CommonCoreStandard,
                 Grade = GradeLevelsUtils.FromString(itemMetadata.Metadata.Grade),
                 AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
-                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y"
+                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
+                DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
+                CoreStandards = coreStandards,
+                IsPerformanceItem = itemContents.Item.AssociatedPassage.HasValue
             };
 
             return digest;
@@ -144,7 +182,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static string ToClaimId(this StandardIdentifier identifier)
         {
-            return (string.IsNullOrEmpty(identifier.Claim)) ? string.Empty : identifier.Claim.Split('-').FirstOrDefault();
+            return (string.IsNullOrEmpty(identifier?.Claim)) ? string.Empty : identifier.Claim.Split('-').FirstOrDefault();
         }
 
         /// <summary>
@@ -152,16 +190,18 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// </summary>
         private static string ToTargetId(this StandardIdentifier identifier)
         {
-            return (string.IsNullOrEmpty(identifier.Target)) ? string.Empty : identifier.Target.Split('-').FirstOrDefault();
+            return (string.IsNullOrEmpty(identifier?.Target)) ? string.Empty : identifier.Target.Split('-').FirstOrDefault();
         }
 
         /// <summary>
         /// Returns a Single Rubric from content and filters out any placeholder text
         /// </summary>
-        public static Rubric ToRubric(this Content content, AppSettings appSettings)
+        public static Rubric ToRubric(this Content content, int? maxPoints, AppSettings appSettings)
         {
             if (appSettings == null || appSettings.RubricPlaceHolderText == null || appSettings.SettingsConfig == null)
-                { throw new ArgumentNullException(nameof(appSettings)); }
+            {
+                throw new ArgumentNullException(nameof(appSettings));
+            }
 
             var placeholder = appSettings.RubricPlaceHolderText;
             var languageToLabel = appSettings.SettingsConfig.LanguageToLabel;
@@ -174,10 +214,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 return null;
             }
 
-
-            var rubricEntries = content.RubricList.Rubrics.Where(r => !string.IsNullOrWhiteSpace(r.Value)
-                                                                   && !placeholder.RubricPlaceHolderContains.Any(s => r.Value.Contains(s))
-                                                                   && !placeholder.RubricPlaceHolderEquals.Any(s => r.Value.Equals(s))).ToImmutableArray();
+            int scorePoint;
+            var rubricEntries = content.RubricList.Rubrics
+                .Where(r => !string.IsNullOrWhiteSpace(r.Value)
+                    && int.TryParse(r.Scorepoint, out scorePoint)
+                    && scorePoint <= maxPoints
+                    && !placeholder.RubricPlaceHolderContains.Any(s => r.Value.Contains(s))
+                    && !placeholder.RubricPlaceHolderEquals.Any(s => r.Value.Equals(s))).ToImmutableArray();
 
            Predicate<SampleResponse> pred = (r => string.IsNullOrWhiteSpace(r.SampleContent)
                                                     || placeholder.RubricPlaceHolderContains.Any(s => r.SampleContent.Contains(s))

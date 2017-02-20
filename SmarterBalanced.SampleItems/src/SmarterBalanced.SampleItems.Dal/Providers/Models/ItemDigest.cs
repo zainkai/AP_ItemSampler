@@ -17,8 +17,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int ItemKey { get; set; }
         public string ItemType { get; set; }
 
-        public string TargetId { get; set; }
-        public string CommonCoreStandardsId { get; set; }
 
         public GradeLevels Grade { get; set; }
         public Subject Subject { get; set; }
@@ -31,5 +29,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int? AssociatedStimulus { get; set; }
         public bool AslSupported { get; set; }
         public bool AllowCalculator { get; set; }
+        public string DepthOfKnowledge { get; set; }
+        public bool IsPerformanceItem { get; set; }
+
+        public CoreStandards CoreStandards { get; set; }
     }
 }

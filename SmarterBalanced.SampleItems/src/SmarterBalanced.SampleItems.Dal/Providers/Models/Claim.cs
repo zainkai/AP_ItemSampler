@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
@@ -27,6 +28,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Code = code;
             ClaimNumber = claimNumber;
             Label = label;
+        }
+
+        public static Claim Create(string code = "", string claimNumber = "", string label = "")
+        {
+            return new Claim(
+                 code: code,
+                 claimNumber: claimNumber,
+                 label: label);
+        }
+
+        public static Claim Create(XElement element)
+        {
+            var claim = new Claim(
+                code: (string)element.Element("Code"),
+                label: (string)element.Element("Label"),
+                claimNumber: (string)element.Element("ClaimNumber"));
+
+            return claim;
         }
     }
 }

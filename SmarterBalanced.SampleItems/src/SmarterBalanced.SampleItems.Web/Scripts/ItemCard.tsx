@@ -12,7 +12,6 @@ interface ItemCardViewModel {
     target: string;
     interactionTypeCode: string;
     interactionTypeLabel: string;
-    commonCoreStandardsId: string;
 }
 
 function itemPageLink(bankKey: number, itemKey: number) {
