@@ -259,7 +259,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             Assert.Equal(familySel.Order, merged.Order);
         }
 
-        [Fact]
+        [Fact(Skip = "TODO: talk to Alex. There are tests with the same name.")]
         public void TestMergeSelectionVoidProps()
         {
             var familySel = AccessibilitySelection.Create(code:goodSelection.Code);

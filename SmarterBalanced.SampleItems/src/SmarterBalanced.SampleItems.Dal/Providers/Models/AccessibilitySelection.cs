@@ -9,13 +9,13 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     {
         public string Code { get; }
         public string Label { get; }
-        public int Order { get; }
+        public int? Order { get; }
         public bool Disabled { get; }
 
         public AccessibilitySelection(
             string code,
             string label,
-            int order,
+            int? order,
             bool disabled)
         {
             Code = code;
@@ -27,7 +27,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public static AccessibilitySelection Create(
             string code = "",
             string label = "",
-            int order = -1,
+            int? order = null,
             bool disabled = false)
         {
             var sel = new AccessibilitySelection(
