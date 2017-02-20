@@ -118,7 +118,8 @@ class RubricEntryComponent extends React.Component<RubricEntry, {}> {
 
 class SampleResponseComponent extends React.Component<SampleResponse, {}> {
     render() {
-        const label = `${this.props.name} (${this.props.scorePoint} Points)`;
+        const pointLabel = this.props.scorePoint == "1" ? "point" : "points";
+        const label = `${this.props.name} (${this.props.scorePoint} ${pointLabel})`;
         return (
             <Collapsible.CComponent label={label}>
                 <div className="sample-response">
