@@ -66,11 +66,23 @@ namespace AboutThisItem {
 }
 
 class RubricComponent extends React.Component<Rubric, {}> {
-    render() {
-        const label = `${this.props.language} Rubric`;
 
+    renderRubrics() {
         const rubricEntries = this.props.rubricEntries.map((re, i) => <RubricEntryComponent {...re} key={String(i)} />);
+        if (rubricEntries.length === 0) {
+            return null;
+        }
 
+         let rubrics = (
+                <div>
+                    <h4>Rubrics</h4>
+                    {rubricEntries}
+                </div>
+        );
+         return rubrics;
+    }
+
+    renderSampleResponses() {
         let rubricSamples: JSX.Element[] = [];
         let i: number = 0;
         for (const sample of this.props.samples) {
@@ -79,31 +91,26 @@ class RubricComponent extends React.Component<Rubric, {}> {
             rubricSamples.push(...responses);
             i++;
         }
-
-        let rubrics = undefined;
-        if (rubricEntries.length > 0) {
-            rubrics = (
-                <div>
-                    <h4>Rubrics</h4>
-                    {rubricEntries}
-                </div>
-            );
+        if (rubricSamples.length === 0) {
+            return null;
         }
 
-        let sampleResponses = undefined;
-        if (rubricSamples.length > 0) {
-            sampleResponses = (
-                <div>
-                    <h4>Sample Responses</h4>
-                    {rubricSamples}
-                </div>
-            );
-        }
+        let sampleResponses = (
+            <div>
+                <h4>Sample Responses</h4>
+                {rubricSamples}
+            </div>
+        );
 
+        return sampleResponses;
+    }
+
+    render() {
+        const label = `${this.props.language} Rubric`;
         return (
             <Collapsible.CComponent label={label}>
-                {rubrics}
-                {sampleResponses}
+                {this.renderRubrics()}
+                {this.renderSampleResponses()}
             </Collapsible.CComponent>
         );
     }
