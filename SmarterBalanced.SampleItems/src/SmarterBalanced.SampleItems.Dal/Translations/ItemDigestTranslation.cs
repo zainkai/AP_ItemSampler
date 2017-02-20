@@ -60,7 +60,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
                                     IList<Subject> subjects, CoreStandardsXml standardsXml, AppSettings appSettings)
         {
-            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
+            int? maxPoints = itemMetadata.Metadata.MaximumNumberOfPoints;
+            var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(maxPoints, appSettings)).Where(r => r != null).ToImmutableArray();
             return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, standardsXml, appSettings);
         }
 
@@ -195,10 +196,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <summary>
         /// Returns a Single Rubric from content and filters out any placeholder text
         /// </summary>
-        public static Rubric ToRubric(this Content content, AppSettings appSettings)
+        public static Rubric ToRubric(this Content content, int? maxPoints, AppSettings appSettings)
         {
             if (appSettings == null || appSettings.RubricPlaceHolderText == null || appSettings.SettingsConfig == null)
-                { throw new ArgumentNullException(nameof(appSettings)); }
+            {
+                throw new ArgumentNullException(nameof(appSettings));
+            }
 
             var placeholder = appSettings.RubricPlaceHolderText;
             var languageToLabel = appSettings.SettingsConfig.LanguageToLabel;
@@ -211,10 +214,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 return null;
             }
 
-
-            var rubricEntries = content.RubricList.Rubrics.Where(r => !string.IsNullOrWhiteSpace(r.Value)
-                                                                   && !placeholder.RubricPlaceHolderContains.Any(s => r.Value.Contains(s))
-                                                                   && !placeholder.RubricPlaceHolderEquals.Any(s => r.Value.Equals(s))).ToImmutableArray();
+            int scorePoint;
+            var rubricEntries = content.RubricList.Rubrics
+                .Where(r => !string.IsNullOrWhiteSpace(r.Value)
+                    && int.TryParse(r.Scorepoint, out scorePoint)
+                    && scorePoint <= maxPoints
+                    && !placeholder.RubricPlaceHolderContains.Any(s => r.Value.Contains(s))
+                    && !placeholder.RubricPlaceHolderEquals.Any(s => r.Value.Equals(s))).ToImmutableArray();
 
            Predicate<SampleResponse> pred = (r => string.IsNullOrWhiteSpace(r.SampleContent)
                                                     || placeholder.RubricPlaceHolderContains.Any(s => r.SampleContent.Contains(s))

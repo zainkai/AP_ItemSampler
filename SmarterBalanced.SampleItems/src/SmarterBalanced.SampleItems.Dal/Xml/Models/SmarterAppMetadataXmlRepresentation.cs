@@ -43,5 +43,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
         [XmlElement("DepthOfKnowledge")]
         public string DepthOfKnowledge { get; set; }
+
+        [XmlElement("MaximumNumberOfPoints")]
+        public int? MaximumNumberOfPoints { get; set; }
     }
 }
