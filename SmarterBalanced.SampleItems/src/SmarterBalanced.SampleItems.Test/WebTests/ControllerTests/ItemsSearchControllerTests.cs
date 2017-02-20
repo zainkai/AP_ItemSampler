@@ -74,7 +74,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestSearchNoResult()
         {
-            var result = controller.Search(null, GradeLevels.High, null, null, null) as JsonResult;
+            var result = controller.Search(null, GradeLevels.High, null, null, null, false) as JsonResult;
             var resultList = result.Value as List<ItemCardViewModel>;
 
             Assert.IsType<List<ItemCardViewModel>>(result.Value);
@@ -88,7 +88,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestSearchResult()
         {
-            var result = controller.Search(goodItemKey.ToString(), GradeLevels.High, null, null, null) as JsonResult;
+            var result = controller.Search(goodItemKey.ToString(), GradeLevels.High, null, null, null, false) as JsonResult;
             var resultList = result.Value as List<ItemCardViewModel>;
 
             Assert.Equal(resultList.Count, 1);

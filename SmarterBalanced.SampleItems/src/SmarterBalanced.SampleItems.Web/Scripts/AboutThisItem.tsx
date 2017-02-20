@@ -26,17 +26,22 @@ interface Rubric {
 namespace AboutThisItem {
     export interface Props {
         rubrics: Rubric[];
-        itemCardViewModel: ItemCardViewModel
+        itemCardViewModel: ItemCardViewModel;
         depthOfKnowledge: string;
         targetDescription: string;
-        commonCoreStandardsDescription: string
+        commonCoreStandardsDescription: string;
     }
 
     export class ATIComponent extends React.Component<Props, {}> {
         render() {
             const rubrics = this.props.rubrics.map((ru, i) => <RubricComponent {...ru} key={String(i)} />);
             return (
-                <div className="modal fade" id="about-item-modal-container" tabIndex={-1} role="dialog" aria-labelledby="About Item Modal" aria-hidden="true">
+                <div className="modal fade"
+                    id="about-item-modal-container"
+                    tabIndex={-1} role="dialog"
+                    aria-labelledby="About Item Modal"
+                    aria-hidden="true">
+
                     <div className="modal-dialog about-item-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -88,7 +93,7 @@ class RubricComponent extends React.Component<Rubric, {}> {
 
 class RubricEntryComponent extends React.Component<RubricEntry, {}> {
     render() {
-        const pointLabel = this.props.scorepoint == "1" ? "point" : "points";
+        const pointLabel = this.props.scorepoint === "1" ? "point" : "points";
         const label = `${this.props.name} (${this.props.scorepoint} ${pointLabel})`;
         return (
             <Collapsible.CComponent label={label}>

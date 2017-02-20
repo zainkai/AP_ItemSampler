@@ -36,7 +36,7 @@ namespace ItemSearchParams {
         interactionTypes?: string[];
         performanceOnly?: boolean;
 
-        expandItemID?: boolean;
+        expandMore?: boolean;
         expandGradeLevels?: boolean;
         expandSubjects?: boolean;
         expandClaims?: boolean;
@@ -60,7 +60,7 @@ namespace ItemSearchParams {
             const subjects = queryObject["subjects"] || [];
             const claims = queryObject["claims"] || [];
             const interactionTypes = queryObject["interactionTypes"] || [];
-            const performanceOnly = !!queryObject["PerfOnly"];  // TODO Cast as boolean
+            const performanceOnly = (queryObject["performanceOnly"] || [])[0] === "true";
 
             this.state = {
                 itemId: itemId,
@@ -70,11 +70,11 @@ namespace ItemSearchParams {
                 interactionTypes: interactionTypes,
                 performanceOnly: performanceOnly,
 
-                expandItemID: itemId.length !== 0,
+                expandMore: itemId.length !== 0 || performanceOnly,
                 expandGradeLevels: gradeLevels !== GradeLevels.NA,
                 expandSubjects: subjects.length !== 0,
                 expandClaims: claims.length !== 0,
-                expandInteractionTypes: interactionTypes.length !== 0
+                expandInteractionTypes: interactionTypes.length !== 0,
             };
 
             this.onChange();
@@ -96,6 +96,9 @@ namespace ItemSearchParams {
             }
             if (this.state.subjects && this.state.subjects.length !== 0) {
                 pairs.push("subjects=" + this.state.subjects.join(","));
+            }
+            if (this.state.performanceOnly) {
+                pairs.push("performanceOnly=true");
             }
 
             if (pairs.length === 0) {
@@ -120,7 +123,8 @@ namespace ItemSearchParams {
                 gradeLevels: this.state.gradeLevels || GradeLevels.All,
                 subjects: this.state.subjects || [],
                 claims: this.state.claims || [],
-                interactionTypes: this.state.interactionTypes || []
+                interactionTypes: this.state.interactionTypes || [],
+                performanceOnly: this.state.performanceOnly || false
             };
             this.props.onChange(params);
         }
@@ -205,14 +209,14 @@ namespace ItemSearchParams {
          * Returns a value indicating whether all search categories are expanded.
          */
         getExpandAll() {
-            const { expandItemID, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
-            const expandAll = expandItemID && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
+            const { expandMore, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
+            const expandAll = expandMore && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
             return expandAll;
         }
 
         toggleExpandItemIDInput() {
             this.setState({
-                expandItemID: !this.state.expandItemID
+                expandMore: !this.state.expandMore
             });
         }
 
@@ -244,7 +248,7 @@ namespace ItemSearchParams {
             // If everything is already expanded, then collapse everything. Otherwise, expand everything.
             const expandAll = !this.getExpandAll();
             this.setState({
-                expandItemID: expandAll,
+                expandMore: expandAll,
                 expandGradeLevels: expandAll,
                 expandSubjects: expandAll,
                 expandClaims: expandAll,
@@ -333,23 +337,25 @@ namespace ItemSearchParams {
                         {this.renderSubjects()}
                         {this.renderClaims()}
                         {this.renderInteractionTypes()}
-                        {this.renderItemID()}
+                        {this.renderMore()}
                     </div>
                 </div>
             );
         }
 
-        renderItemID() {
+        renderMore() {
             const performanceOnlySelected = this.state.performanceOnly;
             const filters = (
-                <div>
+                <div className="search-tags">
                     <input type="tel" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         onKeyUp={e => this.onItemIDKeyUp(e)}
                         value={this.state.itemId}>
                     </input>
-                    <button role="button" key={"PerfOnly"} className={(performanceOnlySelected ? "selected" : "") + " tag"}
+                    <button role="button"
+                        className={(performanceOnlySelected ? "selected " : "") + "tag"}
+                        style={{ flex: 1 }}
                         onClick={() => this.togglePerformanceOnly()}
                         tabIndex={0}
                         aria-pressed={performanceOnlySelected}>
@@ -358,12 +364,12 @@ namespace ItemSearchParams {
                     </button>
                 </div>
             );
-            const input = this.state.expandItemID ? filters : undefined;
+            const input = this.state.expandMore ? filters : undefined;
             return (
                 <div className="search-category">
-                    <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()}
+                    <label aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
                         onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
-                        {this.state.expandItemID ? hideArrow : showArrow} More
+                        {this.state.expandMore ? hideArrow : showArrow} More
                     </label>
                     {input}
                 </div>
