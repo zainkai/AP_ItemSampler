@@ -75,12 +75,30 @@ class RubricComponent extends React.Component<Rubric, {}> {
             i++;
         }
 
+        let rubrics = undefined;
+        if (rubricEntries.length > 0) {
+            rubrics = (
+                <div>
+                    <h4>Rubrics</h4>
+                    {rubricEntries}
+                </div>
+            );
+        }
+
+        let sampleResponses = undefined;
+        if (rubricSamples.length > 0) {
+            sampleResponses = (
+                <div>
+                    <h4>Sample Responses</h4>
+                    {rubricSamples}
+                </div>
+            );
+        }
+
         return (
             <Collapsible.CComponent label={label}>
-                <h4>Rubrics</h4>
-                {rubricEntries}
-                <h4>Sample Responses</h4>
-                {rubricSamples}
+                {rubrics}
+                {sampleResponses}
             </Collapsible.CComponent>
         );
     }
@@ -114,45 +132,33 @@ class SampleResponseComponent extends React.Component<SampleResponse, {}> {
 }
 
 class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, {}> {
+    renderField(label: string, value: string | number, className: string): JSX.Element | null {
+        if (!value) {
+            return null;
+        }
+
+        return (
+            <p className={`card-text ${className}`} tabIndex={0}>
+                <span className="card-text-label">{label}:</span>
+                <span className="card-text-value"> {value}</span>
+            </p>
+        );
+    }
+
     render() {
+
         return (
             <div className={"item-details"}>
-                <p className="subject" tabIndex={0}>
-                    <span className="text-label">Subject:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.subjectLabel}</span>
-                </p>
-                <p className="grade" tabIndex={0}>
-                    <span className="text-label">Grade:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.gradeLabel}</span>
-                </p>
-                <p className="claim" tabIndex={0}>
-                    <span className="text-label">Claim:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.claimLabel}</span>
-                </p>
-                <p className="target" tabIndex={0}>
-                    <span className="text-label">Target:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.target}</span>
-                </p>
-                <p className="interaction-type" tabIndex={0}>
-                    <span className="text-label">Item Type:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.interactionTypeLabel}</span>
-                </p>
-                <p className="item-id" tabIndex={0}>
-                    <span className="text-label">Item Id:</span>
-                    <span className="text-value"> {this.props.itemCardViewModel.itemKey}</span>
-                </p>
-                <p className="dok" tabIndex={0}>
-                    <span className="text-label">Depth of Knowledge:</span>
-                    <span className="text-value"> {this.props.depthOfKnowledge}</span>
-                </p>
-                <p className="ccss" tabIndex={0}>
-                    <span className="text-label">Common Core State Standard:</span>
-                    <span className="text-value"> {this.props.commonCoreStandardsDescription}</span>
-                </p>
-                <p className="target-description" tabIndex={0}>
-                    <span className="text-label">Target Description:</span>
-                    <span className="text-value"> {this.props.targetDescription}</span>
-                </p>
+                {this.renderField("Subject", this.props.itemCardViewModel.subjectLabel, "subject")}
+                {this.renderField("Grade", this.props.itemCardViewModel.gradeLabel, "grade")}
+                {this.renderField("Claim", this.props.itemCardViewModel.claimLabel, "claim")}
+                {this.renderField("Target", this.props.itemCardViewModel.target, "target")}
+                {this.renderField("Item Type", this.props.itemCardViewModel.interactionTypeLabel, "interaction-type")}
+                {this.renderField("Item Id", this.props.itemCardViewModel.itemKey, "item-id")}
+                {this.renderField("Depth of Knowledge", this.props.depthOfKnowledge, "dok")}
+                {this.renderField("Common Core State Standard", this.props.commonCoreStandardsDescription, "ccss")}
+                {this.renderField("Target Description", this.props.targetDescription, "target-description")}
+
             </div>
         );
     }
