@@ -32,9 +32,9 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(string itemID, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims)
+        public IActionResult Search(string itemID, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims, bool performanceOnly)
         {
-            var parms = new ItemsSearchParams(itemID, gradeLevels, subjects, interactionTypes, claims);
+            var parms = new ItemsSearchParams(itemID, gradeLevels, subjects, interactionTypes, claims, performanceOnly);
             var items = sampleItemsSearchRepo.GetItemCards(parms);
             return Json(items);
         }
