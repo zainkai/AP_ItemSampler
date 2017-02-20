@@ -13,12 +13,12 @@ interface AboutThisItemViewModel {
 
 namespace AboutItems {
 
-    interface state {
+    interface State {
         selectedCode: string;
         itemUrl: string;
     }
 
-    export class AIComponent extends React.Component<AboutThisItemViewModel, state>{
+    export class AIComponent extends React.Component<AboutThisItemViewModel, State>{
         constructor(props: AboutThisItemViewModel) {
             super(props);
 
@@ -27,23 +27,20 @@ namespace AboutItems {
                 selectedCode: code,
                 itemUrl: this.props.itemUrl
             };
-
-            this.handleChange = this.handleChange.bind(this);
-            this.setNewUrl = this.setNewUrl.bind(this);
         }
 
-        handleChange(e: any) {
+        handleChange = (e: any) => {
             const newCode = e.currentTarget.value
             if (newCode === this.state.selectedCode) {
                 return;
             }
 
-            this.getNewUrl(newCode);
+            this.fetchNewURL(newCode);
 
-            this.setState(Object.assign({}, this.state, { selectedCode: newCode }) as state)
+            this.setState(Object.assign({}, this.state, { selectedCode: newCode }) as State);
         }
 
-        getNewUrl(newCode: string) {
+        fetchNewURL(newCode: string) {
             const params = {
                 interactionTypeCode: newCode
             };
@@ -53,13 +50,13 @@ namespace AboutItems {
                 type: "GET",
                 url: "/AboutItems/GetItemUrl",
                 data: params,
-                success: this.setNewUrl
+                success: this.onFetchedNewURL
             });
         }
 
-        setNewUrl(newUrl: string) {
+        onFetchedNewURL = (newUrl: string) => {
             // TODO: Handle if url was null (no item found)
-            this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as state)
+            this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as State)
         }
 
         renderDescription() {
