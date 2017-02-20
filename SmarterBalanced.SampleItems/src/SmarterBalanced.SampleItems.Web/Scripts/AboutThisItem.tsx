@@ -75,12 +75,30 @@ class RubricComponent extends React.Component<Rubric, {}> {
             i++;
         }
 
+        let rubrics = undefined;
+        if (rubricEntries.length > 0) {
+            rubrics = (
+                <div>
+                    <h4>Rubrics</h4>
+                    {rubricEntries}
+                </div>
+            );
+        }
+
+        let sampleResponses = undefined;
+        if (rubricSamples.length > 0) {
+            sampleResponses = (
+                <div>
+                    <h4>Sample Responses</h4>
+                    {rubricSamples}
+                </div>
+            );
+        }
+
         return (
             <Collapsible.CComponent label={label}>
-                <h4>Rubrics</h4>
-                {rubricEntries}
-                <h4>Sample Responses</h4>
-                {rubricSamples}
+                {rubrics}
+                {sampleResponses}
             </Collapsible.CComponent>
         );
     }
