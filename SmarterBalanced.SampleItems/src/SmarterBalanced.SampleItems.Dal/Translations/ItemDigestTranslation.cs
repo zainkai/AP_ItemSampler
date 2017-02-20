@@ -121,7 +121,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             try
             {
                 var primaryStandard = itemMetadata.Metadata.StandardPublications
-                    .Where(s => supportedPubs.Any(p => p.Equals(s.Publication)))
+                    .Where(s => !s.PrimaryStandard.EndsWith("Undesignated") && supportedPubs.Any(p => p.Equals(s.Publication)))
                     .FirstOrDefault()
                     ?.PrimaryStandard;
 
@@ -169,7 +169,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
-                CoreStandards = coreStandards
+                CoreStandards = coreStandards,
+                IsPerformanceItem = itemContents.Item.AssociatedPassage.HasValue
             };
 
             return digest;

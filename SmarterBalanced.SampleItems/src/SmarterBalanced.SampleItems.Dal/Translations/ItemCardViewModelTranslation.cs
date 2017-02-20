@@ -13,7 +13,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string claimTitle = (string.IsNullOrEmpty(digest.Claim?.ClaimNumber)) ? string.Empty : $"Claim {digest.Claim.ClaimNumber}";
             string title = $"{digest.Subject?.ShortLabel} {digest.Grade.ToDisplayString()} {claimTitle}";
 
-            var card = new ItemCardViewModel(
+            var card = ItemCardViewModel.Create(
                 bankKey: digest.BankKey,
                 itemKey: digest.ItemKey,
                 title: title,
@@ -25,7 +25,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 claimLabel: digest.Claim?.Label,
                 target: digest.CoreStandards?.TargetIdLabel,
                 interactionTypeCode: digest.InteractionType?.Code,
-                interactionTypeLabel: digest.InteractionType?.Label);
+                interactionTypeLabel: digest.InteractionType?.Label,
+                isPerformanceItem: digest.IsPerformanceItem);
 
             return card;
         }

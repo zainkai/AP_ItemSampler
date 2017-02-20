@@ -30,6 +30,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public bool AslSupported { get; set; }
         public bool AllowCalculator { get; set; }
         public string DepthOfKnowledge { get; set; }
+        public bool IsPerformanceItem { get; set; }
 
         public CoreStandards CoreStandards { get; set; }
     }
