@@ -117,9 +117,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         #endregion
 
-        //TODO:
-        //- add tests for if itemcards and itemdigests have more than one item matching?
-
         #region MoreLikeThis
 
         [Fact]
