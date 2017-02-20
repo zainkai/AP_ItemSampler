@@ -153,6 +153,7 @@ interface SearchAPIParams {
     subjects: string[];
     claims: string[];
     interactionTypes: string[];
+    performanceOnly: boolean;
 }
 
 interface ItemsSearchViewModel {

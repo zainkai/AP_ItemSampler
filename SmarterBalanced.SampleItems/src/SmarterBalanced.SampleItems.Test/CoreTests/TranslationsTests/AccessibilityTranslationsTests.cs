@@ -179,7 +179,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             Assert.Equal(merged.Description, globalResource.Description);
             Assert.Equal(merged.Label, newFamilyRes.Label);
             Assert.Equal(merged.DefaultSelection, "TDS_CCInvert");
-            Assert.Equal(merged.Order, globalResource.Order); // TODO: it's looking more and more like a data type for PartialResource is needed
+            Assert.Equal(merged.Order, globalResource.Order);
             Assert.Equal(merged.Disabled, newFamilyRes.Disabled);
             var res = merged.Selections.Where(r => r.Label == goodSelection.Label).ToList();
             Assert.Equal(1, res.Count);
