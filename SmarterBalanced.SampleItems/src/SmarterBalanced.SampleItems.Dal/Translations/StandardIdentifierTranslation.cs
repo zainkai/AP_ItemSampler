@@ -24,6 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier StandardStringtoStandardIdentifier(string standards)
         {
+
             if (string.IsNullOrEmpty(standards))
             {
                 // TODO: log error
@@ -78,79 +79,66 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         }
 
-        public static StandardIdentifier ElaV1Standard(string[] parts)
+        private static string GetStandardPartOrDefault(string[] parts, int index)
         {
-            if (parts == null || parts.Length != 3)
+            if(parts != null && index < parts.Length)
             {
-                return null;
+                return parts[index];
             }
 
+            return string.Empty;
+        }
+
+        public static StandardIdentifier ElaV1Standard(string[] parts)
+        {
+
             return StandardIdentifier.Create(
-                    claim: parts[0],
-                    target: parts[1],
-                    commonCoreStandard: parts[2],
+                    claim: GetStandardPartOrDefault(parts, 0),
+                    target: GetStandardPartOrDefault(parts, 1),
+                    commonCoreStandard: GetStandardPartOrDefault(parts, 2),
                     subjectCode: "ELA");
         }
 
         public static StandardIdentifier MaV1Standard(string[] parts)
         {
-            if (parts == null || parts.Length != 5)
-            {
-                return null;
-            }
-
             return StandardIdentifier.Create(
-                    claim: parts[0],
-                    target: parts[2],
-                    commonCoreStandard: parts[4],
-                    contentDomain: parts[1],
+                    claim: GetStandardPartOrDefault(parts, 0),
+                    target: GetStandardPartOrDefault(parts, 2),
+                    commonCoreStandard: GetStandardPartOrDefault(parts, 4),
+                    contentDomain: GetStandardPartOrDefault(parts, 1),
                     subjectCode: "MATH");
         }
 
         public static StandardIdentifier MaV4Standard(string[] parts)
         {
-            if (parts == null || parts.Length != 5)
-            {
-                return null;
-            }
-
             return StandardIdentifier.Create(
-                    claim: parts[0],
-                    target: parts[2],
-                    contentDomain: parts[1],
-                    emphasis: parts[3],
-                    commonCoreStandard: parts[4],
+                    claim: GetStandardPartOrDefault(parts, 0),
+                    target: GetStandardPartOrDefault(parts, 2),
+                    contentDomain: GetStandardPartOrDefault(parts, 1),
+                    emphasis: GetStandardPartOrDefault(parts, 3),
+                    commonCoreStandard: GetStandardPartOrDefault(parts, 4),
                     subjectCode: "MATH");
         }
 
         public static StandardIdentifier MaV5Standard(string[] parts)
         {
-            if (parts == null || parts.Length != 5)
-            {
-                return null;
-            }
-
+    
             return StandardIdentifier.Create(
-                    claim: parts[0],
-                    target: parts[2],
-                    contentDomain: parts[1],
-                    emphasis: parts[3],
-                    commonCoreStandard: parts[4],
+                    claim: GetStandardPartOrDefault(parts, 0),
+                    target: GetStandardPartOrDefault(parts, 2),
+                    contentDomain: GetStandardPartOrDefault(parts, 1),
+                    emphasis: GetStandardPartOrDefault(parts, 3),
+                    commonCoreStandard: GetStandardPartOrDefault(parts, 4),
                     subjectCode: "MATH");
         }
 
         public static StandardIdentifier MaV6Standard(string[] parts)
         {
-            if (parts == null || parts.Length != 4)
-            {
-                return null;
-            }
-
             return StandardIdentifier.Create(
-                    claim: parts[0],
-                    target: parts[3],
-                    contentCategory: parts[1],
-                    targetSet: parts[2],
+                    claim: GetStandardPartOrDefault(parts, 0),
+                    target: GetStandardPartOrDefault(parts, 3),
+                    contentCategory: GetStandardPartOrDefault(parts, 1),
+                    targetSet: GetStandardPartOrDefault(parts, 2),
                     subjectCode: "MATH");
         }
 

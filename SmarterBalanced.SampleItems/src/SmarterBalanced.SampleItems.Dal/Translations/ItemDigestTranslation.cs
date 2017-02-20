@@ -61,7 +61,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                                     IList<Subject> subjects, CoreStandardsXml standardsXml, AppSettings appSettings)
         {
             var rubrics = itemContents.Item.Contents.Select(c => c.ToRubric(appSettings)).Where(r => r != null).ToImmutableArray();
-            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, standardsXml);
+            return ItemToItemDigest(itemMetadata, itemContents, interactionTypes, subjects, rubrics, standardsXml, appSettings);
         }
 
         /// <summary>
@@ -71,11 +71,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         private static ItemDigest ItemToItemDigest(ItemMetadata itemMetadata,
                                     ItemContents itemContents, IList<InteractionType> interactionTypes,
                                     IList<Subject> subjects, ImmutableArray<Rubric> rubrics,
-                                    CoreStandardsXml standardsXml)
+                                    CoreStandardsXml standardsXml, AppSettings appSettings)
         {
             string subjectId = itemMetadata.Metadata.Subject;
             var subject = subjects.FirstOrDefault(s => s.Code == subjectId);
-            StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents);
+            StandardIdentifier identifier = itemMetadata.ToStandardIdentifier(itemContents, appSettings.SettingsConfig.SupportedPublications);
             string interactionTypeCode = itemMetadata.Metadata.InteractionType;
             var interactiontype = interactionTypes.FirstOrDefault(t => t.Code == interactionTypeCode);
 
@@ -100,7 +100,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             if (standardsXml != null && standardsXml.CcssRows.Any())
             {
-                targetRow = standardsXml.TargetRows
+                ccssRow = standardsXml.CcssRows
                     .FirstOrDefault(t =>
                     StandardIdentifierCcssComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
             }
@@ -116,14 +116,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <summary>
         /// Gets the standard identifier from the given item metadata
         /// </summary>
-        private static StandardIdentifier ToStandardIdentifier(this ItemMetadata itemMetadata, ItemContents itemContents)
+        private static StandardIdentifier ToStandardIdentifier(this ItemMetadata itemMetadata, ItemContents itemContents, string[] supportedPubs)
         {
             try
             {
-                // FIXME TODO: should iterate all standardPublications until an identifier is successfully filled?
-                //              Or just take first that isn't "Undesignated"?
                 var primaryStandard = itemMetadata.Metadata.StandardPublications
-                    .Where(s => !s.PrimaryStandard.EndsWith("Undesignated"))
+                    .Where(s => supportedPubs.Any(p => p.Equals(s.Publication)))
                     .FirstOrDefault()
                     ?.PrimaryStandard;
 

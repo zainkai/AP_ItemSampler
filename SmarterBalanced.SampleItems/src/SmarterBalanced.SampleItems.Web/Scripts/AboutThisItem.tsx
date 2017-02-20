@@ -150,7 +150,7 @@ class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, 
                     <span className="text-value"> {this.props.commonCoreStandardsDescription}</span>
                 </p>
                 <p className="target-description" tabIndex={0}>
-                    <span className="text-label">Target:</span>
+                    <span className="text-label">Target Description:</span>
                     <span className="text-value"> {this.props.targetDescription}</span>
                 </p>
             </div>
