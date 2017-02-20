@@ -19,7 +19,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Target { get; }
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
-        public string CommonCoreStandardsId { get; }
         public ItemCardViewModel(
             int bankKey,
             int itemKey,
@@ -32,8 +31,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string claimLabel,
             string target,
             string interactionTypeCode,
-            string interactionTypeLabel,
-            string commonCoreStandardsId)
+            string interactionTypeLabel)
         {
             BankKey = bankKey;
             ItemKey = itemKey;
@@ -47,7 +45,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Target = target;
             InteractionTypeCode = interactionTypeCode;
             InteractionTypeLabel = interactionTypeLabel;
-            CommonCoreStandardsId = commonCoreStandardsId;
         }
 
         /// <summary>
@@ -65,8 +62,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string claimLabel = "",
            string target = "",
            string interactionTypeCode = "",
-           string interactionTypeLabel = "",
-           string commonCoreStandardsId = "")
+           string interactionTypeLabel = "")
         {
             return new ItemCardViewModel(
                 bankKey: bankKey,
@@ -80,8 +76,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 claimLabel: claimLabel,
                 target: target,
                 interactionTypeCode: interactionTypeCode,
-                interactionTypeLabel: interactionTypeLabel,
-                commonCoreStandardsId: commonCoreStandardsId);
+                interactionTypeLabel: interactionTypeLabel);
         }
 
     }

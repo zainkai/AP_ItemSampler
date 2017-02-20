@@ -37,6 +37,18 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         }
 
         /// <summary>
+        /// Deserializes the given XML file into the specified type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static T DeserializeXml<T>(string file)
+        {
+            var fileInfo = new FileInfo(file);
+            return DeserializeXml<T>(fileInfo);
+        }
+
+        /// <summary>
         /// Deserializes a list of XML files into a list of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -79,12 +91,6 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
 
             return files;
         }
-
-        public static XElement GetXDocumentElement(string location, string rootElement)
-        {
-            return XDocument.Load(location).Element(rootElement);
-        }
-
         public static XDocument GetXDocument(string location)
         {
             return XDocument.Load(location);

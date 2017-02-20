@@ -43,3 +43,10 @@ image and performs a rolling update to the running versions of these branches.
 
 See the `travis.yml` file in the root directory project for configurations.
 
+### Content package
+The content for the site is provided by a content package supplied by the Smarter Balanced 
+Assessment Consortium. It consists of XML files that describe the test question items 
+(the "content package"). 
+
+Currently, content packages can be accessed at 
+[ftp://ftps.smarterbalanced.org/~sbacpublic/Public/PracticeAndTrainingTests/](ftp://ftps.smarterbalanced.org/~sbacpublic/Public/PracticeAndTrainingTests/).

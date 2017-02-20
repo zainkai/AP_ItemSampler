@@ -21,7 +21,7 @@ For more detailed documentation, see the **Documentation** folder in the root of
     - Don't forget to initialize the project submodules ([instructions](https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules))
 - Install the latest version of Microsoft .NET Core for your operating system ([link](https://www.microsoft.com/net/download/core#/current))
 - Install the latest TypeScript compiler ([link](https://www.typescriptlang.org/index.html#download-links))
-- Download the latest sample item content package (TODO: Link?)
+- Download the latest sample item content package
     - Place this in the location specified in src/Web/appsettings.json (`ContentRootDirectory`)
 
 ## Running
@@ -29,7 +29,10 @@ For more detailed documentation, see the **Documentation** folder in the root of
 - Open the project in Visual Studio 2015
 - Click the run button
 
-TODO: Add steps for docker, vs code, command line...?
+#### Other Environments
+For command line instructions and further documentation, 
+see the **Documentation** folder in the root of the project. 
+
 
 ## Contribute
 * [Fork It](https://help.github.com/articles/fork-a-repo/)

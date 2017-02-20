@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
@@ -33,6 +34,23 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 interactionTypeCodes
             );
         }
+
+        public static Subject Create(XElement subjectElement, ImmutableArray<InteractionFamily> interactionFamilies)
+        {
+            var code = (string)subjectElement.Element("Code");
+            var family = interactionFamilies.Single(f => f.SubjectCode == code);
+            var claims = subjectElement.Elements("Claim").Select(c => Claim.Create(c)).ToImmutableArray();
+
+            var subject = new Subject(
+                code: code,
+                label: (string)subjectElement.Element("Label"),
+                shortLabel: (string)subjectElement.Element("ShortLabel"),
+                claims: claims,
+                interactionTypeCodes: family.InteractionTypeCodes);
+
+            return subject;
+        }
+
 
     }
 }

@@ -3,9 +3,6 @@
 The Sample Items Website is a Microsoft ASP.NET Core MVC web application that displays
 sample test question items.
 
-The content for the site is provided by a content package supplied by the Smarter Balanced 
-Assessment Consortium. It consists of XML files that describe the test question items 
-(the "content package"). 
 
 ### License
 Mozilla Public License Version 2.0

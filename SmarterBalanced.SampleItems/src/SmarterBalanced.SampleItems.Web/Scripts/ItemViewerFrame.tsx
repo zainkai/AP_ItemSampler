@@ -2,16 +2,44 @@
     url: string;
 }
 
-class ItemFrame extends React.Component<FrameProps, {}> {
+interface FrameState {
+    loading: boolean;
+}
+
+class ItemFrame extends React.Component<FrameProps, FrameState> {
     constructor(props: FrameProps) {
         super(props);
+        this.state = { loading: true }
+    }
+
+    startLoad = () => {
+        this.setState({
+            loading: true
+        });
+    }
+
+    finishLoad = () => {
+        this.setState({
+            loading: false
+        })
     }
 
     render() {
+        const spinner = this.state.loading
+            ? <div className="itemviewer-iframe-spinner">
+                <img src="/images/spin-large.gif"></img>
+            </div>
+            : null;
+
         return (
             <div className="itemViewerFrame" tabIndex={0}>
-                <iframe id="itemviewer-iframe" className="itemviewer-iframe"
-                    src={this.props.url}></iframe>
+                {spinner}
+                <iframe id="itemviewer-iframe"
+                    className="itemviewer-iframe"
+                    onLoadStart={this.startLoad}
+                    onLoad={this.finishLoad}
+                    src={this.props.url}>
+                </iframe>
             </div>
         );
     }
