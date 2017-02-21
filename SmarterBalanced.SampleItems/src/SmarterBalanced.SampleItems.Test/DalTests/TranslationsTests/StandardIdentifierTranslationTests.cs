@@ -233,11 +233,57 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Null(identifier);
         }
 
-        [Fact(Skip ="TODO")]
-        public void TestCoreStandardToIdentifier()
+        [Fact]
+        public void TestInvalidCoreStandardToIdentifier()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.MathCoreStandardToCcss(new string[] { });
-            Assert.Null(identifier);
+            var coreStandardsRow = new CoreStandardsRow("", null, null, null, null, null);
+            Exception exception = Assert.Throws<ArgumentException>(() => StandardIdentifierTranslation.CoreStandardToIdentifier(coreStandardsRow));
+            Assert.Equal("The standards string must not be null or empty", exception.Message);
+            exception = Assert.Throws<ArgumentException>(() => StandardIdentifierTranslation.CoreStandardToIdentifier(null));
+            Assert.Equal("The standards string must not be null or empty", exception.Message);
+        }
+
+        [Fact]
+        public void TestCoreStandardToIdentifierELACcss()
+        {
+            CoreStandardsRow coreStandardsRow = new CoreStandardsRow("ELA", "3-l|4-6|6.SL.2", "","","CCSS", null);
+            StandardIdentifier identifier = StandardIdentifierTranslation.CoreStandardToIdentifier(coreStandardsRow);
+            Assert.Equal("3-l", identifier.Claim);
+            Assert.Equal("4-6", identifier.Target);
+            Assert.Equal("6.SL.2", identifier.CommonCoreStandard);
+            Assert.Equal("ELA", identifier.SubjectCode);
+        }
+
+        [Fact]
+        public void TestCoreStandardToIdentifierELATarget()
+        {
+            CoreStandardsRow coreStandardsRow = new CoreStandardsRow("ELA", "4-6|3-6", "", "", "Target", null);
+            StandardIdentifier identifier = StandardIdentifierTranslation.CoreStandardToIdentifier(coreStandardsRow);
+            Assert.Equal("4-6", identifier.Claim);
+            Assert.Equal("3-6", identifier.Target);
+            Assert.Equal("ELA", identifier.SubjectCode);
+        }
+
+        [Fact]
+        public void TestCoreStandardToIdentifierMathCcss()
+        {
+            CoreStandardsRow coreStandardsRow = new CoreStandardsRow("MATH", "1|NBT|E-3|a/s|3.NBT.2", "", "", "CCSS", null);
+            StandardIdentifier identifier = StandardIdentifierTranslation.CoreStandardToIdentifier(coreStandardsRow);
+            Assert.Equal("1", identifier.Claim);
+            Assert.Equal("NBT", identifier.ContentDomain);
+            Assert.Equal("E-3", identifier.Target);
+            Assert.Equal("3.NBT.2", identifier.CommonCoreStandard);
+        }
+
+        [Fact]
+        public void TestCoreStandardToIdentifierMathTarget()
+        {
+            CoreStandardsRow coreStandardsRow = new CoreStandardsRow("MATH", "1|NBT|E-3", "", "", "Target", null);
+            StandardIdentifier identifier = StandardIdentifierTranslation.CoreStandardToIdentifier(coreStandardsRow);
+            Assert.Equal("1", identifier.Claim);
+            Assert.Equal("NBT", identifier.ContentDomain);
+            Assert.Equal("E-3", identifier.Target);
+            Assert.Equal("MATH", identifier.SubjectCode);
         }
     }
 }
