@@ -41,7 +41,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 itemCards: itemCards,
                 interactionTypes: interactionGroup.InteractionTypes,
                 subjects: subjects,
-                accessibilityResourceFamilies: accessibilityResourceFamilies,
                 appSettings: appSettings);
 
             logger.LogInformation($"Loaded {itemDigests.Length} item digests");
@@ -52,7 +51,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
         private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
             AppSettings settings,
-            IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
+            IList<MergedAccessibilityFamily> accessibilityResourceFamilies,
             IList<InteractionType> interactionTypes,
             IList<Subject> subjects,
            CoreStandardsXml coreStandards,
@@ -82,19 +81,13 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return itemDigests;
         }
 
-        private static ImmutableArray<AccessibilityResourceFamily> LoadAccessibility(string accessibilityPath)
+        private static ImmutableArray<MergedAccessibilityFamily> LoadAccessibility(string accessibilityPath)
         {
             var accessibilityDoc = XmlSerialization.GetXDocument(accessibilityPath);
             var accessibilityXml = accessibilityDoc.Element("Accessibility");
+            var mergedFamilies = AccessibilityResourceTranslation.CreateMergedFamilies(accessibilityXml);
 
-            ImmutableArray<AccessibilityResource> globalResources = accessibilityXml
-                .Element("MasterResourceFamily")
-                .Elements("SingleSelectResource")
-                .ToAccessibilityResources();
-
-            return accessibilityXml
-                .Elements("ResourceFamily")
-                .ToAccessibilityResourceFamilies(globalResources);
+            return mergedFamilies;
         }
 
         private static CoreStandardsXml LoadCoreStandards(string targetFile)

@@ -191,7 +191,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 }
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(),
+            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<MergedAccessibilityFamily>(),
                             interactionTypes, subjects, null, settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());

@@ -48,22 +48,22 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
         private static AccessibilityResource ApplyIsaap(this AccessibilityResource resource, string[] isaap)
         {
-            var newSelection = resource.Selections.FirstOrDefault(sel => isaap.Contains(sel.Code));
+            var newSelection = resource.Selections.FirstOrDefault(sel => isaap.Contains(sel.SelectionCode));
             if (newSelection == null)
             {
                 return resource;
             }
 
-            var newResource = resource.WithSelectedCode(newSelection.Code);
+            var newResource = resource.WithCurrentSelection(newSelection.SelectionCode);
             return newResource;
         }
 
         private static AccessibilityResource ApplyCookie(this AccessibilityResource resource, Dictionary<string, string> cookie)
         {
             string newSelectedCode;
-            if (cookie.TryGetValue(resource.Code, out newSelectedCode))
+            if (cookie.TryGetValue(resource.ResourceCode, out newSelectedCode))
             {
-                var newResource = resource.WithSelectedCode(newSelectedCode);
+                var newResource = resource.WithCurrentSelection(newSelectedCode);
                 return newResource;
             }
 

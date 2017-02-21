@@ -20,7 +20,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Resources = new List<AccessibilityResource>
             {
                 AccessibilityResource.Create(
-                    code: "ACC1",
+                    resourceCode: "ACC1",
                     order: 1,
                     disabled: false,
                     defaultSelection: "ACC1_SEL1",
@@ -33,7 +33,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                             disabled: false,
                             label: "Selection 1"))),
                 AccessibilityResource.Create(
-                    code: "ACC2",
+                    resourceCode: "ACC2",
                     order: 2,
                     disabled: false,
                     defaultSelection: "ACC2_SEL2",
@@ -55,13 +55,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             PartialResources = new List<AccessibilityResource>
             {
                 AccessibilityResource.Create(
-                    code: "ACC1",
+                    resourceCode: "ACC1",
                     selections: ImmutableArray.Create(
                         AccessibilitySelection.Create(
                             code: "ACC1_SEL1",
                             label: "Selection 1"))),
                 AccessibilityResource.Create(
-                    code: "ACC2",
+                    resourceCode: "ACC2",
                     selections: ImmutableArray.Create(
                         AccessibilitySelection.Create(
                             code: "ACC1_SEL1",
@@ -104,7 +104,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             AccessibilityResource globalResource = Resources[1];
             AccessibilityResource partialResource = AccessibilityResource.Create(
-                code: "ACC1",
+                resourceCode: "ACC1",
                 selections: ImmutableArray.Create(
                     AccessibilitySelection.Create(code: "ACC2_SEL1"),
                     AccessibilitySelection.Create(code: "ACC2_SEL2")));
@@ -112,7 +112,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             AccessibilityResource outputResource = AccessibilityResourceTranslation
                 .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(globalResource.Disabled, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
@@ -129,7 +129,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             AccessibilityResource globalResource = Resources[1];
             AccessibilityResource partialResource = AccessibilityResource.Create(
-                code: "ACC2",
+                resourceCode: "ACC2",
                 disabled: true,
                 selections: ImmutableArray.Create(
                     AccessibilitySelection.Create(code: "ACC2_SEL1"),
@@ -137,7 +137,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             AccessibilityResource outputResource = partialResource.MergeWith(globalResource);
 
-            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.True(outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(string.Empty, outputResource.DefaultSelection);
@@ -160,13 +160,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             AccessibilityResource globalResource = Resources[1];
             AccessibilityResource partialResource = AccessibilityResource.Create(
-                code: "ACC2",
+                resourceCode: "ACC2",
                 selections: ImmutableArray<AccessibilitySelection>.Empty);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
                 .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(string.Empty, outputResource.DefaultSelection);
@@ -188,14 +188,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             AccessibilityResource globalResource = Resources[1];
             AccessibilityResource partialResource = AccessibilityResource.Create(
-                code: "ACC2",
+                resourceCode: "ACC2",
                 selections: ImmutableArray.Create(
                     AccessibilitySelection.Create(code: "ACC2_SEL1")));
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
                 .MergeWith(partialResource, globalResource);
 
-            Assert.Equal(globalResource.SelectedCode, outputResource.SelectedCode);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
 
@@ -243,7 +243,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             AccessibilityResource outputResource = resultResources[0];
 
-            Assert.Equal(inputResource.SelectedCode, outputResource.SelectedCode);
+            Assert.Equal(inputResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(inputResource.Description, outputResource.Description);
             Assert.Equal(inputResource.Disabled, outputResource.Disabled);
             Assert.Equal(inputResource.DefaultSelection, outputResource.DefaultSelection);

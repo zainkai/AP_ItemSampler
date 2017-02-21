@@ -21,7 +21,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// Matches the ItemMetadata and ItemContents objects based on their ItemKey fields.
         /// </summary>
         public static IEnumerable<ItemDigest> ItemsToItemDigests(IEnumerable<ItemMetadata> itemMetadata,
-            IEnumerable<ItemContents> itemContents, IList<AccessibilityResourceFamily> resourceFamilies,
+            IEnumerable<ItemContents> itemContents, IList<MergedAccessibilityFamily> resourceFamilies,
             IList<InteractionType> interactionTypes, IList<Subject> subjects,
              CoreStandardsXml standardsXml,
             AppSettings settings)
@@ -245,13 +245,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             bool aslSupported,
             bool allowCalculator)
         {
-            if (!aslSupported && resource.Code == "AmericanSignLanguage")
+            if (!aslSupported && resource.ResourceCode == "AmericanSignLanguage")
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
             }
 
-            if (!allowCalculator && resource.Code == "Calculator")
+            if (!allowCalculator && resource.ResourceCode == "Calculator")
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
@@ -262,7 +262,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         
         private static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
             ItemDigest itemDigest,
-            IList<AccessibilityResourceFamily> resourceFamilies,
+            IList<MergedAccessibilityFamily> resourceFamilies,
             IList<AccessibilityType> accessibilityTypes)
         {
             var family = resourceFamilies

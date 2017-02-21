@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Immutable;
+using System.Xml.Linq;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
@@ -8,12 +9,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         /// <summary>
         /// ID for this accessibility resource.
         /// </summary>
-        public string Code { get; }
+        public string ResourceCode { get; }
 
         /// <summary>
         /// ID of the current AccessibilitySelection.
         /// </summary>
-        public string SelectedCode { get; }
+        public string CurrentSelectionCode { get; }
 
         public int Order { get; }
         public string DefaultSelection { get; }
@@ -24,8 +25,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string ResourceType { get; }
 
         public AccessibilityResource(
-            string code,
-            string selectedCode,
+            string resourceCode,
+            string currentSelectionCode,
             int order,
             string defaultSelection,
             ImmutableArray<AccessibilitySelection> selections,
@@ -34,8 +35,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool disabled,
             string resourceType)
         {
-            Code = code;
-            SelectedCode = selectedCode;
+            ResourceCode = resourceCode;
+            CurrentSelectionCode = currentSelectionCode;
             Order = order;
             DefaultSelection = defaultSelection;
             Selections = selections;
@@ -45,11 +46,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             ResourceType = resourceType;
         }
 
-        public AccessibilityResource WithSelectedCode(string selectedCode)
+        public AccessibilityResource WithCurrentSelection(string currentSelectionCode)
         {
             var newResource = new AccessibilityResource(
-                code: Code,
-                selectedCode: selectedCode,
+                resourceCode: ResourceCode,
+                currentSelectionCode: currentSelectionCode,
                 order: Order,
                 defaultSelection: DefaultSelection,
                 selections: Selections,
@@ -64,8 +65,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public AccessibilityResource WithSelections(ImmutableArray<AccessibilitySelection> selections)
         {
             var newResource = new AccessibilityResource(
-                code: Code,
-                selectedCode: SelectedCode,
+                resourceCode: ResourceCode,
+                currentSelectionCode: CurrentSelectionCode,
                 order: Order,
                 defaultSelection: DefaultSelection,
                 selections: selections,
@@ -84,8 +85,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 .ToImmutableArray();
 
             var newResource = new AccessibilityResource(
-                code: Code,
-                selectedCode: SelectedCode,
+                resourceCode: ResourceCode,
+                currentSelectionCode: CurrentSelectionCode,
                 order: Order,
                 defaultSelection: DefaultSelection,
                 selections: newSelections,
@@ -98,8 +99,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         }
 
         public static AccessibilityResource Create(
-            string code = "",
-            string selectedCode = "",
+            string resourceCode = "",
+            string currentSelectionCode = "",
             int order = -1,
             string defaultSelection = "",
             ImmutableArray<AccessibilitySelection> selections = default(ImmutableArray<AccessibilitySelection>),
@@ -109,8 +110,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string resourceType = "")
         {
             var resource = new AccessibilityResource(
-                code: code,
-                selectedCode: selectedCode,
+                resourceCode: resourceCode,
+                currentSelectionCode: currentSelectionCode,
                 order: order,
                 defaultSelection: defaultSelection,
                 selections: selections,
@@ -120,6 +121,33 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 resourceType: resourceType);
 
             return resource;
+        }
+
+        public static AccessibilityResource Create(XElement element)
+        {
+            var selections = element.Elements("Selection")
+                       .Select(x => AccessibilitySelection.Create(x))
+                       .ToImmutableArray();
+
+            var defaultSelection = (string)element.Element("DefaultSelection");
+            defaultSelection = string.IsNullOrEmpty(defaultSelection)
+                ? selections.FirstOrDefault()?.SelectionCode
+                : defaultSelection;
+
+            var resourceType = (string)element.Element("ResourceType") ?? string.Empty;
+
+            var textElem = element.Element("Text");
+
+            return new AccessibilityResource(
+                resourceCode: (string)element.Element("Code"),
+                currentSelectionCode: defaultSelection,
+                order: (int)element.Element("Order"),
+                defaultSelection: defaultSelection,
+                label: (string)textElem.Element("Label"),
+                description: (string)textElem.Element("Description"),
+                disabled: false,
+                selections: selections,
+                resourceType: resourceType);
         }
     }
 }
