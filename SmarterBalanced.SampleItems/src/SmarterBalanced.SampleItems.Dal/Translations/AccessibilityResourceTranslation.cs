@@ -50,8 +50,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             var selection = new AccessibilitySelection(
                     code: (string)xmlSelection.Element("Code"),
-                    label: (string)xmlSelection.Element("Text").Element("Label"),
-                    order: (int)xmlSelection.Element("Order"),
+                    label: (string)xmlSelection.Element("Text")?.Element("Label"),
+                    order: (int?)xmlSelection.Element("Order"),
                     disabled: false);
 
             return selection;
@@ -61,25 +61,31 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             this IEnumerable<XElement> resourceFamilies,
             IList<AccessibilityResource> globalResources)
         {
-            ImmutableArray<AccessibilityResourceFamily> families = resourceFamilies
-                .Select(f => new AccessibilityResourceFamily(
-                    subjects: f.Elements("Subject")
+            List<AccessibilityResourceFamily> families = new List<AccessibilityResourceFamily>();
+            foreach (XElement familyElement in resourceFamilies)
+            {
+                var subjects = familyElement.Elements("Subject")
                         .Select(s => (string)s.Element("Code"))
-                        .ToImmutableArray(),
-                    grades: f.Elements("Grade")
-                        .Select(g => g.Value)
-                        .ToGradeLevels(),
-                    resources: f.Elements("SingleSelectResource")
+                        .ToImmutableArray();
+                var resources = familyElement.Elements("SingleSelectResource")
                         .Select(r => ToAccessibilityResource(r))
-                        .MergeAllWith(globalResources)))
-                .ToImmutableArray();
+                        .MergeAllWith(globalResources);
+                var grades = familyElement.Elements("Grade")
+                    .Select(g => g.Value)
+                    .ToGradeLevels();
+                families.Add(new AccessibilityResourceFamily(
+                    subjects: subjects,
+                    grades: grades,
+                    resources: resources
+                    ));
+            }
 
-            return families;
+            return families.ToImmutableArray();
         }
 
         public static AccessibilityResource ToAccessibilityResource(XElement elem)
         {
-            var selectionsElem = elem.Elements("Selections");
+            var selectionsElem = elem.Elements("Selection");
             var selections = selectionsElem == null
                 ? ImmutableArray<AccessibilitySelection>.Empty
                 : selectionsElem.Select(s => s.ToSelection()).ToImmutableArray();
@@ -107,7 +113,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         {
             var resources = globalResources.Select(globalResource =>
             {
-                var familyResource = partialResources.FirstOrDefault(fr => fr.SelectedCode == globalResource.SelectedCode);
+                var familyResource = partialResources.FirstOrDefault(fr => fr.Code == globalResource.Code);
                 if (familyResource == null)
                 {
                     return globalResource;
