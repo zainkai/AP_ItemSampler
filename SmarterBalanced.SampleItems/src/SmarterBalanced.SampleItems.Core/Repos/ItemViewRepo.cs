@@ -56,8 +56,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             {
                 items = $"{digest.BankKey}-{digest.ItemKey}";
             }
-   
-                return $"{baseUrl}/item?=items{items}";
+
+                return $"{baseUrl}/item?={items}";
         }
 
         private List<ItemDigest> GetAssociatedStimulus(ItemDigest digest)
