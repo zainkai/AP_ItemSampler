@@ -1,0 +1,4 @@
+FROM sampleitemscode:prod
+ARG source=content/
+ARG contentStore=/app/content/
+COPY $source $contentStore
