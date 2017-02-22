@@ -47,7 +47,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
 
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}";
+            //For whomever refactors this to support performance task items.
+            //The item viewer service takes multiple items in the format
+            // {baseUrl}/items?ids={bankKey1-itemKey1},{bankKey2-itemKey2},{bankKey3-itemKey3}
+            return $"{baseUrl}/items?ids={digest.BankKey}-{digest.ItemKey}";
         }
 
         public ItemViewModel GetItemViewModel(
