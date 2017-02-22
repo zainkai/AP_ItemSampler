@@ -39,7 +39,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
         /// </summary>
-        protected string GetItemViewerUrl(ItemDigest digest)
+        public string GetItemViewerUrl(ItemDigest digest)
         {
             string items;
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;

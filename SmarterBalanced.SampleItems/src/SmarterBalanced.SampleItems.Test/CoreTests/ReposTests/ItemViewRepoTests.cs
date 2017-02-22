@@ -13,7 +13,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 {
     public class ItemViewRepoTests
     {
-        ItemDigest MathDigest, ElaDigest, DuplicateDigest;
+        ItemDigest MathDigest, ElaDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate;
         Subject Math, Ela, NotASubject;
         Claim Claim1, Claim2;
         ImmutableArray<ItemDigest> ItemDigests;
@@ -41,8 +41,10 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             DuplicateCard = ItemCardViewModel.Create(bankKey: DuplicateBankKey, itemKey: DuplicateItemKey);
             MathDigest = new ItemDigest() { BankKey = GoodBankKey, ItemKey = GoodItemKey };
             ElaDigest = new ItemDigest() { BankKey = BadBankKey, ItemKey = BadItemKey };
+            PerformanceDigest = new ItemDigest() { IsPerformanceItem = true, AssociatedStimulus = 1 };
+            PerformanceDigestDuplicate = new ItemDigest() { IsPerformanceItem = true, AssociatedStimulus = 1 };
             DuplicateDigest = new ItemDigest() { BankKey = DuplicateBankKey, ItemKey = DuplicateItemKey };
-            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest);
+            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
@@ -107,6 +109,32 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
             Assert.NotNull(result);
             Assert.Equal(result, resultCheck);
+        }
+
+        [Fact]
+        public void TestGetItemUrl()
+        {
+            var result = ItemViewRepo.GetItemDigest(GoodBankKey, GoodItemKey);
+            var url = ItemViewRepo.GetItemViewerUrl(result);
+
+            Assert.NotNull(url);
+            Assert.Equal("/items?ids=1-4", url);
+        }
+
+        [Fact]
+        public void TestGetItemUrlMultiple()
+        {
+            var url = ItemViewRepo.GetItemViewerUrl(PerformanceDigest);
+
+            Assert.NotNull(url);
+            Assert.Equal("/items?ids=0-0,0-0", url);
+        }
+
+        [Fact]
+        public void TestGetItemUrlNull()
+        {
+            var url = ItemViewRepo.GetItemViewerUrl(null);
+            Assert.Equal(string.Empty, url);
         }
 
         [Fact]
