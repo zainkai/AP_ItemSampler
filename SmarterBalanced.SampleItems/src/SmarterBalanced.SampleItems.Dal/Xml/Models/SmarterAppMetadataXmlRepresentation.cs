@@ -18,10 +18,10 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public int? AssociatedStimulus { get; set; }
 
         [XmlElement("Subject")]
-        public string Subject { get; set; }
+        public string SubjectCode { get; set; }
 
         [XmlElement("IntendedGrade")]
-        public string Grade { get; set; }
+        public string GradeCode { get; set; }
 
         [XmlElement("SufficientEvidenceOfClaim")]
         public string SufficientEvidenceOfClaim { get; set; }

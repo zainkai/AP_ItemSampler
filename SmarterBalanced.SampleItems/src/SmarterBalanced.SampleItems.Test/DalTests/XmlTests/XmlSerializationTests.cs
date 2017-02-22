@@ -30,10 +30,10 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             Assert.NotNull(metadata);
             Assert.NotNull(metadata.Metadata);
             Assert.Equal(expectedItemKey, metadata.Metadata.ItemKey);
-            Assert.Equal(expectedGrade, metadata.Metadata.Grade);
+            Assert.Equal(expectedGrade, metadata.Metadata.GradeCode);
             Assert.Equal(expectedTarget, metadata.Metadata.TargetAssessmentType);
             Assert.Equal(expectedInteractionType, metadata.Metadata.InteractionType);
-            Assert.Equal(expectedSubject, metadata.Metadata.Subject);
+            Assert.Equal(expectedSubject, metadata.Metadata.SubjectCode);
             Assert.Equal(expectedClaim, metadata.Metadata.SufficientEvidenceOfClaim);
         }
 

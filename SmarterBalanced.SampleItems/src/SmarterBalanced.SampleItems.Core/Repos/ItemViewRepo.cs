@@ -25,9 +25,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             logger = loggerFactory.CreateLogger<ItemViewRepo>();
         }
 
-        public ItemDigest GetItemDigest(int bankKey, int itemKey)
+        public SampleItem GetItemDigest(int bankKey, int itemKey)
         {
-            return context.ItemDigests.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
+            return context.SampleItems.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
         }
 
         public ItemCardViewModel GetItemCardViewModel(int bankKey, int itemKey)
@@ -39,7 +39,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
         /// </summary>
-        protected string GetItemViewerUrl(ItemDigest digest)
+        protected string GetItemViewerUrl(SampleItem digest)
         {
             if (digest == null)
             {
@@ -99,7 +99,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="subject"></param>
         /// <param name="claim"></param>
         /// <returns></returns>
-        public MoreLikeThisViewModel GetMoreLikeThis(ItemDigest itemDigest)
+        public MoreLikeThisViewModel GetMoreLikeThis(SampleItem itemDigest)
         {
             var subjectCode = itemDigest.Subject.Code;
             var claimCode = itemDigest.Claim?.Code;

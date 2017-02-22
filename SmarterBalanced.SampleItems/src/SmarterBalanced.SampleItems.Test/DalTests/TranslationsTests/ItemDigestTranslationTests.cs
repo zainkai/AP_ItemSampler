@@ -29,11 +29,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
             contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = testItemKey;
-            metadata.Metadata.Grade = testGrade;
+            metadata.Metadata.GradeCode = testGrade;
             metadata.Metadata.TargetAssessmentType = "Test target string";
             metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
-            metadata.Metadata.Subject = "MATH";
+            metadata.Metadata.SubjectCode = "MATH";
             metadata.Metadata.StandardPublications = new List<StandardPublication>();
             metadata.Metadata.StandardPublications.Add(
                 new StandardPublication
@@ -73,7 +73,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                                 };
             
 
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, null, appSettings);
+            SampleItem digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, null, appSettings);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
             Assert.Equal(GradeLevels.Grade5, digest.Grade);
@@ -95,11 +95,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
             contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = 1;
-            metadata.Metadata.Grade = "7";
+            metadata.Metadata.GradeCode = "7";
             metadata.Metadata.TargetAssessmentType = "Test target string";
             metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
-            metadata.Metadata.Subject = "MATH";
+            metadata.Metadata.SubjectCode = "MATH";
             metadata.Metadata.StandardPublications = new List<StandardPublication>();
             metadata.Metadata.StandardPublications.Add(
                 new StandardPublication
@@ -124,7 +124,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             int testItemCount = 3;
             List<ItemContents> contentsList = new List<ItemContents>();
             List<ItemMetadata> metadataList = new List<ItemMetadata>();
-            IEnumerable<ItemDigest> digests;
+            IEnumerable<SampleItem> digests;
 
             // Get a range of numbers from 50 to the number of items being tested.
             // Use the same numer for an item's key and bank to make it easy to validate that
@@ -147,11 +147,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];
-                metadata.Metadata.Grade = (itemKeys[i] % 9 + 3).ToString();
+                metadata.Metadata.GradeCode = (itemKeys[i] % 9 + 3).ToString();
                 metadata.Metadata.TargetAssessmentType = testTarget + itemKeys[i];
                 metadata.Metadata.SufficientEvidenceOfClaim = testClaimEvidence + itemKeys[i];
                 metadata.Metadata.InteractionType = testInteractionType;
-                metadata.Metadata.Subject = testSubject;
+                metadata.Metadata.SubjectCode = testSubject;
                 metadata.Metadata.StandardPublications = new List<StandardPublication>();
                 metadata.Metadata.StandardPublications.Add(
                     new StandardPublication
@@ -196,7 +196,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             Assert.Equal(itemKeys.Length, digests.Count());
 
-            foreach(ItemDigest digest in digests)
+            foreach(SampleItem digest in digests)
             {
                 int id = digest.ItemKey;
                 Assert.Equal(digest.ItemKey, digest.BankKey);

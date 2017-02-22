@@ -13,10 +13,10 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 {
     public class ItemViewRepoTests
     {
-        ItemDigest MathDigest, ElaDigest, DuplicateDigest;
+        SampleItem MathDigest, ElaDigest, DuplicateDigest;
         Subject Math, Ela, NotASubject;
         Claim Claim1, Claim2;
-        ImmutableArray<ItemDigest> ItemDigests;
+        ImmutableArray<SampleItem> ItemDigests;
         ItemViewRepo ItemViewRepo;
         SampleItemsContext Context;
         int GoodItemKey;
@@ -39,9 +39,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathCard = ItemCardViewModel.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
             ElaCard = ItemCardViewModel.Create(bankKey: BadBankKey, itemKey: BadItemKey);
             DuplicateCard = ItemCardViewModel.Create(bankKey: DuplicateBankKey, itemKey: DuplicateItemKey);
-            MathDigest = new ItemDigest() { BankKey = GoodBankKey, ItemKey = GoodItemKey };
-            ElaDigest = new ItemDigest() { BankKey = BadBankKey, ItemKey = BadItemKey };
-            DuplicateDigest = new ItemDigest() { BankKey = DuplicateBankKey, ItemKey = DuplicateItemKey };
+            MathDigest = new SampleItem() { BankKey = GoodBankKey, ItemKey = GoodItemKey };
+            ElaDigest = new SampleItem() { BankKey = BadBankKey, ItemKey = BadItemKey };
+            DuplicateDigest = new SampleItem() { BankKey = DuplicateBankKey, ItemKey = DuplicateItemKey };
             ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
@@ -55,7 +55,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             itemCards = itemCards.AddRange(MoreItemCards());
             var settings = new AppSettings() { SettingsConfig = new SettingsConfig() { NumMoreLikeThisItems = 3 } };
 
-            Context = SampleItemsContext.Create(itemDigests: ItemDigests, itemCards: itemCards, appSettings: settings);
+            Context = SampleItemsContext.Create(sampleItems: ItemDigests, itemCards: itemCards, appSettings: settings);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
@@ -87,7 +87,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         public void TestGetItemDigest()
         {
             var result = ItemViewRepo.GetItemDigest(GoodBankKey, GoodItemKey);
-            var resultCheck = Context.ItemDigests.FirstOrDefault(i => i.ItemKey == GoodItemKey && i.BankKey == GoodBankKey);
+            var resultCheck = Context.SampleItems.FirstOrDefault(i => i.ItemKey == GoodItemKey && i.BankKey == GoodBankKey);
 
             Assert.NotNull(result);
             Assert.Equal(result, resultCheck);
@@ -122,7 +122,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreLikeThisHappyCase()
         {
-            var itemDigest = new ItemDigest() { Subject = Math, Claim = Claim1, Grade = GradeLevels.Grade6 };
+            var itemDigest = new SampleItem() { Subject = Math, Claim = Claim1, Grade = GradeLevels.Grade6 };
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
@@ -147,7 +147,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreNAGrade()
         {
-            var itemDigest = new ItemDigest() { Claim = Claim1, Subject = Ela };
+            var itemDigest = new SampleItem() { Claim = Claim1, Subject = Ela };
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
@@ -171,7 +171,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreUnknownSubject()
         {
-            var itemDigest = new ItemDigest() { Claim = Claim1, Subject = NotASubject, Grade = GradeLevels.Grade4 };
+            var itemDigest = new SampleItem() { Claim = Claim1, Subject = NotASubject, Grade = GradeLevels.Grade4 };
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());

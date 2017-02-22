@@ -28,7 +28,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
-            ItemDigest digest = new ItemDigest
+            SampleItem digest = new SampleItem
             {
                 BankKey = bankKey,
                 ItemKey = itemKey,
@@ -44,7 +44,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 commonCoreStandardsDescription: "");
 
 
-            ItemDigest digestCookie = new ItemDigest
+            SampleItem digestCookie = new SampleItem
             {
                 BankKey = bankKey,
                 ItemKey = 0,

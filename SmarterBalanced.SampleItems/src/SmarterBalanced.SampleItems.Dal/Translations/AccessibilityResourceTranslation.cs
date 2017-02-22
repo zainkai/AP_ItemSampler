@@ -124,6 +124,56 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             return mergedFamilies;
         }
-    }
 
+        public static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
+           SampleItem sampleItem,
+           IList<MergedAccessibilityFamily> resourceFamilies,
+           IList<AccessibilityType> accessibilityTypes)
+        {
+            var family = resourceFamilies
+                .FirstOrDefault(f =>
+                    f.Subjects.Any(c => c == sampleItem.Subject?.Code) &&
+                    f.Grades.Contains(sampleItem.Grade));
+
+            if (family == null)
+            {
+                return ImmutableArray<AccessibilityResourceGroup>.Empty;
+            }
+
+            var flaggedResources = family.Resources
+                .Select(r => r.ApplyFlags(
+                    aslSupported: sampleItem.AslSupported))
+                .ToImmutableArray();
+
+            var groups = accessibilityTypes
+                .Select(at =>
+                {
+                    var groupResources = flaggedResources
+                    .Where(r => r.ResourceType == at.Id)
+                    .ToImmutableArray();
+
+                    var group = new AccessibilityResourceGroup(
+                        label: at.Label,
+                        order: at.Order,
+                        accessibilityResources: groupResources);
+
+                    return group;
+                })
+                .ToImmutableArray();
+
+            return groups;
+        }
+        public static AccessibilityResource ApplyFlags(
+            this AccessibilityResource resource,
+             bool aslSupported)
+        {
+            if (!aslSupported && resource.ResourceCode == "AmericanSignLanguage")
+            {
+                var newResource = resource.ToDisabled();
+                return newResource;
+            }
+            return resource;
+        }
+
+    }
 }

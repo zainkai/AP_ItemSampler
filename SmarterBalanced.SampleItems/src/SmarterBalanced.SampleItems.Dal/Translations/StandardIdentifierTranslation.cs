@@ -1,4 +1,6 @@
-﻿using SmarterBalanced.SampleItems.Dal.Xml.Models;
+﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
-    public class StandardIdentifierTranslation
+    public static class StandardIdentifierTranslation
     {
         /* 
          * Locate and parse the standard, claim, and target from the metadata
@@ -69,7 +71,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     break;
             }
 
-            if(standardIdentifier == null)
+            if (standardIdentifier == null)
             {
                 standardIdentifier = StandardIdentifier.Create(
                         claim: parts[0]);
@@ -81,7 +83,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         private static string GetStandardPartOrDefault(string[] parts, int index)
         {
-            if(parts != null && index < parts.Length)
+            if (parts != null && index < parts.Length)
             {
                 return parts[index];
             }
@@ -122,7 +124,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static StandardIdentifier MaV5Standard(string[] parts)
         {
-    
+
             return StandardIdentifier.Create(
                     claim: GetStandardPartOrDefault(parts, 0),
                     target: GetStandardPartOrDefault(parts, 2),
@@ -211,11 +213,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             if (row.SubjectCode == "ELA")
             {
-                if(row.LevelType == "CCSS")
+                if (row.LevelType == "CCSS")
                 {
                     identifier = ElaCoreStandardToCcss(parts);
                 }
-                else if(row.LevelType == "Target")
+                else if (row.LevelType == "Target")
                 {
                     identifier = ElaCoreStandardToTarget(parts);
                 }
@@ -234,6 +236,75 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             return identifier;
         }
+
+        /// <summary>
+        /// Translates the standard identifier to claim id 
+        /// </summary>
+        public static string ToClaimId(this StandardIdentifier identifier)
+        {
+            return (string.IsNullOrEmpty(identifier?.Claim)) ? string.Empty : identifier.Claim.Split('-').FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Translates the standard identifier to target id
+        /// </summary>
+        public static string ToTargetId(this StandardIdentifier identifier)
+        {
+            return (string.IsNullOrEmpty(identifier?.Target)) ? string.Empty : identifier.Target.Split('-').FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the standard identifier from the given item metadata
+        /// </summary>
+        public static StandardIdentifier ToStandardIdentifier(ItemDigest digest, string[] supportedPubs)
+        {
+            try
+            {
+                var primaryStandard = digest.StandardPublications
+                    .Where(s => !s.PrimaryStandard.EndsWith("Undesignated") && supportedPubs.Any(p => p.Equals(s.Publication)))
+                    .FirstOrDefault()
+                    ?.PrimaryStandard;
+
+                var identifier = StandardStringtoStandardIdentifier(primaryStandard);
+                return identifier;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new SampleItemsContextException(
+                    $"Publication field for item {digest.BankKey}-{digest.ItemKey} is empty.", ex);
+            }
+        }
+
+
+        //TODO: refactor
+        public static CoreStandards CoreStandardFromIdentififer(
+            CoreStandardsXml standardsXml,
+            StandardIdentifier itemIdentifier)
+        {
+            CoreStandardsRow targetRow = null;
+            CoreStandardsRow ccssRow = null;
+            if (standardsXml != null && standardsXml.TargetRows.Any())
+            {
+                targetRow = standardsXml.TargetRows
+                    .FirstOrDefault(t =>
+                    StandardIdentifierTargetComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
+            }
+
+            if (standardsXml != null && standardsXml.CcssRows.Any())
+            {
+                ccssRow = standardsXml.CcssRows
+                    .FirstOrDefault(t =>
+                    StandardIdentifierCcssComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
+            }
+
+            return CoreStandards.Create(
+                  targetId: itemIdentifier?.Target,
+                  targetIdLabel: itemIdentifier?.ToTargetId(),
+                  commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
+                  commonCoreStandardsDescription: ccssRow?.Description,
+                  targetDescription: targetRow?.Description);
+        }
+
     }
 
 }

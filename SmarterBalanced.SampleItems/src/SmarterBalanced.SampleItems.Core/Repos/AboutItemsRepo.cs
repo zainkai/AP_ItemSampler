@@ -31,7 +31,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 return null;
             }
 
-            var itemDigest = context.ItemDigests
+            var itemDigest = context.SampleItems
                 .Where(i => i.Grade != GradeLevels.NA && i.InteractionType != null)
                 .OrderBy(i => (int)i.Grade)
                 .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);

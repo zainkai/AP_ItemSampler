@@ -24,7 +24,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             var interactionGroup = LoadInteractionGroup(appSettings.SettingsConfig.InteractionTypesXMLPath);
             ImmutableArray<Subject> subjects = LoadSubjects(appSettings.SettingsConfig.ClaimsXMLPath, interactionGroup.InteractionFamilies);
 
-            var itemDigests = LoadItemDigests(
+
+            var itemDigests = LoadItemDigests(appSettings).Result;
+
+            var sampleItems = LoadSampleItems(
+                itemDigests,
                 appSettings,
                 accessibilityResourceFamilies,
                 interactionGroup.InteractionTypes,
@@ -32,29 +36,30 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 standardsXml,
                 appSettings).Result;
 
-            var itemCards = itemDigests
+            var itemCards = sampleItems
                 .Select(i => i.ToItemCardViewModel())
                 .ToImmutableArray();
 
             SampleItemsContext context = new SampleItemsContext(
-                itemDigests: itemDigests,
+                sampleItems: sampleItems,
                 itemCards: itemCards,
                 interactionTypes: interactionGroup.InteractionTypes,
                 subjects: subjects,
                 appSettings: appSettings);
 
-            logger.LogInformation($"Loaded {itemDigests.Length} item digests");
+            logger.LogInformation($"Loaded {sampleItems.Length} sample items");
             logger.LogInformation($"Context loaded successfully");
 
             return context;
         }
 
-        private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
+        private static async Task<ImmutableArray<SampleItem>> LoadSampleItems(
+            ImmutableArray<ItemDigest> digests,
             AppSettings settings,
             IList<MergedAccessibilityFamily> accessibilityResourceFamilies,
             IList<InteractionType> interactionTypes,
             IList<Subject> subjects,
-           CoreStandardsXml coreStandards,
+            CoreStandardsXml coreStandards,
             AppSettings appSettings)
         {
             string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
@@ -64,22 +69,44 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
             //Parse Xml Files
             IEnumerable<ItemMetadata> itemMetadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFiles);
-           IEnumerable<ItemContents> itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
+            IEnumerable<ItemContents> itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
+
+            var sampleItems = SampleItemTranslation
+                .ToSampleItems(
+                    digests: digests,
+                    resourceFamilies: accessibilityResourceFamilies,
+                    interactionTypes: interactionTypes,
+                    subjects: subjects,
+                    standardsXml: coreStandards,
+                    settings: appSettings)
+                .ToImmutableArray();
+
+            return sampleItems;
+        }
+
+        private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
+            AppSettings appSettings)
+        {
+            string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
+
+            var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
+
+            //Parse Xml Files
+            IEnumerable<ItemMetadata> itemMetadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFiles);
+            IEnumerable<ItemContents> itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
 
             var itemDigests = ItemDigestTranslation
-                .ItemsToItemDigests(
+                .ToItemDigests(
                     itemMetadata,
                     itemContents,
-                    accessibilityResourceFamilies,
-                    interactionTypes,
-                    subjects,
-                    coreStandards,
                     appSettings)
-                .Where(i => i.Grade != GradeLevels.NA)
+                .Where(i => i.GradeCode != "NA" && string.IsNullOrEmpty(i.ItemType))
                 .ToImmutableArray();
 
             return itemDigests;
         }
+
 
         private static ImmutableArray<MergedAccessibilityFamily> LoadAccessibility(string accessibilityPath)
         {
@@ -129,11 +156,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
         private static ImmutableArray<InteractionFamily> LoadInteractionFamilies(XElement elementRoot)
         {
-           var interactionFamilies = elementRoot
-                            .Element("Families")
-                            .Elements("Family")
-                            .Select(e => InteractionFamily.Create(e))
-                            .ToImmutableArray();
+            var interactionFamilies = elementRoot
+                             .Element("Families")
+                             .Elements("Family")
+                             .Select(e => InteractionFamily.Create(e))
+                             .ToImmutableArray();
             return interactionFamilies;
         }
 

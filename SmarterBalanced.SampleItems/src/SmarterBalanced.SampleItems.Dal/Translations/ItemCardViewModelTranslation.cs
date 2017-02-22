@@ -8,7 +8,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class ItemCardViewModelTranslation
     {
-        public static ItemCardViewModel ToItemCardViewModel(this ItemDigest digest)
+        public static ItemCardViewModel ToItemCardViewModel(this SampleItem digest)
         {
             string claimTitle = (string.IsNullOrEmpty(digest.Claim?.ClaimNumber)) ? string.Empty : $"Claim {digest.Claim.ClaimNumber}";
             string title = $"{digest.Subject?.ShortLabel} {digest.Grade.ToDisplayString()} {claimTitle}";
