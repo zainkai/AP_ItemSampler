@@ -11,7 +11,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
     public static class AccessibilityResourceTranslation
     {
         public static ImmutableArray<AccessibilityResource> ToGlobalAccessibilityResources(
-                this IEnumerable<XElement> singleSelectResources)
+            this IEnumerable<XElement> singleSelectResources)
         {
             var accessibilityResources = singleSelectResources
                 .Select(xs => AccessibilityResource.Create(xs))
@@ -125,6 +125,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return mergedFamilies;
         }
 
+        ///todo: refactor to using an item digest
         public static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
            SampleItem sampleItem,
            IList<MergedAccessibilityFamily> resourceFamilies,
@@ -163,9 +164,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             return groups;
         }
+
         public static AccessibilityResource ApplyFlags(
             this AccessibilityResource resource,
-             bool aslSupported)
+            bool aslSupported)
         {
             if (!aslSupported && resource.ResourceCode == "AmericanSignLanguage")
             {
