@@ -14,6 +14,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
     {
         public List<AccessibilityResource> Resources { get; set; }
         public List<AccessibilityResource> PartialResources { get; set; }
+        public AccessibilityFamilyResource familyResource;
+        public AccessibilityResource globalResource;
 
         public AccessibilityTranslationTests()
         {
@@ -70,6 +72,28 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                             code: "ACC1_SEL2",
                             label: "Selection 2"))),
             };
+
+            familyResource = new AccessibilityFamilyResource(
+                resourceCode: "TDS_CC",
+                selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+                disabled: false);
+
+            globalResource = new AccessibilityResource(
+                resourceCode: "TDS_CC",
+                currentSelectionCode: "TDS_CC0",
+                order: 5,
+                defaultSelection: "TDS_CC0",
+                selections: ImmutableArray.Create(
+                    new AccessibilitySelection("TDS_CC0", "Black on White", 2, false),
+                    new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false),
+                    new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false),
+                    new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false)),
+                label: "globalResource",
+                description: "globalResource",
+                disabled: false,
+                resourceType: "globalResource Type");
+
+
         }
       
         #region ToAccessibilityResourceTests
@@ -80,8 +104,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourceNullPartialAccessibility()
         {
-            AccessibilityResource r = null;
-            Assert.Throws<ArgumentNullException>(() => r.MergeWith(Resources[0]));
+            AccessibilityFamilyResource r = null;
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(r, Resources[0]));
         }
 
         /// <summary>
@@ -91,8 +115,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourceNullGlobalAccessibility()
         {
-            AccessibilityResource r = AccessibilityResource.Create();
-            Assert.Throws<ArgumentNullException>(() => r.MergeWith(null));
+            AccessibilityFamilyResource r = new AccessibilityFamilyResource(
+            resourceCode: "TDS_CC",
+            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+            disabled: false);
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(r, null));
         }
 
         /// <summary>
@@ -103,14 +130,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact] public void TestToAccessibilityResourceNoChanges()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = AccessibilityResource.Create(
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
                 resourceCode: "ACC1",
                 selections: ImmutableArray.Create(
-                    AccessibilitySelection.Create(code: "ACC2_SEL1"),
-                    AccessibilitySelection.Create(code: "ACC2_SEL2")));
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL1"),
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL2")),
+                disabled: false);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .MergeWith(partialResource, globalResource);
+                .MergeGlobalResource(partialResource, globalResource);
 
             Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(globalResource.Disabled, outputResource.Disabled);
@@ -128,14 +156,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledResource()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = AccessibilityResource.Create(
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
                 resourceCode: "ACC2",
                 disabled: true,
                 selections: ImmutableArray.Create(
-                    AccessibilitySelection.Create(code: "ACC2_SEL1"),
-                    AccessibilitySelection.Create(code: "ACC2_SEL2")));
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL1"),
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL2")));
 
-            AccessibilityResource outputResource = partialResource.MergeWith(globalResource);
+            AccessibilityResource outputResource = AccessibilityResourceTranslation.MergeGlobalResource(partialResource, globalResource);
 
             Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.True(outputResource.Disabled);
@@ -218,10 +246,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourcesNotModified()
         {
-            List<AccessibilityResource> noPartialResources = new List<AccessibilityResource>();
-            var resultResources = AccessibilityResourceTranslation.MergeAllWith(noPartialResources, Resources);
+            ImmutableArray<AccessibilityFamilyResource> noPartialResources = ImmutableArray.Create<AccessibilityFamilyResource>();
+            ImmutableArray<string> subject = new ImmutableArray<string>();
+            AccessibilityFamily noPartialResourcesFamily = new AccessibilityFamily(
+            subjects: subject,
+            grades: GradeLevels.NA,
+            resources: noPartialResources);
+            var resultResources = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResourcesFamily, Resources);
 
-            Assert.Equal(Resources.Count, resultResources.Length);
+            Assert.Equal(Resources.Count, resultResources.Resources.Length);
         }
 
 
@@ -232,24 +265,34 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourceNotModified()
         {
-            List<AccessibilityResource> noPartialResources = new List<AccessibilityResource>();
+            ImmutableArray<AccessibilityFamilyResource> resource = ImmutableArray.Create<AccessibilityFamilyResource>();
+            AccessibilityFamilyResource familyResource = new AccessibilityFamilyResource(
+             resourceCode: "ACC1",
+             selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+             disabled: false);
+            resource.Add(familyResource);
+
+            AccessibilityFamily noPartialResources = new AccessibilityFamily(
+                subjects: new ImmutableArray<string>(),
+                grades: GradeLevels.NA,
+                resources: resource);
             AccessibilityResource inputResource = Resources[1];
             List<AccessibilityResource> inputResources = new List<AccessibilityResource>
             {
                 inputResource
             };
 
-            var resultResources = AccessibilityResourceTranslation.MergeAllWith(noPartialResources, inputResources);
-            Assert.Equal(inputResources.Count, resultResources.Length);
+            var resultResources = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResources, inputResources);
+            Assert.Equal(inputResources.Count, resultResources.Resources.Count());
 
-            AccessibilityResource outputResource = resultResources[0];
+            AccessibilityResource outputResource = resultResources.Resources[0];
 
             Assert.Equal(inputResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(inputResource.Description, outputResource.Description);
             Assert.Equal(inputResource.Disabled, outputResource.Disabled);
             Assert.Equal(inputResource.DefaultSelection, outputResource.DefaultSelection);
             Assert.Equal(inputResource.Order, outputResource.Order);
-            Assert.Equal(inputResource.Selections.Count(), outputResource.Selections.Count());
+            Assert.Equal(inputResource.Selections.Count(), outputResource.Selections.Length);
         }
 
         /// <summary>
@@ -259,8 +302,21 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourcesMatchingPartialResource()
         {
-            var resultResources = AccessibilityResourceTranslation.MergeAllWith(new List<AccessibilityResource>(), Resources);
-            Assert.Equal(Resources.Count, resultResources.Length);
+            ImmutableArray<AccessibilityFamilyResource> resource = ImmutableArray.Create<AccessibilityFamilyResource>();
+            AccessibilityFamily noPartialResources = new AccessibilityFamily(
+                subjects: new ImmutableArray<string>(),
+                grades: GradeLevels.NA,
+                resources: resource);
+            var resultResources = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResources, Resources);
+            Assert.Equal(Resources.Count, resultResources.Resources.Length);
+        }
+
+        [Fact]
+        public void TestMergeWithThrowsOnNulls()
+        {
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(familyResource, null));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(null, globalResource));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(null, null));
         }
         #endregion
 
