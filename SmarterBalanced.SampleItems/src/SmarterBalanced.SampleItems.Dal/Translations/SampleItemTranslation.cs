@@ -57,8 +57,19 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
             var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId());
 
-            SampleItem sampleItem = SampleItem.Create
-            (
+            var family = resourceFamilies.FirstOrDefault(f =>
+                f.Grades.Contains(grade) &&
+                f.Subjects.Contains(itemDigest.SubjectCode));
+
+            var flaggedResources = family?.Resources
+                .Select(r => r.ApplyFlags(aslSupported: itemDigest.AslSupported))
+                .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
+
+            var groups = settings.SettingsConfig.AccessibilityTypes
+                .Select(accType => GroupItemResources(accType, flaggedResources))
+                .ToImmutableArray();
+
+            SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
                 itemKey: itemDigest.ItemKey,
                 bankKey: itemDigest.BankKey,
@@ -69,24 +80,32 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 aslSupported: itemDigest.AslSupported,
                 allowCalculator: itemDigest.AllowCalculator,
                 isPerformanceItem: itemDigest.AssociatedPassage.HasValue,
-                accessibilityResourceGroups: ImmutableArray.Create<AccessibilityResourceGroup>(),
+                accessibilityResourceGroups: groups,
                 rubrics: rubrics,
                 interactionType: interactionType,
                 subject: subject,
                 claim: claim,
                 grade: grade,
-                coreStandards: coreStandards
-            );
-
-            //todo: refactor
-            sampleItem.AccessibilityResourceGroups = AccessibilityResourceTranslation.CreateAccessibilityGroups(
-                sampleItem,
-                resourceFamilies, 
-                settings.SettingsConfig.AccessibilityTypes);
+                coreStandards: coreStandards);
 
             return sampleItem;
         }
 
+        public static AccessibilityResourceGroup GroupItemResources(
+            AccessibilityType accType,
+            ImmutableArray<AccessibilityResource> resources)
+        {
+            var matchingResources = resources
+                .Where(r => r.ResourceTypeId == accType.Id)
+                .ToImmutableArray();
+
+            var group = new AccessibilityResourceGroup(
+                label: accType.Label,
+                order: accType.Order,
+                accessibilityResources: matchingResources);
+
+            return group;
+        }
 
         public static ImmutableArray<Rubric> GetRubrics(ItemDigest digest, AppSettings settings)
         {

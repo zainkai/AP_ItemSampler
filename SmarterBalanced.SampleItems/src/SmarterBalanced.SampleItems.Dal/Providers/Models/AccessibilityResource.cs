@@ -22,7 +22,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Label { get; }
         public string Description { get; }
         public bool Disabled { get; }
-        public string ResourceType { get; }
+        public string ResourceTypeId { get; }
 
         public AccessibilityResource(
             string resourceCode,
@@ -43,7 +43,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             Label = label;
             Description = description;
             Disabled = disabled;
-            ResourceType = resourceType;
+            ResourceTypeId = resourceType;
         }
 
         public AccessibilityResource WithCurrentSelection(string currentSelectionCode)
@@ -57,7 +57,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 label: Label,
                 description: Description,
                 disabled: Disabled,
-                resourceType: ResourceType);
+                resourceType: ResourceTypeId);
 
             return newResource;
         }
@@ -73,7 +73,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 label: Label,
                 description: Description,
                 disabled: Disabled,
-                resourceType: ResourceType);
+                resourceType: ResourceTypeId);
 
             return newResource;
         }
@@ -93,7 +93,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 label: Label,
                 description: Description,
                 disabled: true,
-                resourceType: ResourceType);
+                resourceType: ResourceTypeId);
 
             return newResource;
         }
