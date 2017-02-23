@@ -33,5 +33,85 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public bool IsPerformanceItem { get; set; }
 
         public CoreStandards CoreStandards { get; set; }
-    }
+
+        public SampleItem(
+            int bankKey,
+            int itemKey,
+            string itemType,
+            GradeLevels grade,
+            Subject subject,
+            Claim claim,
+            ImmutableArray<Rubric> rubrics,
+            InteractionType interactionType,
+            ImmutableArray<AccessibilityResourceGroup> accessibilityResourceGroups,
+            string targetAssessmentType,
+            string sufficentEvidenceOfClaim,
+            int? associatedStimulus,
+            bool aslSupported,
+            bool allowCalculator,
+            string depthOfKnowledge,
+            bool isPerformanceItem,
+            CoreStandards coreStandards
+            )
+        {
+            BankKey = bankKey;
+            ItemKey = itemKey;
+            ItemType = itemType;
+            Grade = grade;
+            Subject = subject;
+            Claim = claim;
+            Rubrics = rubrics;
+            InteractionType = interactionType;
+            AccessibilityResourceGroups = accessibilityResourceGroups;
+            TargetAssessmentType = targetAssessmentType;
+            SufficentEvidenceOfClaim = sufficentEvidenceOfClaim;
+            AssociatedStimulus = associatedStimulus;
+            AslSupported = aslSupported;
+            AllowCalculator = allowCalculator;
+            DepthOfKnowledge = depthOfKnowledge;
+            IsPerformanceItem = isPerformanceItem;
+            CoreStandards = coreStandards;
+        }
+
+        public static SampleItem Create(
+            int bankKey = -1,
+            int itemKey = -1,
+            string itemType = "",
+            GradeLevels grade = GradeLevels.NA,
+            Subject subject = null,
+            Claim claim = null,
+            ImmutableArray<Rubric> rubrics = new ImmutableArray<Rubric>(),
+            InteractionType interactionType = null,
+            ImmutableArray<AccessibilityResourceGroup> accessibilityResourceGroups = new ImmutableArray<AccessibilityResourceGroup>(),
+            string targetAssessmentType = "",
+            string sufficentEvidenceOfClaim = "",
+            int? associatedStimulus = -1,
+            bool aslSupported = false,
+            bool allowCalculator = false,
+            string depthOfKnowledge = "",
+            bool isPerformanceItem = false,
+            CoreStandards coreStandards = null
+            )
+        {
+            return new SampleItem(
+                bankKey,
+                itemKey,
+                itemType,
+                grade,
+                subject,
+                claim,
+                rubrics,
+                interactionType,
+                accessibilityResourceGroups,
+                targetAssessmentType,
+                sufficentEvidenceOfClaim,
+                associatedStimulus,
+                aslSupported,
+                allowCalculator,
+                depthOfKnowledge,
+                isPerformanceItem,
+                coreStandards
+            );
+        }
+    }    
 }

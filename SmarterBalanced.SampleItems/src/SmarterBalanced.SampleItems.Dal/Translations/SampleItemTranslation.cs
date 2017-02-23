@@ -57,25 +57,26 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
             var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId());
 
-            SampleItem sampleItem = new SampleItem()
-            {
-                ItemType = itemDigest.ItemType,
-                ItemKey = itemDigest.ItemKey,
-                BankKey = itemDigest.BankKey,
-                TargetAssessmentType = itemDigest.TargetAssessmentType,
-                DepthOfKnowledge = itemDigest.DepthOfKnowledge,
-                SufficentEvidenceOfClaim = itemDigest.SufficentEvidenceOfClaim,
-                AssociatedStimulus = itemDigest.AssociatedStimulus,
-                AslSupported = itemDigest.AslSupported,
-                AllowCalculator = itemDigest.AllowCalculator,
-                IsPerformanceItem = itemDigest.AssociatedPassage.HasValue,
-                Rubrics = rubrics,
-                InteractionType = interactionType,
-                Subject = subject,
-                Claim = claim,
-                Grade = grade,
-                CoreStandards = coreStandards
-            };
+            SampleItem sampleItem = SampleItem.Create
+            (
+                itemType: itemDigest.ItemType,
+                itemKey: itemDigest.ItemKey,
+                bankKey: itemDigest.BankKey,
+                targetAssessmentType: itemDigest.TargetAssessmentType,
+                depthOfKnowledge: itemDigest.DepthOfKnowledge,
+                sufficentEvidenceOfClaim: itemDigest.SufficentEvidenceOfClaim,
+                associatedStimulus: itemDigest.AssociatedStimulus,
+                aslSupported: itemDigest.AslSupported,
+                allowCalculator: itemDigest.AllowCalculator,
+                isPerformanceItem: itemDigest.AssociatedPassage.HasValue,
+                accessibilityResourceGroups: ImmutableArray.Create<AccessibilityResourceGroup>(),
+                rubrics: rubrics,
+                interactionType: interactionType,
+                subject: subject,
+                claim: claim,
+                grade: grade,
+                coreStandards: coreStandards
+            );
 
             //todo: refactor
             sampleItem.AccessibilityResourceGroups = AccessibilityResourceTranslation.CreateAccessibilityGroups(

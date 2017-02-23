@@ -39,9 +39,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathCard = ItemCardViewModel.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
             ElaCard = ItemCardViewModel.Create(bankKey: BadBankKey, itemKey: BadItemKey);
             DuplicateCard = ItemCardViewModel.Create(bankKey: DuplicateBankKey, itemKey: DuplicateItemKey);
-            MathDigest = new SampleItem() { BankKey = GoodBankKey, ItemKey = GoodItemKey };
-            ElaDigest = new SampleItem() { BankKey = BadBankKey, ItemKey = BadItemKey };
-            DuplicateDigest = new SampleItem() { BankKey = DuplicateBankKey, ItemKey = DuplicateItemKey };
+            MathDigest = SampleItem.Create( bankKey : GoodBankKey, itemKey : GoodItemKey );
+            ElaDigest = SampleItem.Create(bankKey: BadBankKey, itemKey: BadItemKey );
+            DuplicateDigest = SampleItem.Create( bankKey : DuplicateBankKey, itemKey : DuplicateItemKey );
             ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
@@ -122,7 +122,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreLikeThisHappyCase()
         {
-            var itemDigest = new SampleItem() { Subject = Math, Claim = Claim1, Grade = GradeLevels.Grade6 };
+            var itemDigest = SampleItem.Create(subject : Math, claim : Claim1, grade : GradeLevels.Grade6 );
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
@@ -147,7 +147,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreNAGrade()
         {
-            var itemDigest = new SampleItem() { Claim = Claim1, Subject = Ela };
+            var itemDigest = SampleItem.Create( claim : Claim1, subject : Ela );
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());
@@ -171,7 +171,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestMoreUnknownSubject()
         {
-            var itemDigest = new SampleItem() { Claim = Claim1, Subject = NotASubject, Grade = GradeLevels.Grade4 };
+            var itemDigest = SampleItem.Create(claim : Claim1, subject : NotASubject, grade : GradeLevels.Grade4 );
             var more = ItemViewRepo.GetMoreLikeThis(itemDigest);
 
             Assert.Equal(3, more.GradeAboveItems.ItemCards.Count());

@@ -28,12 +28,12 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
-            SampleItem digest = new SampleItem
-            {
-                BankKey = bankKey,
-                ItemKey = itemKey,
-                Grade = GradeLevels.NA
-            };
+            SampleItem digest = SampleItem.Create
+            (
+                bankKey : bankKey,
+                itemKey : itemKey,
+                grade : GradeLevels.NA
+            );
             ItemCardViewModel card = digest.ToItemCardViewModel();
 
             var aboutThisItemVM = new AboutThisItemViewModel(
@@ -44,12 +44,12 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 commonCoreStandardsDescription: "");
 
 
-            SampleItem digestCookie = new SampleItem
-            {
-                BankKey = bankKey,
-                ItemKey = 0,
-                Grade = GradeLevels.NA
-            };
+            SampleItem digestCookie = SampleItem.Create
+            (
+                bankKey : bankKey,
+                itemKey : 0,
+                grade : GradeLevels.NA
+            );
             ItemCardViewModel cardCookie = digest.ToItemCardViewModel();
 
             var aboutItemCookie = new AboutThisItemViewModel(
