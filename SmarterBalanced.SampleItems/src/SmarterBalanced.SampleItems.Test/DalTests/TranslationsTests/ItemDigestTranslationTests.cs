@@ -73,14 +73,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                                 };
             
 
-            SampleItem digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, null, appSettings);
+            ItemDigest digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
-            Assert.Equal(GradeLevels.Grade5, digest.Grade);
+            Assert.Equal(GradeLevels.Grade5, GradeLevelsUtils.FromString(digest.GradeCode));
             Assert.Equal("Test target string", digest.TargetAssessmentType);
             Assert.Equal("Test claim string", digest.SufficentEvidenceOfClaim);
-            Assert.Equal("MATH", digest.Subject.Code);
-            Assert.Equal("EQ", digest.InteractionType.Code);
+            Assert.Equal("MATH", digest.SubjectCode);
+            Assert.Equal("EQ", digest.InteractionTypeCode);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
             contents.Item.Contents = new List<Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), null, new AppSettings()));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ToItemDigest(metadata, contents, new AppSettings()));
         }
 
 
@@ -124,7 +124,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             int testItemCount = 3;
             List<ItemContents> contentsList = new List<ItemContents>();
             List<ItemMetadata> metadataList = new List<ItemMetadata>();
-            IEnumerable<SampleItem> digests;
+            IEnumerable<ItemDigest> digests;
 
             // Get a range of numbers from 50 to the number of items being tested.
             // Use the same numer for an item's key and bank to make it easy to validate that
@@ -191,20 +191,19 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 }
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<MergedAccessibilityFamily>(),
-                            interactionTypes, subjects, null, settings);
+            digests = ItemDigestTranslation.ToItemDigests(metadataList, contentsList, settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 
-            foreach(SampleItem digest in digests)
+            foreach(var digest in digests)
             {
                 int id = digest.ItemKey;
                 Assert.Equal(digest.ItemKey, digest.BankKey);
-                Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), digest.Grade);
+                Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), GradeLevelsUtils.FromString(digest.GradeCode));
                 Assert.Equal(testTarget + id, digest.TargetAssessmentType);
                 Assert.Equal(testClaimEvidence + id, digest.SufficentEvidenceOfClaim);
-                Assert.Equal(testInteractionType, digest.InteractionType.Code);
-                Assert.Equal(testSubject, digest.Subject.Code);
+                Assert.Equal(testInteractionType, digest.InteractionTypeCode);
+                Assert.Equal(testSubject, digest.SubjectCode);
             }
         }
     }

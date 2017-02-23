@@ -13,24 +13,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     /// </summary>
     public sealed class SampleItem
     {
-        public int BankKey { get; set; }
-        public int ItemKey { get; set; }
-        public string ItemType { get; set; }
+        public int BankKey { get; }
+        public int ItemKey { get; }
+        public string ItemType { get; }
 
 
-        public GradeLevels Grade { get; set; }
-        public Subject Subject { get; set; }
-        public Claim Claim { get; set; }
-        public ImmutableArray<Rubric> Rubrics { get; set; }
-        public InteractionType InteractionType { get; set; }
-        public ImmutableArray<AccessibilityResourceGroup> AccessibilityResourceGroups { get; set; }
-        public string TargetAssessmentType { get; set; }
-        public string SufficentEvidenceOfClaim { get; set; }
-        public int? AssociatedStimulus { get; set; }
-        public bool AslSupported { get; set; }
-        public bool AllowCalculator { get; set; }
-        public string DepthOfKnowledge { get; set; }
-        public bool IsPerformanceItem { get; set; }
+        public GradeLevels Grade { get; }
+        public Subject Subject { get; }
+        public Claim Claim { get; }
+        public ImmutableArray<Rubric> Rubrics { get; }
+        public InteractionType InteractionType { get; }
+        public ImmutableArray<AccessibilityResourceGroup> AccessibilityResourceGroups { get; }
+        public string TargetAssessmentType { get; }
+        public string SufficentEvidenceOfClaim { get; }
+        public int? AssociatedStimulus { get; }
+        public bool AslSupported { get; }
+        public bool AllowCalculator { get; }
+        public string DepthOfKnowledge { get; }
+        public bool IsPerformanceItem { get; }
 
         public CoreStandards CoreStandards { get; set; }
 
@@ -90,8 +90,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool allowCalculator = false,
             string depthOfKnowledge = "",
             bool isPerformanceItem = false,
-            CoreStandards coreStandards = null
-            )
+            CoreStandards coreStandards = null)
         {
             return new SampleItem(
                 bankKey,
@@ -110,8 +109,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 allowCalculator,
                 depthOfKnowledge,
                 isPerformanceItem,
-                coreStandards
-            );
+                coreStandards);
         }
     }    
 }

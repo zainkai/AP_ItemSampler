@@ -102,7 +102,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 label: globalResource.Label,
                 description: globalResource.Description,
                 disabled: familyResource.Disabled,
-                resourceType: globalResource.ResourceType);
+                resourceType: globalResource.ResourceTypeId);
 
             return newResource;
         }
@@ -123,46 +123,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 .ToImmutableArray();
 
             return mergedFamilies;
-        }
-
-        ///todo: refactor to using an item digest
-        public static ImmutableArray<AccessibilityResourceGroup> CreateAccessibilityGroups(
-           SampleItem sampleItem,
-           IList<MergedAccessibilityFamily> resourceFamilies,
-           IList<AccessibilityType> accessibilityTypes)
-        {
-            var family = resourceFamilies
-                .FirstOrDefault(f =>
-                    f.Subjects.Any(c => c == sampleItem.Subject?.Code) &&
-                    f.Grades.Contains(sampleItem.Grade));
-
-            if (family == null)
-            {
-                return ImmutableArray<AccessibilityResourceGroup>.Empty;
-            }
-
-            var flaggedResources = family.Resources
-                .Select(r => r.ApplyFlags(
-                    aslSupported: sampleItem.AslSupported))
-                .ToImmutableArray();
-
-            var groups = accessibilityTypes
-                .Select(at =>
-                {
-                    var groupResources = flaggedResources
-                    .Where(r => r.ResourceType == at.Id)
-                    .ToImmutableArray();
-
-                    var group = new AccessibilityResourceGroup(
-                        label: at.Label,
-                        order: at.Order,
-                        accessibilityResources: groupResources);
-
-                    return group;
-                })
-                .ToImmutableArray();
-
-            return groups;
         }
 
         public static AccessibilityResource ApplyFlags(
