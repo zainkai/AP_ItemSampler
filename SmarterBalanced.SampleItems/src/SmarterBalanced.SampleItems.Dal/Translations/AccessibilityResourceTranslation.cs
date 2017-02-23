@@ -35,7 +35,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// <summary>
         /// Translates Partial family resources with global resources to full set of family resources
         /// </summary>
-        private static MergedAccessibilityFamily MergeGlobalResources(
+        public static MergedAccessibilityFamily MergeGlobalResources(
             this AccessibilityFamily family,
             IEnumerable<AccessibilityResource> globalResources)
         {
@@ -75,7 +75,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return newSelection;
         }
 
-        private static AccessibilityResource MergeGlobalResource(AccessibilityFamilyResource familyResource, AccessibilityResource globalResource)
+        public static AccessibilityResource MergeGlobalResource(AccessibilityFamilyResource familyResource, AccessibilityResource globalResource)
         {
             if (familyResource == null)
                 throw new ArgumentNullException(nameof(familyResource));

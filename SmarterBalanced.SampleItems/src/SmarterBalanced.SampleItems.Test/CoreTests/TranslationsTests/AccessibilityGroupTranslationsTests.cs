@@ -12,7 +12,7 @@ using SmarterBalanced.SampleItems.Dal.Translations;
 
 namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 {
-    public class AccessibilityTranslationsTests
+    public class AccessibilityGroupTranslationsTests
     {
         AccessibilityResourceGroup group1 = new AccessibilityResourceGroup("", 1,
                 ImmutableArray.Create(
@@ -48,16 +48,10 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             "ESN",
         };
 
-        AccessibilityResource familyResource = new AccessibilityResource(
+        AccessibilityFamilyResource familyResource = new AccessibilityFamilyResource(
             resourceCode: "TDS_CC",
-            currentSelectionCode: "TDS_CC0",
-            order: 0,
-            defaultSelection: "TDS_CC0",
-            selections: ImmutableArray.Create(new AccessibilitySelection[] { }),
-            label: "familyResource",
-            description: "familyResource",
-            disabled: false,
-            resourceType: "familyResource Type");
+            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+            disabled: false);
 
         AccessibilityResource globalResource = new AccessibilityResource(
             resourceCode: "TDS_CC",
@@ -78,6 +72,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         AccessibilitySelection goodSelection = new AccessibilitySelection("TDS_CCInvert", "Good Selection", 1, false);
         AccessibilitySelection disabledSelection = new AccessibilitySelection("TDS_CCMedGrayLtGray", "Disabled Selection", 1, true);
         AccessibilitySelection goodSelectionOtherCode = new AccessibilitySelection("TestCode", "Good Selection Other Code", 1, false);
+        AccessibilityFamilySelection goodFamilySelection = new AccessibilityFamilySelection("TDS_CCInvert", "Good Selection");
+        AccessibilityFamilySelection disabledFamilySelection = new AccessibilityFamilySelection("TDS_CCMedGrayLtGray", "Disabled Selection");
+        AccessibilityFamilySelection familySelectionOtherCode = new AccessibilityFamilySelection("TestCode", "Good Selection Other Code");
 
         ImmutableArray<AccessibilitySelection> emptySelection = ImmutableArray<AccessibilitySelection>.Empty;
 
@@ -92,7 +89,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             disabled: false,
             resourceType: "familyResource Type");
 
-        public AccessibilityTranslationsTests()
+        public AccessibilityGroupTranslationsTests()
         {
             groups = ImmutableArray.Create(group1, group2);
         }
@@ -102,7 +99,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         private string SelectedCode(ImmutableArray<AccessibilityResourceGroup> result, string resourceCode)
         {
             var resources = new List<AccessibilityResource>();
-            foreach(var rg in result)
+            foreach (var rg in result)
             {
                 resources.AddRange(rg.AccessibilityResources);
             }
@@ -112,7 +109,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestApplyPreferencesNoIsaapNoCookie()
         {
-            var result=groups.ApplyPreferences(new string[] { }, new Dictionary<string, string>());
+            var result = groups.ApplyPreferences(new string[] { }, new Dictionary<string, string>());
 
             Assert.NotNull(result);
             Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL0");
@@ -170,17 +167,15 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestMergeWithHappyCase()
         {
-            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
-                    .Append(goodSelection)
-                    .ToImmutableArray());
-            var merged = newFamilyRes.MergeWith(globalResource);
-            
+            familyResource.Selections.Add(goodFamilySelection);
+            var merged = AccessibilityResourceTranslation.MergeGlobalResource(familyResource, globalResource);
+
             Assert.Equal(merged.ResourceCode, "TDS_CC");
             Assert.Equal(merged.Description, globalResource.Description);
-            Assert.Equal(merged.Label, newFamilyRes.Label);
+            Assert.Equal(merged.Label, familyResource.Selections[0].Label);
             Assert.Equal(merged.DefaultSelection, "TDS_CCInvert");
             Assert.Equal(merged.Order, globalResource.Order);
-            Assert.Equal(merged.Disabled, newFamilyRes.Disabled);
+            Assert.Equal(merged.Disabled,familyResource.Disabled);
             var res = merged.Selections.Where(r => r.Label == goodSelection.Label).ToList();
             Assert.Equal(1, res.Count);
             Assert.Equal(4, merged.Selections.Count());
@@ -189,11 +184,9 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestMergeWithExtraSelection()
         {
-            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
-                    .Append(goodSelectionOtherCode)
-                    .ToImmutableArray());
+            familyResource.Selections.Add(familySelectionOtherCode);
+            var merged = AccessibilityResourceTranslation.MergeGlobalResource(familyResource, globalResource);
 
-            var merged = newFamilyRes.MergeWith(globalResource);
             Assert.DoesNotContain(merged.Selections, s => s.Label == goodSelectionOtherCode.Label);
             Assert.DoesNotContain(merged.Selections, s => !s.Disabled);
         }
@@ -201,9 +194,11 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestMergeWithUseDefaults()
         {
-            var newFamilyRes = AccessibilityResource.Create(resourceCode: "hello", selections: emptySelection
-                    .Append(goodSelection).ToImmutableArray());
-            var merged = newFamilyRes.MergeWith(globalResource);
+            AccessibilityFamilyResource familyResource = new AccessibilityFamilyResource(
+            resourceCode: "hello",
+            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+            disabled: false);
+            var merged = AccessibilityResourceTranslation.MergeGlobalResource(familyResource, globalResource);
 
             Assert.Equal(merged.ResourceCode, globalResource.ResourceCode);
             Assert.Equal(merged.Description, globalResource.Description);
@@ -217,13 +212,14 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestMergeWithDisabledSelection()
         {
+            AccessibilityFamilyResource familyResource = new AccessibilityFamilyResource(
+            resourceCode: "hello",
+            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+            disabled: false);
+            familyResource.Selections.Add(disabledFamilySelection);
+            familyResource.Selections.Add(goodFamilySelection);
 
-            var newFamilyRes = happyFamilyResource.WithSelections(familyResource.Selections
-                    .Append(disabledSelection)
-                    .Append(goodSelection)
-                    .ToImmutableArray());
-
-            var merged = newFamilyRes.MergeWith(globalResource);
+            var merged = AccessibilityResourceTranslation.MergeGlobalResource(familyResource, globalResource);
             Assert.Equal(4, merged.Selections.Length);
 
             var disabledSelections = merged.Selections.Where(r => r.Disabled).ToList();
@@ -234,7 +230,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestMergeWithThrowsOnNulls()
         {
-            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeWith(familyResource, null));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(familyResource, null));
             Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(null, globalResource));
             Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(null, null));
         }
@@ -246,7 +242,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact]
         public void TestMergeSelectionHappyCase()
         {
-            var newFamilyRes = familyResource.WithSelections(familyResource.Selections
+            var newFamilyRes = familyResource.MergeSelection(familyResource.Selections
                     .Append(goodSelection)
                     .ToImmutableArray());
             var globalSelection = globalResource.Selections.FirstOrDefault(s => s.SelectionCode == goodSelection.SelectionCode);
@@ -262,13 +258,13 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         [Fact(Skip = "TODO: talk to Alex. There are tests with the same name.")]
         public void TestMergeSelectionVoidProps()
         {
-            var familySel = AccessibilitySelection.Create(code:goodSelection.SelectionCode);
+            var familySel = AccessibilitySelection.Create(code: goodSelection.SelectionCode);
             var newFamilyRes = familyResource.WithSelections(emptySelection
                     .Append(familySel)
                     .ToImmutableArray());
             var globalSelection = globalResource.Selections.FirstOrDefault(s => s.SelectionCode == goodSelection.SelectionCode);
             var merged = AccessibilityResourceTranslation.MergeSelection(globalSelection, newFamilyRes);
-           
+
             Assert.Equal(goodSelection.SelectionCode, merged.SelectionCode);
             Assert.False(merged.Disabled);
             Assert.Equal(globalSelection.Label, merged.Label);

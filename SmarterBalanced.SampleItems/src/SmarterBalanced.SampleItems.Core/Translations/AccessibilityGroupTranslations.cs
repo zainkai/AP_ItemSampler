@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Core.Translations
 {
-    public static class AccessibilityTranslations
+    public static class AccessibilityGroupTranslations
     {
         public static ImmutableArray<AccessibilityResourceGroup> ApplyPreferences(
             this ImmutableArray<AccessibilityResourceGroup> groups,

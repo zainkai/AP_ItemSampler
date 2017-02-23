@@ -159,12 +159,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledAllSelections()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = AccessibilityResource.Create(
-                resourceCode: "ACC2",
-                selections: ImmutableArray<AccessibilitySelection>.Empty);
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
+            resourceCode: "ACC2",
+            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+            disabled: false);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .MergeWith(partialResource, globalResource);
+                .MergeGlobalResource(partialResource, globalResource);
 
             Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
@@ -187,13 +188,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledSomeSelections()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = AccessibilityResource.Create(
-                resourceCode: "ACC2",
-                selections: ImmutableArray.Create(
-                    AccessibilitySelection.Create(code: "ACC2_SEL1")));
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
+            resourceCode: "TDS_CC",
+            disabled: false,
+            selections: ImmutableArray.Create(AccessibilityFamilySelection.Create(code: "ACC2_SEL1")));
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .MergeWith(partialResource, globalResource);
+                .MergeGlobalResource(partialResource, globalResource);
 
             Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
