@@ -39,16 +39,43 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
         /// </summary>
-        protected string GetItemViewerUrl(ItemDigest digest)
+        public string GetItemViewerUrl(ItemDigest digest)
         {
+            string items;
+            string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
             if (digest == null)
             {
                 return string.Empty;
             }
 
-            string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            return $"{baseUrl}/item/{digest.BankKey}-{digest.ItemKey}";
+            if (digest.IsPerformanceItem)
+            {
+                items = string.Join(",", GetStimulusUrl(digest));
+            }
+            else
+            {
+                items = $"{digest.BankKey}-{digest.ItemKey}";
+            }
+
+                return $"{baseUrl}/items?ids={items}";
         }
+
+        private List<ItemDigest> GetAssociatedStimulus(ItemDigest digest)
+        {
+            var associatedStimulus = digest.AssociatedStimulus;
+            List<ItemDigest> associatedStimulusDigests = context.ItemDigests
+            .Where(i => i.AssociatedStimulus == digest.AssociatedStimulus)
+            .OrderBy(i => i.ItemKey).ToList();
+
+            return associatedStimulusDigests;
+        }
+
+        private string[] GetStimulusUrl(ItemDigest digest)
+        {
+            var associatedStimulusDigests = GetAssociatedStimulus(digest)?.Select(d => $"{d.BankKey}-{d.ItemKey}").ToArray();
+            return associatedStimulusDigests;
+        }
+
 
         public ItemViewModel GetItemViewModel(
             int bankKey,
@@ -75,7 +102,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
-               
+
                 accResourceGroups: groups,
                 moreLikeThisVM: GetMoreLikeThis(itemDigest),
                 aboutThisItemVM: aboutThisItem);
