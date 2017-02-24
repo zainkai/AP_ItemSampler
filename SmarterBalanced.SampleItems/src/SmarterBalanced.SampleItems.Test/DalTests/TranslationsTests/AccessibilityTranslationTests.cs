@@ -332,10 +332,5 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
         }
-
-        /* TODO:
-         * This did not test to see if there was a family resource. We changed the select statement in MergeAllWith
-         * to Code. This should have broken a test.
-         * */
     }
 }

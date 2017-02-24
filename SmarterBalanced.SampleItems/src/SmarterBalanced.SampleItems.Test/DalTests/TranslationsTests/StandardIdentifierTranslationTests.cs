@@ -114,6 +114,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         }
 
         //TODO: Add invalid strings for each of the ma and ela types
-        //TODO: add standards testing
+        //TODO: add standards testing Note these are Fixed in Dev :)
     }
 }
