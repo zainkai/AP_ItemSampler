@@ -14,8 +14,8 @@
     }
 
     interface State {
-        resourceTypeExpanded?: IsResourceExpanded;
-        resourceSelections?: ResourceSelections;
+        resourceTypeExpanded: IsResourceExpanded;
+        resourceSelections: ResourceSelections;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, State> {
@@ -52,17 +52,17 @@
             this.setState({ resourceSelections: newSelections });
         }
 
-        onSave = (e: React.FormEvent) => {
+        onSave = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
             e.preventDefault();
             this.props.onSave(this.state.resourceSelections || {});
         }
 
-        onCancel = (e: React.FormEvent) => {
+        onCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             this.setState({ resourceSelections: {} });
         }
 
-        onReset = (e: React.FormEvent) => {
+        onReset = (e: React.MouseEvent<HTMLButtonElement>) => {
             this.setState({ resourceSelections: {} });
             this.props.onReset();
         }

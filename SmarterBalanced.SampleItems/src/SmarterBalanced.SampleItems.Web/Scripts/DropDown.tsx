@@ -20,8 +20,8 @@
             super(props);
         }
 
-        onChange = (event: React.FormEvent) => {
-            this.props.updateSelection((event.target as HTMLSelectElement).value, this.props.label);
+        onChange = (event: React.FormEvent<HTMLSelectElement>) => {
+            this.props.updateSelection(event.currentTarget.value, this.props.label);
         }
 
         renderOption = (selection: Selection) => {

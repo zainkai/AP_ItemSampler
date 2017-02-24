@@ -102,45 +102,34 @@ namespace ItemPage {
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
-            this.state = { selections: {} };
         }
 
         saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
             this.props.onSave(resourceSelections);
         }
 
-        resetOptions = (event: React.FormEvent): void => {
-            event.preventDefault();
-            this.props.onReset();
-        }
-
-        cancelChanges = (event: React.FormEvent): void => {
-            event.preventDefault();
-            this.setState({ selections: {} });
-        }
-
-        openAboutItemModal(e: React.KeyboardEvent) {
+        openAboutItemModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
             if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#about-item-modal-container"));
                 modal.modal();
             }
         }
 
-        openMoreLikeThisModal(e: React.KeyboardEvent) {
+        openMoreLikeThisModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
             if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#more-like-this-modal-container"));
                 modal.modal();
             }
         }
 
-        openShareModal(e: React.KeyboardEvent) {
+        openShareModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
             if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#share-modal-container"));
                 modal.modal();
             }
         }
 
-        openAccessibilityModal(e: React.KeyboardEvent) {
+        openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
             if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();

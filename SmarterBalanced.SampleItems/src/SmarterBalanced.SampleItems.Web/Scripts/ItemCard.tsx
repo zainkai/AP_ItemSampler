@@ -20,7 +20,7 @@ function itemPageLink(bankKey: number, itemKey: number) {
 
 class ItemCard extends React.Component<ItemCardViewModel, {}> {
 
-    handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent) {
+    handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 13) {
             itemPageLink(bankKey, itemKey);
         }
@@ -67,7 +67,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
 
 class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
 
-    handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent) {
+    handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 13) {
             itemPageLink(bankKey, itemKey);
         }
