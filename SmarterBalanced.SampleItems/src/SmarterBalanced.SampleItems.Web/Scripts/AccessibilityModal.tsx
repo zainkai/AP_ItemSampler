@@ -109,7 +109,7 @@
             }
 
             return (
-                <div>
+                <div key={type}>
                     <h3>{type}</h3>
                     <div className="accessibility-dropdowns">
                         {dropdowns}

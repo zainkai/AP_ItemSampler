@@ -18,7 +18,7 @@
                 : "No items found for this grade.";
 
             const items = column.itemCards.length ?
-                column.itemCards.map(c => <ItemCardCondensed {...c} />)
+                column.itemCards.map(c => <ItemCardCondensed key={c.bankKey + "-" + c.itemKey} {...c} />)
                 : label;
 
             return (

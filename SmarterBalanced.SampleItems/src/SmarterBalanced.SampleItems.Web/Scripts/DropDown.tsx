@@ -30,7 +30,8 @@
                 <option value={selection.code}
                     disabled={selection.disabled}
                     key={selection.label}
-                    className={disabledCSS}>
+                    className={disabledCSS}
+                    selected={this.props.selectedCode === selection.code}>
 
                     {selection.label}
                 </option>
