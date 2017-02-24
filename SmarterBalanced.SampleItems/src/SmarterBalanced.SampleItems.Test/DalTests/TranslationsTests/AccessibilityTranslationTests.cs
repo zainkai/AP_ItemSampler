@@ -98,31 +98,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
       
         #region ToAccessibilityResourceTests
         /// <summary>
-        /// Tests exception thrown if ToAccessibilityResource is given a 
-        /// null partial resource
-        /// </summary>
-        [Fact]
-        public void TestToAccessibilityResourceNullPartialAccessibility()
-        {
-            AccessibilityFamilyResource r = null;
-            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(r, Resources[0]));
-        }
-
-        /// <summary>
-        /// Tests exception thrown if ToAccessibilityResource is given a 
-        /// null global resource
-        /// </summary>
-        [Fact]
-        public void TestToAccessibilityResourceNullGlobalAccessibility()
-        {
-            AccessibilityFamilyResource r = new AccessibilityFamilyResource(
-            resourceCode: "TDS_CC",
-            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
-            disabled: false);
-            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(r, null));
-        }
-
-        /// <summary>
         /// Tests that a global accessibility resource copy is not modified 
         /// from the original given a partial accessibility resource that 
         /// contains all of the select elements
