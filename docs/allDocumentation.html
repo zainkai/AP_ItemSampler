@@ -6,43 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
-  <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-  </style>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -282,8 +245,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#application-overview">Application Overview</a><ul>
 <li><a href="#license">License</a></li>
 <li><a href="#installation">Installation</a></li>
-</ul></li>
 <li><a href="#project-architecture">Project Architecture</a></li>
+</ul></li>
 <li><a href="#project-setup">Project Setup</a><ul>
 <li><a href="#general-steps">General Steps</a></li>
 <li><a href="#running">Running</a></li>
@@ -299,11 +262,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#travisci">TravisCI</a></li>
 <li><a href="#content-package">Content package</a></li>
 </ul></li>
-<li><a href="#deployment">Deployment</a><ul>
-<li><a href="#ec2-instance-setup">EC2 Instance setup</a></li>
-<li><a href="#code-deploy-setup">Code Deploy Setup</a></li>
-<li><a href="#s3-setup">S3 setup</a></li>
-<li><a href="#appspec.yml">appspec.yml</a></li>
+<li><a href="#build">Build</a><ul>
+<li><a href="#before-starting-build">Before starting build</a></li>
+<li><a href="#using-a-previous-docker-code-image">Using a previous docker code image</a></li>
+<li><a href="#building-from-scratch">Building from scratch</a></li>
+</ul></li>
+<li><a href="#docker-2">Docker</a><ul>
+<li><a href="#publish-docker-to-aws">Publish Docker to AWS</a></li>
+<li><a href="#publish-docker-to-dockerhub">Publish Docker to DockerHub</a></li>
+<li><a href="#docker-commands">Docker Commands</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -315,7 +282,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>Clone the project
 <ul>
-<li>Don't forget to initialize the project submodules (<a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules">instructions</a>)</li>
+<li>Don’t forget to initialize the project submodules (<a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules">instructions</a>)</li>
 </ul></li>
 <li>Install the latest version of Microsoft .NET Core for your operating system (<a href="https://www.microsoft.com/net/download/core#/current">link</a>)</li>
 <li>Install the latest TypeScript compiler (<a href="https://www.typescriptlang.org/index.html#download-links">link</a>)</li>
@@ -324,11 +291,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Place this in the location specified in src/Web/appsettings.json (<code>ContentRootDirectory</code>)</li>
 </ul></li>
 </ul>
-<h2 id="project-architecture">Project Architecture</h2>
+<h3 id="project-architecture">Project Architecture</h3>
 <p>The Sample Items Website project is composed of three layers: Web, Core, and Dal.</p>
 <p><strong>Web</strong> is the startup project and contains controllers, views, style, and other web dependencies. See the <strong>Dependencies</strong> section for more information.</p>
 <p><strong>Core</strong> provides business logic to Web via repositories. It also houses the business logic for the diagnosticAPI and model translations.</p>
-<p><strong>Dal</strong> provides data to the Core layer. All data is supplied by a &quot;content package&quot; which is a set of XML files that represent test question items. This XML is parsed into the immutable <code>ItemDigest</code> and <code>ItemCard</code> models, which are used throughout the application.</p>
+<p><strong>Dal</strong> provides data to the Core layer. All data is supplied by a “content package” which is a set of XML files that represent test question items. This XML is parsed into the immutable <code>ItemDigest</code> and <code>ItemCard</code> models, which are used throughout the application.</p>
 <p>Other XML data is used, such as <code>AccessibilityAccommodationConfigurations</code>, <code>ClaimConfigurations</code>, and <code>InteractionTypeConfigurations</code>. These configure information such as order and labels for accessibility and interaction types.</p>
 <p><strong>Test</strong> is the test project for Sample Items Website. It contains unit tests and integration tests for each of the three aforementioned layers.</p>
 <h2 id="project-setup">Project Setup</h2>
@@ -336,7 +303,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>Clone the project
 <ul>
-<li>Don't forget to initialize the project submodules (<a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules">instructions</a>)</li>
+<li>Don’t forget to initialize the project submodules (<a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules#_cloning_submodules">instructions</a>)</li>
 </ul></li>
 <li>Install the latest version of Microsoft .NET Core for your operating system (<a href="https://www.microsoft.com/net/download/core#/current">link</a>)</li>
 <li>Install the latest TypeScript compiler (<a href="https://www.typescriptlang.org/index.html#download-links">link</a>)</li>
@@ -396,79 +363,100 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>On the <strong>dev</strong>, <strong>stage</strong>, and <strong>master</strong> branches, Travis triggers a build process in AWS that combines the content package, hosted in an S3 bucket, with the application Docker image and performs a rolling update to the running versions of these branches.</p>
 <p>See the <code>travis.yml</code> file in the root directory project for configurations.</p>
 <h3 id="content-package">Content package</h3>
-<p>The content for the site is provided by a content package supplied by the Smarter Balanced Assessment Consortium. It consists of XML files that describe the test question items (the &quot;content package&quot;).</p>
+<p>The content for the site is provided by a content package supplied by the Smarter Balanced Assessment Consortium. It consists of XML files that describe the test question items (the “content package”).</p>
 <p>Currently, content packages can be accessed at <a href="ftp://ftps.smarterbalanced.org/~sbacpublic/Public/PracticeAndTrainingTests/" class="uri">ftp://ftps.smarterbalanced.org/~sbacpublic/Public/PracticeAndTrainingTests/</a>.</p>
-<h2 id="deployment">Deployment</h2>
-<p>Code Deploy is triggered by Travis CI using the deploy section in the <code>.travis.yml</code> file. When the build on the dev, stage, or master branch is successful the branch specific deployment is run.<br />
-The Travis build publishes the application using <code>dotnet publish</code>, and zips it into an archive, then pushes it to an Amazon S3 bucket, then triggers a Code Deploy deployment. The Code Deploy deployment deploys the application to a running EC2 instance that was set up using the instructions below.</p>
-<h3 id="ec2-instance-setup">EC2 Instance setup</h3>
-<p>The EC2 instance running the Sample Items Website needs an IAM role granting it read permissions to S3 and full access to Code Deploy. It requires <a href="https://www.nginx.com/resources/wiki/">Nginx</a>, [Supervisor], .NET Core, and the Amazon Code Deploy Agent to be installed on the instance. Nginx is used for reverse proxy.</p>
-<p>Nginx and Supervisor can be installed with apt.</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="fu">sudo</span> apt-get update
-<span class="fu">sudo</span> apt-get install nginx
-<span class="fu">sudo</span> apt-get install supervisor</code></pre></div>
-<p>.NET Core can be installed with apt after adding the the <code>dotnet-release</code> repo.</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="fu">sudo</span> sh -c <span class="st">&#39;echo &quot;deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main&quot; &gt; /etc/apt/sources.list.d/dotnetdev.list&#39;</span>
-<span class="fu">sudo</span> apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-<span class="fu">sudo</span> apt-get update
-<span class="fu">sudo</span> apt-get install dotnet-dev-1.0.0-preview2-003131</code></pre></div>
-<p>The install steps for .NET Core may change so please see <a href="https://www.microsoft.com/net/core#ubuntu">Microsoft's instructions</a> if the above does not work.<br />
-Please see <a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/how-to-run-agent-install.html">Amazon's instructions</a> for installing the code deploy agent.</p>
-<p>All together in one script that can be run when the instance is created:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="co">#!/bin/bash</span>
-<span class="kw">set</span> <span class="ex">-ev</span>
-
-<span class="fu">sudo</span> apt-get -y update
-<span class="fu">sudo</span> apt-get -y install nginx
-<span class="fu">sudo</span> apt-get -y install supervisor
-<span class="fu">sudo</span> sh -c <span class="st">&#39;echo &quot;deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main&quot; &gt; /etc/apt/sources.list.d/dotnetdev.list&#39;</span>
-<span class="fu">sudo</span> apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-<span class="fu">sudo</span> apt-get -y update
-<span class="fu">sudo</span> apt-get -y install dotnet-dev-1.0.0-preview2-003131
-<span class="fu">sudo</span> apt-get -y install python-pip
-<span class="fu">sudo</span> apt-get -y install ruby2.0
-<span class="fu">sudo</span> apt-get -y install wget
-<span class="fu">wget</span> https://aws-codedeploy-us-west-2.s3.amazonaws.com/latest/install
-<span class="fu">chmod</span> +x ./install
-<span class="fu">sudo</span> ./install auto</code></pre></div>
-<h4 id="iam-role">IAM Role</h4>
-<p>Create an IAM role with the AmazonS3ReadOnlyAccess and AWSCodeDeployFullAccess policies. Add the following custom policy:</p>
-<div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
-    <span class="dt">&quot;Statement&quot;</span><span class="fu">:</span> <span class="ot">[</span>
-        <span class="fu">{</span>
-            <span class="dt">&quot;Action&quot;</span><span class="fu">:</span> <span class="ot">[</span>
-                <span class="st">&quot;autoscaling:Describe*&quot;</span><span class="ot">,</span>
-                <span class="st">&quot;cloudformation:Describe*&quot;</span><span class="ot">,</span>
-                <span class="st">&quot;cloudformation:GetTemplate&quot;</span><span class="ot">,</span>
-                <span class="st">&quot;s3:Get*&quot;</span>
-            <span class="ot">]</span><span class="fu">,</span>
-            <span class="dt">&quot;Resource&quot;</span><span class="fu">:</span> <span class="st">&quot;*&quot;</span><span class="fu">,</span>
-            <span class="dt">&quot;Effect&quot;</span><span class="fu">:</span> <span class="st">&quot;Allow&quot;</span>
-        <span class="fu">}</span>
-    <span class="ot">]</span>
-<span class="fu">}</span></code></pre></div>
-<h4 id="what-to-install">What to install</h4>
-<p>In order to deploy and run the Sample Items website the instance must have the following installed.</p>
-<ul>
-<li><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/how-to-run-agent-install.html">AWS Code Deploy Agent</a></li>
-<li><a href="https://www.microsoft.com/net/core#ubuntu">.NET Core</a></li>
-<li>Nginx</li>
-<li>Supervisor</li>
-</ul>
-<h3 id="code-deploy-setup">Code Deploy Setup</h3>
-<ul>
-<li>In the AWS web console navigate to Code Deploy</li>
-<li>Click &quot;Create New Application&quot;</li>
-<li>Choose an application name. This must match the <code>application</code> used in the <code>.travis.yml</code> file under the <code>codedeploy</code> provider.</li>
-<li>Choose a deployment group name. This must match the <code>deployment_group</code> used in the <code>.travis.yml</code> file under the <code>codedeploy</code> provider.</li>
-<li>Under add instances add the EC2 instance you set up above.</li>
-<li>Leave the default &quot;Deployment Configuration&quot; on &quot;CodeDeployDefault.OneAtATime&quot;</li>
-<li>Set the Service Role to IAM role you created above.</li>
-<li>Choose &quot;Create Application&quot;</li>
-</ul>
-<h3 id="s3-setup">S3 setup</h3>
-<p>Create an S3 bucket to store the zip archive created by the Travis CI build. The name and region must match those specified in the <code>s3</code> provider in the <code>.travis.yml</code> file.</p>
-<h3 id="appspec.yml">appspec.yml</h3>
-<p>The appspec is the file that defines how the code deploy agent deploys the application. For the Sample Items Website it copies the configuration files for Nginx and Supervisor, and the application into the correct places, then starts Nginx and Supervisor to run the application.</p>
+<h2 id="build">Build</h2>
+<p>Sampleitems Website requires content before running.</p>
+<p>There is a two-step process using docker. The base app without content needs to be created as a docker image called code. Then we combine the code image with the content package using another dockerfile.</p>
+<h3 id="before-starting-build">Before starting build</h3>
+<p>Locate the dockerfile.stage and dockerfile.prod files from github repo, navigate to deployScripts</p>
+<h3 id="using-a-previous-docker-code-image">Using a previous docker code image</h3>
+<p>To build a docker image for sample items website code base (without content) see Building from scratch</p>
+<h4 id="docker-1">Docker</h4>
+<ol type="1">
+<li>Navigate to directory containing dockerfiles</li>
+<li>Get docker code repo for stage/prod, run <code>docker pull reponame:{tag}</code>
+<ol type="1">
+<li>Example stage: run <code>docker pull xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:stage</code></li>
+<li>Example producation: run <code>docker pull xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod</code></li>
+</ol></li>
+<li>Docker tag code, run <code>docker tag reponame:{tag} sampleitemscode:{tag}</code>
+<ol type="1">
+<li>Example stage: run <code>docker tag xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:stage sampleitemscode:stage</code></li>
+<li>Example production: run <code>docker pull xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod sampleitemscode:prod</code></li>
+</ol></li>
+<li>place content within deployScripts directory
+<ol type="1">
+<li>Content needs to be unzipped</li>
+<li>content directory root level needs Items directory</li>
+</ol></li>
+<li>Docker build, run <code>docker build -t sampleitemsapp:{tag} -f Dockerfile.{tag} .</code>
+<ol type="1">
+<li>Example stage: run <code>docker build -t sampleitemsapp:stage -f Dockerfile.stage .</code></li>
+<li>Example production: run <code>docker build -t sampleitemsapp:prod -f Dockerfile.prod .</code></li>
+</ol></li>
+<li>Docker Run app , run <code>docker exec -it -p 8012:80 sampleitemsapp:{tag}</code>
+<ol type="1">
+<li>Example stage: run <code>docker exec -it -p 8012:80 sampleitemsapp:stage</code></li>
+<li>Example production: run <code>docker exec -it -p 8012:80 sampleitemsapp:prod</code></li>
+</ol></li>
+<li>Go to <a href="http://localhost:8012">localhost:8012</a></li>
+<li>point to docker</li>
+</ol>
+<h3 id="building-from-scratch">Building from scratch</h3>
+<h4 id="dependencies">Dependencies</h4>
+<ol type="1">
+<li>See <a href="#internal-dependencies">Project Dependencies</a></li>
+<li>Install Nodejs and npm</li>
+</ol>
+<h4 id="dotnet-build-and-publish">Dotnet build and Publish</h4>
+<ol type="1">
+<li><code>cd SampleItemsWebsite\SmarterBalanced.SampleItems</code></li>
+<li><code>dotnet restore</code></li>
+<li><code>cd src\SmarterBalanced.SampleItems.Web</code></li>
+<li><code>npm install</code></li>
+<li><code>grunt all</code></li>
+<li><code>dotnet publish -o ../../publish</code></li>
+<li><code>cd ../../publish</code></li>
+</ol>
+<h4 id="docker-build">Docker build</h4>
+<ol type="1">
+<li>Go to the publish directory containing the dockerfile</li>
+<li>Build app, run <code>docker build -t sampleitemscode:{tag}</code>
+<ol type="1">
+<li>Example stage: run <code>docker build -t sampleitemscode:stage</code></li>
+<li>Example producation: run <code>docker build -t sampleitemscode:prod</code></li>
+</ol></li>
+</ol>
+<h4 id="deploy-sample-items-app">Deploy Sample Items app</h4>
+<ol type="1">
+<li>see <a href="#publish-docker-to-aws">Publish Docker</a></li>
+</ol>
+<h2 id="docker-2">Docker</h2>
+<h3 id="publish-docker-to-aws">Publish Docker to AWS</h3>
+<ol type="1">
+<li>Go to Amazon ECS</li>
+<li>Select Repositories</li>
+<li>Select a repository or create</li>
+<li>Select push Commands</li>
+<li>Follow the push Commands or follow:
+<ol type="1">
+<li>Go to the root directory containing Dockerfile</li>
+<li>Run <code>aws ecr get-login --region us-west-2</code></li>
+<li>Run the docker login command</li>
+<li>Run <code>docker build -t {repo-name}:{latest/dev/stage/prod} .</code></li>
+<li>Run <code>docker tag {repo-name}:{latest/dev/stage/prod} {amazon-repo}:{latest/dev/stage/prod}</code></li>
+<li>Run <code>docker push {amazon-repo}:{latest/dev/stage/prod}</code></li>
+</ol></li>
+</ol>
+<h3 id="publish-docker-to-dockerhub">Publish Docker to DockerHub</h3>
+<ol type="1">
+<li>Go to the root directory containing Dockerfile</li>
+<li>Run <code>docker login</code></li>
+<li>Run <code>docker build -t {repo-name}:{latest/dev/stage/prod} .</code></li>
+<li>Run <code>docker push {repo-name}:{latest/dev/stage/prod}</code></li>
+</ol>
+<h3 id="docker-commands">Docker Commands</h3>
+<p>To update a docker image, please follow publish to Aws or DockerHub</p>
 </body>
 </html>

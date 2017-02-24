@@ -1,5 +1,5 @@
 @ECHO OFF
-SET inputFiles=../ProjectOverview.md ../ProjectSetup.md ../ApplicationSettings.md ../Dependencies.md ../CodeDeployAWS.md
+SET inputFiles=../ProjectOverview.md ../ProjectSetup.md ../ApplicationSettings.md ../Dependencies.md ../Buildapp.md ../Docker.md
 SET output=../allDocumentation.html
 SET docheader="Sample Items Website"
 @ECHO ON
