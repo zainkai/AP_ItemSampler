@@ -18,14 +18,13 @@
     export class Dropdown extends React.Component<Props, {}> {
         constructor(props: Props) {
             super(props);
-            this.onChange = this.onChange.bind(this);
         }
 
-        onChange(event: any): void {
-            this.props.updateSelection(event.target.value, this.props.label);
+        onChange = (event: React.FormEvent) => {
+            this.props.updateSelection((event.target as HTMLSelectElement).value, this.props.label);
         }
 
-        renderOption(selection: Selection) {
+        renderOption = (selection: Selection) => {
             const disabledCSS: string = selection.disabled ? "option-disabled" : "option-enabled";
             return (
                 <option value={selection.code}
