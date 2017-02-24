@@ -87,14 +87,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             Assert.False(StandardIdentifierTargetComparer.Instance.Equals(x, y));
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestMathNotEqualCCSS()
         {
             StandardIdentifier x = DefaultWith(subjectCode: subjectMath);
             StandardIdentifier y = DefaultWith(subjectCode: subjectMath, commonCoreStandard: Ccss2);
 
             Assert.False(StandardIdentifierCcssComparer.Instance.Equals(x, y));
-            Assert.False(StandardIdentifierTargetComparer.Instance.Equals(x, y));
+            Assert.True(StandardIdentifierTargetComparer.Instance.Equals(x, y));
         }
 
         [Fact]
@@ -107,14 +107,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             Assert.True(StandardIdentifierTargetComparer.Instance.Equals(x, y));
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestElaNotEqualTarget()
         {
             StandardIdentifier x = DefaultWith(subjectCode: subjectEla);
             StandardIdentifier y = DefaultWith(subjectCode: subjectEla, target: target2);
 
             Assert.False(StandardIdentifierCcssComparer.Instance.Equals(x, y));
-            Assert.True(StandardIdentifierTargetComparer.Instance.Equals(x, y));
+            Assert.False(StandardIdentifierTargetComparer.Instance.Equals(x, y));
         }
 
         [Fact]

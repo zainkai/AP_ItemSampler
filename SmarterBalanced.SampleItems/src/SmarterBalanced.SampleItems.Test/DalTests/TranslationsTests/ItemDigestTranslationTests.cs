@@ -17,7 +17,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// <summary>
         /// Test translating a single ItemMetadata object and a single ItemContents object into an ItemDigest object
         /// </summary>
-        [Fact(Skip ="TODO")]
+        [Fact]
         public void TestItemToItemDigest()
         {
             int testItemKey = 1;
@@ -66,9 +66,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
+            var settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "" }
+            };
+
             AppSettings appSettings = new AppSettings
                                 {
-                                    SettingsConfig = new SettingsConfig(),
+                                    SettingsConfig = settings,                                                         
                                     RubricPlaceHolderText = placeholderText
                                 };
             
@@ -87,7 +92,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// Tests that an exception is thrown if the ItemKey fields do not match for the 
         /// ItemMetadata and ItemContents objects passed to the ItemToItemDigest method.
         /// </summary>
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestItemToItemDigestInvalid()
         {
             ItemMetadata metadata = new ItemMetadata();
@@ -107,10 +112,18 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                 });
 
-            contents.Item.ItemKey = 2;
+            var settings = new AppSettings
+            {
+                SettingsConfig = new SettingsConfig
+                {
+                    SupportedPublications = new string[] { "" }
+                }
+            };
+
+                contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
             contents.Item.Contents = new List<Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), null, new AppSettings()));
+            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), null, settings));
         }
 
 
@@ -118,7 +131,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// Test translating a collection of ItemMetadata objects and a collection of ItenContents objects
         /// into a collection of ItemDigest objects.
         /// </summary>
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestItemstoItemDigests()
         {
             int testItemCount = 3;
@@ -187,7 +200,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             {
                 SettingsConfig = new SettingsConfig
                 {
-                    AccessibilityTypes = new List<AccessibilityType>()
+                    AccessibilityTypes = new List<AccessibilityType>(),
+                    SupportedPublications = new string[] { "" } 
                 }
             };
 
