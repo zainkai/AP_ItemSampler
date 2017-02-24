@@ -295,6 +295,44 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         }
         #endregion
 
+        [Fact]
+        public void TestApplyFlags()
+        {
+            AccessibilityResource resource = AccessibilityResource.Create(
+                resourceCode: "AmericanSignLanguage",
+                disabled: false,
+                selections: ImmutableArray.Create(
+                    new AccessibilitySelection(
+                           code: "ACC1_SEL1",
+                           order: 1,
+                           disabled: true,
+                           label: "Selection 1")));
+
+            var resModified = resource.ApplyFlags(false);
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, true);
+        }
+
+        [Fact]
+        public void TestApplyFlagsFalse()
+        {
+            AccessibilityResource resource = AccessibilityResource.Create(
+               resourceCode: "AmericanSignLanguage",
+               disabled: false,
+               selections: ImmutableArray.Create(
+                   new AccessibilitySelection(
+                          code: "ACC1_SEL1",
+                          order: 1,
+                          disabled: true,
+                          label: "Selection 1")));
+
+            var resModified = resource.ApplyFlags(true);
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, false);
+        }
+
         /* TODO:
          * This did not test to see if there was a family resource. We changed the select statement in MergeAllWith
          * to Code. This should have broken a test.

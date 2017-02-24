@@ -17,7 +17,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// <summary>
         /// Test translating a single ItemMetadata object and a single ItemContents object into an ItemDigest object
         /// </summary>
-        [Fact(Skip ="TODO")]
+        [Fact]
         public void TestItemToItemDigest()
         {
             int testItemKey = 1;
@@ -87,7 +87,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// Tests that an exception is thrown if the ItemKey fields do not match for the 
         /// ItemMetadata and ItemContents objects passed to the ItemToItemDigest method.
         /// </summary>
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestItemToItemDigestInvalid()
         {
             ItemMetadata metadata = new ItemMetadata();
@@ -109,8 +109,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            contents.Item.Contents = new List<Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ToItemDigest(metadata, contents, new AppSettings()));
+            contents.Item.Contents = new List<Content>();    
+            var exception = Record.Exception(() => ItemDigestTranslation.ToItemDigest(metadata, contents, new AppSettings()));
+
+            Assert.NotNull(exception);
+            Assert.IsType<SampleItemsContextException>(exception);
         }
 
 
@@ -118,7 +121,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// Test translating a collection of ItemMetadata objects and a collection of ItenContents objects
         /// into a collection of ItemDigest objects.
         /// </summary>
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestItemstoItemDigests()
         {
             int testItemCount = 3;
