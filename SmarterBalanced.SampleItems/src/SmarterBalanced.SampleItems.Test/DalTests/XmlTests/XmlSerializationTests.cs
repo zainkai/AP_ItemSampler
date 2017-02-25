@@ -30,10 +30,10 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             Assert.NotNull(metadata);
             Assert.NotNull(metadata.Metadata);
             Assert.Equal(expectedItemKey, metadata.Metadata.ItemKey);
-            Assert.Equal(expectedGrade, metadata.Metadata.Grade);
+            Assert.Equal(expectedGrade, metadata.Metadata.GradeCode);
             Assert.Equal(expectedTarget, metadata.Metadata.TargetAssessmentType);
             Assert.Equal(expectedInteractionType, metadata.Metadata.InteractionType);
-            Assert.Equal(expectedSubject, metadata.Metadata.Subject);
+            Assert.Equal(expectedSubject, metadata.Metadata.SubjectCode);
             Assert.Equal(expectedClaim, metadata.Metadata.SufficientEvidenceOfClaim);
         }
 
@@ -62,11 +62,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         public async void TestDeserializeXmlFiles()
         {
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> metadataFiles = await XmlSerialization.FindMetadataXmlFiles(contentDir);
+            IEnumerable<FileInfo> metadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             IEnumerable<ItemMetadata> metadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metadataFiles);
             Assert.Equal(metadataFiles.Count(), metadata.Count());
 
-            IEnumerable<FileInfo> contentFiles = await XmlSerialization.FindContentXmlFiles(contentDir);
+            IEnumerable<FileInfo> contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
             IEnumerable<ItemContents> contents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
             Assert.Equal(metadataFiles.Count(), contents.Count());
         }
@@ -75,11 +75,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         /// Test that the FindMetadataXmlFiles method finds the correct number of files
         /// </summary>
         [Fact]
-        public async void TestFindMetadataXmlFiles()
+        public void TestFindMetadataXmlFiles()
         {
             int metadataFilesCount = 6;
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> metadataFiles = await XmlSerialization.FindMetadataXmlFiles(contentDir);
+            var metadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             Assert.Equal(metadataFilesCount, metadataFiles.Count());
         }
 
@@ -87,11 +87,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         /// Test that the FindContentXmlFiles method finds the correct number of files
         /// </summary>
         [Fact]
-        public async void TestFindContentXmlFiles()
+        public void TestFindContentXmlFiles()
         {
             int contentFilesCount = 6;
             string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> contentFiles = await XmlSerialization.FindContentXmlFiles(contentDir);
+            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
             Assert.Equal(contentFilesCount, contentFiles.Count());
         }
     }

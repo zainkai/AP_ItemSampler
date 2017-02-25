@@ -10,6 +10,7 @@
                   <xs:sequence>
                     <xs:element type="xs:string" name="Code"/>
                     <xs:element type="xs:string" name="Label"/>
+                    <xs:element type="xs:string" name="Description"/>
                     <xs:element type="xs:byte" name="Order"/>
                   </xs:sequence>
                 </xs:complexType>

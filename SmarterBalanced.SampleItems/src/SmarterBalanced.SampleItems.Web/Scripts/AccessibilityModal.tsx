@@ -14,8 +14,8 @@
     }
 
     interface State {
-        resourceTypeExpanded?: IsResourceExpanded;
-        resourceSelections?: ResourceSelections;
+        resourceTypeExpanded: IsResourceExpanded;
+        resourceSelections: ResourceSelections;
     }
 
     export class ItemAccessibilityModal extends React.Component<Props, State> {
@@ -52,14 +52,19 @@
             this.setState({ resourceSelections: newSelections });
         }
 
-        onSave = (e: React.FormEvent) => {
+        onSave = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
             e.preventDefault();
             this.props.onSave(this.state.resourceSelections || {});
         }
 
-        onCancel = (e: React.FormEvent) => {
+        onCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             this.setState({ resourceSelections: {} });
+        }
+
+        onReset = (e: React.MouseEvent<HTMLButtonElement>) => {
+            this.setState({ resourceSelections: {} });
+            this.props.onReset();
         }
 
         renderResourceType(type: string) {
@@ -104,7 +109,7 @@
             }
 
             return (
-                <div>
+                <div key={type}>
                     <h3>{type}</h3>
                     <div className="accessibility-dropdowns">
                         {dropdowns}
@@ -137,7 +142,7 @@
                             </div>
                             <div className="modal-footer">
                                 <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
-                                <button className="btn btn-primary" data-dismiss="modal" onClick={this.props.onReset} >Reset to Default</button>
+                                <button className="btn btn-primary" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
                                 <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                             </div>
                         </div>

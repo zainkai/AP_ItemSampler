@@ -1,19 +1,45 @@
 ﻿@model SmarterBalanced.SampleItems.Core.Repos.Models.ItemViewModel
 
+@{
+    ViewData["Title"] = "Item Details";
+}
 <div id="item-container"></div>
+<environment names="Development">
+    <link rel="stylesheet" href="~/css/item.css" />
+</environment>
+<environment names="Staging, Production">
+    <link rel="stylesheet" href="~/css/item.min.css" />
+</environment>
 
-<link rel="stylesheet" href="~/css/ItemPage.css" />
 
 @section Scripts {
-<script src="~/scripts/GradeLevels.js"></script>
-<script src="~/scripts/Collapsible.js"></script>
-<script src="~/scripts/AboutItem.js"></script>
-<script src="~/scripts/ShareModal.js"></script>
-<script src="~/scripts/AccessibilityModal.js"></script>
-<script src="~/scripts/ItemViewerFrame.js"></script>
-<script src="~/scripts/DropDown.js"></script>
-<script src="~/scripts/ItemPage.js"></script>
-<script>
-    initializeItemPage(@Json.Serialize(Model));
-</script>
+    <environment names="Development">
+        <script src="~/scripts/GradeLevels.js"></script>
+        <script src="~/scripts/Collapsible.js"></script>
+        <script src="~/scripts/ItemCard.js"></script>
+        <script src="~/scripts/AboutThisItem.js"></script>
+        <script src="~/scripts/ShareModal.js"></script>
+        <script src="~/scripts/MoreLikeThisModal.js"></script>
+        <script src="~/scripts/AccessibilityModal.js"></script>
+        <script src="~/scripts/ItemViewerFrame.js"></script>
+        <script src="~/scripts/DropDown.js"></script>
+        <script src="~/scripts/ItemPage.js"></script>
+    </environment>
+    <environment names="Staging, Production">
+        <script src="~/scripts/GradeLevels.min.js"></script>
+        <script src="~/scripts/Collapsible.min.js"></script>
+        <script src="~/scripts/ItemCard.min.js"></script>
+        <script src="~/scripts/AboutThisItem.min.js"></script>
+        <script src="~/scripts/ShareModal.min.js"></script>
+        <script src="~/scripts/MoreLikeThisModal.min.js"></script>
+        <script src="~/scripts/AccessibilityModal.min.js"></script>
+        <script src="~/scripts/ItemViewerFrame.min.js"></script>
+        <script src="~/scripts/DropDown.min.js"></script>
+        <script src="~/scripts/ItemPage.min.js"></script>
+    </environment>
+
+
+    <script>
+        initializeItemPage(@Json.Serialize(Model));
+    </script>
 }

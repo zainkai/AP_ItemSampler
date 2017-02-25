@@ -3,6 +3,7 @@ using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Translations;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,116 +14,89 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
     {
         public List<AccessibilityResource> Resources { get; set; }
         public List<AccessibilityResource> PartialResources { get; set; }
+        public AccessibilityFamilyResource familyResource;
+        public AccessibilityResource globalResource;
 
         public AccessibilityTranslationTests()
         {
             Resources = new List<AccessibilityResource>
             {
-                new AccessibilityResource
-                {
-                    Code = "ACC1",
-                    Order = 1,
-                    Disabled = false,
-                    DefaultSelection = "ACC1_SEL1",
-                    Label = "Accessibility 1",
-                    Description = "Accessibility Selection One",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC1_SEL1",
-                            Order = 1,
-                            Disabled = false,
-                            Label = "Selection 1"
-                        }
-                    }
-                },
-                new AccessibilityResource
-                {
-                    Code = "ACC2",
-                    Order = 2,
-                    Disabled = false,
-                    DefaultSelection = "ACC2_SEL2",
-                    Label = "Accessibility 2",
-                    Description = "Accessibility Selection Two",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL1",
-                            Order = 1,
-                            Disabled = false,
-                            Label = "Selection 1"
-                        },
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL2",
-                            Order = 2,
-                            Disabled = false,
-                            Label = "Selection 2"
-                        }
-                    }
-                },
+                AccessibilityResource.Create(
+                    resourceCode: "ACC1",
+                    order: 1,
+                    disabled: false,
+                    defaultSelection: "ACC1_SEL1",
+                    label: "Accessibility 1",
+                    description: "Accessibility Selection One",
+                    selections: ImmutableArray.Create(
+                        new AccessibilitySelection(
+                            code: "ACC1_SEL1",
+                            order: 1,
+                            disabled: false,
+                            label: "Selection 1"))),
+                AccessibilityResource.Create(
+                    resourceCode: "ACC2",
+                    order: 2,
+                    disabled: false,
+                    defaultSelection: "ACC2_SEL2",
+                    label: "Accessibility 2",
+                    description: "Accessibility Selection Two",
+                    selections: ImmutableArray.Create(
+                        new AccessibilitySelection(
+                            code: "ACC2_SEL1",
+                            order: 1,
+                            disabled: false,
+                            label: "Selection 1"),
+                        new AccessibilitySelection(
+                            code: "ACC2_SEL2",
+                            order: 2,
+                            disabled: false,
+                            label: "Selection 2")))
             };
 
             PartialResources = new List<AccessibilityResource>
             {
-                new AccessibilityResource
-                {
-                    Code = "ACC1",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC1_SEL1",
-                            Label = "Selection 1"
-                        }
-                    }
-                },
-                new AccessibilityResource
-                {
-                    Code = "ACC2",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL1",
-                            Label = "Selection 1"
-                        },
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL2",
-                            Label = "Selection 2"
-                        }
-                    }
-                },
+                AccessibilityResource.Create(
+                    resourceCode: "ACC1",
+                    selections: ImmutableArray.Create(
+                        AccessibilitySelection.Create(
+                            code: "ACC1_SEL1",
+                            label: "Selection 1"))),
+                AccessibilityResource.Create(
+                    resourceCode: "ACC2",
+                    selections: ImmutableArray.Create(
+                        AccessibilitySelection.Create(
+                            code: "ACC1_SEL1",
+                            label: "Selection 1"),
+                        AccessibilitySelection.Create(
+                            code: "ACC1_SEL2",
+                            label: "Selection 2"))),
             };
+
+            familyResource = new AccessibilityFamilyResource(
+                resourceCode: "TDS_CC",
+                selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+                disabled: false);
+
+            globalResource = new AccessibilityResource(
+                resourceCode: "TDS_CC",
+                currentSelectionCode: "TDS_CC0",
+                order: 5,
+                defaultSelection: "TDS_CC0",
+                selections: ImmutableArray.Create(
+                    new AccessibilitySelection("TDS_CC0", "Black on White", 2, false),
+                    new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false),
+                    new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false),
+                    new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false)),
+                label: "globalResource",
+                description: "globalResource",
+                disabled: false,
+                resourceType: "globalResource Type");
+
+
         }
       
         #region ToAccessibilityResourceTests
-        /// <summary>
-        /// Tests exception thrown if ToAccessibilityResource is given a 
-        /// null partial resource
-        /// </summary>
-        [Fact]
-        public void TestToAccessibilityResourceNullPartialAccessibility()
-        {
-            AccessibilityResource r = new AccessibilityResource();
-            r = null;
-            Assert.Throws<ArgumentNullException>(() => r.ToAccessibilityResource(Resources[0]));
-        }
-
-        /// <summary>
-        /// Tests exception thrown if ToAccessibilityResource is given a 
-        /// null global resource
-        /// </summary>
-        [Fact]
-        public void TestToAccessibilityResourceNullGlobalAccessibility()
-        {
-            AccessibilityResource r = new AccessibilityResource();
-            Assert.Throws<ArgumentNullException>(() => r.ToAccessibilityResource(null));
-        }
-
         /// <summary>
         /// Tests that a global accessibility resource copy is not modified 
         /// from the original given a partial accessibility resource that 
@@ -131,26 +105,17 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact] public void TestToAccessibilityResourceNoChanges()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC1",
-                Selections = new List<AccessibilitySelection>
-                {
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC2_SEL1"
-                    },
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC2_SEL2"
-                    }
-                }
-            };
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
+                resourceCode: "ACC1",
+                selections: ImmutableArray.Create(
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL1"),
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL2")),
+                disabled: false);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeGlobalResource(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(globalResource.Disabled, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
             Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
@@ -166,34 +131,24 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledResource()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC1",
-                Disabled = true,
-                Selections = new List<AccessibilitySelection>
-                {
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC1_SEL1"
-                    },
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC1_SEL2"
-                    }
-                }
-            };
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
+                resourceCode: "ACC2",
+                disabled: true,
+                selections: ImmutableArray.Create(
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL1"),
+                    AccessibilityFamilySelection.Create(code: "ACC2_SEL2")));
 
-            AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+            AccessibilityResource outputResource = AccessibilityResourceTranslation.MergeGlobalResource(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
-            Assert.Equal(true, outputResource.Disabled);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
+            Assert.True(outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
-            Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
-            Assert.Equal(globalResource.Selections.Count(), outputResource.Selections.Count());
+            Assert.Equal(string.Empty, outputResource.DefaultSelection);
+            Assert.Equal(globalResource.Selections.Length, outputResource.Selections.Length);
+
             foreach (var sel in outputResource.Selections)
             {
-                Assert.Equal(true, sel.Disabled);
+                Assert.True(sel.Disabled);
             }
         }
 
@@ -207,19 +162,18 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledAllSelections()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC2",
-                Selections = null
-            };
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
+            resourceCode: "ACC2",
+            selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+            disabled: false);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeGlobalResource(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
-            Assert.Equal(null, outputResource.DefaultSelection);
+            Assert.Equal(string.Empty, outputResource.DefaultSelection);
             Assert.Equal(globalResource.Selections.Count(), outputResource.Selections.Count());
             foreach (var sel in outputResource.Selections)
             {
@@ -237,29 +191,22 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public void TestToAccessibilityDisabledSomeSelections()
         {
             AccessibilityResource globalResource = Resources[1];
-            AccessibilityResource partialResource = new AccessibilityResource
-            {
-                Code = "ACC2",
-                Selections = new List<AccessibilitySelection>
-                {
-                    new AccessibilitySelection
-                    {
-                        Code = "ACC2_SEL1"
-                    }
-                }
-            };
+            AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
+            resourceCode: "TDS_CC",
+            disabled: false,
+            selections: ImmutableArray.Create(AccessibilityFamilySelection.Create(code: "ACC2_SEL1")));
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
-                .ToAccessibilityResource(partialResource, globalResource);
+                .MergeGlobalResource(partialResource, globalResource);
 
-            Assert.Equal(globalResource.Code, outputResource.Code);
+            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
 
             // Check that default selection was also updated
             Assert.Equal("ACC2_SEL1", outputResource.DefaultSelection); 
 
-            Assert.Equal(globalResource.Selections.Count(), outputResource.Selections.Count());
+            Assert.Equal(globalResource.Selections.Length, outputResource.Selections.Length);
             Assert.Equal(false, outputResource.Selections[0].Disabled);
             Assert.Equal(true, outputResource.Selections[1].Disabled);
         }
@@ -274,10 +221,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourcesNotModified()
         {
-            List<AccessibilityResource> noPartialResources = new List<AccessibilityResource>();
-            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, Resources);
+            ImmutableArray<AccessibilityFamilyResource> noPartialResources = ImmutableArray.Create<AccessibilityFamilyResource>();
+            ImmutableArray<string> subject = new ImmutableArray<string>();
+            AccessibilityFamily noPartialResourcesFamily = new AccessibilityFamily(
+            subjects: subject,
+            grades: GradeLevels.NA,
+            resources: noPartialResources);
+            var resultResources = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResourcesFamily, Resources);
 
-            Assert.Equal(Resources.Count, resultResources.Length);
+            Assert.Equal(Resources.Count, resultResources.Resources.Length);
         }
 
 
@@ -288,54 +240,97 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestToAccessibilityResourceNotModified()
         {
-            List<AccessibilityResource> noPartialResources = new List<AccessibilityResource>();
+            ImmutableArray<AccessibilityFamilyResource> resource = ImmutableArray.Create<AccessibilityFamilyResource>();
+            AccessibilityFamilyResource familyResource = new AccessibilityFamilyResource(
+             resourceCode: "ACC1",
+             selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
+             disabled: false);
+            resource.Add(familyResource);
+
+            AccessibilityFamily noPartialResources = new AccessibilityFamily(
+                subjects: new ImmutableArray<string>(),
+                grades: GradeLevels.NA,
+                resources: resource);
             AccessibilityResource inputResource = Resources[1];
             List<AccessibilityResource> inputResources = new List<AccessibilityResource>
             {
                 inputResource
             };
 
-            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(noPartialResources, inputResources);
-            Assert.Equal(inputResources.Count, resultResources.Length);
+            var resultResources = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResources, inputResources);
+            Assert.Equal(inputResources.Count, resultResources.Resources.Count());
 
-            AccessibilityResource outputResource = resultResources[0];
+            AccessibilityResource outputResource = resultResources.Resources[0];
 
-            Assert.Equal(inputResource.Code, outputResource.Code);
+            Assert.Equal(inputResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(inputResource.Description, outputResource.Description);
             Assert.Equal(inputResource.Disabled, outputResource.Disabled);
             Assert.Equal(inputResource.DefaultSelection, outputResource.DefaultSelection);
             Assert.Equal(inputResource.Order, outputResource.Order);
-            Assert.Equal(inputResource.Selections.Count(), outputResource.Selections.Count());
+            Assert.Equal(inputResource.Selections.Count(), outputResource.Selections.Length);
         }
 
         /// <summary>
-        /// Tests that a global resource is matched with a family's resource
-        /// if the codes match
+        /// Tests that global resources are passed through an empty list
+        /// of partial resources in mergeAllWith()
         /// </summary>
         [Fact]
         public void TestToAccessibilityResourcesMatchingPartialResource()
         {
-            List<AccessibilityResource> partialResources = new List<AccessibilityResource>
-            {
-                new AccessibilityResource
-                {
-                    Code = "ACC2",
-                    Selections = new List<AccessibilitySelection>
-                    {
-                        new AccessibilitySelection
-                        {
-                            Code = "ACC2_SEL1"
-                        }
-                   }
-                }
-            };
+            ImmutableArray<AccessibilityFamilyResource> resource = ImmutableArray.Create<AccessibilityFamilyResource>();
+            AccessibilityFamily noPartialResources = new AccessibilityFamily(
+                subjects: new ImmutableArray<string>(),
+                grades: GradeLevels.NA,
+                resources: resource);
+            var resultResources = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResources, Resources);
+            Assert.Equal(Resources.Count, resultResources.Resources.Length);
+        }
 
-            var resultResources = AccessibilityResourceTranslation.ToAccessibilityResources(partialResources, Resources);
-
-            Assert.Equal(Resources.Count, resultResources.Length);
+        [Fact]
+        public void TestMergeWithThrowsOnNulls()
+        {
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(familyResource, null));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(null, globalResource));
+            Assert.Throws<ArgumentNullException>(() => AccessibilityResourceTranslation.MergeGlobalResource(null, null));
         }
         #endregion
 
- 
+        [Fact]
+        public void TestApplyFlags()
+        {
+            AccessibilityResource resource = AccessibilityResource.Create(
+                resourceCode: "AmericanSignLanguage",
+                disabled: false,
+                selections: ImmutableArray.Create(
+                    new AccessibilitySelection(
+                           code: "ACC1_SEL1",
+                           order: 1,
+                           disabled: true,
+                           label: "Selection 1")));
+
+            var resModified = resource.ApplyFlags(false);
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, true);
+        }
+
+        [Fact]
+        public void TestApplyFlagsFalse()
+        {
+            AccessibilityResource resource = AccessibilityResource.Create(
+               resourceCode: "AmericanSignLanguage",
+               disabled: false,
+               selections: ImmutableArray.Create(
+                   new AccessibilitySelection(
+                          code: "ACC1_SEL1",
+                          order: 1,
+                          disabled: true,
+                          label: "Selection 1")));
+
+            var resModified = resource.ApplyFlags(true);
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, false);
+        }
     }
 }

@@ -8,25 +8,25 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 {
     public static class ItemCardViewModelTranslation
     {
-        public static ItemCardViewModel ToItemCardViewModel(this ItemDigest digest)
+        public static ItemCardViewModel ToItemCardViewModel(this SampleItem sampleItem)
         {
-            string claimTitle = (string.IsNullOrEmpty(digest.Claim?.ClaimNumber)) ? string.Empty : $"Claim {digest.Claim.ClaimNumber}";
-            string title = $"{digest.Subject?.ShortLabel} {digest.Grade.ToDisplayString()} {claimTitle}";
+            string claimTitle = (string.IsNullOrEmpty(sampleItem.Claim?.ClaimNumber)) ? string.Empty : $"Claim {sampleItem.Claim.ClaimNumber}";
+            string title = $"{sampleItem.Subject?.ShortLabel} {sampleItem.Grade.ToDisplayString()} {claimTitle}";
 
-            var card = new ItemCardViewModel(
-                bankKey: digest.BankKey,
-                itemKey: digest.ItemKey,
+            var card = ItemCardViewModel.Create(
+                bankKey: sampleItem.BankKey,
+                itemKey: sampleItem.ItemKey,
                 title: title,
-                grade: digest.Grade,
-                gradeLabel: digest.Grade.ToDisplayString(),
-                subjectCode: digest.Subject?.Code,
-                subjectLabel: digest.Subject?.ShortLabel,
-                claimCode: digest.Claim?.Code,
-                claimLabel: digest.Claim?.Label,
-                target: digest.TargetId,
-                interactionTypeCode: digest.InteractionType?.Code,
-                interactionTypeLabel: digest.InteractionType?.Label,
-                commonCoreStandardsId: digest.CommonCoreStandardsId);
+                grade: sampleItem.Grade,
+                gradeLabel: sampleItem.Grade.ToDisplayString(),
+                subjectCode: sampleItem.Subject?.Code,
+                subjectLabel: sampleItem.Subject?.ShortLabel,
+                claimCode: sampleItem.Claim?.Code,
+                claimLabel: sampleItem.Claim?.Label,
+                target: sampleItem.CoreStandards?.TargetIdLabel,
+                interactionTypeCode: sampleItem.InteractionType?.Code,
+                interactionTypeLabel: sampleItem.InteractionType?.Label,
+                isPerformanceItem: sampleItem.IsPerformanceItem);
 
             return card;
         }

@@ -260,3 +260,9 @@ _references.js
 
 # minified css
 **/*.min.css
+
+# css generated from less files
+/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/wwwroot/css/*
+
+#jmeter
+/jmeter/Results/

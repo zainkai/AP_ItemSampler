@@ -18,10 +18,10 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public int? AssociatedStimulus { get; set; }
 
         [XmlElement("Subject")]
-        public string Subject { get; set; }
+        public string SubjectCode { get; set; }
 
         [XmlElement("IntendedGrade")]
-        public string Grade { get; set; }
+        public string GradeCode { get; set; }
 
         [XmlElement("SufficientEvidenceOfClaim")]
         public string SufficientEvidenceOfClaim { get; set; }
@@ -40,5 +40,11 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
         [XmlElement("AllowCalculator")]
         public string AllowCalculator { get; set; }
+
+        [XmlElement("DepthOfKnowledge")]
+        public string DepthOfKnowledge { get; set; }
+
+        [XmlElement("MaximumNumberOfPoints")]
+        public int? MaximumNumberOfPoints { get; set; }
     }
 }

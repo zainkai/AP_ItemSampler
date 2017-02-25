@@ -1,9 +1,10 @@
 ﻿interface AccessibilityResource {
+    code: string; // ID for this resource
     defaultSelection: string;
     description: string;
     disabled: boolean;
     label: string;
-    selectedCode: string;
+    selectedCode: string; // ID of the current selection
     resourceTypeLabel: string;
     order: number;
     selections: Dropdown.Selection[];
@@ -20,7 +21,7 @@ namespace ItemPage {
                 }
             }
         }
-        return str;
+        return encodeURIComponent(str);
     }
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
@@ -36,17 +37,17 @@ namespace ItemPage {
         };
     }
 
-    function generateAccCookieValue(accGroups: AccResourceGroup[]): string {
-        let cookieValue = "";
-        let newGroups = [];
-        for (let group of accGroups) {
-            newGroups.push({
-                label: group.label,
-                order: group.order,
-                accessibilityResources: group.accessibilityResources.map(trimAccResource)
-            });
+    function toCookie(accGroups: AccResourceGroup[]): string {
+        let prefs: AccessibilityModal.ResourceSelections = {};
+        for (const group of accGroups) {
+            for (const resource of group.accessibilityResources) {
+                prefs[resource.code] = resource.selectedCode;
+            }
         }
-        return JSON.stringify(newGroups);
+
+        const json = JSON.stringify(prefs);
+        const cookie = btoa(json);
+        return cookie;
     }
 
     function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
@@ -81,11 +82,14 @@ namespace ItemPage {
         accessibilityResources: AccessibilityResource[];
     }
 
+
+
     export interface ViewModel {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         accResourceGroups: AccResourceGroup[];
-        aboutItemVM: AboutItem.Props;
+        moreLikeThisVM: MoreLikeThis.Props;
+        aboutThisItemVM: AboutThisItem.Props;
     }
 
     export interface Props extends ViewModel {
@@ -98,47 +102,35 @@ namespace ItemPage {
     export class Page extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
-            this.state = { selections: {} };
         }
 
         saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
             this.props.onSave(resourceSelections);
         }
 
-        resetOptions = (event: React.FormEvent): void => {
-            event.preventDefault();
-            this.props.onReset();
-        }
-
-        cancelChanges = (event: React.FormEvent): void => {
-            event.preventDefault();
-            this.setState({ selections: {} });
-        }
-
-        openAboutItemModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+        openAboutItemModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#about-item-modal-container"));
                 modal.modal();
             }
         }
 
-        // TODO: Update id with modal id
-        openMoreLikeThisModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
-                const modal: any = ($("#TODO-modal-container"));
+        openMoreLikeThisModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
+                const modal: any = ($("#more-like-this-modal-container"));
                 modal.modal();
             }
         }
 
-        openShareModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+        openShareModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#share-modal-container"));
                 modal.modal();
             }
         }
 
-        openAccessibilityModal(e: React.KeyboardEvent) {
-            if (e.keyCode === 13) {
+        openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
             }
@@ -146,23 +138,28 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
-            const accText = (window.innerWidth < 800) ? "" : "Accessibility";
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
+            var windowWidth = 600;
+            const accText = (window.innerWidth < 350) ? "" : "Accessibility";
+            const abtText = (window.innerWidth < windowWidth) ? "About" : "About This Item";
+            const moreText = (window.innerWidth < windowWidth) ? "More" : "More Like This";
             return (
                 <div>
                     <div className="btn-toolbar item-nav-group" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="btn-group mr-2 item-nav-bottom" role="group" aria-label="First group">
+
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
-                                About This Item
+                                {abtText}
                             </a>
 
-                            <a className="btn item-nav-btn" data-target="#share-modal-container"
+                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
-                                More Like This
+                                {moreText}                               
                             </a>
+
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
                                 onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
@@ -175,18 +172,17 @@ namespace ItemPage {
                                 data-target="#accessibility-modal-container"
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                                <span className="accessibility-button-text"></span>
+                                {accText}
                             </a>
                         </div>
                     </div>
-                    <ItemFrame baseUrl={this.props.itemViewerServiceUrl}
-                        accessibilityString={isaap}
-                        url={ivsUrl} /> {/* TODO: remove redundant prop */}
-                    <AboutItem.AIComponent {...this.props.aboutItemVM} />
+                    <ItemFrame url={ivsUrl} />
+                    <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
                         accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
                         onReset={this.props.onReset} />
+                        <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
                     <Share.ShareModal iSAAP={isaap}/>
                 </div>
             );
@@ -213,8 +209,8 @@ namespace ItemPage {
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newGroups;
 
-            let cookieValue = generateAccCookieValue(this.itemProps.accResourceGroups);
-            document.cookie = this.itemProps.accessibilityCookieName.concat("=", btoa(cookieValue), "; path=/");
+            let cookieValue = toCookie(this.itemProps.accResourceGroups);
+            document.cookie = this.itemProps.accessibilityCookieName.concat("=", cookieValue, "; path=/");
 
             this.render();
         }

@@ -1,0 +1,7 @@
+FROM sampleitemscode:stage
+ARG source=content/
+ARG contentStore=/app/content/
+COPY $source $contentStore
+
+ASPNETCORE_ENVIRONMENT=Staging
+

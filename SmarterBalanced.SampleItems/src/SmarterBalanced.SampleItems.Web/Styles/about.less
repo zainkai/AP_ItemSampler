@@ -1,0 +1,62 @@
+﻿@import "constants.less";
+
+h1 {
+	letter-spacing: -.02em;
+}
+
+.container {
+    align-self: center;
+    width: auto;
+}
+
+.aboutitems-parents {
+    padding: 1.5em;
+    background-color: #ffffff; // SB
+    border-radius: 6px; // SB
+    box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135); // SB
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+@media (max-width: @phone-portrait) {
+    .aboutitems-parents {
+        padding: 0;
+        border-radius: 0;
+    }
+}
+
+.aboutitems-info {
+    vertical-align: middle;
+    flex: 1 300px;
+    margin: 1.5em;
+}
+
+.aboutitem-iframe {
+    flex: 1 800px;
+    margin: 1.5em;
+}
+
+.aboutitems-dropdown {
+    width: inherit;
+    padding-top: 10px;
+}
+
+.aboutitems-dropdown .form-control {
+	padding: 10px;
+	font-size: 16px;
+	max-width: 100%;
+    height: auto;
+}
+
+.aboutitems-desc {
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 6px; // SB
+}
+
+.aboutitems-text {
+    align-content:center;
+    font-size: 18px; // SB
+}
