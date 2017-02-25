@@ -138,7 +138,7 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("?isaap=", isaap);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
             var windowWidth = 600;
             const accText = (window.innerWidth < 350) ? "" : "Accessibility";
             const abtText = (window.innerWidth < windowWidth) ? "About" : "About This Item";

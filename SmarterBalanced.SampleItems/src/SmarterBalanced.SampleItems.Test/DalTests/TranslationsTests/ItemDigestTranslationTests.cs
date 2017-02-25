@@ -66,9 +66,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
+            var settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "" }
+            };
+
             AppSettings appSettings = new AppSettings
                                 {
-                                    SettingsConfig = new SettingsConfig(),
+                                    SettingsConfig = settings,                                                         
                                     RubricPlaceHolderText = placeholderText
                                 };
             
@@ -107,7 +112,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                 });
 
-            contents.Item.ItemKey = 2;
+            var settings = new AppSettings
+            {
+                SettingsConfig = new SettingsConfig
+                {
+                    SupportedPublications = new string[] { "" }
+                }
+            };
+
+                contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
             contents.Item.Contents = new List<Content>();    
             var exception = Record.Exception(() => ItemDigestTranslation.ToItemDigest(metadata, contents, new AppSettings()));
@@ -190,7 +203,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             {
                 SettingsConfig = new SettingsConfig
                 {
-                    AccessibilityTypes = new List<AccessibilityType>()
+                    AccessibilityTypes = new List<AccessibilityType>(),
+                    SupportedPublications = new string[] { "" } 
                 }
             };
 

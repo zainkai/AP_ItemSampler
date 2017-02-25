@@ -15,7 +15,7 @@ Mozilla Public License Version 2.0
 - Download the latest sample item content package (TODO: Link?)
     - Place this in the location specified in src/Web/appsettings.json (`ContentRootDirectory`)
 
-## Project Architecture
+### Project Architecture
 The Sample Items Website project is composed of three layers: Web, Core, and Dal.
 
 **Web** is the startup project and contains controllers, views, style, and other

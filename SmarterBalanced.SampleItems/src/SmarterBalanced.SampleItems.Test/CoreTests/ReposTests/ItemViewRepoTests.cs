@@ -42,7 +42,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathDigest = SampleItem.Create( bankKey : GoodBankKey, itemKey : GoodItemKey );
             ElaDigest = SampleItem.Create(bankKey: BadBankKey, itemKey: BadItemKey );
             DuplicateDigest = SampleItem.Create( bankKey : DuplicateBankKey, itemKey : DuplicateItemKey );
-            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest);
+            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
@@ -107,6 +107,32 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
             Assert.NotNull(result);
             Assert.Equal(result, resultCheck);
+        }
+
+        [Fact]
+        public void TestGetItemUrl()
+        {
+            var result = ItemViewRepo.GetItemDigest(GoodBankKey, GoodItemKey);
+            var url = ItemViewRepo.GetItemViewerUrl(result);
+
+            Assert.NotNull(url);
+            Assert.Equal("/items?ids=1-4", url);
+        }
+
+        [Fact]
+        public void TestGetItemUrlMultiple()
+        {
+            var url = ItemViewRepo.GetItemViewerUrl(PerformanceDigest);
+
+            Assert.NotNull(url);
+            Assert.Equal("/items?ids=0-0,0-0", url);
+        }
+
+        [Fact]
+        public void TestGetItemUrlNull()
+        {
+            var url = ItemViewRepo.GetItemViewerUrl(null);
+            Assert.Equal(string.Empty, url);
         }
 
         [Fact]
