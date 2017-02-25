@@ -39,40 +39,40 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given ItemDigest.
         /// </summary>
-        protected string GetItemViewerUrl(SampleItem digest)
+        public string GetItemViewerUrl(SampleItem item)
         {
             string items;
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            if (digest == null)
+            if (item == null)
             {
                 return string.Empty;
             }
 
-            if (digest.IsPerformanceItem)
+            if (item.IsPerformanceItem)
             {
-                items = string.Join(",", GetStimulusUrl(digest));
+                items = string.Join(",", GetStimulusUrl(item));
             }
             else
             {
-                items = $"{digest.BankKey}-{digest.ItemKey}";
+                items = $"{item.BankKey}-{item.ItemKey}";
             }
 
                 return $"{baseUrl}/items?ids={items}";
         }
 
-        private List<ItemDigest> GetAssociatedStimulus(ItemDigest digest)
+        private List<SampleItem> GetAssociatedStimulus(SampleItem item)
         {
-            var associatedStimulus = digest.AssociatedStimulus;
-            List<ItemDigest> associatedStimulusDigests = context.ItemDigests
-            .Where(i => i.AssociatedStimulus == digest.AssociatedStimulus)
+            var associatedStimulus = item.AssociatedStimulus;
+            List<SampleItem> associatedStimulusDigests = context.SampleItems
+            .Where(i => i.AssociatedStimulus == item.AssociatedStimulus)
             .OrderBy(i => i.ItemKey).ToList();
 
             return associatedStimulusDigests;
         }
 
-        private string[] GetStimulusUrl(ItemDigest digest)
+        private string[] GetStimulusUrl(SampleItem item)
         {
-            var associatedStimulusDigests = GetAssociatedStimulus(digest)?.Select(d => $"{d.BankKey}-{d.ItemKey}").ToArray();
+            var associatedStimulusDigests = GetAssociatedStimulus(item)?.Select(d => $"{d.BankKey}-{d.ItemKey}").ToArray();
             return associatedStimulusDigests;
         }
 
