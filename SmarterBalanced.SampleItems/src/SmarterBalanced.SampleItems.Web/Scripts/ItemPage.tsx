@@ -1,11 +1,10 @@
 ﻿interface AccessibilityResource {
-    code: string; // ID for this resource
+    resourceCode: string; // ID for this resource
     defaultSelection: string;
     description: string;
     disabled: boolean;
     label: string;
-    selectedCode: string; // ID of the current selection
-    resourceTypeLabel: string;
+    currentSelectionCode: string; // ID of the current selection
     order: number;
     selections: Dropdown.Selection[];
 }
@@ -16,8 +15,8 @@ namespace ItemPage {
         let str = "";
         for (let group of accResourceGroups) {
             for (let res of group.accessibilityResources) {
-                if (res.selectedCode && !res.disabled) {
-                    str += res.selectedCode + ";";
+                if (res.currentSelectionCode && !res.disabled) {
+                    str += res.currentSelectionCode + ";";
                 }
             }
         }
@@ -26,14 +25,14 @@ namespace ItemPage {
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
         const newModel = Object.assign({}, model);
-        newModel.selectedCode = model.defaultSelection;
+        newModel.currentSelectionCode = model.defaultSelection;
         return newModel;
     }
 
     function trimAccResource(resource: AccessibilityResource): { label: string, selectedCode: string } {
         return {
             label: resource.label,
-            selectedCode: resource.selectedCode,
+            selectedCode: resource.currentSelectionCode,
         };
     }
 
@@ -41,7 +40,7 @@ namespace ItemPage {
         let prefs: AccessibilityModal.ResourceSelections = {};
         for (const group of accGroups) {
             for (const resource of group.accessibilityResources) {
-                prefs[resource.code] = resource.selectedCode;
+                prefs[resource.resourceCode] = resource.currentSelectionCode;
             }
         }
 
@@ -55,12 +54,12 @@ namespace ItemPage {
             let newSelection = Object.assign(resource, resource);
             let disabledOption: Dropdown.Selection = {
                 label: "Disabled for item",
-                code: "",
+                selectionCode: "",
                 disabled: true,
                 order: 0,
             };
             newSelection.selections.push(disabledOption);
-            newSelection.selectedCode = "";
+            newSelection.currentSelectionCode = "";
             return newSelection;
         }
         return resource;
@@ -200,7 +199,7 @@ namespace ItemPage {
                 const newResources: AccessibilityResource[] = [];
                 for (let res of newGroup.accessibilityResources) {
                     const newRes = Object.assign({}, res);
-                    newRes.selectedCode = selections[newRes.label] || newRes.selectedCode;
+                    newRes.currentSelectionCode = selections[newRes.label] || newRes.currentSelectionCode;
                     newResources.push(newRes);
                 }
                 newGroup.accessibilityResources = newResources;
