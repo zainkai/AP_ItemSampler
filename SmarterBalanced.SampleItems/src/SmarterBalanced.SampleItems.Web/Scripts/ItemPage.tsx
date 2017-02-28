@@ -65,13 +65,20 @@ namespace ItemPage {
         return resource;
     }
 
+    // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
-        let resourceTypes: string[] = [];
-        for (const group of resourceGroups) {
-            if (resourceTypes.indexOf(group.label) === -1) {
-                resourceTypes.push(group.label);
+        let resourceGroupsSorted = resourceGroups.sort((x: AccResourceGroup, y: AccResourceGroup) => {
+            if (x.order === y.order) {
+                return 0;
             }
-        }
+            else if (x.order > y.order) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        });
+        let resourceTypes = resourceGroupsSorted.map(t => t.label);
         return resourceTypes;
     }
 
@@ -80,8 +87,6 @@ namespace ItemPage {
         order: number;
         accessibilityResources: AccessibilityResource[];
     }
-
-
 
     export interface ViewModel {
         itemViewerServiceUrl: string;
@@ -129,6 +134,13 @@ namespace ItemPage {
             }
         }
 
+        openPerfTaskModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
+                const modal: any = ($("#about-performance-tasks-modal-container"));
+                modal.modal();
+            }
+        }
+
         openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
             if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#accessibility-modal-container"));
@@ -150,8 +162,8 @@ namespace ItemPage {
 
             return (
                 <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
-                    onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
-                    <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
+                    onKeyUp={e => this.openPerfTaskModal(e)} role="button" tabIndex={0}>
+                    <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                     {btnText}
                 </a>
             );
@@ -171,20 +183,20 @@ namespace ItemPage {
                         <div className="item-nav-left-group" role="group" aria-label="First group">
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
-                                onKeyUp={e => this.openAboutItemModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
+                                onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                                 {abtText}
                             </a>
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
-                                onKeyUp={e => this.openMoreLikeThisModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
+                                onKeyUp={e => this.openMoreLikeThisModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}                               
                             </a>
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
-                                onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
+                                onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
                                 Share
                             </a>
 
