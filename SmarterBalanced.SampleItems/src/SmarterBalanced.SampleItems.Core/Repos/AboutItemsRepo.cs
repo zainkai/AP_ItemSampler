@@ -31,13 +31,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 return null;
             }
 
-            var itemDigest = context.SampleItems
+            var sampleItem = context.SampleItems
                 .Where(i => i.Grade != GradeLevels.NA && i.InteractionType != null)
                 .OrderBy(i => (int)i.Grade)
                 .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);
 
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            return $"{baseUrl}/items?ids={itemDigest?.BankKey}-{itemDigest?.ItemKey}";
+            return $"{baseUrl}/items?ids={sampleItem?.BankKey}-{sampleItem?.ItemKey}";
         }
 
     }
