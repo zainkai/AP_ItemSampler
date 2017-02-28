@@ -80,17 +80,26 @@
     background-color: #106481;
 }
 
-.item-nav-group {
-    position: relative;
-    margin-bottom: 3px;
+.item-nav {
+    display:flex;
+    justify-content: space-between; 
 }
 
-.item-nav-bottom {
-    position: absolute;
-    bottom: 0;    
+.item-nav-left-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: baseline;
+}
+
+.item-nav-right-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
 }
 
 .item-nav-btn {
+    margin-top: auto; 
     font-size: 14px;
     padding: 0px 10px 0px 10px;
     color: black;

@@ -18,7 +18,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         Subject Math, Ela, NotASubject;
         Claim Claim1, Claim2;
-        ImmutableArray<SampleItem> ItemDigests;
+        ImmutableArray<SampleItem> SampleItems;
         ItemViewRepo ItemViewRepo;
         SampleItemsContext Context;
         int GoodItemKey;
@@ -50,7 +50,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             PerformanceDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: 209, isPerformanceItem: true, associatedStimulus: 1);
             PerformanceDigestDuplicate = SampleItem.Create(bankKey: DuplicateBankKey, itemKey: 210, isPerformanceItem: true, associatedStimulus: 1);
 
-            ItemDigests = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate);
+            SampleItems = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
@@ -63,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             itemCards = itemCards.AddRange(MoreItemCards());
             var settings = new AppSettings() { SettingsConfig = new SettingsConfig() { NumMoreLikeThisItems = 3 } };
 
-            Context = SampleItemsContext.Create(sampleItems: ItemDigests, itemCards: itemCards, appSettings: settings);
+            Context = SampleItemsContext.Create(sampleItems: SampleItems, itemCards: itemCards, appSettings: settings);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
@@ -94,7 +94,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemDigest()
         {
-            var result = ItemViewRepo.GetItemDigest(GoodBankKey, GoodItemKey);
+            var result = ItemViewRepo.GetSampleItem(GoodBankKey, GoodItemKey);
             var resultCheck = Context.SampleItems.FirstOrDefault(i => i.ItemKey == GoodItemKey && i.BankKey == GoodBankKey);
 
             Assert.NotNull(result);
@@ -104,7 +104,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact(Skip ="TODO")]
         public void TestGetItemDigestDuplicate()
         {
-            Assert.Throws<InvalidOperationException>(() => ItemViewRepo.GetItemDigest(DuplicateBankKey, DuplicateItemKey));
+            Assert.Throws<InvalidOperationException>(() => ItemViewRepo.GetSampleItem(DuplicateBankKey, DuplicateItemKey));
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemUrl()
         {
-            var result = ItemViewRepo.GetItemDigest(GoodBankKey, GoodItemKey);
+            var result = ItemViewRepo.GetSampleItem(GoodBankKey, GoodItemKey);
             var url = ItemViewRepo.GetItemViewerUrl(result);
 
             Assert.NotNull(url);

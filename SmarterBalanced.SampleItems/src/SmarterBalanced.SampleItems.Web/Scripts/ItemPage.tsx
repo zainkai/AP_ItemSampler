@@ -86,6 +86,7 @@ namespace ItemPage {
     export interface ViewModel {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
+        isPerformanceItem: boolean;
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
@@ -135,17 +136,39 @@ namespace ItemPage {
             }
         }
 
+        renderPerformanceItemModalBtn = (isPerformanceItem: boolean, doCollapseText: boolean) => {
+            if (!isPerformanceItem) {
+                return undefined;
+            }
+
+            let btnText = (
+                <span>
+                    {doCollapseText ? "" : "This is a "}
+                    <b>Performance Task</b>
+                </span>
+            ); 
+
+            return (
+                <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
+                    onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
+                    <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
+                    {btnText}
+                </a>
+            );
+        }
+
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
-            var windowWidth = 600;
+            let windowWidth = 600;
+            let doCollapseText = (window.innerWidth < windowWidth);
             const accText = (window.innerWidth < 350) ? "" : "Accessibility";
-            const abtText = (window.innerWidth < windowWidth) ? "About" : "About This Item";
-            const moreText = (window.innerWidth < windowWidth) ? "More" : "More Like This";
+            const abtText = doCollapseText ? "About" : "About This Item";
+            const moreText = doCollapseText ? "More" : "More Like This";
             return (
                 <div>
-                    <div className="btn-toolbar item-nav-group" role="toolbar" aria-label="Toolbar with button groups">
-                        <div className="btn-group mr-2 item-nav-bottom" role="group" aria-label="First group">
+                    <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
+                        <div className="item-nav-left-group" role="group" aria-label="First group">
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} tabIndex={0}>
@@ -164,9 +187,12 @@ namespace ItemPage {
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
                                 Share
                             </a>
+
+                            {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem, doCollapseText)}
+
                         </div>
 
-                        <div className="btn-group mr-2 pull-right" role="group" aria-label="Second group">
+                        <div className="item-nav-right-group" role="group" aria-label="Second group">
                             <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
@@ -181,8 +207,9 @@ namespace ItemPage {
                         accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
                         onReset={this.props.onReset} />
-                        <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
-                    <Share.ShareModal iSAAP={isaap}/>
+                    <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
+                    <Share.ShareModal iSAAP={isaap} />
+                    <AboutPerformanceTasksModal.Modal />
                 </div>
             );
         }
