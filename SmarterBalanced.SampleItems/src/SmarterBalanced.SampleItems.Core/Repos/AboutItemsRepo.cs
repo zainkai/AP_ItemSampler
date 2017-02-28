@@ -5,12 +5,12 @@ using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
-    public class AboutItemsRepo : ItemViewRepo, IAboutItemsRepo
+    public class AboutItemsRepo : IAboutItemsRepo
     {
         private readonly SampleItemsContext context;
         private readonly ILogger logger;
 
-        public AboutItemsRepo(SampleItemsContext context, ILoggerFactory loggerFactory) : base(context, loggerFactory)
+        public AboutItemsRepo(SampleItemsContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
             logger = loggerFactory.CreateLogger<AboutItemsRepo>();
@@ -36,7 +36,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 .OrderBy(i => (int)i.Grade)
                 .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);
 
-            return GetItemViewerUrl(itemDigest);
+            string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
+            return $"{baseUrl}/items?ids={itemDigest?.BankKey}-{itemDigest?.ItemKey}";
         }
 
     }
