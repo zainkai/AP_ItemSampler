@@ -67,6 +67,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             var groups = settings.SettingsConfig.AccessibilityTypes
                 .Select(accType => GroupItemResources(accType, flaggedResources))
+                .OrderBy(g => g.Order)
                 .ToImmutableArray();
 
             SampleItem sampleItem = new SampleItem(

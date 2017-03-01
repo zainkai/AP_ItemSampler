@@ -1,3 +1,5 @@
+@import "constants.less";
+
 .container {
     width: 100%;
 }
@@ -104,6 +106,16 @@
     padding: 0px 10px 0px 10px;
     color: black;
 }
+
+.item-nav-long-label {
+    display: inherit; 
+}
+
+    @media (max-width: @small) {
+        .item-nav-long-label {
+            display: none; 
+        }
+    }
 
 .accessibility-btn {
     font-size: 18px;

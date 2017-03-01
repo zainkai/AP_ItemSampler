@@ -67,18 +67,7 @@ namespace ItemPage {
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
-        let resourceGroupsSorted = resourceGroups.sort((x: AccResourceGroup, y: AccResourceGroup) => {
-            if (x.order === y.order) {
-                return 0;
-            }
-            else if (x.order > y.order) {
-                return 1;
-            }
-            else {
-                return -1;
-            }
-        });
-        let resourceTypes = resourceGroupsSorted.map(t => t.label);
+        let resourceTypes = resourceGroups.map(t => t.label);
         return resourceTypes;
     }
 
@@ -148,15 +137,14 @@ namespace ItemPage {
             }
         }
 
-        renderPerformanceItemModalBtn = (isPerformanceItem: boolean, doCollapseText: boolean) => {
+        renderPerformanceItemModalBtn = (isPerformanceItem: boolean) => {
             if (!isPerformanceItem) {
                 return undefined;
             }
 
             let btnText = (
                 <span>
-                    {doCollapseText ? "" : "This is a "}
-                    <b>Performance Task</b>
+                    <span className="item-nav-long-label">This is a </span><b>Performance Task</b>
                 </span>
             ); 
 
@@ -172,11 +160,8 @@ namespace ItemPage {
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
-            let windowWidth = 600;
-            let doCollapseText = (window.innerWidth < windowWidth);
-            const accText = (window.innerWidth < 350) ? "" : "Accessibility";
-            const abtText = doCollapseText ? "About" : "About This Item";
-            const moreText = doCollapseText ? "More" : "More Like This";
+            const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
+            const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (
                 <div>
                     <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
@@ -200,7 +185,7 @@ namespace ItemPage {
                                 Share
                             </a>
 
-                            {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem, doCollapseText)}
+                            {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
 
                         </div>
 
@@ -209,7 +194,7 @@ namespace ItemPage {
                                 data-target="#accessibility-modal-container"
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                                {accText}
+                                Acessibility
                             </a>
                         </div>
                     </div>
@@ -221,7 +206,34 @@ namespace ItemPage {
                         onReset={this.props.onReset} />
                     <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
                     <Share.ShareModal iSAAP={isaap} />
-                    <AboutPerformanceTasksModal.Modal />
+                    <div className="modal fade" id="about-performance-tasks-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
+                        <div className="modal-dialog share-modal" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 className="modal-title" id="myModalLabel">About Performance Tasks</h4>
+                                </div>
+                                <div className="modal-body">
+                                    <p>
+                                        <b>Performance tasks</b> measure a student’s ability to demonstrate critical-thinking and
+                                        problem-solving skills.
+                                        Performance tasks challenge students to apply their knowledge and skills to respond to
+                                        complex real-world problems. They can be best described as collections of questions and
+                                        activities that are coherently connected to a single theme or scenario. These activities
+                                        are meant to measure capacities such as depth of understanding, writing and research
+                                        skills, and complex analysis, which cannot be adequately assessed with traditional
+                                        assessment questions. The performance tasks are taken on a computer (but are not computer
+                                        adaptive) and will take one to two class periods to complete.
+                                    </p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button className="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
         }
