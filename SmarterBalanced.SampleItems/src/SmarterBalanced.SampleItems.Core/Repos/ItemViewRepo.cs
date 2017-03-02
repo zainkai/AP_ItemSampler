@@ -66,7 +66,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private List<SampleItem> GetAssociatedStimulus(SampleItem item)
+        private List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
         {
             var associatedStimulus = item.AssociatedStimulus;
             List<SampleItem> associatedStimulusDigests = context.SampleItems
