@@ -46,7 +46,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 return null;
             }
 
-            string itemURL = GetItemViewerUrlSingleItem(sampleItem.BankKey, sampleItem.ItemKey);
+            string itemURL = GetItemViewerUrlSingleItem(sampleItem);
 
             AboutThisItemViewModel aboutThisItemViewModel = GetAboutThisItemViewModel(sampleItem);
             AboutItemsViewModel model = new AboutItemsViewModel(
@@ -61,10 +61,15 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         /// <summary>
         /// Constructs an ItemViewerService URL for a single item 
         /// </summary>
-        private string GetItemViewerUrlSingleItem(int bankKey, int itemKey)
+        private string GetItemViewerUrlSingleItem(SampleItem sampleItem)
         {
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            return $"{baseUrl}/items?ids={bankKey}-{itemKey}";
+            return $"{baseUrl}/items?ids={sampleItem.ToString()}";
         }
 
     }
