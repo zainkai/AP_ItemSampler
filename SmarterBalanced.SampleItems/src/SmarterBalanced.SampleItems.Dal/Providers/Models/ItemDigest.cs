@@ -25,5 +25,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int?  MaximumNumberOfPoints { get; set; }
         public List<StandardPublication> StandardPublications { get; set; }
         public List<Content> Contents { get; set; }
+        public List<ItemMetadataAttribute> ItemMetadataAttributes { get; set; }
+
     }
 }

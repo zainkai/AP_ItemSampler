@@ -83,7 +83,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 GradeCode = itemMetadata.Metadata.GradeCode,
                 MaximumNumberOfPoints = itemMetadata.Metadata.MaximumNumberOfPoints,
                 StandardPublications = itemMetadata.Metadata.StandardPublications,
-                SubjectCode = itemMetadata.Metadata.SubjectCode
+                SubjectCode = itemMetadata.Metadata.SubjectCode,
+                ItemMetadataAttributes = itemContents.Item.ItemMetadataAttributes
             };
 
             return digest;
