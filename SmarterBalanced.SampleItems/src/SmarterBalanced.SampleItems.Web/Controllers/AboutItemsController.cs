@@ -32,8 +32,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         [HttpGet]
         public IActionResult GetItemUrl(string interactionTypeCode)
         {
-            var itemUrl = repo.GetItemViewerUrl(interactionTypeCode);
-            return Json(itemUrl);
+            var viewModel = repo.GetAboutItemsViewModel(interactionTypeCode);
+            return Json(viewModel);
         }
 
     }

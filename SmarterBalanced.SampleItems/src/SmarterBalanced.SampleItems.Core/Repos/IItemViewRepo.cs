@@ -16,5 +16,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             Dictionary<string, string> cookieValue);
 
         MoreLikeThisViewModel GetMoreLikeThis(SampleItem sampleItem);
+
+        AboutThisItemViewModel GetAboutThisItemViewModel(SampleItem sampleItem);
     }
 }

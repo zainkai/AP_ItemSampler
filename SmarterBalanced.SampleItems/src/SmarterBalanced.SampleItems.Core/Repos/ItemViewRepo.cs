@@ -84,7 +84,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return associatedStimulusDigests;
         }
 
-
         public ItemViewModel GetItemViewModel(
             int bankKey,
             int itemKey,
@@ -92,18 +91,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             Dictionary<string, string> cookiePreferences)
         {
             var sampleItem = GetSampleItem(bankKey, itemKey);
-            var itemCardViewModel = GetItemCardViewModel(bankKey, itemKey);
-            if (sampleItem == null || itemCardViewModel == null)
+            if (sampleItem == null)
             {
                 return null;
             }
 
-            var aboutThisItem = new AboutThisItemViewModel(
-                rubrics: sampleItem.Rubrics,
-                itemCard: itemCardViewModel,
-                targetDescription: sampleItem.CoreStandards?.TargetDescription,
-                depthOfKnowledge: sampleItem.DepthOfKnowledge,
-                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription);
+            var aboutThisItem = GetAboutThisItemViewModel(sampleItem);
 
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
 
@@ -116,6 +109,24 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 aboutThisItemVM: aboutThisItem);
 
             return itemViewModel;
+        }
+
+        public AboutThisItemViewModel GetAboutThisItemViewModel(SampleItem sampleItem)
+        {
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
+            var itemCardViewModel = GetItemCardViewModel(sampleItem.BankKey, sampleItem.ItemKey);
+            var aboutThisItemViewModel = new AboutThisItemViewModel(
+                rubrics: sampleItem.Rubrics,
+                itemCard: itemCardViewModel,
+                targetDescription: sampleItem.CoreStandards?.TargetDescription,
+                depthOfKnowledge: sampleItem.DepthOfKnowledge,
+                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription);
+
+            return aboutThisItemViewModel;
         }
 
         private MoreLikeThisColumn ToColumn(IEnumerable<ItemCardViewModel> itemCards, GradeLevels grade)

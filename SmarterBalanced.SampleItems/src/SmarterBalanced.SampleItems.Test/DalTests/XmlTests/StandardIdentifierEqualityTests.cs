@@ -10,7 +10,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
     public class StandardIdentifierEqualityTests
     {
         private string claim1 = "c1";
-        private string claim2 = "c2";
 
         private string subjectMath = "MATH";
         private string subjectEla = "ELA";

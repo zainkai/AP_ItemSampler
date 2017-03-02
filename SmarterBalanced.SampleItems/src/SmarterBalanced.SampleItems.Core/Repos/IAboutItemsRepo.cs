@@ -1,8 +1,10 @@
-﻿namespace SmarterBalanced.SampleItems.Core.Repos.Models
+﻿using SmarterBalanced.SampleItems.Dal.Providers.Models;
+
+namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
-    public interface IAboutItemsRepo
+    public interface IAboutItemsRepo: IItemViewRepo
     {
         AboutItemsViewModel GetAboutItemsViewModel();
-        string GetItemViewerUrl(string interactionTypeCode);
+        AboutItemsViewModel GetAboutItemsViewModel(string interactionTypeCode);
     }
 }
