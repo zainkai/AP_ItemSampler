@@ -6,9 +6,11 @@ interface InteractionType {
     order?: number;
 }
 
-interface AboutThisItemViewModel {
+interface AboutItemsViewModel {
     interactionTypes: InteractionType[];
     itemUrl: string;
+    selectedInteractionTypeCode: string;
+    aboutThisItemViewModel: AboutThisItem.Props;
 }
 
 namespace AboutItems {
@@ -16,31 +18,30 @@ namespace AboutItems {
     interface State {
         selectedCode: string;
         itemUrl: string;
+        aboutThisItemViewModel: AboutThisItem.Props;
     }
 
-    export class AIComponent extends React.Component<AboutThisItemViewModel, State>{
-        constructor(props: AboutThisItemViewModel) {
+    export class AIComponent extends React.Component<AboutItemsViewModel, State>{
+        constructor(props: AboutItemsViewModel) {
             super(props);
 
-            const code = this.props.interactionTypes.length ? this.props.interactionTypes[0].code : "";
             this.state = {
-                selectedCode: code,
-                itemUrl: this.props.itemUrl
+                selectedCode: this.props.selectedInteractionTypeCode,
+                itemUrl: this.props.itemUrl,
+                aboutThisItemViewModel: this.props.aboutThisItemViewModel
             };
         }
 
-        handleChange = (e: any) => {
+        handleChange = (e: React.FormEvent<HTMLSelectElement>) => {
             const newCode = e.currentTarget.value
             if (newCode === this.state.selectedCode) {
                 return;
             }
 
-            this.fetchNewURL(newCode);
-
-            this.setState(Object.assign({}, this.state, { selectedCode: newCode }) as State);
+            this.fetchUpdatedViewModel(newCode);
         }
 
-        fetchNewURL(newCode: string) {
+        fetchUpdatedViewModel(newCode: string) {
             const params = {
                 interactionTypeCode: newCode
             };
@@ -50,13 +51,21 @@ namespace AboutItems {
                 type: "GET",
                 url: "/AboutItems/GetItemUrl",
                 data: params,
-                success: this.onFetchedNewURL
+                success: this.onFetchedUpdatedViewModel
             });
         }
 
-        onFetchedNewURL = (newUrl: string) => {
-            // TODO: Handle if url was null (no item found)
-            this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as State)
+        onFetchedUpdatedViewModel = (viewModel: AboutItemsViewModel) => {
+            if (!viewModel) {
+                console.log("An error occurred updating the item.");
+                return;
+            }
+
+            this.setState({
+                itemUrl: viewModel.itemUrl,
+                selectedCode: viewModel.selectedInteractionTypeCode,
+                aboutThisItemViewModel: viewModel.aboutThisItemViewModel
+            });
         }
 
         renderDescription() {
@@ -66,6 +75,7 @@ namespace AboutItems {
                     desc = it.description;
                 }
             }
+
             return (
                 <div dangerouslySetInnerHTML={{ __html: desc }} className= "aboutitems-desc" />
             );
@@ -86,6 +96,13 @@ namespace AboutItems {
             );
         }
 
+        openAboutItemModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
+                const modal: any = ($("#about-item-modal-container"));
+                modal.modal();
+            }
+        }
+
         render() {
             return (
                 <div className="aboutitems-parents">
@@ -101,9 +118,16 @@ namespace AboutItems {
                         </div>
                         {this.renderDescription()}
                     </div>
-
                     <div className="aboutitem-iframe">
+                        <div className="about-this-item-btn" role="toolbar" aria-label="Toolbar with button groups">
+                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
+                                onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
+                                About This Item
+                            </a>
+                        </div>
                         <ItemFrame url={this.state.itemUrl} />
+                        <AboutThisItem.ATIComponent {...this.state.aboutThisItemViewModel} />
                     </div>
                 </div>
             );
@@ -112,7 +136,7 @@ namespace AboutItems {
 }
 
 
-function initializeAboutItems(viewModel: AboutThisItemViewModel) {
+function initializeAboutItems(viewModel: AboutItemsViewModel) {
     ReactDOM.render(
         <AboutItems.AIComponent {...viewModel} />,
         document.getElementById("about-items") as HTMLElement
