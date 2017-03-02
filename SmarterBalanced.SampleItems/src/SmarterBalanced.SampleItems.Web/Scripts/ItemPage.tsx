@@ -194,7 +194,7 @@ namespace ItemPage {
                                 data-target="#accessibility-modal-container"
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                                Acessibility
+                                Accessibility
                             </a>
                         </div>
                     </div>

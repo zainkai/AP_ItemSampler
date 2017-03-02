@@ -50,14 +50,14 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
             if (item.IsPerformanceItem)
             {
-                items = string.Join(",", GetStimulusUrl(item));
+                items = string.Join(",", GetPeformanceItemNames(item));
             }
             else
             {
-                items = $"{item.BankKey}-{item.ItemKey}";
+                items = item.ToString();
             }
 
-                return $"{baseUrl}/items?ids={items}";
+            return $"{baseUrl}/items?ids={items}";
         }
 
         /// <summary>
@@ -66,25 +66,21 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private List<SampleItem> GetAssociatedStimulus(SampleItem item)
+        private List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
         {
             var associatedStimulus = item.AssociatedStimulus;
-            List<SampleItem> associatedStimulusItems = context.SampleItems
-            .Where(i => i.AssociatedStimulus == item.AssociatedStimulus)
-            .OrderBy(i => i.ItemKey).ToList();
+            List<SampleItem> associatedStimulusDigests = context.SampleItems
+                .Where(i => i.IsPerformanceItem &&
+                    i.AssociatedStimulus == item.AssociatedStimulus &&
+                    (i.FieldTestUse != null && i.FieldTestUse.Code.Equals(item.FieldTestUse?.Code)))
+                .OrderByDescending(i => i.ItemKey == item.ItemKey).ThenBy(i => i.FieldTestUse?.QuestionNumber).ToList();
 
-            int itemIndex = associatedStimulusItems
-                .FindIndex(i => i.BankKey == item.BankKey && i.ItemKey == item.ItemKey);
-            SampleItem tmpItem = associatedStimulusItems[0];
-            associatedStimulusItems[0] = item;
-            associatedStimulusItems[itemIndex] = tmpItem;
-
-            return associatedStimulusItems;
+            return associatedStimulusDigests;
         }
 
-        private string[] GetStimulusUrl(SampleItem item)
+        private List<string> GetPeformanceItemNames(SampleItem item)
         {
-            var associatedStimulusDigests = GetAssociatedStimulus(item)?.Select(d => $"{d.BankKey}-{d.ItemKey}").ToArray();
+            var associatedStimulusDigests = GetAssociatedPerformanceItems(item)?.Select(d => d.ToString()).ToList();
             return associatedStimulusDigests;
         }
 
