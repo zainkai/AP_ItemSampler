@@ -65,13 +65,9 @@ namespace ItemPage {
         return resource;
     }
 
+    // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
-        let resourceTypes: string[] = [];
-        for (const group of resourceGroups) {
-            if (resourceTypes.indexOf(group.label) === -1) {
-                resourceTypes.push(group.label);
-            }
-        }
+        let resourceTypes = resourceGroups.map(t => t.label);
         return resourceTypes;
     }
 
@@ -81,11 +77,10 @@ namespace ItemPage {
         accessibilityResources: AccessibilityResource[];
     }
 
-
-
     export interface ViewModel {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
+        isPerformanceItem: boolean;
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
@@ -128,6 +123,13 @@ namespace ItemPage {
             }
         }
 
+        openPerfTaskModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
+                const modal: any = ($("#about-performance-tasks-modal-container"));
+                modal.modal();
+            }
+        }
+
         openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
             if (e.keyCode === 13 || e.keyCode === 23) {
                 const modal: any = ($("#accessibility-modal-container"));
@@ -135,43 +137,64 @@ namespace ItemPage {
             }
         }
 
+        renderPerformanceItemModalBtn = (isPerformanceItem: boolean) => {
+            if (!isPerformanceItem) {
+                return undefined;
+            }
+
+            let btnText = (
+                <span>
+                    <span className="item-nav-long-label">This is a </span><b>Performance Task</b>
+                </span>
+            ); 
+
+            return (
+                <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
+                    onKeyUp={e => this.openPerfTaskModal(e)} role="button" tabIndex={0}>
+                    <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
+                    {btnText}
+                </a>
+            );
+        }
+
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
-            var windowWidth = 600;
-            const accText = (window.innerWidth < 350) ? "" : "Accessibility";
-            const abtText = (window.innerWidth < windowWidth) ? "About" : "About This Item";
-            const moreText = (window.innerWidth < windowWidth) ? "More" : "More Like This";
+            const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
+            const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (
                 <div>
-                    <div className="btn-toolbar item-nav-group" role="toolbar" aria-label="Toolbar with button groups">
-                        <div className="btn-group mr-2 item-nav-bottom" role="group" aria-label="First group">
+                    <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
+                        <div className="item-nav-left-group" role="group" aria-label="First group">
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
-                                onKeyUp={e => this.openAboutItemModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true"></span>
+                                onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                                 {abtText}
                             </a>
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
-                                onKeyUp={e => this.openMoreLikeThisModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true"></span>
+                                onKeyUp={e => this.openMoreLikeThisModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}                               
                             </a>
 
                             <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
-                                onKeyUp={e => this.openShareModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true"></span>
+                                onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
+                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
                                 Share
                             </a>
+
+                            {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
+
                         </div>
 
-                        <div className="btn-group mr-2 pull-right" role="group" aria-label="Second group">
+                        <div className="item-nav-right-group" role="group" aria-label="Second group">
                             <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                                {accText}
+                                Accessibility
                             </a>
                         </div>
                     </div>
@@ -181,8 +204,36 @@ namespace ItemPage {
                         accResourceGroups={this.props.accResourceGroups}
                         onSave={this.props.onSave}
                         onReset={this.props.onReset} />
-                        <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
-                    <Share.ShareModal iSAAP={isaap}/>
+                    <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
+                    <Share.ShareModal iSAAP={isaap} />
+                    <div className="modal fade" id="about-performance-tasks-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
+                        <div className="modal-dialog share-modal" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 className="modal-title" id="myModalLabel">About Performance Tasks</h4>
+                                </div>
+                                <div className="modal-body">
+                                    <p>
+                                        <b>Performance tasks</b> measure a student’s ability to demonstrate critical-thinking and
+                                        problem-solving skills.
+                                        Performance tasks challenge students to apply their knowledge and skills to respond to
+                                        complex real-world problems. They can be best described as collections of questions and
+                                        activities that are coherently connected to a single theme or scenario. These activities
+                                        are meant to measure capacities such as depth of understanding, writing and research
+                                        skills, and complex analysis, which cannot be adequately assessed with traditional
+                                        assessment questions. The performance tasks are taken on a computer (but are not computer
+                                        adaptive) and will take one to two class periods to complete.
+                                    </p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button className="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
         }

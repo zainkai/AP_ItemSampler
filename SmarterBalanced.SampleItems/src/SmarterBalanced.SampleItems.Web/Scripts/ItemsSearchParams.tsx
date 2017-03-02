@@ -303,7 +303,7 @@ namespace ItemSearchParams {
         }
 
         toggleExpandItemTypes(e: React.KeyboardEvent<HTMLElement>) {
-            if (e.keyCode == 0 || e.keyCode === 13 || e.keyCode === 32) {
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandInteractionTypes();
             }
         }
