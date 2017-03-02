@@ -25,19 +25,21 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             ItMath = new InteractionType("2", "Math Itype", "", 2);
             var interactionTypes = ImmutableArray.Create(ItMath);
-            aboutItemsViewModel = new AboutItemsViewModel(interactionTypes, "");
+            aboutItemsViewModel = new AboutItemsViewModel(interactionTypes, "", "", null);
             var appSettings = new AppSettings()
             {
                 SettingsConfig = new SettingsConfig()
             };
             var aboutItemsRepoMock = new Mock<IAboutItemsRepo>();
             aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel()).Returns(aboutItemsViewModel);
-            aboutItemsRepoMock.Setup(x => x.GetItemViewerUrl(""));
+            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel(""));
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             aboutItemsController = new AboutItemsController(aboutItemsRepoMock.Object, appSettings, loggerFactory.Object);
         }
+
+        // TODO: Add more tests
 
         [Fact]
         public void TestIndex()

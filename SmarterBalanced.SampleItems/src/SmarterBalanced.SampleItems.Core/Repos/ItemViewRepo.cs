@@ -25,7 +25,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             logger = loggerFactory.CreateLogger<ItemViewRepo>();
         }
 
-        public SampleItem GetItemDigest(int bankKey, int itemKey)
+        public SampleItem GetSampleItem(int bankKey, int itemKey)
         {
             return context.SampleItems.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
         }
@@ -37,7 +37,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         /// <summary>
         /// Constructs an itemviewerservice URL to access the 
-        /// item corresponding to the given ItemDigest.
+        /// item corresponding to the given SampleItem.
         /// </summary>
         public string GetItemViewerUrl(SampleItem item)
         {
@@ -50,32 +50,39 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
             if (item.IsPerformanceItem)
             {
-                items = string.Join(",", GetStimulusUrl(item));
+                items = string.Join(",", GetPeformanceItemNames(item));
             }
             else
             {
-                items = $"{item.BankKey}-{item.ItemKey}";
+                items = item.ToString();
             }
 
-                return $"{baseUrl}/items?ids={items}";
+            return $"{baseUrl}/items?ids={items}";
         }
 
-        private List<SampleItem> GetAssociatedStimulus(SampleItem item)
+        /// <summary>
+        /// Gets a list of items that share a stimulus with the given item.
+        /// Given item is returned as the first element of the list.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
         {
             var associatedStimulus = item.AssociatedStimulus;
             List<SampleItem> associatedStimulusDigests = context.SampleItems
-            .Where(i => i.AssociatedStimulus == item.AssociatedStimulus)
-            .OrderBy(i => i.ItemKey).ToList();
+                .Where(i => i.IsPerformanceItem &&
+                    i.AssociatedStimulus == item.AssociatedStimulus &&
+                    (i.FieldTestUse != null && i.FieldTestUse.Code.Equals(item.FieldTestUse?.Code)))
+                .OrderByDescending(i => i.ItemKey == item.ItemKey).ThenBy(i => i.FieldTestUse?.QuestionNumber).ToList();
 
             return associatedStimulusDigests;
         }
 
-        private string[] GetStimulusUrl(SampleItem item)
+        private List<string> GetPeformanceItemNames(SampleItem item)
         {
-            var associatedStimulusDigests = GetAssociatedStimulus(item)?.Select(d => $"{d.BankKey}-{d.ItemKey}").ToArray();
+            var associatedStimulusDigests = GetAssociatedPerformanceItems(item)?.Select(d => d.ToString()).ToList();
             return associatedStimulusDigests;
         }
-
 
         public ItemViewModel GetItemViewModel(
             int bankKey,
@@ -83,31 +90,43 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             string[] iSAAPCodes,
             Dictionary<string, string> cookiePreferences)
         {
-            var itemDigest = GetItemDigest(bankKey, itemKey);
-            var itemCardViewModel = GetItemCardViewModel(bankKey, itemKey);
-            if (itemDigest == null || itemCardViewModel == null)
+            var sampleItem = GetSampleItem(bankKey, itemKey);
+            if (sampleItem == null)
             {
                 return null;
             }
 
-            var aboutThisItem = new AboutThisItemViewModel(
-                rubrics: itemDigest.Rubrics,
-                itemCard: itemCardViewModel,
-                targetDescription: itemDigest.CoreStandards?.TargetDescription,
-                depthOfKnowledge: itemDigest.DepthOfKnowledge,
-                commonCoreStandardsDescription: itemDigest.CoreStandards?.CommonCoreStandardsDescription);
+            var aboutThisItem = GetAboutThisItemViewModel(sampleItem);
 
-            var groups = itemDigest.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
+            var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
 
             var itemViewModel = new ItemViewModel(
-                itemViewerServiceUrl: GetItemViewerUrl(itemDigest),
+                itemViewerServiceUrl: GetItemViewerUrl(sampleItem),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
-
+                isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,
-                moreLikeThisVM: GetMoreLikeThis(itemDigest),
+                moreLikeThisVM: GetMoreLikeThis(sampleItem),
                 aboutThisItemVM: aboutThisItem);
 
             return itemViewModel;
+        }
+
+        public AboutThisItemViewModel GetAboutThisItemViewModel(SampleItem sampleItem)
+        {
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
+            var itemCardViewModel = GetItemCardViewModel(sampleItem.BankKey, sampleItem.ItemKey);
+            var aboutThisItemViewModel = new AboutThisItemViewModel(
+                rubrics: sampleItem.Rubrics,
+                itemCard: itemCardViewModel,
+                targetDescription: sampleItem.CoreStandards?.TargetDescription,
+                depthOfKnowledge: sampleItem.DepthOfKnowledge,
+                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription);
+
+            return aboutThisItemViewModel;
         }
 
         private MoreLikeThisColumn ToColumn(IEnumerable<ItemCardViewModel> itemCards, GradeLevels grade)
@@ -125,14 +144,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <param name="grade"></param>
         /// <param name="subject"></param>
         /// <param name="claim"></param>
-        /// <returns></returns>
-        public MoreLikeThisViewModel GetMoreLikeThis(SampleItem itemDigest)
+        public MoreLikeThisViewModel GetMoreLikeThis(SampleItem sampleItem)
         {
-            var subjectCode = itemDigest.Subject.Code;
-            var claimCode = itemDigest.Claim?.Code;
-            var grade = itemDigest.Grade;
-            var itemKey = itemDigest.ItemKey;
-            var bankKey = itemDigest.BankKey;
+            var subjectCode = sampleItem.Subject.Code;
+            var claimCode = sampleItem.Claim?.Code;
+            var grade = sampleItem.Grade;
+            var itemKey = sampleItem.ItemKey;
+            var bankKey = sampleItem.BankKey;
 
             var matchingSubjectClaim = context.ItemCards.Where(i => i.SubjectCode == subjectCode && i.ClaimCode == claimCode);
             int numExpected = context.AppSettings.SettingsConfig.NumMoreLikeThisItems;
