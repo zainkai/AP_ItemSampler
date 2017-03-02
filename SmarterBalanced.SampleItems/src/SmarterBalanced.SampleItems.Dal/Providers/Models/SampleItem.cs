@@ -31,8 +31,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public bool AllowCalculator { get; }
         public string DepthOfKnowledge { get; }
         public bool IsPerformanceItem { get; }
-
-        public CoreStandards CoreStandards { get; set; }
+        public FieldTestUse FieldTestUse { get;}
+        public CoreStandards CoreStandards { get; }
 
         public SampleItem(
             int bankKey,
@@ -51,7 +51,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool allowCalculator,
             string depthOfKnowledge,
             bool isPerformanceItem,
-            CoreStandards coreStandards
+            CoreStandards coreStandards,
+            FieldTestUse fieldTestUse
             )
         {
             BankKey = bankKey;
@@ -71,6 +72,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             DepthOfKnowledge = depthOfKnowledge;
             IsPerformanceItem = isPerformanceItem;
             CoreStandards = coreStandards;
+            FieldTestUse = fieldTestUse;
         }
 
         public static SampleItem Create(
@@ -90,7 +92,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool allowCalculator = false,
             string depthOfKnowledge = "",
             bool isPerformanceItem = false,
-            CoreStandards coreStandards = null)
+            CoreStandards coreStandards = null,
+            FieldTestUse fieldTestUse = null)
         {
             return new SampleItem(
                 bankKey,
@@ -109,7 +112,13 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 allowCalculator,
                 depthOfKnowledge,
                 isPerformanceItem,
-                coreStandards);
+                coreStandards,
+                fieldTestUse);
+        }
+
+        public override string ToString()
+        {
+            return $"{BankKey}-{ItemKey}";
         }
     }    
 }

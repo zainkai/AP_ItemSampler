@@ -69,6 +69,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 .Select(accType => GroupItemResources(accType, flaggedResources))
                 .ToImmutableArray();
 
+            var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
+            var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
+            bool isPeformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
+
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
                 itemKey: itemDigest.ItemKey,
@@ -79,17 +83,19 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 associatedStimulus: itemDigest.AssociatedStimulus,
                 aslSupported: itemDigest.AslSupported,
                 allowCalculator: itemDigest.AllowCalculator,
-                isPerformanceItem: itemDigest.AssociatedPassage.HasValue,
+                isPerformanceItem: isPeformance,
                 accessibilityResourceGroups: groups,
                 rubrics: rubrics,
                 interactionType: interactionType,
                 subject: subject,
                 claim: claim,
                 grade: grade,
-                coreStandards: coreStandards);
+                coreStandards: coreStandards,
+                fieldTestUse: fieldTestUse);
 
             return sampleItem;
         }
+
 
         public static AccessibilityResourceGroup GroupItemResources(
             AccessibilityType accType,
