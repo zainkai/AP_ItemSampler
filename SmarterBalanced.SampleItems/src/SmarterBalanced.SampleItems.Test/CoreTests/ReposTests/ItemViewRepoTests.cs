@@ -4,6 +4,7 @@ using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -11,7 +12,7 @@ using System.Linq;
 using Xunit;
 namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 {
-    //TODO FIX 
+
     public class ItemViewRepoTests
     {
         SampleItem MathDigest, ElaDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate;
@@ -43,12 +44,15 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
             ElaDigest = SampleItem.Create(bankKey: BadBankKey, itemKey: BadItemKey);
 
+            var fieldTestUseVar = new FieldTestUse();
+            fieldTestUseVar.Code = "ELA";
+            fieldTestUseVar.QuestionNumber = 1;
+
             DuplicateDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: DuplicateItemKey);
             var duplicateDigest2 = SampleItem.Create(bankKey: GoodBankKey, itemKey: DuplicateItemKey);
 
-
-            PerformanceDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: 209, isPerformanceItem: true, associatedStimulus: 1);
-            PerformanceDigestDuplicate = SampleItem.Create(bankKey: DuplicateBankKey, itemKey: 210, isPerformanceItem: true, associatedStimulus: 1);
+            PerformanceDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: 209, isPerformanceItem: true, associatedStimulus: 1, fieldTestUse: fieldTestUseVar);
+            PerformanceDigestDuplicate = SampleItem.Create(bankKey: DuplicateBankKey, itemKey: 210, isPerformanceItem: true, associatedStimulus: 1, fieldTestUse: fieldTestUseVar);
 
             SampleItems = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
@@ -101,10 +105,11 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal(result, resultCheck);
         }
 
-        [Fact(Skip ="TODO")]
+        [Fact]
         public void TestGetItemDigestDuplicate()
         {
-            Assert.Throws<InvalidOperationException>(() => ItemViewRepo.GetSampleItem(DuplicateBankKey, DuplicateItemKey));
+            var result = ItemViewRepo.GetSampleItem(DuplicateBankKey, DuplicateItemKey);
+            Assert.Null(result);
         }
 
         [Fact]
@@ -127,7 +132,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal("/items?ids=1-4", url);
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestGetItemUrlMultiple()
         {
             var url = ItemViewRepo.GetItemViewerUrl(PerformanceDigest);
