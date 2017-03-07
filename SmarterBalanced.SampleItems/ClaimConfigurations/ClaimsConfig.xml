@@ -16,12 +16,12 @@
 		<Claim>
 			<Code>MATH3</Code>
 			<ClaimNumber>3</ClaimNumber>
-			<Label>Modeling/Data Analysis</Label>
+			<Label>Communicating Reasoning</Label>
 		</Claim>
 		<Claim>
 			<Code>MATH4</Code>
 			<ClaimNumber>4</ClaimNumber>
-			<Label>Communicating Reasoning</Label>
+			<Label>Modeling/Data Analysis</Label>
 		</Claim>
 	</Subject>
 
