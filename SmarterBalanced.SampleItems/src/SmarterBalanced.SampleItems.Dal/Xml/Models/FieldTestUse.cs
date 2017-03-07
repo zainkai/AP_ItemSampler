@@ -10,6 +10,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public int? QuestionNumber { get; set; }
         public string Code { get; set; }
 
+        public string Section { get; set; }
+
         public static FieldTestUse Create(ItemMetadataAttribute attribute, string subjectCode)
         {
             if (attribute == null || string.IsNullOrEmpty(attribute.Value))
@@ -17,6 +19,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
                 return null;
             }
 
+            string section = string.Empty;
+            int questionNumber;
             string[] parts = attribute.Value.Split(';')?
                 .FirstOrDefault()?
                 .Split(new string[] { "::" }, StringSplitOptions.None);
@@ -27,16 +31,21 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
                 return null;
             }
 
-            int val;
+            if(subjectCode == "ELA")
+            {
+                section = parts.ElementAtOrDefault(3);
+            }
+
             parts = parts.LastOrDefault()
                 .Split(new string[] { "(", ")" }, StringSplitOptions.None);
 
-            int.TryParse(parts.ElementAtOrDefault(1), out val);
+            int.TryParse(parts.ElementAtOrDefault(1), out questionNumber);
 
             FieldTestUse fieldTestUse = new FieldTestUse
             {
                 Code = parts.FirstOrDefault(),
-                QuestionNumber = val
+                QuestionNumber = questionNumber,
+                Section = section
             };
 
             return fieldTestUse;
