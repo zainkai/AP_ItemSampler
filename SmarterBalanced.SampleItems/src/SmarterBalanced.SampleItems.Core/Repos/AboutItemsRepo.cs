@@ -10,33 +10,66 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         private readonly SampleItemsContext context;
         private readonly ILogger logger;
 
-        public AboutItemsRepo(SampleItemsContext context, ILoggerFactory loggerFactory) : base(context, loggerFactory)
+        public AboutItemsRepo(SampleItemsContext context, ILoggerFactory loggerFactory): base(context, loggerFactory)
         {
             this.context = context;
             logger = loggerFactory.CreateLogger<AboutItemsRepo>();
         }
 
+        /// <summary>
+        /// Constructs an AboutItemsViewModel with an item that matches
+        /// the first interactionType in context.
+        /// </summary>
         public AboutItemsViewModel GetAboutItemsViewModel()
         {
             var interactionTypes = context.InteractionTypes;
-            string itemURL = GetItemViewerUrl(interactionTypes.FirstOrDefault()?.Code);
-            AboutItemsViewModel model = new AboutItemsViewModel(interactionTypes, itemURL);
+            string interactionTypeCode = interactionTypes.FirstOrDefault()?.Code;
+
+            var model = GetAboutItemsViewModel(interactionTypeCode);
+
             return model;
         }
 
-        public string GetItemViewerUrl(string interactionTypeCode)
+        /// <summary>
+        /// Constructs and AboutItemsViewModel with an item that matches 
+        /// the given interactionType.
+        /// </summary>
+        public AboutItemsViewModel GetAboutItemsViewModel(string interactionTypeCode)
         {
-            if (string.IsNullOrEmpty(interactionTypeCode))
-            {
-                return null;
-            }
-
-            var itemDigest = context.SampleItems
+            SampleItem sampleItem = context.SampleItems
                 .Where(i => i.Grade != GradeLevels.NA && i.InteractionType != null)
                 .OrderBy(i => (int)i.Grade)
                 .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);
 
-            return GetItemViewerUrl(itemDigest);
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
+            string itemURL = GetItemViewerUrlSingleItem(sampleItem);
+
+            AboutThisItemViewModel aboutThisItemViewModel = GetAboutThisItemViewModel(sampleItem);
+            AboutItemsViewModel model = new AboutItemsViewModel(
+                interactionTypes: context.InteractionTypes,
+                itemUrl: itemURL,
+                selectedCode: interactionTypeCode,
+                aboutThisItemViewModel: aboutThisItemViewModel);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Constructs an ItemViewerService URL for a single item 
+        /// </summary>
+        private string GetItemViewerUrlSingleItem(SampleItem sampleItem)
+        {
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
+            string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
+            return $"{baseUrl}/items?ids={sampleItem.ToString()}";
         }
 
     }

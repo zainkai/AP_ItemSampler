@@ -77,12 +77,12 @@
             }
 
             let dropdowns = resources.map(res => {
-                let selectedCode = (this.state.resourceSelections || {})[res.label] || res.selectedCode;
+                let selectedCode = (this.state.resourceSelections || {})[res.label] || res.currentSelectionCode;
                 let ddprops: Dropdown.Props = {
-                    defaultSelection: res.selectedCode,
+                    defaultSelection: res.currentSelectionCode,
                     label: res.label,
                     selections: res.selections,
-                    selectedCode: selectedCode,
+                    selectionCode: selectedCode,
                     disabled: res.disabled,
                     updateSelection: this.updateSelection,
                 }

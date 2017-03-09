@@ -13,7 +13,7 @@
     "grunt-contrib-watch": "1.0.0",
     "grunt-ts": "6.0.0-beta.3",
     "less": "^2.7.2",
-    "typescript": "^2.0.9"
+    "typescript": "2.2.1"
   },
   "dependencies": {
     "@types/jquery": "^2.0.40",

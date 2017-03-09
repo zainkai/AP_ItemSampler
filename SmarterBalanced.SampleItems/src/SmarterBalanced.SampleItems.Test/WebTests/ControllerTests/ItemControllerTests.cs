@@ -78,6 +78,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
                 accessibilityCookieName: accCookieName,
+                isPerformanceItem: false,
                 accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
                 moreLikeThisVM: default(MoreLikeThisViewModel),
                 aboutThisItemVM: aboutThisItemVM);
@@ -85,6 +86,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
+                isPerformanceItem: false,
                 aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
 

@@ -48,8 +48,19 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
         private static AccessibilityResource ApplyIsaap(this AccessibilityResource resource, string[] isaap)
         {
-            var newSelection = resource.Selections.FirstOrDefault(sel => isaap.Contains(sel.SelectionCode));
-            if (newSelection == null)
+            var issapSelection = resource.Selections.FirstOrDefault(sel => isaap.Contains(sel.SelectionCode));
+            if (issapSelection == null)
+            {
+                return resource;
+            }
+
+            return resource.ApplySelectedCode(issapSelection.SelectionCode);
+        }
+
+        private static AccessibilityResource ApplySelectedCode(this AccessibilityResource resource, string code)
+        {
+            var newSelection = resource.Selections.FirstOrDefault(sel => sel.SelectionCode.Contains(code));
+            if (newSelection == null || newSelection.Disabled)
             {
                 return resource;
             }
@@ -63,8 +74,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
             string newSelectedCode;
             if (cookie.TryGetValue(resource.ResourceCode, out newSelectedCode))
             {
-                var newResource = resource.WithCurrentSelection(newSelectedCode);
-                return newResource;
+                return resource.ApplySelectedCode(newSelectedCode);
             }
 
             return resource;
