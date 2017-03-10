@@ -192,6 +192,7 @@ namespace ItemPage {
                         <div className="item-nav-right-group" role="group" aria-label="Second group">
                             <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
+                                onClick={e => ga("send", "event", "button", "OpenAccessibility")}
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                                 Accessibility

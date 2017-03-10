@@ -359,7 +359,7 @@ namespace ItemSearchParams {
             );
             const input = this.state.expandMore ? filters : undefined;
             return (
-                <div className="search-category">
+                <div className="search-category" style={{ "maxWidth":"250px" }}>
                     <label aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
                         onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
                         {this.state.expandMore ? hideArrow : showArrow} More
