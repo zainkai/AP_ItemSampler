@@ -16,6 +16,7 @@
     "typescript": "2.2.1"
   },
   "dependencies": {
+    "@types/google.analytics": "0.0.29",
     "@types/jquery": "^2.0.40",
     "@types/react": "^15.0.12",
     "@types/react-dom": "^0.14.23"
