@@ -18,7 +18,7 @@ namespace SmarterBalanced.SampleItems.Web
 {
     public class Startup
     {
-        private readonly ILogger logger;
+        private ILogger logger;
         public Startup(IHostingEnvironment env, ILoggerFactory factory)
         {
             var builder = new ConfigurationBuilder()
@@ -35,24 +35,31 @@ namespace SmarterBalanced.SampleItems.Web
             Configuration = builder.Build();
             ConfigureLogging(env, factory);
 
-            logger = factory.CreateLogger<Startup>();
         }
 
         private void ConfigureLogging(IHostingEnvironment env, ILoggerFactory factory)
         {
             factory.AddConsole(Configuration.GetSection("Logging"));
             factory.AddDebug();
+
             if (!env.IsDevelopment())
             {
                 try
                 {
                     factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+                    logger = factory.CreateLogger<Startup>();
                 }
                 catch (AmazonServiceException)
                 {
+                    logger = factory.CreateLogger<Startup>();
                     logger.LogWarning("Unable to load AWS logging, due to credentials or file");
                 }
             }
+            else
+            {
+                logger = factory.CreateLogger<Startup>();
+            }
+
         }
 
         public IConfigurationRoot Configuration { get; }

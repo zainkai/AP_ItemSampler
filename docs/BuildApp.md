@@ -20,16 +20,16 @@ To build a docker image for sample items website code base (without content) see
     2. Example producation: run `docker pull xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod`
 3. Docker tag code, run `docker tag reponame:{tag} sampleitemscode:{tag}`
     1. Example stage: run `docker tag xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:stage sampleitemscode:stage`
-    2. Example production: run `docker pull xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod sampleitemscode:prod`
+    2. Example production: run `docker tag xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod sampleitemscode:prod`
 4. place content within deployScripts directory
     1. Content needs to be unzipped
     2. content directory root level needs Items directory
 5. Docker build, run `docker build -t sampleitemsapp:{tag} -f Dockerfile.{tag} .`
     1. Example stage: run `docker build -t sampleitemsapp:stage -f Dockerfile.stage .`
     2. Example production: run `docker build -t sampleitemsapp:prod -f Dockerfile.prod .`
-6. Docker Run app , run `docker exec -it -p 8012:80 sampleitemsapp:{tag}`
-    1. Example stage: run `docker exec -it -p 8012:80 sampleitemsapp:stage`
-    2. Example production: run `docker exec -it -p 8012:80 sampleitemsapp:prod`
+6. Docker Run app , run `docker run -it -p 8012:80 sampleitemsapp:{tag}`
+    1. Example stage: run `docker run -it -p 8012:80 sampleitemsapp:stage`
+    2. Example production: run `docker run -it -p 8012:80 sampleitemsapp:prod`
 7. Go to [localhost:8012](http://localhost:8012)
 8. point to docker
 
