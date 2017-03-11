@@ -149,7 +149,7 @@ namespace ItemPage {
             ); 
 
             return (
-                <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
+                <a className="item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
                     onKeyUp={e => this.openPerfTaskModal(e)} role="button" tabIndex={0}>
                     <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                     {btnText}

@@ -31,8 +31,8 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 SettingsConfig = new SettingsConfig()
             };
             var aboutItemsRepoMock = new Mock<IAboutItemsRepo>();
-            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel()).Returns(aboutItemsViewModel);
-            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel(""));
+            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel("")).Returns(aboutItemsViewModel);
+            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel("bad"));
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
@@ -55,7 +55,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestGetItemViewerUrl()
         {
-            var result = aboutItemsController.GetItemUrl("");
+            var result = aboutItemsController.GetItemUrl("bad");
             JsonResult resJson = Assert.IsType<JsonResult>(result);
 
             Assert.Equal(null, resJson.Value);
