@@ -40,12 +40,15 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 .Select(i => i.ToItemCardViewModel())
                 .ToImmutableArray();
 
+            var aboutInteractionTypes = LoadAboutInteractionTypes(interactionGroup);
+
             SampleItemsContext context = new SampleItemsContext(
                 sampleItems: sampleItems,
                 itemCards: itemCards,
                 interactionTypes: interactionGroup.InteractionTypes,
                 subjects: subjects,
-                appSettings: appSettings);
+                appSettings: appSettings,
+                aboutInteractionTypes: aboutInteractionTypes);
 
             logger.LogInformation($"Loaded {sampleItems.Length} sample items");
             logger.LogInformation($"Context loaded successfully");
@@ -173,6 +176,14 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                             .ToImmutableArray();
 
             return interactionTypes;
+        }
+
+        private static ImmutableArray<InteractionType> LoadAboutInteractionTypes(InteractionGroup interactionGroup)
+        {
+            var aboutInteractionCodes = interactionGroup.InteractionFamilies.FirstOrDefault(i => i.Type == "AboutItems").InteractionTypeCodes;
+            var aboutInteractionTypes = interactionGroup.InteractionTypes.Where(i => aboutInteractionCodes.Contains(i.Code)).ToImmutableArray();
+
+            return aboutInteractionTypes;
         }
 
     }

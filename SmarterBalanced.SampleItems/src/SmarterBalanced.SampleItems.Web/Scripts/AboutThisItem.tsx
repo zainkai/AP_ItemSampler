@@ -34,6 +34,9 @@ namespace AboutThisItem {
 
     export class ATIComponent extends React.Component<Props, {}> {
         render() {
+            if (!this.props.rubrics) {
+                return null;
+            } 
             const rubrics = this.props.rubrics.map((ru, i) => <RubricComponent {...ru} key={String(i)} />);
             return (
                 <div className="modal fade"

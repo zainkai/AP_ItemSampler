@@ -34,25 +34,14 @@ namespace SmarterBalanced.SampleItems.Web
 
             Configuration = builder.Build();
             ConfigureLogging(env, factory);
-
             logger = factory.CreateLogger<Startup>();
+
         }
 
         private void ConfigureLogging(IHostingEnvironment env, ILoggerFactory factory)
         {
             factory.AddConsole(Configuration.GetSection("Logging"));
             factory.AddDebug();
-            if (!env.IsDevelopment())
-            {
-                try
-                {
-                    factory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
-                }
-                catch (AmazonServiceException)
-                {
-                    logger.LogWarning("Unable to load AWS logging, due to credentials or file");
-                }
-            }
         }
 
         public IConfigurationRoot Configuration { get; }

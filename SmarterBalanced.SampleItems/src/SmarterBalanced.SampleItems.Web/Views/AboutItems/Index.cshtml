@@ -8,19 +8,24 @@
 
 <environment names="Development">
     <link rel="stylesheet" href="~/css/about.css" />
+    <link rel="stylesheet" href="~/css/item.css" />
 </environment>
 <environment names="Staging, Production">
     <link rel="stylesheet" href="~/css/about.min.css" />
+    <link rel="stylesheet" href="~/css/item.min.css" />
+
 </environment>
 
 @section Scripts {
 
     <environment names="Development">
+        <script src="~/scripts/Collapsible.js"></script>
         <script src="~/scripts/ItemViewerFrame.js"></script>
         <script src="~/scripts/AboutItems.js"></script>
         <script src="~/scripts/AboutThisItem.js"></script>
     </environment>
     <environment names="Staging, Production">
+        <script src="~/scripts/Collapsible.min.js"></script>
         <script src="~/scripts/ItemViewerFrame.min.js"></script>
         <script src="~/scripts/AboutItems.min.js"></script>
         <script src="~/scripts/AboutThisItem.min.js"></script>

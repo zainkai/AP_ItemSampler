@@ -33,6 +33,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public bool IsPerformanceItem { get; }
         public FieldTestUse FieldTestUse { get;}
         public CoreStandards CoreStandards { get; }
+        public string InteractionTypeSubCat{ get; }
 
         public SampleItem(
             int bankKey,
@@ -52,7 +53,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string depthOfKnowledge,
             bool isPerformanceItem,
             CoreStandards coreStandards,
-            FieldTestUse fieldTestUse
+            FieldTestUse fieldTestUse,
+            string interactionTypeSubCat
             )
         {
             BankKey = bankKey;
@@ -73,6 +75,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             IsPerformanceItem = isPerformanceItem;
             CoreStandards = coreStandards;
             FieldTestUse = fieldTestUse;
+            InteractionTypeSubCat = interactionTypeSubCat;
         }
 
         public static SampleItem Create(
@@ -93,7 +96,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string depthOfKnowledge = "",
             bool isPerformanceItem = false,
             CoreStandards coreStandards = null,
-            FieldTestUse fieldTestUse = null)
+            FieldTestUse fieldTestUse = null,
+            string interactionTypeSubCat = "")
         {
             return new SampleItem(
                 bankKey,
@@ -113,7 +117,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 depthOfKnowledge,
                 isPerformanceItem,
                 coreStandards,
-                fieldTestUse);
+                fieldTestUse,
+                interactionTypeSubCat);
         }
 
         public override string ToString()

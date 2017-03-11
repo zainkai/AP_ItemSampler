@@ -103,7 +103,33 @@ namespace AboutItems {
             }
         }
 
+         renderNoItem() {
+                return (
+                    <div className="no-item">
+                        <p>No items of the selected type found.</p>
+                    </div>
+                );
+         }
+
+        renderItemFrame() {
+            return (
+                <div className="aboutitem-iframe">
+                     <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
+                        <div className="item-nav-left-group" role="group" aria-label="First group">
+                        <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
+                            onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
+                            <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
+                            About This Item
+                        </a>
+                      </div>
+                    </div>
+                    <ItemFrame url={this.state.itemUrl} />
+                    <AboutThisItem.ATIComponent {...this.state.aboutThisItemViewModel} />
+                </div>
+            );
+        }
         render() {
+            const itemFrame = this.state.itemUrl ? this.renderItemFrame() : this.renderNoItem();
             return (
                 <div className="aboutitems-parents">
                     <div className="aboutitems-info">
@@ -118,17 +144,7 @@ namespace AboutItems {
                         </div>
                         {this.renderDescription()}
                     </div>
-                    <div className="aboutitem-iframe">
-                        <div className="about-this-item-btn" role="toolbar" aria-label="Toolbar with button groups">
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
-                                onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
-                                <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
-                                About This Item
-                            </a>
-                        </div>
-                        <ItemFrame url={this.state.itemUrl} />
-                        <AboutThisItem.ATIComponent {...this.state.aboutThisItemViewModel} />
-                    </div>
+                    {itemFrame}
                 </div>
             );
         }
