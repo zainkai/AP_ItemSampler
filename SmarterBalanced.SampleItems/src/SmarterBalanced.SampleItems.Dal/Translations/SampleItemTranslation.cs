@@ -73,6 +73,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
             bool isPeformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
+            string interactionTypeSubCat = "";
+            settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
+
 
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
@@ -92,7 +95,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 claim: claim,
                 grade: grade,
                 coreStandards: coreStandards,
-                fieldTestUse: fieldTestUse);
+                fieldTestUse: fieldTestUse,
+                interactionTypeSubCat: interactionTypeSubCat);
 
             return sampleItem;
         }

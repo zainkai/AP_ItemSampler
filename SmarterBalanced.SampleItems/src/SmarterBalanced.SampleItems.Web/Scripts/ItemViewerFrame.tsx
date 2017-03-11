@@ -24,13 +24,20 @@ class ItemFrame extends React.Component<FrameProps, FrameState> {
         })
     }
 
-    render() {
+    renderNoItem() {
+        return (
+            <div className="no-item">
+                <p>No Item Found</p>
+            </div>
+        );
+    }
+
+    renderItem() {
         const spinner = this.state.loading
             ? <div className="itemviewer-iframe-spinner">
                 <img src="/images/spin-large.gif"></img>
             </div>
             : null;
-
         return (
             <div className="itemViewerFrame" tabIndex={0}>
                 {spinner}
@@ -42,5 +49,14 @@ class ItemFrame extends React.Component<FrameProps, FrameState> {
                 </iframe>
             </div>
         );
+    }
+
+    render() {
+        if (this.props.url) {
+            return this.renderItem();
+        }
+        else {
+            return this.renderNoItem();
+        }
     }
 }

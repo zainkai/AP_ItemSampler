@@ -167,19 +167,19 @@ namespace ItemPage {
                     <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="item-nav-left-group" role="group" aria-label="First group">
 
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                                 {abtText}
                             </a>
 
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}                               
                             </a>
 
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
                                 onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
                                 Share

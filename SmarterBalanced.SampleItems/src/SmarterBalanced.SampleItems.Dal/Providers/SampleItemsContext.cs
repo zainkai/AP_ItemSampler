@@ -14,6 +14,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         public ImmutableArray<SampleItem> SampleItems { get; }
         public ImmutableArray<ItemCardViewModel> ItemCards { get; }
         public ImmutableArray<InteractionType> InteractionTypes { get; }
+        public ImmutableArray<InteractionType> AboutInteractionTypes { get; }
+
         public ImmutableArray<Subject> Subjects { get; }
         public AppSettings AppSettings { get; }
 
@@ -21,6 +23,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             ImmutableArray<SampleItem> sampleItems,
             ImmutableArray<ItemCardViewModel> itemCards,
             ImmutableArray<InteractionType> interactionTypes,
+            ImmutableArray<InteractionType> aboutInteractionTypes,
             ImmutableArray<Subject> subjects,
             AppSettings appSettings)
         {
@@ -29,6 +32,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             InteractionTypes = interactionTypes;
             Subjects = subjects;
             AppSettings = appSettings;
+            AboutInteractionTypes = aboutInteractionTypes;
         }
 
         /// <summary>
@@ -38,6 +42,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             ImmutableArray<SampleItem> sampleItems = default(ImmutableArray<SampleItem>),
             ImmutableArray<ItemCardViewModel> itemCards = default(ImmutableArray<ItemCardViewModel>),
             ImmutableArray<InteractionType> interactionTypes = default(ImmutableArray<InteractionType>),
+            ImmutableArray<InteractionType> aboutInteractionTypes = default(ImmutableArray<InteractionType>),
             ImmutableArray<Subject> subjects = default(ImmutableArray<Subject>),
             AppSettings appSettings = null)
         {
@@ -46,7 +51,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 itemCards: itemCards,
                 interactionTypes: interactionTypes,
                 subjects: subjects,
-                appSettings: appSettings);
+                appSettings: appSettings,
+                aboutInteractionTypes: aboutInteractionTypes);
 
             return context;
         }
