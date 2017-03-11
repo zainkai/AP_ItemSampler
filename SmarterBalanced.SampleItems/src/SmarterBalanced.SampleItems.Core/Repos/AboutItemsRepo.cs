@@ -17,40 +17,30 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         }
 
         /// <summary>
-        /// Constructs an AboutItemsViewModel with an item that matches
-        /// the first interactionType in context.
-        /// </summary>
-        public AboutItemsViewModel GetAboutItemsViewModel()
-        {
-            var interactionTypes = context.InteractionTypes;
-            string interactionTypeCode = interactionTypes.FirstOrDefault()?.Code;
-
-            var model = GetAboutItemsViewModel(interactionTypeCode);
-
-            return model;
-        }
-
-        /// <summary>
         /// Constructs and AboutItemsViewModel with an item that matches 
         /// the given interactionType.
         /// </summary>
-        public AboutItemsViewModel GetAboutItemsViewModel(string interactionTypeCode)
+        public AboutItemsViewModel GetAboutItemsViewModel(string interactionTypeCode = "")
         {
-            SampleItem sampleItem = context.SampleItems
-                .Where(i => i.Grade != GradeLevels.NA && i.InteractionType != null)
-                .OrderBy(i => (int)i.Grade)
-                .FirstOrDefault(item => item.InteractionType.Code == interactionTypeCode);
+            var interactionTypes = context.AboutInteractionTypes;
 
-            if (sampleItem == null)
+            if (string.IsNullOrWhiteSpace(interactionTypeCode))
             {
-                return null;
+                interactionTypeCode  = interactionTypes.FirstOrDefault()?.Code;
             }
+
+            var items = context.SampleItems
+               .Where(i => i.Grade != GradeLevels.NA && i.InteractionType != null)
+               .OrderBy(i => (int)i.Grade);
+
+            SampleItem sampleItem = items.FirstOrDefault(item => item.InteractionTypeSubCat == interactionTypeCode)
+                ?? items.FirstOrDefault(item => interactionTypeCode.Contains(item.InteractionType.Code));
 
             string itemURL = GetItemViewerUrlSingleItem(sampleItem);
 
             AboutThisItemViewModel aboutThisItemViewModel = GetAboutThisItemViewModel(sampleItem);
             AboutItemsViewModel model = new AboutItemsViewModel(
-                interactionTypes: context.InteractionTypes,
+                interactionTypes: interactionTypes,
                 itemUrl: itemURL,
                 selectedCode: interactionTypeCode,
                 aboutThisItemViewModel: aboutThisItemViewModel);

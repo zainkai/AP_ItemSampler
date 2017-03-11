@@ -4,7 +4,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
     public interface IAboutItemsRepo: IItemViewRepo
     {
-        AboutItemsViewModel GetAboutItemsViewModel();
-        AboutItemsViewModel GetAboutItemsViewModel(string interactionTypeCode);
+        AboutItemsViewModel GetAboutItemsViewModel(string interactionTypeCode = "");
     }
 }

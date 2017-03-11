@@ -1,6 +1,6 @@
 @ECHO OFF
 SET inputFiles=../ProjectOverview.md ../ProjectSetup.md ../ApplicationSettings.md ../Dependencies.md ../Buildapp.md ../Docker.md
-SET output=../allDocumentation.html
+SET output=../index.html
 SET docheader="Sample Items Website"
 @ECHO ON
 

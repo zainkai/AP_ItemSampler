@@ -10,19 +10,22 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     public class InteractionFamily
     {
         public string SubjectCode { get; }
+        public string Type { get;}
         public ImmutableArray<string> InteractionTypeCodes { get; }
 
-        public InteractionFamily(string subjectCode, ImmutableArray<string> interactionTypeCodes)
+        public InteractionFamily(string subjectCode, ImmutableArray<string> interactionTypeCodes, string type)
         {
             SubjectCode = subjectCode;
             InteractionTypeCodes = interactionTypeCodes;
+            Type = type;
         }
 
-        public static InteractionFamily Create(ImmutableArray<string> interactionTypeCodes, string subjectCode = "" )
+        public static InteractionFamily Create(ImmutableArray<string> interactionTypeCodes, string subjectCode = "", string type = "" )
         {
             return new InteractionFamily(
                 subjectCode: subjectCode, 
-                interactionTypeCodes: interactionTypeCodes);
+                interactionTypeCodes: interactionTypeCodes,
+                type: type);
         }
 
         public static InteractionFamily Create(XElement familyElement)
@@ -35,6 +38,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
             var interactionFamily = Create(
                 subjectCode: (string)familyElement.Element("SubjectCode"),
+                type: (string)familyElement.Element("Type"),
                 interactionTypeCodes: interactionTypeCodes);
 
             return interactionFamily;

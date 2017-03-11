@@ -53,15 +53,17 @@ nav {
 }
 
 .sbNav-linksGroup-item {
-    font-size: 18px; // SB
-    color: #007393;
+    font-size: @font-size-larger; // SB
+    color: @link-color; //SB
     margin: 10px 20px; // SB
     white-space: nowrap;
+
+    &:hover{
+        text-decoration: none;
+    }
 }
 
-.sbNav-linksGroup-item:hover {
-    text-decoration: none;
-}
+
 
 .sbNav-titleGroup-item h3 {
     color: #63666A;
@@ -111,7 +113,7 @@ footer {
 
 .footer-practiceTests {
     align-self: flex-start;
-    font-size: 14px; // SB
+    font-size: @font-size-smaller; // SB
     text-decoration: underline;
 }
 

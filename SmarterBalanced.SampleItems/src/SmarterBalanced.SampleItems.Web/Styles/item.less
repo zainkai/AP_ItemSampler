@@ -22,7 +22,7 @@
 
 .accessibility-modal {
     width: auto;
-    max-width: 785px;
+    max-width: 825px;
     min-width: 300px;
 }
 
@@ -32,7 +32,7 @@
 
 .accessibility-button { 
     float: right;
-    font-size: 18px;
+    font-size: @font-size-larger;
     border-radius: 0px;
     margin-bottom: 5px !important;
 }
@@ -64,11 +64,6 @@
     user-select: all;
 }
 
-.modal-toggle {
-    font-size: 20px;
-    color: black;
-}
-
 .glyphicon-pad {
     padding: 5px;
 }
@@ -85,6 +80,8 @@
 .item-nav {
     display:flex;
     justify-content: space-between; 
+    margin-right: 5px; //sb
+    margin-bottom: 5px; //sb
 }
 
 .item-nav-left-group {
@@ -102,9 +99,14 @@
 
 .item-nav-btn {
     margin-top: auto; 
-    font-size: 14px;
+    font-size: @font-size-smaller;
     padding: 0px 10px 0px 10px;
-    color: black;
+    white-space: nowrap;
+    color: @link-color; //SB
+    
+    &:hover{
+        text-decoration: none;
+    }
 }
 
 .item-nav-long-label {
@@ -118,7 +120,7 @@
     }
 
 .accessibility-btn {
-    font-size: 18px;
+    font-size: @font-size-larger;
     padding: 6px 12px; // SB
 }
 

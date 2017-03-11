@@ -383,7 +383,7 @@
 <li>Docker tag code, run <code>docker tag reponame:{tag} sampleitemscode:{tag}</code>
 <ol type="1">
 <li>Example stage: run <code>docker tag xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:stage sampleitemscode:stage</code></li>
-<li>Example production: run <code>docker pull xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod sampleitemscode:prod</code></li>
+<li>Example production: run <code>docker tag xxx.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:prod sampleitemscode:prod</code></li>
 </ol></li>
 <li>place content within deployScripts directory
 <ol type="1">
@@ -395,10 +395,10 @@
 <li>Example stage: run <code>docker build -t sampleitemsapp:stage -f Dockerfile.stage .</code></li>
 <li>Example production: run <code>docker build -t sampleitemsapp:prod -f Dockerfile.prod .</code></li>
 </ol></li>
-<li>Docker Run app , run <code>docker exec -it -p 8012:80 sampleitemsapp:{tag}</code>
+<li>Docker Run app , run <code>docker run -it -p 8012:80 sampleitemsapp:{tag}</code>
 <ol type="1">
-<li>Example stage: run <code>docker exec -it -p 8012:80 sampleitemsapp:stage</code></li>
-<li>Example production: run <code>docker exec -it -p 8012:80 sampleitemsapp:prod</code></li>
+<li>Example stage: run <code>docker run -it -p 8012:80 sampleitemsapp:stage</code></li>
+<li>Example production: run <code>docker run -it -p 8012:80 sampleitemsapp:prod</code></li>
 </ol></li>
 <li>Go to <a href="http://localhost:8012">localhost:8012</a></li>
 <li>point to docker</li>

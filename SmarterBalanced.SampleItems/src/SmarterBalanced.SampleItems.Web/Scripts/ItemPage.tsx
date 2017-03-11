@@ -149,7 +149,7 @@ namespace ItemPage {
             ); 
 
             return (
-                <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
+                <a className="item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
                     onKeyUp={e => this.openPerfTaskModal(e)} role="button" tabIndex={0}>
                     <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                     {btnText}
@@ -167,19 +167,19 @@ namespace ItemPage {
                     <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="item-nav-left-group" role="group" aria-label="First group">
 
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                                 {abtText}
                             </a>
 
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}                               
                             </a>
 
-                            <a className="btn item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
                                 onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
                                 Share
@@ -192,6 +192,7 @@ namespace ItemPage {
                         <div className="item-nav-right-group" role="group" aria-label="Second group">
                             <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
+                                onClick={e => ga("send", "event", "button", "OpenAccessibility")}
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                                 Accessibility
