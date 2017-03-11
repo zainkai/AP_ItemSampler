@@ -12,6 +12,10 @@ class ItemFrame extends React.Component<FrameProps, FrameState> {
         this.state = { loading: true }
     }
 
+    componentWillReceiveProps(nextProps: FrameProps, nextContext: any) {
+        this.setState({ loading: true });
+    }
+
     startLoad = () => {
         this.setState({
             loading: true
