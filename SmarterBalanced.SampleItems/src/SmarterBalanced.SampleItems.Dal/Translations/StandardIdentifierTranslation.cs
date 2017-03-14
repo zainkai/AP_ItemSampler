@@ -55,7 +55,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     break;
 
                 case "SBAC-MA-v1":
-                    standardIdentifier = MaV4Standard(parts);
+                    standardIdentifier = MaV1Standard(parts);
                     break;
 
                 case "SBAC-MA-v4":
