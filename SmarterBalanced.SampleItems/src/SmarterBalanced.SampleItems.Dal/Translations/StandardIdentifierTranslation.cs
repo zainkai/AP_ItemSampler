@@ -24,7 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
          *     Claim|Content Domain|Target|Emphasis|Common Core Standard
          */
 
-        public static StandardIdentifier StandardStringtoStandardIdentifier(string standards)
+        public static StandardIdentifier StandardStringToStandardIdentifier(string standards)
         {
 
             if (string.IsNullOrEmpty(standards))
@@ -265,7 +265,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     .FirstOrDefault()
                     ?.PrimaryStandard;
 
-                var identifier = StandardStringtoStandardIdentifier(primaryStandard);
+                var identifier = StandardStringToStandardIdentifier(primaryStandard);
                 return identifier;
             }
             catch (InvalidOperationException ex)
