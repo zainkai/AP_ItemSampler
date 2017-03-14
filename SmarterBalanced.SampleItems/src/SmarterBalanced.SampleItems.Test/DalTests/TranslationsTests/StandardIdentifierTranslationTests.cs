@@ -46,7 +46,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestElaV1Translation()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(elaStandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
             Assert.Equal("3-L", identifier.Claim);
             Assert.Equal("4-6", identifier.Target);
             Assert.Equal("6.SL.2", identifier.CommonCoreStandard);
@@ -55,7 +55,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestMathV1Translation()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(mathv1StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(mathv1StandardString);
             Assert.Equal("1", identifier.Claim);
             Assert.Equal("NBT", identifier.ContentDomain);
             Assert.Equal("E-3", identifier.Target);
@@ -65,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestMathV4Translation()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(mathV4StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(mathV4StandardString);
             Assert.Equal("1", identifier.Claim);
             Assert.Equal("D-6", identifier.Target);
             Assert.Equal("6.NS.6c", identifier.CommonCoreStandard);
@@ -76,7 +76,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestMathV5Translation()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(mathV5StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(mathV5StandardString);
             Assert.Equal("2", identifier.Claim);
             Assert.Equal("D-6", identifier.Target);
             Assert.Equal("6.NS.6c", identifier.CommonCoreStandard);
@@ -87,7 +87,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestMathV6Translation()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(mathV6StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(mathV6StandardString);
             Assert.Equal("3", identifier.Claim);
             Assert.Equal("D-6", identifier.Target);
             Assert.Equal("P", identifier.ContentCategory);
@@ -97,7 +97,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestInvalidElaString()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(invalidElaStandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(invalidElaStandardString);
             Assert.Equal("3-L", identifier.Claim);
             Assert.Equal(string.Empty, identifier.Target);
             Assert.Equal(string.Empty, identifier.CommonCoreStandard);
@@ -106,28 +106,28 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestNoClaimString()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(noClaimString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(noClaimString);
             Assert.Null(identifier);
         }
 
         [Fact]
         public void TestNullInput()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(null);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(null);
             Assert.Null(identifier);
         }
 
         [Fact]
         public void TestEmptyInput()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(string.Empty);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(string.Empty);
             Assert.Null(identifier);
         }
 
         [Fact]
         public void TestInvalidMathV1String()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(invalidMathV1StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(invalidMathV1StandardString);
             Assert.Equal("1", identifier.Claim);
             Assert.Equal(string.Empty, identifier.Target);
             Assert.Equal(string.Empty, identifier.CommonCoreStandard);
@@ -136,7 +136,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestInvalidMathV4String()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(invalidMathV4StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(invalidMathV4StandardString);
             Assert.Equal(string.Empty, identifier.Claim);
             Assert.Equal("D-6", identifier.Target);
             Assert.Equal("NS", identifier.ContentDomain);
@@ -147,7 +147,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestInvalidMathV5String()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(invalidMathV5StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(invalidMathV5StandardString);
             Assert.Equal("2", identifier.Claim);
             Assert.Equal("6.NS.6c", identifier.CommonCoreStandard);
             Assert.Equal(string.Empty, identifier.Target);
@@ -158,7 +158,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestInvalidMathV6String()
         {
-            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringtoStandardIdentifier(invalidMathV6StandardString);
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(invalidMathV6StandardString);
             Assert.Equal("3", identifier.Claim);
             Assert.Equal(string.Empty, identifier.ContentCategory);
             Assert.Equal(string.Empty, identifier.TargetSet);
