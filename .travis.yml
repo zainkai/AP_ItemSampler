@@ -2,6 +2,12 @@ language: csharp
 sudo: required
 node_js: 
   - "node"
+python:
+  - "2.7"
+install: 
+  - pip install ecs-deploy
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
 
 services:
   - docker
@@ -30,14 +36,13 @@ matrix:
 #Docker section
 after_success:
   - docker --version
-  - pip install --user awscli
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - export PATH=$PATH:$HOME/.local/bin
-  - eval $(aws ecr get-login --region us-west-2)
   - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o /home/travis/build/osu-cass/SampleItemsWebsite/publish/
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/publish/
   - docker build -t sampleitemscode .
-  - docker tag sampleitemscode:latest 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:$BRANCH
-  - docker push 047189625337.dkr.ecr.us-west-2.amazonaws.com/sampleitemscode:$BRANCH
+  - docker tag sampleitemscode:latest osucass/sampleitemscode:$BRANCH
+  - docker push osucass/sampleitemscode:$BRANCH
   - cd /home/travis/build/osu-cass/SampleItemsWebsite
   - chmod ugo+x DeployScripts/runEcsBuild.sh
   - ./DeployScripts/runEcsBuild.sh
