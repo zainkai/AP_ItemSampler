@@ -188,6 +188,7 @@ namespace ItemPage {
 
                         </div>
                         <div className="item-nav-right-group" role="group" aria-label="Second group" disabled>
+                            <p>Coming Soon</p>&nbsp;&nbsp;
                             <a type="button" className="accessibility-btn btn btn-primary" disabled>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                                 Accessibility
