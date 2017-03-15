@@ -127,6 +127,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         {
             var selections = element.Elements("Selection")
                        .Select(x => AccessibilitySelection.Create(x))
+                       .OrderBy(x => x.Order)
                        .ToImmutableArray();
 
             var defaultSelection = (string)element.Element("DefaultSelection");
