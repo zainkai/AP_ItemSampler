@@ -60,7 +60,7 @@
         <![CDATA[<p>This item presents students with a two-part question, parts A and B. 
               Students select a correct response from four options in Part A and then identify textual support for that response in Part B.</p>]]>
       </Description>
-      <Order>5</Order>
+      <Order>6</Order>
     </Item>
     <Item>
       <Code>EQ</Code>
@@ -69,7 +69,7 @@
         <![CDATA[<p>The Equation item type has one or more text boxes for a response area and a key pad containing mathematical characters. 
               The student enters an equation or numerical answer into the text box using the key pad or keyboard.</p>]]>
       </Description>
-      <Order>6</Order>
+      <Order>5</Order>
     </Item>
     <Item>
       <Code>ER</Code>
