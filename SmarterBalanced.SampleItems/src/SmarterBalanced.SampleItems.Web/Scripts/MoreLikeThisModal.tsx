@@ -5,21 +5,23 @@
     }
 
     export interface Props {
-        gradeBelowItems: Column;
+        gradeBelowItems: Column | null;
         sameGradeItems: Column;
-        gradeAboveItems: Column;
+        gradeAboveItems: Column | null;
     }
 
     export class Modal extends React.Component<Props, {}> {
 
-        renderColumn(column: Column) {
-            const label = column.label == "NA" ?
-                "No items to be displayed."
-                : "No items found for this grade.";
+        renderColumn(column: Column | null) {
+            if (!column || column.label == "NA") {
+                return undefined;
+            }
+
+            const noneLabel = "No items found for this grade.";
 
             const items = column.itemCards.length ?
                 column.itemCards.map(c => <ItemCardCondensed key={c.bankKey + "-" + c.itemKey} {...c} />)
-                : label;
+                : noneLabel;
 
             return (
                 <div className="more-like-this-column">
