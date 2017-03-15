@@ -15,7 +15,7 @@
       <Description>
         <![CDATA[<p>This is an example of a Hot Spot Grid item. This item type requires students to click on certain areas of an image.</p>]]>
       </Description>
-      <Order>2</Order>
+      <Order>3</Order>
     </Item>
     <Item>
       <Code>GI3</Code>
@@ -23,7 +23,7 @@
       <Description>
         <![CDATA[<p>This is an example of a Graphing Grid Item. This item type requires students to plot points and/or draw lines.</p>]]>
       </Description>
-      <Order>3</Order>
+      <Order>2</Order>
     </Item>
     <Item>
       <Code>GI</Code>
