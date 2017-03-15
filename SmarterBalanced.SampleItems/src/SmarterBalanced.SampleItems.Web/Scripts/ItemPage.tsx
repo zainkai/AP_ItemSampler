@@ -178,12 +178,21 @@ namespace ItemPage {
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}                               
                             </a>
-
+                            <a className="item-nav-btn" disabled>
+                                
+                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
+                                Share
+                            </a>
 
                             {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
 
                         </div>
-
+                        <div className="item-nav-right-group" role="group" aria-label="Second group" disabled>
+                            <a type="button" className="accessibility-btn btn btn-primary" disabled>
+                                <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                                Accessibility
+                            </a>
+                        </div>
                     </div>
                     <ItemFrame url={ivsUrl} />
                     <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
