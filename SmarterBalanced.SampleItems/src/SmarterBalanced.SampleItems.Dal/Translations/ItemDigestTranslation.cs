@@ -78,7 +78,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType,
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
-                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
+                AslSupported = (itemMetadata.Metadata.AccessibilityTagsASLLanguage ?? "Y") == "Y",
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
                 Contents = itemContents.Item.Contents,
