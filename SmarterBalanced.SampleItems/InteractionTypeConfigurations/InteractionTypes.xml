@@ -7,7 +7,7 @@
         <![CDATA[<p>There are three types of Grid Items. This is an example of a Drag and Drop Grid Item. 
               This item type requires students to click on a single element or multiple elements and drag-and-drop the element(s) into a background image.</p>]]>
       </Description>
-      <Order>1</Order>
+      <Order>4</Order>
     </Item>
     <Item>
       <Code>GI2</Code>
@@ -15,7 +15,7 @@
       <Description>
         <![CDATA[<p>This is an example of a Hot Spot Grid item. This item type requires students to click on certain areas of an image.</p>]]>
       </Description>
-      <Order>3</Order>
+      <Order>5</Order>
     </Item>
     <Item>
       <Code>GI3</Code>
@@ -23,7 +23,7 @@
       <Description>
         <![CDATA[<p>This is an example of a Graphing Grid Item. This item type requires students to plot points and/or draw lines.</p>]]>
       </Description>
-      <Order>2</Order>
+      <Order>6</Order>
     </Item>
     <Item>
       <Code>GI</Code>
@@ -60,7 +60,7 @@
         <![CDATA[<p>This item presents students with a two-part question, parts A and B. 
               Students select a correct response from four options in Part A and then identify textual support for that response in Part B.</p>]]>
       </Description>
-      <Order>6</Order>
+      <Order>1</Order>
     </Item>
     <Item>
       <Code>EQ</Code>
@@ -69,7 +69,7 @@
         <![CDATA[<p>The Equation item type has one or more text boxes for a response area and a key pad containing mathematical characters. 
               The student enters an equation or numerical answer into the text box using the key pad or keyboard.</p>]]>
       </Description>
-      <Order>5</Order>
+      <Order>2</Order>
     </Item>
     <Item>
       <Code>ER</Code>
@@ -78,7 +78,7 @@
         <![CDATA[<p>The Extended Response item type has a text box for a response area and requires a keyboard entry of alphanumeric characters. 
               This item type allows for a longer response than the Short Answer item type.</p>]]>
       </Description>
-      <Order>7</Order>
+      <Order>3</Order>
     </Item>
 
     <Item>
