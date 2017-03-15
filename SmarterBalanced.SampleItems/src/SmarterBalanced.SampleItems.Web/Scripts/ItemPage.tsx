@@ -159,7 +159,7 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
+            let ivsUrl: string = this.props.itemViewerServiceUrl;
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (
@@ -179,25 +179,11 @@ namespace ItemPage {
                                 {moreText}                               
                             </a>
 
-                            <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
-                                onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
-                                <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
-                                Share
-                            </a>
 
                             {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
 
                         </div>
 
-                        <div className="item-nav-right-group" role="group" aria-label="Second group">
-                            <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
-                                data-target="#accessibility-modal-container"
-                                onClick={e => ga("send", "event", "button", "OpenAccessibility")}
-                                onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
-                                <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                                Accessibility
-                            </a>
-                        </div>
                     </div>
                     <ItemFrame url={ivsUrl} />
                     <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
