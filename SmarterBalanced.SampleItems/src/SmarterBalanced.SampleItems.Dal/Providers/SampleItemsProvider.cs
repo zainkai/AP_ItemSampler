@@ -23,18 +23,20 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             var accessibilityResourceFamilies = LoadAccessibility(appSettings.SettingsConfig.AccommodationsXMLPath);
             var interactionGroup = LoadInteractionGroup(appSettings.SettingsConfig.InteractionTypesXMLPath);
             ImmutableArray<Subject> subjects = LoadSubjects(appSettings.SettingsConfig.ClaimsXMLPath, interactionGroup.InteractionFamilies);
-
-
+            
             var itemDigests = LoadItemDigests(appSettings).Result;
 
-            var sampleItems = LoadSampleItems(
-                itemDigests,
-                appSettings,
-                accessibilityResourceFamilies,
-                interactionGroup.InteractionTypes,
-                subjects,
-                standardsXml,
-                appSettings).Result;
+            var itemPatchPath = appSettings.SettingsConfig.PatchXMLPath;
+            var itemPatchRoot = XmlSerialization.DeserializeXml<ItemPatchRoot>(filePath: itemPatchPath);
+
+            var sampleItems = SampleItemTranslation.ToSampleItems(
+                digests: itemDigests,
+                settings: appSettings,
+                resourceFamilies: accessibilityResourceFamilies,
+                interactionTypes: interactionGroup.InteractionTypes,
+                subjects: subjects,
+                patches: itemPatchRoot.Patches,
+                standardsXml: standardsXml);
 
             var itemCards = sampleItems
                 .Select(i => i.ToItemCardViewModel())
@@ -56,48 +58,17 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             return context;
         }
 
-        private static async Task<ImmutableArray<SampleItem>> LoadSampleItems(
-            ImmutableArray<ItemDigest> digests,
-            AppSettings settings,
-            IList<MergedAccessibilityFamily> accessibilityResourceFamilies,
-            IList<InteractionType> interactionTypes,
-            IList<Subject> subjects,
-            CoreStandardsXml coreStandards,
-            AppSettings appSettings)
-        {
-            string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
-
-            var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
-            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-
-            //Parse Xml Files
-            IEnumerable<ItemMetadata> itemMetadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFiles);
-            IEnumerable<ItemContents> itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
-
-            var sampleItems = SampleItemTranslation
-                .ToSampleItems(
-                    digests: digests,
-                    resourceFamilies: accessibilityResourceFamilies,
-                    interactionTypes: interactionTypes,
-                    subjects: subjects,
-                    standardsXml: coreStandards,
-                    settings: appSettings)
-                .ToImmutableArray();
-
-            return sampleItems;
-        }
-
         private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
             AppSettings appSettings)
         {
             string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
+            
 
             var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
-
-            //Parse Xml Files
-            IEnumerable<ItemMetadata> itemMetadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFiles);
-            IEnumerable<ItemContents> itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
+            
+            var itemMetadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFiles);
+            var itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
 
             var itemDigests = ItemDigestTranslation
                 .ToItemDigests(
