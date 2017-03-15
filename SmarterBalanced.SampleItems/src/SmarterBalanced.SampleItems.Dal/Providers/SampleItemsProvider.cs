@@ -173,6 +173,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                             .Element("Items")
                             .Elements("Item")
                             .Select(i => InteractionType.Create(i))
+                            .OrderBy(i => i.Order)
                             .ToImmutableArray();
 
             return interactionTypes;
@@ -181,7 +182,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         private static ImmutableArray<InteractionType> LoadAboutInteractionTypes(InteractionGroup interactionGroup)
         {
             var aboutInteractionCodes = interactionGroup.InteractionFamilies.FirstOrDefault(i => i.Type == "AboutItems").InteractionTypeCodes;
-            var aboutInteractionTypes = interactionGroup.InteractionTypes.Where(i => aboutInteractionCodes.Contains(i.Code)).ToImmutableArray();
+            var aboutInteractionTypes = interactionGroup.InteractionTypes
+                .Where(i => aboutInteractionCodes.Contains(i.Code))
+                .OrderBy(i => i.Order)
+                .ToImmutableArray();
 
             return aboutInteractionTypes;
         }
