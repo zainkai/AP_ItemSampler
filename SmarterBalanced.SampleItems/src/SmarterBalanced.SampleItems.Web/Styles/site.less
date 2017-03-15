@@ -6,13 +6,14 @@ html {
 
 body {
     font-family: "PT Serif", Times, serif;
-    min-height: 100%;
+    height: 100%;
     display: flex;
     flex-flow: column;
+    background-color: #f3f3f3;
 }
 
 .container {
-    flex: 1;
+    flex: 1 0 auto;
     max-width: 1400px;
     margin: 0 1em 1em 1em;
     align-self: center;
@@ -57,9 +58,21 @@ textarea {
     max-width: 280px;
 }
 
+.itemViewerFrame {
+    position: relative;
+    background-color: #ffffff;
+}
+
 .itemviewer-iframe {
     height: 70vh;
     width: 100%;
+}
+
+.itemviewer-iframe-spinner {
+    position: absolute;
+    top: calc(~'50% - 60px');
+    left: calc(~'50% - 60px');
+    z-index: 1;
 }
 
 .screen-reader-text {
@@ -80,7 +93,7 @@ textarea {
     transition-duration: 0.2s;
     cursor: pointer;
     margin: 26px;
-    font-size: 16px;
+    font-size: @font-size-base;
     box-shadow: inset 0 0 0 transparent,0 0px 5px #959595;
 }
 
@@ -109,6 +122,14 @@ textarea {
 
     .card.condensed .card-contents p:first-of-type {
         padding-top: 5px;
+    }
+
+    .card-static {
+        cursor: default;
+    }
+
+    .card-static:hover {
+        box-shadow: inset 0 0 0 transparent,0 0px 5px #959595;
     }
 
 .ela h4.card-title {
@@ -199,3 +220,5 @@ h4.card-title {
 h1, h2, h3, h4, h5 {
     font-family: "PT Sans", Times, serif;
 }
+
+

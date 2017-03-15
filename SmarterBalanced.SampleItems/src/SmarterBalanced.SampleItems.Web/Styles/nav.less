@@ -1,18 +1,17 @@
 ﻿@import "constants.less";
 
-.navbar {
+nav {
 	border-radius: 0px; // SB
 	padding: 1em; // SB
 	box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135); // SB
-}
-
-.navbar-default {
     background-color: #ffffff; // SB
     border-color: #ffffff; // SB
+    position: relative;
+    margin-bottom: 20px;
 }
 
 @media screen and (max-width: @small) {
-    .navbar {
+    nav {
         margin: 0;
     }
 }
@@ -54,15 +53,17 @@
 }
 
 .sbNav-linksGroup-item {
-    font-size: 18px; // SB
-    color: #007393;
+    font-size: @font-size-larger; // SB
+    color: @link-color; //SB
     margin: 10px 20px; // SB
     white-space: nowrap;
+
+    &:hover{
+        text-decoration: none;
+    }
 }
 
-.sbNav-linksGroup-item:hover {
-    text-decoration: none;
-}
+
 
 .sbNav-titleGroup-item h3 {
     color: #63666A;
@@ -97,6 +98,7 @@ footer {
     border: 1px solid #ffffff;
     background-color: #ffffff;
     display: flex;
+    flex-shrink: 0;
     flex-direction: column;
     align-items: stretch;
 	padding: 2em 2em 1em 2em; // SB
@@ -111,7 +113,7 @@ footer {
 
 .footer-practiceTests {
     align-self: flex-start;
-    font-size: 14px; // SB
+    font-size: @font-size-smaller; // SB
     text-decoration: underline;
 }
 

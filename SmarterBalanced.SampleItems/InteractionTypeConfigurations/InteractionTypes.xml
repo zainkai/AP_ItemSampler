@@ -1,161 +1,192 @@
 <InteractionTypes>
-    <Items>
-        <Item>
-            <Code>EBSR</Code>
-            <Label>Evidence-Based Selected Response</Label>
-            <Description>
-              <![CDATA[<p>EBSR items combine two sets of stems and response options into a single item. Unlike
-              MultipleChoice and Multi-Select item types, EBSR items cannot be displayed in horizontal or
-              stacked layouts. EBSR items can only display response options vertically.</p>
-              
-              <p>For Smarter Balanced, the first part of an EBSR item is multiple choice where only one
-              answer can be selected. In the second part, multiple answers may be selected though the
-              instructions may specify a limit to the student. In the example below, the student is only
-              expected to select one answer from the second part.</p>]]>
-            </Description>
-			      <Order>1</Order>
-        </Item>
-            <Item>
-            <Code>EQ</Code>
-            <Label>Equation</Label>
-            <Description>
-              <![CDATA[The Equation item response area consists of one or more entry boxes and an on-screen key
-              panel containing mathematical characters. These items are 769 pixels wide or use 100% of
-              the available response area width (whichever is smaller). The default height is 254 pixels.
-              The item indicates which of 11 pre-defined layouts should be used for the math input key
-              panel.]]>
-            </Description>
-            <Order>2</Order>
-        </Item>
-        <Item>
-            <Code>ER</Code>
-            <Label>Extended Response</Label>
-            <Description>
-              <![CDATA[The response areas for Extended Response (ER) and Short Answer (SA) item types essentially
-              have the same appearance. Extended Response (ER) areas accommodate more text than
-              Short Answer response areas. You can configure the character limit for both item types.]]>
-            </Description>
-            <Order>3</Order>
-        </Item>
-        <Item>
-            <Code>SA</Code>
-            <Label>Short Answer</Label>
-            <Description>
-              <![CDATA[The response areas for Extended Response (ER) and Short Answer (SA) item types essentially
-              have the same appearance. Extended Response (ER) areas accommodate more text than
-              Short Answer response areas. You can configure the character limit for both item types.]]>
-            </Description>
-			      <Order>4</Order>
-        </Item>
-        <Item>
-            <Code>GI</Code>
-            <Label>Grid Item</Label>
-            <Description>
-              <![CDATA[<p>Smarter Balanced uses three variations of the Grid Item type, each with a distinct
+  <Items>
+    <Item>
+      <Code>GI1</Code>
+      <Label>Grid Item: Drag and Drop</Label>
+      <Description>
+        <![CDATA[<p>There are three types of Grid Items. This is an example of a Drag and Drop Grid Item. 
+              This item type requires students to click on a single element or multiple elements and drag-and-drop the element(s) into a background image.</p>]]>
+      </Description>
+      <Order>4</Order>
+    </Item>
+    <Item>
+      <Code>GI2</Code>
+      <Label>Grid Item: Hot Spot</Label>
+      <Description>
+        <![CDATA[<p>This is an example of a Hot Spot Grid item. This item type requires students to click on certain areas of an image.</p>]]>
+      </Description>
+      <Order>5</Order>
+    </Item>
+    <Item>
+      <Code>GI3</Code>
+      <Label>Grid Item: Graphing</Label>
+      <Description>
+        <![CDATA[<p>This is an example of a Graphing Grid Item. This item type requires students to plot points and/or draw lines.</p>]]>
+      </Description>
+      <Order>6</Order>
+    </Item>
+    <Item>
+      <Code>GI</Code>
+      <Label>Grid Item</Label>
+      <Description>
+        <![CDATA[<p>Smarter Balanced uses three variations of the Grid Item type, each with a distinct
               appearance and interaction mode.</p>
               
-              <p>The Grid Item - Graphing variant response area consists of a grid in which students plot
+			  <ul>
+              <li><b>Graphing variant</b> consists of a grid in which students plot
               points and/or lines. The available tools include a select, delete, add point, and connect line.
               Depending on the item, the point or line tool may not appear. A text box below the grid offers
               hints on what the student can do with each tool. The response area may have a background image on which the student plots points or lines
               as in this example. Grid Item – Graphing Variants may constrain points and lines; for example they may be
               constrained to a number line. The background, whether a simple grid, a graph with axes, or
-              another image is simply a bitmap.</p>
+              another image is simply a bitmap.</li>
               
-              <p>The Grid Item – Hot Spot Variant response area consists of a space in which images are
+              <li><b>Hot Spot variant</b> consists of a space in which images are
               displayed. Clicking on certain hot spot areas causes images appear or disappear.
-              Transparent sections of the images allow the background to show through.</p>
+              Transparent sections of the images allow the background to show through.</li>
               
-              <p>The Grid Item – Drag and Drop variant has a workspace with a background image. Other
+              <li><b>Drag and Drop variant</b> has a workspace with a background image. Other
               images can be dragged and dropped into the workspace. The drop locations may or may not
-              be constrained. When they are constrained, dropped images snap to nearby locaitons.</p>]]>
-            </Description>
-            <Order>5</Order>
-        </Item>
-        <Item>
-            <Code>HTQ</Code>
-            <Label>Hot Text</Label>
-            <Description>
-              <![CDATA[The response area for Hot Text items consists of a section of text containing interactive
-              words or phrases that students can either select (highlight) by clicking or rearrange by
-              clicking and dragging.]]>
-            </Description>
-			      <Order>6</Order>
-        </Item>
-        <Item>
-            <Code>MC</Code>
-            <Label>Multiple Choice</Label>
-            <Description>
-              <![CDATA[For multiple choice responses, only one answer can be selected among several possibilities.]]> 
-            </Description>
-			<Order>7</Order>
-        </Item>
-        <Item>
-            <Code>MS</Code>
-            <Label>Multi Select</Label>
-            <Description>
-              <![CDATA[For the Multi Select (MS) option, students are given a number of items to select to answer
-              the questions. For the example below, two of the listed items will be selected.]]>
-            </Description>
-			<Order>8</Order>
-        </Item>
-        <Item>
-            <Code>MI</Code>
-            <Label>Matching Item</Label>
-            <Description>
-              <![CDATA[For the Match Interaction (MI) types, text or images in rows are matched values in columns.
-              The student selects the boxes where a match is valid.]]>
-            </Description>
-			<Order>9</Order>
-        </Item>
-        <Item>
-            <Code>TI</Code>
-            <Label>Table Item</Label>
-            <Description>
-              <![CDATA[For Table Interaction (TI) item types, students are provided with a table that includes a
-              separate area of cells in which students may enter text.]]>
-            </Description>
-			<Order>10</Order>
-        </Item>
-        <Item>
-            <Code>WER</Code>
-            <Label>Writing Extended Response</Label>
-            <Description>
-              <![CDATA[Writing Extended Response (WER) item types provide more space for students to provide a
-              longer written response. It also includes text formatting tools – bold, underline, italic,
-              numbered and bulleted lists, indentation, clipboard, undo, redo, and spell checking.]]>
-            </Description>
-			<Order>11</Order>
-        </Item>
-    </Items>
+              be constrained. When they are constrained, dropped images snap to nearby locaitons.</li>
+			  </ul>]]>
+      </Description>
+      <Order>4</Order>
+    </Item>
 
-    <Families>
-        <Family>
-            <SubjectCode>ELA</SubjectCode>
-            <InteractionTypeCodes>
-				<Code>EBSR</Code>
-				<Code>ER</Code>
-				<Code>SA</Code>
-				<Code>HTQ</Code>
-				<Code>MC</Code>
-				<Code>MS</Code>
-				<Code>MI</Code>
-				<Code>WER</Code>
-            </InteractionTypeCodes>
-        </Family>
+    <Item>
+      <Code>EBSR</Code>
+      <Label>Evidence-Based Selected Response</Label>
+      <Description>
+        <![CDATA[<p>This item presents students with a two-part question, parts A and B. 
+              Students select a correct response from four options in Part A and then identify textual support for that response in Part B.</p>]]>
+      </Description>
+      <Order>1</Order>
+    </Item>
+    <Item>
+      <Code>EQ</Code>
+      <Label>Equation</Label>
+      <Description>
+        <![CDATA[<p>The Equation item type has one or more text boxes for a response area and a key pad containing mathematical characters. 
+              The student enters an equation or numerical answer into the text box using the key pad or keyboard.</p>]]>
+      </Description>
+      <Order>2</Order>
+    </Item>
+    <Item>
+      <Code>ER</Code>
+      <Label>Extended Response</Label>
+      <Description>
+        <![CDATA[<p>The Extended Response item type has a text box for a response area and requires a keyboard entry of alphanumeric characters. 
+              This item type allows for a longer response than the Short Answer item type.</p>]]>
+      </Description>
+      <Order>3</Order>
+    </Item>
 
-        <Family>
-            <SubjectCode>MATH</SubjectCode>
-            <InteractionTypeCodes>
-				<Code>EQ</Code>
-				<Code>GI</Code>
-				<Code>MC</Code>
-				<Code>MI</Code>
-				<Code>MS</Code>
-				<Code>TI</Code>
-				<Code>ER</Code>
-				<Code>SA</Code>
-            </InteractionTypeCodes>
-        </Family>
-    </Families>
+    <Item>
+      <Code>HTQ</Code>
+      <Label>Hot Text</Label>
+      <Description>
+        <![CDATA[<p>The Hot Text item type includes words or phrases that students can either select (highlight) by clicking or rearrange by clicking and dragging.</p>]]>
+      </Description>
+      <Order>8</Order>
+    </Item>
+    <Item>
+      <Code>MC</Code>
+      <Label>Multiple Choice</Label>
+      <Description>
+        <![CDATA[<p>The Multiple Choice item type presents students with a number of answer options. The student may select only one option.</p>]]>
+      </Description>
+      <Order>10</Order>
+    </Item>
+    <Item>
+      <Code>MS</Code>
+      <Label>Multi Select</Label>
+      <Description>
+        <![CDATA[<p>The Multi Select item type presents students with a number of answer options. The student may select one or more options. 
+              For this example, two of the options will be selected.</p>]]>
+      </Description>
+      <Order>11</Order>
+    </Item>
+    <Item>
+      <Code>MI</Code>
+      <Label>Matching Item</Label>
+      <Description>
+        <![CDATA[<p>The Matching item type requires students to match text or images in rows to values in columns. The student selects the boxes where a match is valid.</p>]]>
+      </Description>
+      <Order>9</Order>
+    </Item>
+    <Item>
+      <Code>SA</Code>
+      <Label>Short Answer</Label>
+      <Description>
+        <![CDATA[<p>The Short Answer item type has a text box for a response area and requires a keyboard entry of alphanumeric characters.</p>]]>
+      </Description>
+      <Order>12</Order>
+    </Item>
+
+    <Item>
+      <Code>TI</Code>
+      <Label>Table Item</Label>
+      <Description>
+        <![CDATA[<p>The Table item type requires a keyboard entry into table cells.</p>]]>
+      </Description>
+      <Order>13</Order>
+    </Item>
+    <Item>
+      <Code>WER</Code>
+      <Label>Writing Extended Response</Label>
+      <Description>
+        <![CDATA[<p>The Writing Extended Response item type has a text box for a response area and requires a keyboard entry of alphanumeric characters. This item type provides more space for students to provide a longer written response. It also includes text formatting tools – bold, underline, italic, numbered and bulleted lists, indentation, clipboard, undo, redo, and spell checking.</p>]]>
+      </Description>
+      <Order>14</Order>
+    </Item>
+  </Items>
+
+  <Families>
+    <Family>
+      <SubjectCode>ELA</SubjectCode>
+      <InteractionTypeCodes>
+        <Code>EBSR</Code>
+        <Code>ER</Code>
+        <Code>SA</Code>
+        <Code>HTQ</Code>
+        <Code>MC</Code>
+        <Code>MS</Code>
+        <Code>MI</Code>
+        <Code>WER</Code>
+      </InteractionTypeCodes>
+    </Family>
+
+    <Family>
+      <SubjectCode>MATH</SubjectCode>
+      <InteractionTypeCodes>
+        <Code>EQ</Code>
+        <Code>GI</Code>
+        <Code>MC</Code>
+        <Code>MI</Code>
+        <Code>MS</Code>
+        <Code>TI</Code>
+        <Code>ER</Code>
+        <Code>SA</Code>
+      </InteractionTypeCodes>
+    </Family>
+    <Family>
+      <Type>AboutItems</Type>
+      <InteractionTypeCodes>
+        <Code>EQ</Code>
+        <Code>TI</Code>
+        <Code>ER</Code>
+        <Code>EBSR</Code>
+        <Code>ER</Code>
+        <Code>SA</Code>
+        <Code>HTQ</Code>
+        <Code>MC</Code>
+        <Code>MS</Code>
+        <Code>MI</Code>
+        <Code>WER</Code>
+        <Code>GI1</Code>
+        <Code>GI2</Code>
+        <Code>GI3</Code>
+      </InteractionTypeCodes>
+    </Family>
+  </Families>
 </InteractionTypes>

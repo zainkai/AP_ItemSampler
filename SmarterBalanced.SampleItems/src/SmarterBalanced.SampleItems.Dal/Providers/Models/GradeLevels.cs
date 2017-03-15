@@ -83,13 +83,16 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 case GradeLevels.Grade6: return "Grade 6";
                 case GradeLevels.Grade7: return "Grade 7";
                 case GradeLevels.Grade8: return "Grade 8";
-                case GradeLevels.Grade9: return "Grade 9";
-                case GradeLevels.Grade10: return "Grade 10";
-                case GradeLevels.Grade11: return "Grade 11";
-                case GradeLevels.Grade12: return "Grade 12";
                 case GradeLevels.Elementary: return "Grades 3-5";
                 case GradeLevels.Middle: return "Grades 6-8";
-                case GradeLevels.High: return "High School";
+
+                case GradeLevels.Grade9:
+                case GradeLevels.Grade10:
+                case GradeLevels.Grade11:
+                case GradeLevels.Grade12:
+                case GradeLevels.High:
+                    return "High School";
+
                 case GradeLevels.All: return "All";
                 default: return string.Empty;
             }

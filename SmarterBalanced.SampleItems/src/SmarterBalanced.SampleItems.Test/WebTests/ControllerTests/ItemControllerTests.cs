@@ -28,30 +28,37 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             bankKey = 234343;
             itemKey = 485954;
 
-            ItemDigest digest = new ItemDigest
-                        {
-                            BankKey = bankKey,
-                            ItemKey = itemKey,
-                            Grade = GradeLevels.NA
-                        };
+            SampleItem digest = SampleItem.Create
+            (
+                bankKey : bankKey,
+                itemKey : itemKey,
+                grade : GradeLevels.NA
+            );
             ItemCardViewModel card = digest.ToItemCardViewModel();
 
             var aboutThisItemVM = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
-                itemCard: card);
+                itemCard: card,
+                depthOfKnowledge: "",
+                targetDescription: "",
+                commonCoreStandardsDescription: "");
 
 
-            ItemDigest digestCookie = new ItemDigest
-            {
-                BankKey = bankKey,
-                ItemKey = 0,
-                Grade = GradeLevels.NA
-            };
+            SampleItem digestCookie = SampleItem.Create
+            (
+                bankKey : bankKey,
+                itemKey : 0,
+                grade : GradeLevels.NA
+            );
             ItemCardViewModel cardCookie = digest.ToItemCardViewModel();
 
             var aboutItemCookie = new AboutThisItemViewModel(
                 rubrics: ImmutableArray.Create<Rubric>(),
-                itemCard: cardCookie);
+                itemCard: cardCookie,
+                depthOfKnowledge: "",
+                targetDescription: "",
+                commonCoreStandardsDescription: "");
+
 
 
             iSAAP = "TDS_test;TDS_test2;";
@@ -71,6 +78,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: $"http://itemviewerservice.cass.oregonstate.edu/item/{bankKey}-{itemKey}",
                 accessibilityCookieName: accCookieName,
+                isPerformanceItem: false,
                 accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
                 moreLikeThisVM: default(MoreLikeThisViewModel),
                 aboutThisItemVM: aboutThisItemVM);
@@ -78,13 +86,14 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
+                isPerformanceItem: false,
                 aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
-             
+
                 moreLikeThisVM: default(MoreLikeThisViewModel));
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
-          
+
             itemViewRepoMock
                 .Setup(repo =>
                     repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<Dictionary<string, string>>()))
@@ -156,7 +165,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 
             Assert.Equal(itemViewModel, model);
         }
-        
+
         /// <summary>
         /// Tests that Index returns correct RedirectToAction controller and action name
         /// </summary>

@@ -13,9 +13,12 @@
     "grunt-contrib-watch": "1.0.0",
     "grunt-ts": "6.0.0-beta.3",
     "less": "^2.7.2",
-    "typescript": "^2.0.9"
-
-
+    "typescript": "2.2.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/google.analytics": "0.0.29",
+    "@types/jquery": "^2.0.40",
+    "@types/react": "^15.0.12",
+    "@types/react-dom": "^0.14.23"
+  }
 }

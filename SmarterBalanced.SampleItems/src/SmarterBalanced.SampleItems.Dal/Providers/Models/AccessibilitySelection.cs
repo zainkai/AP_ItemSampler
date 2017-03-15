@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Xml.Linq;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public class AccessibilitySelection
     {
-        public string Code { get; }
+        public string SelectionCode { get; }
         public string Label { get; }
-        public int Order { get; }
+        public int? Order { get; }
         public bool Disabled { get; }
 
         public AccessibilitySelection(
             string code,
             string label,
-            int order,
+            int? order,
             bool disabled)
         {
-            Code = code;
+            SelectionCode = code;
             Label = label;
             Order = order;
             Disabled = disabled;
@@ -27,7 +27,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public static AccessibilitySelection Create(
             string code = "",
             string label = "",
-            int order = -1,
+            int? order = null,
             bool disabled = false)
         {
             var sel = new AccessibilitySelection(
@@ -42,12 +42,23 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public AccessibilitySelection WithDisabled(bool disabled)
         {
             var newSelection = new AccessibilitySelection(
-                code: Code,
+                code: SelectionCode,
                 label: Label,
                 order: Order,
                 disabled: disabled);
 
             return newSelection;
+        }
+
+        public static AccessibilitySelection Create(XElement xmlSelection)
+        {
+            var selection = new AccessibilitySelection(
+                    code: (string)xmlSelection.Element("Code"),
+                    label: (string)xmlSelection.Element("Text")?.Element("Label"),
+                    order: (int?)xmlSelection.Element("Order"),
+                    disabled: false);
+
+            return selection;
         }
     }
 

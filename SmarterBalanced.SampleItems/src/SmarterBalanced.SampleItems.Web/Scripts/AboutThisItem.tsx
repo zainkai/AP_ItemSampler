@@ -26,15 +26,25 @@ interface Rubric {
 namespace AboutThisItem {
     export interface Props {
         rubrics: Rubric[];
-        itemCardViewModel: ItemCardViewModel
-        // depthOfKnowledge: string; // TODO: Add when supported by xml
+        itemCardViewModel: ItemCardViewModel;
+        depthOfKnowledge: string;
+        targetDescription: string;
+        commonCoreStandardsDescription: string;
     }
 
     export class ATIComponent extends React.Component<Props, {}> {
         render() {
+            if (!this.props.rubrics) {
+                return null;
+            } 
             const rubrics = this.props.rubrics.map((ru, i) => <RubricComponent {...ru} key={String(i)} />);
             return (
-                <div className="modal fade" id="about-item-modal-container" tabIndex={-1} role="dialog" aria-labelledby="About Item Modal" aria-hidden="true">
+                <div className="modal fade"
+                    id="about-item-modal-container"
+                    tabIndex={-1} role="dialog"
+                    aria-labelledby="About Item Modal"
+                    aria-hidden="true">
+
                     <div className="modal-dialog about-item-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -44,7 +54,7 @@ namespace AboutThisItem {
                                 <h4 className="modal-title">About This Item</h4>
                             </div>
                             <div className="modal-body">
-                                <AboutThisItemDetailComponent {...this.props.itemCardViewModel} />
+                                <AboutThisItemDetailComponent {...this.props} />
                                 {rubrics}
                             </div>
                             <div className="modal-footer">
@@ -59,11 +69,23 @@ namespace AboutThisItem {
 }
 
 class RubricComponent extends React.Component<Rubric, {}> {
-    render() {
-        const label = `${this.props.language} Rubric`;
 
+    renderRubrics() {
         const rubricEntries = this.props.rubricEntries.map((re, i) => <RubricEntryComponent {...re} key={String(i)} />);
+        if (rubricEntries.length === 0) {
+            return null;
+        }
 
+         let rubrics = (
+                <div>
+                    <h4>Rubrics</h4>
+                    {rubricEntries}
+                </div>
+        );
+         return rubrics;
+    }
+
+    renderSampleResponses() {
         let rubricSamples: JSX.Element[] = [];
         let i: number = 0;
         for (const sample of this.props.samples) {
@@ -72,13 +94,26 @@ class RubricComponent extends React.Component<Rubric, {}> {
             rubricSamples.push(...responses);
             i++;
         }
+        if (rubricSamples.length === 0) {
+            return null;
+        }
 
-        return (
-            <Collapsible.CComponent label={label}>
-                <h4>Rubrics</h4>
-                {rubricEntries}
+        let sampleResponses = (
+            <div>
                 <h4>Sample Responses</h4>
                 {rubricSamples}
+            </div>
+        );
+
+        return sampleResponses;
+    }
+
+    render() {
+        const label = `${this.props.language} Rubric`;
+        return (
+            <Collapsible.CComponent label={label}>
+                {this.renderRubrics()}
+                {this.renderSampleResponses()}
             </Collapsible.CComponent>
         );
     }
@@ -86,7 +121,7 @@ class RubricComponent extends React.Component<Rubric, {}> {
 
 class RubricEntryComponent extends React.Component<RubricEntry, {}> {
     render() {
-        const pointLabel = this.props.scorepoint == "1" ? "point" : "points";
+        const pointLabel = this.props.scorepoint === "1" ? "point" : "points";
         const label = `${this.props.name} (${this.props.scorepoint} ${pointLabel})`;
         return (
             <Collapsible.CComponent label={label}>
@@ -98,7 +133,8 @@ class RubricEntryComponent extends React.Component<RubricEntry, {}> {
 
 class SampleResponseComponent extends React.Component<SampleResponse, {}> {
     render() {
-        const label = `${this.props.name} (${this.props.scorePoint} Points)`;
+        const pointLabel = this.props.scorePoint == "1" ? "point" : "points";
+        const label = `${this.props.name} (${this.props.scorePoint} ${pointLabel})`;
         return (
             <Collapsible.CComponent label={label}>
                 <div className="sample-response">
@@ -111,39 +147,34 @@ class SampleResponseComponent extends React.Component<SampleResponse, {}> {
     }
 }
 
-class AboutThisItemDetailComponent extends React.Component<ItemCardViewModel, {}> {
+class AboutThisItemDetailComponent extends React.Component<AboutThisItem.Props, {}> {
+    renderField(label: string, value: string | number, className: string): JSX.Element | null {
+        if (!value) {
+            return null;
+        }
+
+        return (
+            <p className={`card-text ${className}`} tabIndex={0}>
+                <span className="card-text-label">{label}:</span>
+                <span className="card-text-value"> {value}</span>
+            </p>
+        );
+    }
+
     render() {
-        const { bankKey, itemKey } = this.props;
+
         return (
             <div className={"item-details"}>
-                <p className="subject" tabIndex={0}>
-                    <span className="text-label">Subject:</span>
-                    <span className="text-value"> {this.props.subjectLabel}</span>
-                </p>
-                <p className="grade" tabIndex={0}>
-                    <span className="text-label">Grade:</span>
-                    <span className="text-value"> {this.props.gradeLabel}</span>
-                </p>
-                <p className="claim" tabIndex={0}>
-                    <span className="text-label">Claim:</span>
-                    <span className="text-value"> {this.props.claimLabel}</span>
-                </p>
-                <p className="target" tabIndex={0}>
-                    <span className="text-label">Target:</span>
-                    <span className="text-value"> {this.props.target}</span>
-                </p>
-                <p className="interaction-type" tabIndex={0}>
-                    <span className="text-label">Item Type:</span>
-                    <span className="text-value"> {this.props.interactionTypeLabel}</span>
-                </p>
-                <p className="item-id" tabIndex={0}>
-                    <span className="text-label">Item Id:</span>
-                    <span className="text-value"> {this.props.itemKey}</span>
-                </p>
-                <p className="ccss" tabIndex={0}>
-                    <span className="text-label">Common Core State Standard:</span>
-                    <span className="text-value"> {this.props.commonCoreStandardsId}</span>
-                </p>
+                {this.renderField("Subject", this.props.itemCardViewModel.subjectLabel, "subject")}
+                {this.renderField("Grade", this.props.itemCardViewModel.gradeLabel, "grade")}
+                {this.renderField("Claim", this.props.itemCardViewModel.claimLabel, "claim")}
+                {this.renderField("Target", this.props.itemCardViewModel.target, "target")}
+                {this.renderField("Item Type", this.props.itemCardViewModel.interactionTypeLabel, "interaction-type")}
+                {this.renderField("Item Id", this.props.itemCardViewModel.itemKey, "item-id")}
+                {this.renderField("Depth of Knowledge", this.props.depthOfKnowledge, "dok")}
+                {this.renderField("Common Core State Standard", this.props.commonCoreStandardsDescription, "ccss")}
+                {this.renderField("Target Description", this.props.targetDescription, "target-description")}
+
             </div>
         );
     }

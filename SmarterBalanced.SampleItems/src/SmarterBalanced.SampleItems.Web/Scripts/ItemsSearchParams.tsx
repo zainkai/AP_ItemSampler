@@ -1,9 +1,9 @@
-﻿ const hideArrow = (
-        <span aria-label="Hide">▼</span>
+﻿const hideArrow = (
+    <span aria-label="Hide">▼</span>
 );
 
 const showArrow = (
-        <span aria-label="Show">▶</span>
+    <span aria-label="Show">▶</span>
 );
 
 function parseQueryString(url: string): { [key: string]: string[] | undefined } {
@@ -29,17 +29,18 @@ namespace ItemSearchParams {
     }
 
     export interface State {
-        itemId?: string;
-        gradeLevels?: GradeLevels;
-        subjects?: string[];
-        claims?: string[];
-        interactionTypes?: string[];
+        itemId: string;
+        gradeLevels: GradeLevels;
+        subjects: string[];
+        claims: string[];
+        interactionTypes: string[];
+        performanceOnly: boolean;
 
-        expandItemID?: boolean;
-        expandGradeLevels?: boolean;
-        expandSubjects?: boolean;
-        expandClaims?: boolean;
-        expandInteractionTypes?: boolean;
+        expandMore: boolean;
+        expandGradeLevels: boolean;
+        expandSubjects: boolean;
+        expandClaims: boolean;
+        expandInteractionTypes: boolean;
     }
 
     export class ISPComponent extends React.Component<Props, State> {
@@ -59,6 +60,7 @@ namespace ItemSearchParams {
             const subjects = queryObject["subjects"] || [];
             const claims = queryObject["claims"] || [];
             const interactionTypes = queryObject["interactionTypes"] || [];
+            const performanceOnly = (queryObject["performanceOnly"] || [])[0] === "true";
 
             this.state = {
                 itemId: itemId,
@@ -66,12 +68,13 @@ namespace ItemSearchParams {
                 subjects: subjects,
                 claims: claims,
                 interactionTypes: interactionTypes,
+                performanceOnly: performanceOnly,
 
-                expandItemID: itemId.length !== 0,
+                expandMore: itemId.length !== 0 || performanceOnly,
                 expandGradeLevels: gradeLevels !== GradeLevels.NA,
                 expandSubjects: subjects.length !== 0,
                 expandClaims: claims.length !== 0,
-                expandInteractionTypes: interactionTypes.length !== 0
+                expandInteractionTypes: interactionTypes.length !== 0,
             };
 
             this.onChange();
@@ -93,6 +96,9 @@ namespace ItemSearchParams {
             }
             if (this.state.subjects && this.state.subjects.length !== 0) {
                 pairs.push("subjects=" + this.state.subjects.join(","));
+            }
+            if (this.state.performanceOnly) {
+                pairs.push("performanceOnly=true");
             }
 
             if (pairs.length === 0) {
@@ -117,13 +123,14 @@ namespace ItemSearchParams {
                 gradeLevels: this.state.gradeLevels || GradeLevels.All,
                 subjects: this.state.subjects || [],
                 claims: this.state.claims || [],
-                interactionTypes: this.state.interactionTypes || []
+                interactionTypes: this.state.interactionTypes || [],
+                performanceOnly: this.state.performanceOnly || false
             };
             this.props.onChange(params);
         }
 
-        onItemIDInput(e: React.FormEvent) {
-            const newValue = (e.target as HTMLInputElement).value;
+        onItemIDInput(e: React.FormEvent<HTMLInputElement>) {
+            const newValue = e.currentTarget.value;
             const isInputOK = /^\d{0,4}$/.test(newValue);
             if (isInputOK) {
                 this.setState({
@@ -132,7 +139,7 @@ namespace ItemSearchParams {
             }
         }
 
-        onItemIDKeyUp(e: React.KeyboardEvent) {
+        onItemIDKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
             if (e.keyCode === 13) {
                 this.props.selectSingleResult();
             }
@@ -144,6 +151,12 @@ namespace ItemSearchParams {
                 gradeLevels: this.state.gradeLevels ^ grades // tslint:disable-line:no-bitwise
             }, () => this.beginChangeTimeout());
 
+        }
+
+        togglePerformanceOnly() {
+            this.setState({
+                performanceOnly: !this.state.performanceOnly
+            }, () => this.beginChangeTimeout());
         }
 
         toggleSubject(subject: string) {
@@ -164,10 +177,10 @@ namespace ItemSearchParams {
 
             // Remove all claims not contained by the newly selected subjects
             const subjectClaimCodes = newSubjects.reduce((prev: string[], cur: Subject) => prev.concat(cur.claims.map(c => c.code)), []);
-            const newClaimCodes = (this.state.claims || []).filter(c => subjectClaimCodes.indexOf(c) !== -1);
+            const newClaimCodes = this.state.claims.filter(c => subjectClaimCodes.indexOf(c) !== -1);
 
             const subjectInteractionCodes = newSubjects.reduce((prev: string[], cur: Subject) => prev.concat(cur.interactionTypeCodes), []);
-            const newInteractionCodes = (this.state.interactionTypes || []).filter(i => subjectInteractionCodes.indexOf(i) !== -1);
+            const newInteractionCodes = this.state.interactionTypes.filter(i => subjectInteractionCodes.indexOf(i) !== -1);
 
             this.setState({
                 subjects: newSubjectCodes,
@@ -177,7 +190,7 @@ namespace ItemSearchParams {
         }
 
         toggleClaim(claim: string) {
-            const claims = this.state.claims || [];
+            const claims = this.state.claims;
             const containsClaim = claims.indexOf(claim) !== -1;
             this.setState({
                 claims: containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim])
@@ -185,7 +198,7 @@ namespace ItemSearchParams {
         }
 
         toggleInteractionType(code: string) {
-            const interactionTypes = this.state.interactionTypes || [];
+            const interactionTypes = this.state.interactionTypes;
             const containsSubject = interactionTypes.indexOf(code) !== -1;
             this.setState({
                 interactionTypes: containsSubject ? interactionTypes.filter(s => s !== code) : interactionTypes.concat([code])
@@ -196,14 +209,14 @@ namespace ItemSearchParams {
          * Returns a value indicating whether all search categories are expanded.
          */
         getExpandAll() {
-            const { expandItemID, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
-            const expandAll = expandItemID && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
+            const { expandMore, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
+            const expandAll = expandMore && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
             return expandAll;
         }
 
         toggleExpandItemIDInput() {
             this.setState({
-                expandItemID: !this.state.expandItemID
+                expandMore: !this.state.expandMore
             });
         }
 
@@ -235,7 +248,7 @@ namespace ItemSearchParams {
             // If everything is already expanded, then collapse everything. Otherwise, expand everything.
             const expandAll = !this.getExpandAll();
             this.setState({
-                expandItemID: expandAll,
+                expandMore: expandAll,
                 expandGradeLevels: expandAll,
                 expandSubjects: expandAll,
                 expandClaims: expandAll,
@@ -253,51 +266,44 @@ namespace ItemSearchParams {
             }, () => this.beginChangeTimeout());
         }
 
-        keyPressResetFilters(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
+        keyPressResetFilters(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.resetFilters();
             }
         }
 
-        keyPressToggleExpandAll(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
+        keyPressToggleExpandAll(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandAll();
             }
         }
 
-        keyPressToggleExpandItemId(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
+        keyPressToggleExpandItemId(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandItemIDInput();
             }
         }
 
-        keyPressToggleExpandGrades(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
+        keyPressToggleExpandGrades(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandGradeLevels();
             }
         }
 
-        keyPressToggleExpandSubjects(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
+        keyPressToggleExpandSubjects(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandSubjects();
             }
         }
 
-        keyPressToggleExpandClaims(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
+        keyPressToggleExpandClaims(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandClaims();
             }
         }
 
-        toggleExpandItemTypes(e: React.KeyboardEvent) {
-            console.log(e.keyCode);
-            if (e.keyCode == 0 || e.keyCode === 13 || e.keyCode === 32) {
+        toggleExpandItemTypes(e: React.KeyboardEvent<HTMLElement>) {
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandInteractionTypes();
             }
         }
@@ -324,29 +330,39 @@ namespace ItemSearchParams {
                         {this.renderSubjects()}
                         {this.renderClaims()}
                         {this.renderInteractionTypes()}
-                        {this.renderItemID()}
+                        {this.renderMore()}
                     </div>
                 </div>
             );
         }
 
-        renderItemID() {
-            const input = this.state.expandItemID
-                ?
+        renderMore() {
+            const performanceOnlySelected = this.state.performanceOnly;
+            const filters = (
+                <div className="search-tags">
                     <input type="tel" className="form-control"
                         placeholder="Item ID"
                         onChange={e => this.onItemIDInput(e)}
                         onKeyUp={e => this.onItemIDKeyUp(e)}
                         value={this.state.itemId}>
                     </input>
+                    <button role="button"
+                        className={(performanceOnlySelected ? "selected " : "") + "tag"}
+                        style={{ flex: 1 }}
+                        onClick={() => this.togglePerformanceOnly()}
+                        tabIndex={0}
+                        aria-pressed={performanceOnlySelected}>
 
-                : undefined;
-
+                        Performance Items Only
+                    </button>
+                </div>
+            );
+            const input = this.state.expandMore ? filters : undefined;
             return (
-                <div className="search-category">
-                    <label aria-expanded={this.state.expandItemID} onClick={() => this.toggleExpandItemIDInput()}
+                <div className="search-category" style={{ "maxWidth":"250px" }}>
+                    <label aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
                         onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
-                        {this.state.expandItemID ? hideArrow : showArrow} More
+                        {this.state.expandMore ? hideArrow : showArrow} More
                     </label>
                     {input}
                 </div>
@@ -354,7 +370,7 @@ namespace ItemSearchParams {
         }
 
         renderGrades() {
-            const gradeLevels = this.state.gradeLevels || GradeLevels.NA;
+            const gradeLevels = this.state.gradeLevels;
             const elementarySelected = GradeLevels.contains(gradeLevels, GradeLevels.Elementary);
             const middleSelected = GradeLevels.contains(gradeLevels, GradeLevels.Middle);
             const highSelected = GradeLevels.contains(gradeLevels, GradeLevels.High);
@@ -404,7 +420,7 @@ namespace ItemSearchParams {
         }
 
         renderSubject(subject: Subject) {
-            const subjects = this.state.subjects || [];
+            const subjects = this.state.subjects;
             const containsSubject = subjects.indexOf(subject.code) !== -1;
             const className = (containsSubject ? "selected" : "") + " tag";
             return (
@@ -440,7 +456,7 @@ namespace ItemSearchParams {
         }
 
         renderClaims() {
-            const selectedClaims = this.state.claims || [];
+            const selectedClaims = this.state.claims;
 
             const renderClaim = (claim: Claim) => {
                 let containsClaim = selectedClaims.indexOf(claim.code) !== -1;
@@ -456,7 +472,7 @@ namespace ItemSearchParams {
             };
 
             // If no subjects are selected, use the entire list of subjects
-            const selectedSubjectCodes = this.state.subjects || [];
+            const selectedSubjectCodes = this.state.subjects;
             const subjects = selectedSubjectCodes.length !== 0
                 ? this.props.subjects.filter(s => selectedSubjectCodes.indexOf(s.code) !== -1)
                 : [];
@@ -484,7 +500,7 @@ namespace ItemSearchParams {
         }
 
         renderInteractionTypes() {
-            const selectedInteractionTypes = this.state.interactionTypes || [];
+            const selectedInteractionTypes = this.state.interactionTypes;
 
             const renderInteractionType = (it: InteractionType) => {
                 let containsInteractionType = selectedInteractionTypes.indexOf(it.code) !== -1;
@@ -499,7 +515,7 @@ namespace ItemSearchParams {
                 );
             };
 
-            const selectedSubjectCodes = this.state.subjects || [];
+            const selectedSubjectCodes = this.state.subjects;
             const selectedSubjects = selectedSubjectCodes.length !== 0
                 ? this.props.subjects.filter(subj => selectedSubjectCodes.indexOf(subj.code) !== -1)
                 : [];

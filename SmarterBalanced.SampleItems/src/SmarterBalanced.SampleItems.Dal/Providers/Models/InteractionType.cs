@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
@@ -28,6 +29,16 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 description,
                 order
             );
+        }
+        public static InteractionType Create(XElement elem)
+        {
+            var interactionType = new InteractionType(
+                code: (string)elem.Element("Code"),
+                label: (string)elem.Element("Label"),
+                description: (string)elem.Element("Description"),
+                order: elem.Element("Order") == null ? 0 : (int)elem.Element("Order"));
+
+            return interactionType;
         }
 
     }

@@ -18,9 +18,6 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         /// <summary>
         /// Deserializes the given XML file into the specified type T.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="file"></param>
-        /// <returns></returns>
         public static T DeserializeXml<T>(FileInfo file)
         {
             if (!file.Exists)
@@ -37,12 +34,21 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         }
 
         /// <summary>
+        /// Deserializes the given XML file into the specified type T.
+        /// </summary>
+        public static T DeserializeXml<T>(string filePath)
+        {
+            var fileInfo = new FileInfo(filePath);
+            return DeserializeXml<T>(fileInfo);
+        }
+
+        /// <summary>
         /// Deserializes a list of XML files into a list of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="files"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> DeserializeXmlFilesAsync<T>(IEnumerable<FileInfo> files)
+        public static async Task<IReadOnlyCollection<T>> DeserializeXmlFilesAsync<T>(IEnumerable<FileInfo> files)
         {
             BlockingCollection<T> fileData = new BlockingCollection<T>();
 
@@ -79,12 +85,6 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
 
             return files;
         }
-
-        public static XElement GetXDocumentElement(string location, string rootElement)
-        {
-            return XDocument.Load(location).Element(rootElement);
-        }
-
         public static XDocument GetXDocument(string location)
         {
             return XDocument.Load(location);

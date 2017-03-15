@@ -9,6 +9,7 @@ using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Immutable;
+using SmarterBalanced.SampleItems.Dal.Xml.Models;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers
 {
@@ -17,93 +18,148 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
         public static SampleItemsContext LoadContext(AppSettings appSettings, ILogger logger)
         {
-            string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
+
+            CoreStandardsXml standardsXml = LoadCoreStandards(appSettings.SettingsConfig.CoreStandardsXMLPath);
+            var accessibilityResourceFamilies = LoadAccessibility(appSettings.SettingsConfig.AccommodationsXMLPath);
+            var interactionGroup = LoadInteractionGroup(appSettings.SettingsConfig.InteractionTypesXMLPath);
+            ImmutableArray<Subject> subjects = LoadSubjects(appSettings.SettingsConfig.ClaimsXMLPath, interactionGroup.InteractionFamilies);
             
-            var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
-            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
+            var itemDigests = LoadItemDigests(appSettings).Result;
 
-            var interactionTypeDoc = XmlSerialization.GetXDocumentElement(appSettings.SettingsConfig.InteractionTypesXMLPath, "InteractionTypes");
-            var accessibilityDoc = XmlSerialization.GetXDocumentElement(appSettings.SettingsConfig.AccommodationsXMLPath, "Accessibility");
-            var subjectDoc = XmlSerialization.GetXDocument(appSettings.SettingsConfig.ClaimsXMLPath);
-            
-            var accessibilityResourceFamilies = LoadAccessibility(accessibilityDoc);
+            var itemPatchPath = appSettings.SettingsConfig.PatchXMLPath;
+            var itemPatchRoot = XmlSerialization.DeserializeXml<ItemPatchRoot>(filePath: itemPatchPath);
 
-            var interactionTypes = interactionTypeDoc.ToInteractionTypes();
-            ImmutableArray<InteractionFamily> interactionFamilies = interactionTypeDoc
-                .Element("Families")
-                .Elements("Family")
-                .Select(e => e.ToInteractionFamily())
-                .ToImmutableArray();
+            var sampleItems = SampleItemTranslation.ToSampleItems(
+                digests: itemDigests,
+                settings: appSettings,
+                resourceFamilies: accessibilityResourceFamilies,
+                interactionTypes: interactionGroup.InteractionTypes,
+                subjects: subjects,
+                patches: itemPatchRoot.Patches,
+                standardsXml: standardsXml);
 
-            // TODO: consider using static Subject.Create or additional constructors instead of extension methods on XElement for organization's sake
-            var subjects = subjectDoc.ToSubjects(interactionFamilies);
-
-            // TODO: ItemDigests need everything in the universe. any way to separate the parts?
-            var itemDigests = LoadItemDigests(
-                appSettings,
-                accessibilityResourceFamilies,
-                interactionTypes,
-                subjects,
-                metaDataFiles,
-                contentFiles,
-                appSettings).Result;
-
-            var itemCards = itemDigests
+            var itemCards = sampleItems
                 .Select(i => i.ToItemCardViewModel())
                 .ToImmutableArray();
 
-            SampleItemsContext context = new SampleItemsContext(
-                itemDigests: itemDigests,
-                itemCards: itemCards,
-                interactionTypes: interactionTypes,
-                subjects: subjects,
-                accessibilityResourceFamilies: accessibilityResourceFamilies,
-                appSettings: appSettings);
+            var aboutInteractionTypes = LoadAboutInteractionTypes(interactionGroup);
 
-            logger.LogInformation($"Loaded {itemDigests.Length} item digests");
+            SampleItemsContext context = new SampleItemsContext(
+                sampleItems: sampleItems,
+                itemCards: itemCards,
+                interactionTypes: interactionGroup.InteractionTypes,
+                subjects: subjects,
+                appSettings: appSettings,
+                aboutInteractionTypes: aboutInteractionTypes);
+
+            logger.LogInformation($"Loaded {sampleItems.Length} sample items");
             logger.LogInformation($"Context loaded successfully");
 
             return context;
         }
 
         private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
-            AppSettings settings,
-            IList<AccessibilityResourceFamily> accessibilityResourceFamilies,
-            IList<InteractionType> interactionTypes,
-            IList<Subject> subjects,
-            IEnumerable<FileInfo> metaDataFilesTask,
-            IEnumerable<FileInfo> contentFilesTask,
             AppSettings appSettings)
         {
-    
-            //Parse Xml Files
-            Task<IEnumerable<ItemMetadata>> itemMetadataTask = XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFilesTask);
-            Task<IEnumerable<ItemContents>> itemContentsTask = XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFilesTask);
+            string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
+            
+
+            var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
+            
+            var itemMetadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metaDataFiles);
+            var itemContents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
 
             var itemDigests = ItemDigestTranslation
-                .ItemsToItemDigests(
-                    await itemMetadataTask,
-                    await itemContentsTask,
-                    accessibilityResourceFamilies,
-                    interactionTypes,
-                    subjects,
+                .ToItemDigests(
+                    itemMetadata,
+                    itemContents,
                     appSettings)
-                .Where(i => i.Grade != GradeLevels.NA)
+                .Where(i => i.GradeCode != "NA" && string.IsNullOrEmpty(i.ItemType))
                 .ToImmutableArray();
 
             return itemDigests;
         }
 
-        private static ImmutableArray<AccessibilityResourceFamily> LoadAccessibility(XElement accessibilityXml)
-        {
-            ImmutableArray<AccessibilityResource> globalResources = accessibilityXml
-                .Element("MasterResourceFamily")
-                .Elements("SingleSelectResource")
-                .ToAccessibilityResources();
 
-            return accessibilityXml
-                .Elements("ResourceFamily")
-                .ToAccessibilityResourceFamilies(globalResources);
+        private static ImmutableArray<MergedAccessibilityFamily> LoadAccessibility(string accessibilityPath)
+        {
+            var accessibilityDoc = XmlSerialization.GetXDocument(accessibilityPath);
+            var accessibilityXml = accessibilityDoc.Element("Accessibility");
+            var mergedFamilies = AccessibilityResourceTranslation.CreateMergedFamilies(accessibilityXml);
+
+            return mergedFamilies;
         }
+
+        private static CoreStandardsXml LoadCoreStandards(string targetFile)
+        {
+            var coreDoc = XmlSerialization.GetXDocument(targetFile);
+
+            ImmutableArray<CoreStandardsRow> allRows = coreDoc.Element("Levels").Elements()
+                                                .Select(t => CoreStandardsRow.Create(t))
+                                                .ToImmutableArray();
+
+            var ccss = allRows.Where(r => r.LevelType == "CCSS").ToImmutableArray();
+            var targets = allRows.Where(r => r.LevelType == "Target").ToImmutableArray();
+
+            return new CoreStandardsXml(
+                targetRows: targets,
+                ccssRows: ccss);
+        }
+
+
+        private static ImmutableArray<Subject> LoadSubjects(string subjectFile, ImmutableArray<InteractionFamily> interactionFamilies)
+        {
+            var subjectDoc = XmlSerialization.GetXDocument(subjectFile);
+            var subjects = subjectDoc.Element("Subjects")
+                .Elements("Subject")
+                .Select(s => Subject.Create(s, interactionFamilies)).ToImmutableArray();
+            return subjects;
+
+        }
+
+        private static InteractionGroup LoadInteractionGroup(string interactionTypesFile)
+        {
+            var interactionTypeDoc = XmlSerialization.GetXDocument(interactionTypesFile);
+            var elementRoot = interactionTypeDoc.Element("InteractionTypes");
+            var interactionTypes = LoadInteractionTypes(elementRoot);
+            var interactionFamilies = LoadInteractionFamilies(elementRoot);
+
+            return new InteractionGroup(interactionFamilies, interactionTypes);
+        }
+
+        private static ImmutableArray<InteractionFamily> LoadInteractionFamilies(XElement elementRoot)
+        {
+            var interactionFamilies = elementRoot
+                             .Element("Families")
+                             .Elements("Family")
+                             .Select(e => InteractionFamily.Create(e))
+                             .ToImmutableArray();
+            return interactionFamilies;
+        }
+
+        private static ImmutableArray<InteractionType> LoadInteractionTypes(XElement elementRoot)
+        {
+            var interactionTypes = elementRoot
+                            .Element("Items")
+                            .Elements("Item")
+                            .Select(i => InteractionType.Create(i))
+                            .OrderBy(i => i.Order)
+                            .ToImmutableArray();
+
+            return interactionTypes;
+        }
+
+        private static ImmutableArray<InteractionType> LoadAboutInteractionTypes(InteractionGroup interactionGroup)
+        {
+            var aboutInteractionCodes = interactionGroup.InteractionFamilies.FirstOrDefault(i => i.Type == "AboutItems").InteractionTypeCodes;
+            var aboutInteractionTypes = interactionGroup.InteractionTypes
+                .Where(i => aboutInteractionCodes.Contains(i.Code))
+                .OrderBy(i => i.Order)
+                .ToImmutableArray();
+
+            return aboutInteractionTypes;
+        }
+
     }
 }

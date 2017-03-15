@@ -25,19 +25,21 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             ItMath = new InteractionType("2", "Math Itype", "", 2);
             var interactionTypes = ImmutableArray.Create(ItMath);
-            aboutItemsViewModel = new AboutItemsViewModel(interactionTypes, "");
+            aboutItemsViewModel = new AboutItemsViewModel(interactionTypes, "", "", null);
             var appSettings = new AppSettings()
             {
                 SettingsConfig = new SettingsConfig()
             };
             var aboutItemsRepoMock = new Mock<IAboutItemsRepo>();
-            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel()).Returns(aboutItemsViewModel);
-            aboutItemsRepoMock.Setup(x => x.GetItemViewerUrl(""));
+            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel("")).Returns(aboutItemsViewModel);
+            aboutItemsRepoMock.Setup(x => x.GetAboutItemsViewModel("bad"));
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             aboutItemsController = new AboutItemsController(aboutItemsRepoMock.Object, appSettings, loggerFactory.Object);
         }
+
+        // TODO: Add more tests
 
         [Fact]
         public void TestIndex()
@@ -53,7 +55,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         [Fact]
         public void TestGetItemViewerUrl()
         {
-            var result = aboutItemsController.GetItemUrl("");
+            var result = aboutItemsController.GetItemUrl("bad");
             JsonResult resJson = Assert.IsType<JsonResult>(result);
 
             Assert.Equal(null, resJson.Value);

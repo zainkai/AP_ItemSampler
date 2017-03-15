@@ -53,6 +53,11 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     query = query.Where(i => parms.ClaimIds.Contains(i.ClaimCode));
             }
 
+            if (parms.PerformanceOnly)
+            {
+                query = query.Where(i => i.IsPerformanceItem);
+            }
+
             return query.OrderBy(i => i.SubjectCode).ThenBy(i => i.Grade).ThenBy(i => i.ClaimCode).ToList();
         }
 

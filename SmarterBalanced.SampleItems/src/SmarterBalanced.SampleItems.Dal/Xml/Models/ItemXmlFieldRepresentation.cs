@@ -22,5 +22,12 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
         [XmlElement("content")]
         public List<Content> Contents { get; set; }
+
+        [XmlElement("associatedpassage")]
+        public int? AssociatedPassage { get; set; }
+
+        [XmlArray("attriblist")]
+        [XmlArrayItem("attrib")]
+        public List<ItemMetadataAttribute> ItemMetadataAttributes { get; set; }
     }
 }

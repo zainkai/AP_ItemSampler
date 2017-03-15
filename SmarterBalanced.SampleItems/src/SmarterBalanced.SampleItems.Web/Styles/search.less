@@ -1,4 +1,4 @@
-﻿
+﻿@import "constants.less";
 body {
     background-color: #f3f3f3;
 }
@@ -24,6 +24,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    align-items: center;
 }
 
     .search-status a {
@@ -74,6 +75,16 @@ body {
     flex-flow: wrap;
 }
 
+.search-tags input {
+    margin: 5px;
+}
+
+.search-tags div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
 .tag {
     padding: 5px;
     margin: 5px;
@@ -112,6 +123,6 @@ body {
 
 .placeholder-text {
     color: darkgray;
-    font-size: 16px;
+    font-size: @font-size-base;
     padding: 8px;
 }

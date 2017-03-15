@@ -1,7 +1,7 @@
 ﻿using SmarterBalanced.SampleItems.Dal.Exceptions;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Translations;
-using Gen = SmarterBalanced.SampleItems.Dal.Xml.Models;
+using SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 {
     public class ItemDigestTranslationTests
     {
+        //TODO: Add test for target
         /// <summary>
         /// Test translating a single ItemMetadata object and a single ItemContents object into an ItemDigest object
         /// </summary>
@@ -25,24 +26,24 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
-            contents.Item = new Gen.ItemXmlFieldRepresentation();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = testItemKey;
-            metadata.Metadata.Grade = testGrade;
+            metadata.Metadata.GradeCode = testGrade;
             metadata.Metadata.TargetAssessmentType = "Test target string";
             metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
-            metadata.Metadata.Subject = "MATH";
-            metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+            metadata.Metadata.SubjectCode = "MATH";
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
             metadata.Metadata.StandardPublications.Add(
-                new Gen.StandardPublication
+                new StandardPublication
                 {
                     PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                 });
 
             contents.Item.ItemKey = testItemKey;
             contents.Item.ItemBank = testItemBank;
-            contents.Item.Contents = new List<Gen.Content>();
+            contents.Item.Contents = new List<Content>();
 
             var interactionTypes = new List<InteractionType>
             {
@@ -65,21 +66,26 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
+            var settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "" }
+            };
+
             AppSettings appSettings = new AppSettings
                                 {
-                                    SettingsConfig = new SettingsConfig(),
+                                    SettingsConfig = settings,                                                         
                                     RubricPlaceHolderText = placeholderText
                                 };
+            
 
-
-            ItemDigest digest = ItemDigestTranslation.ItemToItemDigest(metadata, contents, interactionTypes, subjects, appSettings);
+            ItemDigest digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
             Assert.Equal(testItemKey, digest.ItemKey);
             Assert.Equal(testItemBank, digest.BankKey);
-            Assert.Equal(GradeLevels.Grade5, digest.Grade);
+            Assert.Equal(GradeLevels.Grade5, GradeLevelsUtils.FromString(digest.GradeCode));
             Assert.Equal("Test target string", digest.TargetAssessmentType);
             Assert.Equal("Test claim string", digest.SufficentEvidenceOfClaim);
-            Assert.Equal("MATH", digest.Subject.Code);
-            Assert.Equal("EQ", digest.InteractionType.Code);
+            Assert.Equal("MATH", digest.SubjectCode);
+            Assert.Equal("EQ", digest.InteractionTypeCode);
         }
 
         /// <summary>
@@ -91,25 +97,36 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         {
             ItemMetadata metadata = new ItemMetadata();
             ItemContents contents = new ItemContents();
-            metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
-            contents.Item = new Gen.ItemXmlFieldRepresentation();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
             metadata.Metadata.ItemKey = 1;
-            metadata.Metadata.Grade = "7";
+            metadata.Metadata.GradeCode = "7";
             metadata.Metadata.TargetAssessmentType = "Test target string";
             metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
             metadata.Metadata.InteractionType = "EQ";
-            metadata.Metadata.Subject = "MATH";
-            metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+            metadata.Metadata.SubjectCode = "MATH";
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
             metadata.Metadata.StandardPublications.Add(
-                new Gen.StandardPublication
+                new StandardPublication
                 {
                     PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                 });
 
-            contents.Item.ItemKey = 2;
+            var settings = new AppSettings
+            {
+                SettingsConfig = new SettingsConfig
+                {
+                    SupportedPublications = new string[] { "" }
+                }
+            };
+
+                contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
-            contents.Item.Contents = new List<Gen.Content>();
-            var exception = Assert.Throws(typeof(SampleItemsContextException), () => ItemDigestTranslation.ItemToItemDigest(metadata, contents, new List<InteractionType>(), new List<Subject>(), new AppSettings()));
+            contents.Item.Contents = new List<Content>();    
+            var exception = Record.Exception(() => ItemDigestTranslation.ToItemDigest(metadata, contents, new AppSettings()));
+
+            Assert.NotNull(exception);
+            Assert.IsType<SampleItemsContextException>(exception);
         }
 
 
@@ -141,19 +158,19 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 ItemMetadata metadata = new ItemMetadata();
                 ItemContents contents = new ItemContents();
 
-                metadata.Metadata = new Gen.SmarterAppMetadataXmlRepresentation();
-                contents.Item = new Gen.ItemXmlFieldRepresentation();
+                metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+                contents.Item = new ItemXmlFieldRepresentation();
 
                 //Test metadata attributes
                 metadata.Metadata.ItemKey = itemKeys[i];
-                metadata.Metadata.Grade = (itemKeys[i] % 9 + 3).ToString();
+                metadata.Metadata.GradeCode = (itemKeys[i] % 9 + 3).ToString();
                 metadata.Metadata.TargetAssessmentType = testTarget + itemKeys[i];
                 metadata.Metadata.SufficientEvidenceOfClaim = testClaimEvidence + itemKeys[i];
                 metadata.Metadata.InteractionType = testInteractionType;
-                metadata.Metadata.Subject = testSubject;
-                metadata.Metadata.StandardPublications = new List<Gen.StandardPublication>();
+                metadata.Metadata.SubjectCode = testSubject;
+                metadata.Metadata.StandardPublications = new List<StandardPublication>();
                 metadata.Metadata.StandardPublications.Add(
-                    new Gen.StandardPublication
+                    new StandardPublication
                     {
                         PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
                     });
@@ -161,7 +178,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 //Test contents attributes
                 contents.Item.ItemKey = itemKeys[i];
                 contents.Item.ItemBank = banksKeys[i];
-                contents.Item.Contents = new List<Gen.Content>();
+                contents.Item.Contents = new List<Content>();
 
                 metadataList.Add(metadata);
                 contentsList.Add(contents);
@@ -186,23 +203,24 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             {
                 SettingsConfig = new SettingsConfig
                 {
-                    AccessibilityTypes = new List<AccessibilityType>()
+                    AccessibilityTypes = new List<AccessibilityType>(),
+                    SupportedPublications = new string[] { "" } 
                 }
             };
 
-            digests = ItemDigestTranslation.ItemsToItemDigests(metadataList, contentsList, new List<AccessibilityResourceFamily>(), interactionTypes, subjects, settings);
+            digests = ItemDigestTranslation.ToItemDigests(metadataList, contentsList, settings);
 
             Assert.Equal(itemKeys.Length, digests.Count());
 
-            foreach(ItemDigest digest in digests)
+            foreach(var digest in digests)
             {
                 int id = digest.ItemKey;
                 Assert.Equal(digest.ItemKey, digest.BankKey);
-                Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), digest.Grade);
+                Assert.Equal(GradeLevelsUtils.FromString((digest.ItemKey % 9 + 3).ToString()), GradeLevelsUtils.FromString(digest.GradeCode));
                 Assert.Equal(testTarget + id, digest.TargetAssessmentType);
                 Assert.Equal(testClaimEvidence + id, digest.SufficentEvidenceOfClaim);
-                Assert.Equal(testInteractionType, digest.InteractionType.Code);
-                Assert.Equal(testSubject, digest.Subject.Code);
+                Assert.Equal(testInteractionType, digest.InteractionTypeCode);
+                Assert.Equal(testSubject, digest.SubjectCode);
             }
         }
     }

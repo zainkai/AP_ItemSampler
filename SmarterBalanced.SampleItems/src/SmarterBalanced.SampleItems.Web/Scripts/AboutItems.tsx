@@ -6,44 +6,42 @@ interface InteractionType {
     order?: number;
 }
 
-interface AboutThisItemViewModel {
+interface AboutItemsViewModel {
     interactionTypes: InteractionType[];
     itemUrl: string;
+    selectedInteractionTypeCode: string;
+    aboutThisItemViewModel: AboutThisItem.Props;
 }
 
 namespace AboutItems {
 
-    interface state {
+    interface State {
         selectedCode: string;
         itemUrl: string;
+        aboutThisItemViewModel: AboutThisItem.Props;
     }
 
-    export class AIComponent extends React.Component<AboutThisItemViewModel, state>{
-        constructor(props: AboutThisItemViewModel) {
+    export class AIComponent extends React.Component<AboutItemsViewModel, State>{
+        constructor(props: AboutItemsViewModel) {
             super(props);
 
-            const code = this.props.interactionTypes.length ? this.props.interactionTypes[0].code : "";
             this.state = {
-                selectedCode: code,
-                itemUrl: this.props.itemUrl
+                selectedCode: this.props.selectedInteractionTypeCode,
+                itemUrl: this.props.itemUrl,
+                aboutThisItemViewModel: this.props.aboutThisItemViewModel
             };
-
-            this.handleChange = this.handleChange.bind(this);
-            this.setNewUrl = this.setNewUrl.bind(this);
         }
 
-        handleChange(e: any) {
+        handleChange = (e: React.FormEvent<HTMLSelectElement>) => {
             const newCode = e.currentTarget.value
             if (newCode === this.state.selectedCode) {
                 return;
             }
 
-            this.getNewUrl(newCode);
-
-            this.setState(Object.assign({}, this.state, { selectedCode: newCode }) as state)
+            this.fetchUpdatedViewModel(newCode);
         }
 
-        getNewUrl(newCode: string) {
+        fetchUpdatedViewModel(newCode: string) {
             const params = {
                 interactionTypeCode: newCode
             };
@@ -53,13 +51,21 @@ namespace AboutItems {
                 type: "GET",
                 url: "/AboutItems/GetItemUrl",
                 data: params,
-                success: this.setNewUrl
+                success: this.onFetchedUpdatedViewModel
             });
         }
 
-        setNewUrl(newUrl: string) {
-            // TODO: Handle if url was null (no item found)
-            this.setState(Object.assign({}, this.state, { itemUrl: newUrl }) as state)
+        onFetchedUpdatedViewModel = (viewModel: AboutItemsViewModel) => {
+            if (!viewModel) {
+                console.log("An error occurred updating the item.");
+                return;
+            }
+
+            this.setState({
+                itemUrl: viewModel.itemUrl,
+                selectedCode: viewModel.selectedInteractionTypeCode,
+                aboutThisItemViewModel: viewModel.aboutThisItemViewModel
+            });
         }
 
         renderDescription() {
@@ -69,6 +75,7 @@ namespace AboutItems {
                     desc = it.description;
                 }
             }
+
             return (
                 <div dangerouslySetInnerHTML={{ __html: desc }} className= "aboutitems-desc" />
             );
@@ -89,25 +96,55 @@ namespace AboutItems {
             );
         }
 
+        openAboutItemModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+            if (e.keyCode === 13 || e.keyCode === 23) {
+                const modal: any = ($("#about-item-modal-container"));
+                modal.modal();
+            }
+        }
+
+         renderNoItem() {
+                return (
+                    <div className="no-item">
+                        <p>No items of the selected type found.</p>
+                    </div>
+                );
+         }
+
+        renderItemFrame() {
+            return (
+                <div className="aboutitem-iframe">
+                     <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
+                        <div className="item-nav-left-group" role="group" aria-label="First group">
+                        <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
+                            onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
+                            <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
+                            About This Item
+                        </a>
+                      </div>
+                    </div>
+                    <ItemFrame url={this.state.itemUrl} />
+                    <AboutThisItem.ATIComponent {...this.state.aboutThisItemViewModel} />
+                </div>
+            );
+        }
         render() {
+            const itemFrame = this.state.itemUrl ? this.renderItemFrame() : this.renderNoItem();
             return (
                 <div className="aboutitems-parents">
-
                     <div className="aboutitems-info">
+                        <h1>About Test Items</h1>
                         <div className="aboutitems-text">
                             Smarter Balanced assessments use a variety of item
                              types to accurately measure what students know and can do.
-                             To learn more and see an example, select an item type below.
+                             To learn more and see an example item, select an item type below.
                         </div>
                         <div className="aboutitems-dropdown form-group">
                             {this.renderInteractionTypesSelect()}
                         </div>
                         {this.renderDescription()}
                     </div>
-
-                    <div className="aboutitem-iframe">
-                        <ItemFrame url={this.state.itemUrl} />
-                    </div>
+                    {itemFrame}
                 </div>
             );
         }
@@ -115,7 +152,7 @@ namespace AboutItems {
 }
 
 
-function initializeAboutItems(viewModel: AboutThisItemViewModel) {
+function initializeAboutItems(viewModel: AboutItemsViewModel) {
     ReactDOM.render(
         <AboutItems.AIComponent {...viewModel} />,
         document.getElementById("about-items") as HTMLElement
