@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var ivsURL = ViewData["ItemViewerService"] ?? "";
 }
 
 
@@ -36,7 +37,7 @@
 
     </div>
 
-    <iframe src="http://itemviewerservice.cass.oregonstate.edu" style="display: none;"></iframe>
+    <iframe src="@ivsURL" style="display: none;"></iframe>
 </div>
 
 <environment names="Development">

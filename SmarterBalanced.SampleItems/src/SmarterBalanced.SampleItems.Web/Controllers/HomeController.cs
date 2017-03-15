@@ -44,6 +44,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 }
             }
 
+            ViewData["ItemViewerService"] = appsettings.SettingsConfig.ItemViewerServiceURL; 
             return View();
         }
 
