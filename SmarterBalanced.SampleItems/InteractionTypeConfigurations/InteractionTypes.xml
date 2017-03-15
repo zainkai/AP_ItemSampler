@@ -15,7 +15,7 @@
       <Description>
         <![CDATA[<p>This is an example of a Hot Spot Grid item. This item type requires students to click on certain areas of an image.</p>]]>
       </Description>
-      <Order>2</Order>
+      <Order>3</Order>
     </Item>
     <Item>
       <Code>GI3</Code>
@@ -23,7 +23,7 @@
       <Description>
         <![CDATA[<p>This is an example of a Graphing Grid Item. This item type requires students to plot points and/or draw lines.</p>]]>
       </Description>
-      <Order>3</Order>
+      <Order>2</Order>
     </Item>
     <Item>
       <Code>GI</Code>
@@ -60,7 +60,7 @@
         <![CDATA[<p>This item presents students with a two-part question, parts A and B. 
               Students select a correct response from four options in Part A and then identify textual support for that response in Part B.</p>]]>
       </Description>
-      <Order>5</Order>
+      <Order>6</Order>
     </Item>
     <Item>
       <Code>EQ</Code>
@@ -69,7 +69,7 @@
         <![CDATA[<p>The Equation item type has one or more text boxes for a response area and a key pad containing mathematical characters. 
               The student enters an equation or numerical answer into the text box using the key pad or keyboard.</p>]]>
       </Description>
-      <Order>6</Order>
+      <Order>5</Order>
     </Item>
     <Item>
       <Code>ER</Code>
@@ -95,7 +95,7 @@
       <Description>
         <![CDATA[<p>The Multiple Choice item type presents students with a number of answer options. The student may select only one option.</p>]]>
       </Description>
-      <Order>9</Order>
+      <Order>10</Order>
     </Item>
     <Item>
       <Code>MS</Code>
@@ -104,7 +104,7 @@
         <![CDATA[<p>The Multi Select item type presents students with a number of answer options. The student may select one or more options. 
               For this example, two of the options will be selected.</p>]]>
       </Description>
-      <Order>10</Order>
+      <Order>11</Order>
     </Item>
     <Item>
       <Code>MI</Code>
@@ -112,7 +112,7 @@
       <Description>
         <![CDATA[<p>The Matching item type requires students to match text or images in rows to values in columns. The student selects the boxes where a match is valid.</p>]]>
       </Description>
-      <Order>11</Order>
+      <Order>9</Order>
     </Item>
     <Item>
       <Code>SA</Code>
@@ -129,7 +129,7 @@
       <Description>
         <![CDATA[<p>The Table item type requires a keyboard entry into table cells.</p>]]>
       </Description>
-      <Order>10</Order>
+      <Order>13</Order>
     </Item>
     <Item>
       <Code>WER</Code>
@@ -137,7 +137,7 @@
       <Description>
         <![CDATA[<p>The Writing Extended Response item type has a text box for a response area and requires a keyboard entry of alphanumeric characters. This item type provides more space for students to provide a longer written response. It also includes text formatting tools – bold, underline, italic, numbered and bulleted lists, indentation, clipboard, undo, redo, and spell checking.</p>]]>
       </Description>
-      <Order>13</Order>
+      <Order>14</Order>
     </Item>
   </Items>
 
