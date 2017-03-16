@@ -42,14 +42,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     throw new SampleItemsContextException("Multiple ItemContents with ItemKey: " + metadata.Metadata.ItemKey + " found.");
                 }
 
-
-
-
             });
 
             return digests;
         }
-
 
         /// <summary>
         /// Translates metadata, itemcontents and lookups to item digest
