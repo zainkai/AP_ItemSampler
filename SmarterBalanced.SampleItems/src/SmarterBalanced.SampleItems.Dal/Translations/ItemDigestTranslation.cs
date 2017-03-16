@@ -20,9 +20,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         /// Digests a collection of ItemMetadata objects and a collection of ItemContents objects into a collection of ItemDigest objects.
         /// Matches the ItemMetadata and ItemContents objects based on their ItemKey fields.
         /// </summary>
-        public static IEnumerable<ItemDigest> ToItemDigests(
-            IEnumerable<ItemMetadata> itemMetadata,
-            IEnumerable<ItemContents> itemContents,
+        public static IReadOnlyCollection<ItemDigest> ToItemDigests(
+            IReadOnlyCollection<ItemMetadata> itemMetadata,
+            IReadOnlyCollection<ItemContents> itemContents,
             AppSettings settings)
         {
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
@@ -78,7 +78,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType,
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
-                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage == "Y",
+                AslSupported = (itemMetadata.Metadata.AccessibilityTagsASLLanguage ?? "Y") == "Y",
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
                 Contents = itemContents.Item.Contents,

@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var ivsURL = ViewData["ItemViewerService"] ?? "";
 }
 
 
@@ -36,7 +37,9 @@
 
     </div>
 
+    <iframe src="@ivsURL" style="display: none;"></iframe>
 </div>
+
 <environment names="Development">
     <link rel="stylesheet" href="~/css/home.css" />
 </environment>

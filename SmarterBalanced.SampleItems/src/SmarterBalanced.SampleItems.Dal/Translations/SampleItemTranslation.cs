@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using System.Text.RegularExpressions;
 
 namespace SmarterBalanced.SampleItems.Dal.Translations
 {
@@ -21,6 +22,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<InteractionType> interactionTypes,
             IList<Subject> subjects,
             CoreStandardsXml standardsXml,
+            IList<ItemPatch> patches,
             AppSettings settings)
         {
             var sampleItems = digests.Select(d =>
@@ -30,12 +32,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     subjects: subjects,
                     interactionTypes: interactionTypes,
                     resourceFamilies: resourceFamilies,
+                    patches: patches,
                     settings: settings))
                 .ToImmutableArray();
 
             return sampleItems;
         }
-
 
         /// <summary>
         /// Translates metadata, itemcontents and lookups to item digest
@@ -46,15 +48,32 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<Subject> subjects,
             IList<InteractionType> interactionTypes,
             IList<MergedAccessibilityFamily> resourceFamilies,
+            IList<ItemPatch> patches,
             AppSettings settings)
         {
             var supportedPubs = settings.SettingsConfig.SupportedPublications;
             var rubrics = GetRubrics(itemDigest, settings);
             StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(itemDigest, supportedPubs);
-            var coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentififer(standardsXml, identifier);
+
+            var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
+            if (patch != null)
+            {
+                string claimNumber = Regex.Match(input: patch.Claim, pattern: @"\d+").Value;
+                if (identifier == null)
+                {
+                    identifier = StandardIdentifier.Create(claim: claimNumber, target: patch.Target);
+                }
+                else
+                {
+                    identifier = identifier.WithClaimAndTarget(claimNumber, patch.Target);
+                }
+            }
+            
+            var coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
+
             var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId());
 
             var family = resourceFamilies.FirstOrDefault(f =>
@@ -70,12 +89,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 .OrderBy(g => g.Order)
                 .ToImmutableArray();
 
+
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
-            bool isPeformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
+            bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
-
 
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
@@ -87,7 +106,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 associatedStimulus: itemDigest.AssociatedStimulus,
                 aslSupported: itemDigest.AslSupported,
                 allowCalculator: itemDigest.AllowCalculator,
-                isPerformanceItem: isPeformance,
+                isPerformanceItem: isPerformance,
                 accessibilityResourceGroups: groups,
                 rubrics: rubrics,
                 interactionType: interactionType,
