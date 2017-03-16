@@ -92,7 +92,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
                 AslSupported = (itemMetadata.Metadata.AccessibilityTagsASLLanguage ?? "Y") == "Y",
-                AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
+                AllowCalculator = (itemMetadata.Metadata.AllowCalculator ?? "Y") == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
                 Contents = itemContents.Item.Contents,
                 InteractionTypeCode = interactionCode,
