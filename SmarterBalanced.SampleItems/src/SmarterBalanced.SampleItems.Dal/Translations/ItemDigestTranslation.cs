@@ -68,13 +68,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             string itemType = itemContents.Item.ItemType ?? string.Empty;
             string interactionCode = itemMetadata.Metadata.InteractionType ?? string.Empty;
+            var oldToNewInteraction = settings?.SettingsConfig?.OldToNewInteractionType;
 
-            if (settings.SettingsConfig.OldToNewInteractionType.ContainsKey(itemType))
+            if (oldToNewInteraction != null && oldToNewInteraction.ContainsKey(itemType))
             {
                 settings.SettingsConfig.OldToNewInteractionType.TryGetValue(itemType, out itemType);
             }
 
-            if (settings.SettingsConfig.OldToNewInteractionType.ContainsKey(interactionCode))
+            if (oldToNewInteraction != null && oldToNewInteraction.ContainsKey(interactionCode))
             {
                 settings.SettingsConfig.OldToNewInteractionType.TryGetValue(interactionCode, out interactionCode);
             }
