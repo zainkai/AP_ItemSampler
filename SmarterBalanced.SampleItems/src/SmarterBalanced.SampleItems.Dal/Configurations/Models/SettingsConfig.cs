@@ -24,5 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public int NumMoreLikeThisItems { get; set; }
         public string CoreStandardsXMLPath { get; set; }
         public string[] SupportedPublications { get; set; }
+        public Dictionary<string, string> OldToNewInteractionType { get; set; }
+
     }
 }

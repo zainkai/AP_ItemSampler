@@ -70,9 +70,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     + $"Content Item Key: {itemContents.Item.ItemKey} Metadata Item Key:{itemMetadata.Metadata.ItemKey}");
             }
 
+            string itemType = itemContents.Item.ItemType ?? string.Empty;
+            string interactionCode = itemMetadata.Metadata.InteractionType ?? string.Empty;
+
+            if (settings.SettingsConfig.OldToNewInteractionType.ContainsKey(itemType))
+            {
+                settings.SettingsConfig.OldToNewInteractionType.TryGetValue(itemType, out itemType);
+            }
+
+            if (settings.SettingsConfig.OldToNewInteractionType.ContainsKey(interactionCode))
+            {
+                settings.SettingsConfig.OldToNewInteractionType.TryGetValue(interactionCode, out interactionCode);
+            }
+
             ItemDigest digest = new ItemDigest()
             {
-                ItemType = itemContents.Item.ItemType,
+                ItemType = itemType,
                 ItemKey = itemContents.Item.ItemKey,
                 BankKey = itemContents.Item.ItemBank,
                 TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType,
@@ -82,7 +95,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
                 Contents = itemContents.Item.Contents,
-                InteractionTypeCode = itemMetadata.Metadata.InteractionType,
+                InteractionTypeCode = interactionCode,
                 AssociatedPassage = itemContents.Item.AssociatedPassage,
                 GradeCode = itemMetadata.Metadata.GradeCode,
                 MaximumNumberOfPoints = itemMetadata.Metadata.MaximumNumberOfPoints,
