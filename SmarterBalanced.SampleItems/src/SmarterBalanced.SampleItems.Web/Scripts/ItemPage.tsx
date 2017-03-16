@@ -158,7 +158,7 @@ namespace ItemPage {
         }
 
         render() {
-            let isaap = toiSAAP(this.props.accResourceGroups);
+            let isaap = "";//TODO: toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl;
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
@@ -178,8 +178,8 @@ namespace ItemPage {
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}                               
                             </a>
-                            <a className="item-nav-btn" disabled>
-                                
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
+                                onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
                                 Share
                             </a>
