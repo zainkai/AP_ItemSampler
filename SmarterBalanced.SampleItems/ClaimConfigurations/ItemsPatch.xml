@@ -795,4 +795,414 @@
     <Claim>Claim 1</Claim>
     <Target>E</Target>
   </row>
+   <row>
+    <ItemId>3423</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>M</Target>
+  </row>
+  <row>
+    <ItemId>3425</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3427</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3429</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>F</Target>
+  </row>
+  <row>
+    <ItemId>3431</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3435</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3433</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3437</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3439</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>D</Target>
+  </row>
+  <row>
+    <ItemId>3441</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>D</Target>
+  </row>
+  <row>
+    <ItemId>3443</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3445</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3449</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3451</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3447</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>M</Target>
+  </row>
+  <row>
+    <ItemId>3453</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>F</Target>
+  </row>
+  <row>
+    <ItemId>3461</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3459</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3463</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3455</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>F</Target>
+  </row>
+  <row>
+    <ItemId>3457</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3465</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>O</Target>
+  </row>
+  <row>
+    <ItemId>3467</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>O</Target>
+  </row>
+  <row>
+    <ItemId>3256</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3373</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3377</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3375</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3379</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3381</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>2666</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>2664</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3292</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3385</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3383</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3294</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3393</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>2695</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>J</Target>
+  </row>
+  <row>
+    <ItemId>3421</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>J</Target>
+  </row>
+  <row>
+    <ItemId>3387</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3389</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>2648</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3399</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3407</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3411</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>D</Target>
+  </row>
+  <row>
+    <ItemId>3296</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3403</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>F</Target>
+  </row>
+  <row>
+    <ItemId>2697</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>J</Target>
+  </row>
+  <row>
+    <ItemId>3674</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3395</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3391</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>G</Target>
+  </row>
+  <row>
+    <ItemId>3401</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3419</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3409</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3413</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>D</Target>
+  </row>
+  <row>
+    <ItemId>3405</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3415</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3397</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>H</Target>
+  </row>
+  <row>
+    <ItemId>3417</ItemId>
+    <Claim>Claim 1</Claim>
+    <Target>I</Target>
+  </row>
+  <row>
+    <ItemId>3200</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>F</Target>
+  </row>
+  <row>
+    <ItemId>3204</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3210</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>C</Target>
+  </row>
+  <row>
+    <ItemId>3212</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>C</Target>
+  </row>
+  <row>
+    <ItemId>3220</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3218</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>C</Target>
+  </row>
+  <row>
+    <ItemId>3216</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3226</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>C</Target>
+  </row>
+  <row>
+    <ItemId>3240</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3238</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>C</Target>
+  </row>
+  <row>
+    <ItemId>3262</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3264</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>E</Target>
+  </row>
+  <row>
+    <ItemId>3270</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>F</Target>
+  </row>
+  <row>
+    <ItemId>3369</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3371</ItemId>
+    <Claim>Claim 3</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3312</ItemId>
+    <Claim>Claim 2</Claim>
+    <Target>A</Target>
+  </row>
+  <row>
+    <ItemId>3242</ItemId>
+    <Claim>Claim 2</Claim>
+    <Target>D</Target>
+  </row>
+  <row>
+    <ItemId>2646</ItemId>
+    <Claim>Claim 2</Claim>
+    <Target>B</Target>
+  </row>
+  <row>
+    <ItemId>2649</ItemId>
+    <Claim>Claim 2</Claim>
+    <Target>7</Target>
+  </row>
+  <row>
+    <ItemId>2647</ItemId>
+    <Claim>Claim  4</Claim>
+    <Target>2</Target>
+  </row>
+  <row>
+    <ItemId>2665</ItemId>
+    <Claim>Claim 4</Claim>
+    <Target>3</Target>
+  </row>
+  <row>
+    <ItemId>2667</ItemId>
+    <Claim>Claim 2</Claim>
+    <Target>4</Target>
+  </row>
+  <row>
+    <ItemId>2696</ItemId>
+    <Claim>Claim 4</Claim>
+    <Target>3</Target>
+  </row>
+  <row>
+    <ItemId>2698</ItemId>
+    <Claim>Claim 2</Claim>
+    <Target>7</Target>
+  </row>
 </root>
