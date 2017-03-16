@@ -34,6 +34,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                .OrderBy(i => (int)i.Grade);
 
             SampleItem sampleItem = items.FirstOrDefault(item => item.InteractionTypeSubCat == interactionTypeCode)
+                ?? items.FirstOrDefault(item => interactionTypeCode == item.InteractionType.Code)
                 ?? items.FirstOrDefault(item => interactionTypeCode.Contains(item.InteractionType.Code));
 
             string itemURL = GetItemViewerUrlSingleItem(sampleItem);
