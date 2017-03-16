@@ -277,7 +277,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
 
         //TODO: refactor
-        public static CoreStandards CoreStandardFromIdentififer(
+        public static CoreStandards CoreStandardFromIdentifier(
             CoreStandardsXml standardsXml,
             StandardIdentifier itemIdentifier)
         {

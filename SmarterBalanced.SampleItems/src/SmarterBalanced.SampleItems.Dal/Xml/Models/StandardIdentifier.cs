@@ -36,6 +36,21 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             SubjectCode = subjectCode;
         }
 
+        public StandardIdentifier WithClaimAndTarget(string claim, string target)
+        {
+            var result = new StandardIdentifier(
+                claim: claim,
+                contentDomain: ContentDomain,
+                contentCategory: ContentCategory,
+                target: target,
+                targetSet: TargetSet,
+                emphasis: Emphasis,
+                commonCoreStandard: CommonCoreStandard,
+                subjectCode: SubjectCode);
+
+            return result;
+        }
+
         public static StandardIdentifier Create(
             string claim = null,
             string target = null,

@@ -165,31 +165,34 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             int numExpected = context.AppSettings.SettingsConfig.NumMoreLikeThisItems;
 
             var comparer = new MoreLikeThisComparer(subjectCode, claimCode);
-            GradeLevels gradeBelow = grade.GradeBelow();
+
+            bool isHighSchool = GradeLevels.High.Contains(grade);
+            GradeLevels gradeBelow = isHighSchool ? GradeLevels.Grade8 : grade.GradeBelow();
             GradeLevels gradeAbove = grade.GradeAbove();
 
             IEnumerable<ItemCardViewModel> cardsGradeAbove = null;
-            IEnumerable<ItemCardViewModel> cardsGradeBelow = null;
 
-            var cardsSameGrade = context.ItemCards
-                .Where(i => i.Grade == grade && i.ItemKey != itemKey)
-                .OrderBy(i => i, comparer)
-                .Take(numExpected);
-
-            // Only display above and below if not a high school grade
-            if (!GradeLevels.High.Contains(grade))
+            // Only display above if not a high school grade
+            if (!isHighSchool)
             {
-                cardsGradeBelow = context.ItemCards
-                    .Where(i => i.Grade == gradeBelow)
-                    .OrderBy(i => i, comparer)
-                    .Take(numExpected);
-
+                // take grade 11 if gradeabove is high school (only high school items are grade 11)
+                gradeAbove = GradeLevels.High.Contains(gradeAbove) ? GradeLevels.Grade11 : gradeAbove;
                 cardsGradeAbove = context.ItemCards
                     .Where(i => i.Grade == gradeAbove)
                     .OrderBy(i => i, comparer)
                     .Take(numExpected);
             }
 
+            var cardsSameGrade = context.ItemCards
+                .Where(i => i.Grade == grade && i.ItemKey != itemKey)
+                .OrderBy(i => i, comparer)
+                .Take(numExpected);
+
+            var cardsGradeBelow = context.ItemCards
+                .Where(i => i.Grade == gradeBelow)
+                .OrderBy(i => i, comparer)
+                .Take(numExpected);
+            
             var moreLikeThisVM = new MoreLikeThisViewModel(
                 ToColumn(cardsGradeBelow, gradeBelow),
                 ToColumn(cardsSameGrade, grade),
