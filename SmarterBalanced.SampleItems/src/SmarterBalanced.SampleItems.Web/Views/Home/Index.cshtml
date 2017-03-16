@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var ivsURL = ViewData["ItemViewerService"] ?? "";
 }
 
 
@@ -13,7 +14,7 @@
         <br /><br />
 
         These samples are not intended to be used as practice tests, but educators can use them to better 
-        understand how Smarter Balanced measures college and career ready content.
+        understand how Smarter Balanced measures college- and career-ready content.
     </div>
 
     <br />
@@ -36,7 +37,9 @@
 
     </div>
 
+    <iframe src="@ivsURL" style="display: none;"></iframe>
 </div>
+
 <environment names="Development">
     <link rel="stylesheet" href="~/css/home.css" />
 </environment>
