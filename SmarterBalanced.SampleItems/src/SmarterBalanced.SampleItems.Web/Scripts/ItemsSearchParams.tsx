@@ -102,7 +102,7 @@ namespace ItemSearchParams {
             }
 
             if (pairs.length === 0) {
-                return "/ItemsSearch";
+                return "/BrowseItems";
             }
 
             const query = "?" + pairs.join("&");
