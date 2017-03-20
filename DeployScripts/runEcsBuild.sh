@@ -17,8 +17,8 @@ then
         ClusterName="SampleItemsWebsite-stage"
     elif [ "$BRANCH" == "master" ]
     then
-        ServiceName="SampleItemsWebsite-master"
-        ClusterName="SampleItemsWebsite-master"
+        ServiceName="SampleItemsWebsite-prod"
+        ClusterName="SampleItemsWebsite-prod"
     elif [ "$BRANCH" == "feature_travis-docker" ]  # For testing
     then
         ServiceName="SampleItemsWebsite-dev"
