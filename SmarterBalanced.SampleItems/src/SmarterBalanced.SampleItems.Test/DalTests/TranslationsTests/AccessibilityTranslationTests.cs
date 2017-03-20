@@ -16,6 +16,25 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         public List<AccessibilityResource> PartialResources { get; set; }
         public AccessibilityFamilyResource familyResource;
         public AccessibilityResource globalResource;
+        public AccessibilityResource calculatorResource = AccessibilityResource.Create(
+               resourceCode: "Calculator",
+               disabled: false,
+               selections: ImmutableArray.Create(
+                   new AccessibilitySelection(
+                          code: "ACC1_SEL1",
+                          order: 1,
+                          disabled: true,
+                          label: "Selection 1")));
+
+        public AccessibilityResource aslResource = AccessibilityResource.Create(
+               resourceCode: "AmericanSignLanguage",
+               disabled: false,
+               selections: ImmutableArray.Create(
+                   new AccessibilitySelection(
+                          code: "ACC1_SEL1",
+                          order: 1,
+                          disabled: true,
+                          label: "Selection 1")));
 
         public AccessibilityTranslationTests()
         {
@@ -92,8 +111,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 description: "globalResource",
                 disabled: false,
                 resourceType: "globalResource Type");
-
-
         }
       
         #region ToAccessibilityResourceTests
@@ -295,42 +312,67 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         }
         #endregion
 
+        #region ApplyFlags
         [Fact]
-        public void TestApplyFlags()
+        public void TestApplyAslFlag()
         {
-            AccessibilityResource resource = AccessibilityResource.Create(
-                resourceCode: "AmericanSignLanguage",
-                disabled: false,
-                selections: ImmutableArray.Create(
-                    new AccessibilitySelection(
-                           code: "ACC1_SEL1",
-                           order: 1,
-                           disabled: true,
-                           label: "Selection 1")));
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = false,
+                AllowCalculator = false
+            };
 
-            var resModified = resource.ApplyFlags(false);
+            var resModified = aslResource.ApplyFlags(itemDigest);
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
         }
 
         [Fact]
-        public void TestApplyFlagsFalse()
+        public void TestApplyAslFlagFalse()
         {
-            AccessibilityResource resource = AccessibilityResource.Create(
-               resourceCode: "AmericanSignLanguage",
-               disabled: false,
-               selections: ImmutableArray.Create(
-                   new AccessibilitySelection(
-                          code: "ACC1_SEL1",
-                          order: 1,
-                          disabled: true,
-                          label: "Selection 1")));
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = true,
+                AllowCalculator = false
+            };
 
-            var resModified = resource.ApplyFlags(true);
+            var resModified = aslResource.ApplyFlags(itemDigest);
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
         }
+
+        [Fact]
+        public void TestApplyCalculatorFlagTrue()
+        {
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = false,
+                AllowCalculator = true
+            };
+
+            var resModified = calculatorResource.ApplyFlags(itemDigest);
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, false);
+        }
+
+        [Fact]
+        public void TestApplyCalculatorFlagFalse()
+        {
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = true,
+                AllowCalculator = false
+            };
+
+            var resModified = calculatorResource.ApplyFlags(itemDigest);
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, true);
+        }
+
+        #endregion
     }
 }
