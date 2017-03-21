@@ -81,7 +81,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 f.Subjects.Contains(itemDigest.SubjectCode));
 
             var flaggedResources = family?.Resources
-                .Select(r => r.ApplyFlags(aslSupported: itemDigest.AslSupported))
+                .Select(r => r.ApplyFlags(itemDigest))
                 .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
             var groups = settings.SettingsConfig.AccessibilityTypes

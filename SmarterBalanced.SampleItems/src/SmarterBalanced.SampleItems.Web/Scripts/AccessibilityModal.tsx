@@ -134,6 +134,11 @@
                             </div>
                             <div className="modal-body">
                                 <p><span>Options highlighted in grey are not available for this item.</span></p>
+                                <p>
+                                    To experience the <strong>text-to-speech functionality</strong>,&nbsp;
+                                    <a href="http://www.smarterapp.org/news/2016/01/05/SecureBrowsers.html" target="_blank">the Secure Browser application</a>
+                                     &nbsp;is required.
+                                </p>
                                 <form id="accessibility-form" onSubmit={this.onSave}>
                                     <div className="accessibility-groups">
                                         {groups}
