@@ -496,24 +496,10 @@ namespace ItemSearchParams {
                 ? this.props.interactionTypes.filter(it => selectedSubjects.some(subj => subj.interactionTypeCodes.indexOf(it.code) !== -1))
                 : [];
 
-            const interactionTypeTags = (
-                <div className="search-tags form-group">
-                    {visibleInteractionTypes.map(renderInteractionType)}
-                    <button role="button"
-                        className={(performanceOnlySelected ? "selected " : "") + "tag"}
-                        onClick={() => this.togglePerformanceOnly()}
-                        tabIndex={0}
-                        aria-pressed={performanceOnlySelected}>
-                        Performance Items Only
-                    </button>
-                </div>
-            );
-
             const visibleTags = (
                 <div>
                     {visibleInteractionTypes.map(renderInteractionType)}
-                    <br />
-                    <br />
+                    <br /><br />
                     <div>
                         <label>Performance Tasks</label>
                         <button role="button"
@@ -521,7 +507,7 @@ namespace ItemSearchParams {
                             onClick={() => this.togglePerformanceOnly()}
                             tabIndex={0}
                             aria-pressed={performanceOnlySelected}>
-                            Display only items that belong to Performance Tasks
+                            Only show Performance Task items
                         </button>
                     </div>
                 </div>
