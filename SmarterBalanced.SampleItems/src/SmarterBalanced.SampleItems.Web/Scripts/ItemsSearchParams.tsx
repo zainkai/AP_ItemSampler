@@ -301,7 +301,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-params">
                     <div className="search-header">
-                        <h1 className="search-title" tabIndex={0}>Browse</h1>
+                        <h1 className="search-title" tabIndex={0}>Browse Items</h1>
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                             <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
@@ -496,22 +496,26 @@ namespace ItemSearchParams {
                 ? this.props.interactionTypes.filter(it => selectedSubjects.some(subj => subj.interactionTypeCodes.indexOf(it.code) !== -1))
                 : [];
 
-            const interactionTypeTags = (
-                <div className="search-tags form-group">
+            const visibleTags = (
+                <div>
                     {visibleInteractionTypes.map(renderInteractionType)}
-                    <button role="button"
-                        className={(performanceOnlySelected ? "selected " : "") + "tag"}
-                        onClick={() => this.togglePerformanceOnly()}
-                        tabIndex={0}
-                        aria-pressed={performanceOnlySelected}>
-                        Performance Items Only
-                    </button>
+                    <br /><br />
+                    <div>
+                        <label>Performance Tasks</label>
+                        <button role="button"
+                            className={(performanceOnlySelected ? "selected " : "") + "tag"}
+                            onClick={() => this.togglePerformanceOnly()}
+                            tabIndex={0}
+                            aria-pressed={performanceOnlySelected}>
+                            Only show Performance Task items
+                        </button>
+                    </div>
                 </div>
             );
 
-            const tags = visibleInteractionTypes.length === 0
+            const itemTypesContents = visibleInteractionTypes.length === 0
                 ? <p tabIndex={0}>Please first select a subject.</p>
-                : interactionTypeTags;
+                : visibleTags;
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
@@ -519,10 +523,9 @@ namespace ItemSearchParams {
                         onClick={() => this.toggleExpandInteractionTypes()}
                         onKeyUp={e => this.toggleExpandItemTypes(e)}
                         tabIndex={0}>
-
                         {this.state.expandInteractionTypes ? hideArrow : showArrow} Item Types
                     </label>
-                    {this.state.expandInteractionTypes ? tags : undefined}
+                    {this.state.expandInteractionTypes ? itemTypesContents : undefined}
                 </div>
             );
         }

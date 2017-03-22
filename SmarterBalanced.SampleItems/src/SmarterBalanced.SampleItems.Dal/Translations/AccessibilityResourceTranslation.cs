@@ -126,15 +126,16 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         }
 
         /// <summary>
-        /// Disables asl, calculator, dictionary, and thesaurus for special cases.
+        /// Disables accessibility resources for special cases:
+        ///     - ASL and calculator are rdisabled by itemMetadata flags
+        ///     - GlobalNotes is only enabled for performance task items
+        ///     - EnglishDictionary and Thesaurus are only enabled for WER items
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="itemDigest"></param>
-        /// <param name="dictionarySupportedItemTypes"></param>
         public static AccessibilityResource ApplyFlags(
             this AccessibilityResource resource,
             ItemDigest itemDigest,
             string interactionType,
+            bool isPerformanceTask,
             List<string> dictionarySupportedItemTypes)
         {
             if (itemDigest == null)
@@ -144,10 +145,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             bool isUnsupportedAsl = !itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage";
             bool isUnsupportedCalculator = !itemDigest.AllowCalculator && resource.ResourceCode == "Calculator";
+            bool isUnsupportedGlobalNotes = !isPerformanceTask && resource.ResourceCode == "GlobalNotes";
             bool isUnsupportedDictionaryThesaurus = !dictionarySupportedItemTypes.Any(s => s == interactionType)
                 && (resource.ResourceCode == "EnglishDictionary" || resource.ResourceCode == "Thesaurus");
 
-            if (isUnsupportedAsl || isUnsupportedCalculator || isUnsupportedDictionaryThesaurus) 
+            if (isUnsupportedAsl || isUnsupportedCalculator || isUnsupportedGlobalNotes || isUnsupportedDictionaryThesaurus) 
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
