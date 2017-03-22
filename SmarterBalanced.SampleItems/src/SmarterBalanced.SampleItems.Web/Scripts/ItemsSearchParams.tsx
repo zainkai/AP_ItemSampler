@@ -301,7 +301,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-params">
                     <div className="search-header">
-                        <h1 className="search-title" tabIndex={0}>Browse</h1>
+                        <h1 className="search-title" tabIndex={0}>Browse Items</h1>
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                             <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
