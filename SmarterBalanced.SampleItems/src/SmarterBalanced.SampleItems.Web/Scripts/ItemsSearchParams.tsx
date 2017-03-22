@@ -509,9 +509,27 @@ namespace ItemSearchParams {
                 </div>
             );
 
-            const tags = visibleInteractionTypes.length === 0
+            const visibleTags = (
+                <div>
+                    {visibleInteractionTypes.map(renderInteractionType)}
+                    <br />
+                    <br />
+                    <div>
+                        <label>Performance Tasks</label>
+                        <button role="button"
+                            className={(performanceOnlySelected ? "selected " : "") + "tag"}
+                            onClick={() => this.togglePerformanceOnly()}
+                            tabIndex={0}
+                            aria-pressed={performanceOnlySelected}>
+                            Display only items that belong to Performance Tasks
+                        </button>
+                    </div>
+                </div>
+            );
+
+            const itemTypesContents = visibleInteractionTypes.length === 0
                 ? <p tabIndex={0}>Please first select a subject.</p>
-                : interactionTypeTags;
+                : visibleTags;
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
@@ -519,10 +537,9 @@ namespace ItemSearchParams {
                         onClick={() => this.toggleExpandInteractionTypes()}
                         onKeyUp={e => this.toggleExpandItemTypes(e)}
                         tabIndex={0}>
-
                         {this.state.expandInteractionTypes ? hideArrow : showArrow} Item Types
                     </label>
-                    {this.state.expandInteractionTypes ? tags : undefined}
+                    {this.state.expandInteractionTypes ? itemTypesContents : undefined}
                 </div>
             );
         }
