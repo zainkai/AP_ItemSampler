@@ -326,7 +326,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var resource = getResourceWithCode("AmericanSignLanguage");
 
-            var resModified = resource.ApplyFlags(itemDigest, "", new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -343,7 +343,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var resource = getResourceWithCode("AmericanSignLanguage");
 
-            var resModified = resource.ApplyFlags(itemDigest, "", new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
@@ -360,7 +360,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var resource = getResourceWithCode("Calculator");
 
-            var resModified = resource.ApplyFlags(itemDigest, "", new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
@@ -376,7 +376,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("Calculator");
 
-            var resModified = resource.ApplyFlags(itemDigest, "", new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -393,7 +393,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("EnglishDictionary");
 
-            var resModified = resource.ApplyFlags(itemDigest, "WER", new List<string> { "WER" });
+            var resModified = resource.ApplyFlags(itemDigest, "WER", false, new List<string> { "WER" });
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
@@ -410,7 +410,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("EnglishDictionary");
 
-            var resModified = resource.ApplyFlags(itemDigest, itemType, new List<string> { "WER" });
+            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" });
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -427,11 +427,46 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("Thesaurus");
 
-            var resModified = resource.ApplyFlags(itemDigest, itemType, new List<string> { "WER" });
+            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" });
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
         }
+
+        [Fact]
+        public void TestDisableGlobalNotes()
+        {
+            string itemType = "SA";
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = false,
+                AllowCalculator = false
+            };
+            var resource = getResourceWithCode("GlobalNotes");
+
+            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "MC" });
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, true);
+        }
+
+        [Fact]
+        public void TestEnableGlobalNotes()
+        {
+            string itemType = "SA";
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = false,
+                AllowCalculator = false
+            };
+            var resource = getResourceWithCode("GlobalNotes");
+
+            var resModified = resource.ApplyFlags(itemDigest, itemType, true, new List<string> { "MC" });
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, false);
+        }
+
 
         #endregion
     }
