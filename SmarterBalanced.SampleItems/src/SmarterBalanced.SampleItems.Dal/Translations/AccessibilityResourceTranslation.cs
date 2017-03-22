@@ -125,17 +125,29 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return mergedFamilies;
         }
 
+        /// <summary>
+        /// Disables asl, calculator, dictionary, and thesaurus for special cases.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="itemDigest"></param>
+        /// <param name="dictionarySupportedItemTypes"></param>
         public static AccessibilityResource ApplyFlags(
             this AccessibilityResource resource,
-            ItemDigest itemDigest)
+            ItemDigest itemDigest,
+            string interactionType,
+            List<string> dictionarySupportedItemTypes)
         {
             if (itemDigest == null)
             {
                 return resource;
             }
 
-            if ((!itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage")
-                || (!itemDigest.AllowCalculator && resource.ResourceCode == "Calculator")) 
+            bool isUnsupportedAsl = !itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage";
+            bool isUnsupportedCalculator = !itemDigest.AllowCalculator && resource.ResourceCode == "Calculator";
+            bool isUnsupportedDictionaryThesaurus = !dictionarySupportedItemTypes.Any(s => s == interactionType)
+                && (resource.ResourceCode == "EnglishDictionary" || resource.ResourceCode == "Thesaurus");
+
+            if (isUnsupportedAsl || isUnsupportedCalculator || isUnsupportedDictionaryThesaurus) 
             {
                 var newResource = resource.ToDisabled();
                 return newResource;

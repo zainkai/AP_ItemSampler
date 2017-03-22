@@ -81,14 +81,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 f.Subjects.Contains(itemDigest.SubjectCode));
 
             var flaggedResources = family?.Resources
-                .Select(r => r.ApplyFlags(itemDigest))
+                .Select(r => r.ApplyFlags(itemDigest, interactionType?.Code, settings.SettingsConfig.DictionarySupportedItemTypes))
                 .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
             var groups = settings.SettingsConfig.AccessibilityTypes
                 .Select(accType => GroupItemResources(accType, flaggedResources))
                 .OrderBy(g => g.Order)
                 .ToImmutableArray();
-
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);

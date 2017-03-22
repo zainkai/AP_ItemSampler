@@ -577,8 +577,8 @@
   </row>
   <row>
     <ItemId>2647</ItemId>
-    <Claim></Claim>
-    <Target></Target>
+    <Claim>Claim 4</Claim>
+    <Target>7</Target>
   </row>
   <row>
     <ItemId>3601</ItemId>
