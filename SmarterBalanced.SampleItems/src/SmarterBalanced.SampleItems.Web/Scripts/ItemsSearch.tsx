@@ -138,7 +138,7 @@ const client: ItemsSearchClient = {
     itemsSearch: (params, onSuccess, onError) => {
         $.ajax({
             dataType: "json",
-            url: "/ItemsSearch/search",
+            url: "/BrowseItems/search",
             traditional: true, // causes arrays to be serialized in a way supported by MVC
             data: params,
             success: onSuccess,

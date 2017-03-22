@@ -102,7 +102,7 @@ namespace ItemSearchParams {
             }
 
             if (pairs.length === 0) {
-                return "/ItemsSearch";
+                return "/BrowseItems";
             }
 
             const query = "?" + pairs.join("&");
@@ -210,14 +210,8 @@ namespace ItemSearchParams {
          */
         getExpandAll() {
             const { expandMore, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
-            const expandAll = expandMore && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
+            const expandAll = expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
             return expandAll;
-        }
-
-        toggleExpandItemIDInput() {
-            this.setState({
-                expandMore: !this.state.expandMore
-            });
         }
 
         toggleExpandGradeLevels() {
@@ -248,7 +242,6 @@ namespace ItemSearchParams {
             // If everything is already expanded, then collapse everything. Otherwise, expand everything.
             const expandAll = !this.getExpandAll();
             this.setState({
-                expandMore: expandAll,
                 expandGradeLevels: expandAll,
                 expandSubjects: expandAll,
                 expandClaims: expandAll,
@@ -275,12 +268,6 @@ namespace ItemSearchParams {
         keyPressToggleExpandAll(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.toggleExpandAll();
-            }
-        }
-
-        keyPressToggleExpandItemId(e: React.KeyboardEvent<HTMLElement>) {
-            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
-                this.toggleExpandItemIDInput();
             }
         }
 
@@ -314,7 +301,7 @@ namespace ItemSearchParams {
             return (
                 <div className="search-params">
                     <div className="search-header">
-                        <h1 className="search-title" tabIndex={0}>Search</h1>
+                        <h1 className="search-title" tabIndex={0}>Browse</h1>
                         <div className="search-status">
                             {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                             <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
@@ -330,40 +317,24 @@ namespace ItemSearchParams {
                         {this.renderSubjects()}
                         {this.renderClaims()}
                         {this.renderInteractionTypes()}
-                        {this.renderMore()}
+                        {this.renderSearchById()}
                     </div>
                 </div>
             );
         }
 
-        renderMore() {
-            const performanceOnlySelected = this.state.performanceOnly;
-            const filters = (
-                <div className="search-tags">
-                    <input type="tel" className="form-control"
-                        placeholder="Item ID"
-                        onChange={e => this.onItemIDInput(e)}
-                        onKeyUp={e => this.onItemIDKeyUp(e)}
-                        value={this.state.itemId}>
-                    </input>
-                    <button role="button"
-                        className={(performanceOnlySelected ? "selected " : "") + "tag"}
-                        style={{ flex: 1 }}
-                        onClick={() => this.togglePerformanceOnly()}
-                        tabIndex={0}
-                        aria-pressed={performanceOnlySelected}>
-
-                        Performance Items Only
-                    </button>
-                </div>
+        renderSearchById() {
+            const input = (
+                <input type="tel" className="form-control"
+                    placeholder="Item ID"
+                    onChange={e => this.onItemIDInput(e)}
+                    onKeyUp={e => this.onItemIDKeyUp(e)}
+                    value={this.state.itemId}>
+                </input>
             );
-            const input = this.state.expandMore ? filters : undefined;
             return (
-                <div className="search-category" style={{ "maxWidth":"250px" }}>
-                    <label aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
-                        onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
-                        {this.state.expandMore ? hideArrow : showArrow} More
-                    </label>
+                <div className="search-category no-collapse" style={{ "maxWidth":"250px" }}>
+                    <label>Browse By Id</label>
                     {input}
                 </div>
             );
@@ -501,6 +472,7 @@ namespace ItemSearchParams {
 
         renderInteractionTypes() {
             const selectedInteractionTypes = this.state.interactionTypes;
+            const performanceOnlySelected = this.state.performanceOnly;
 
             const renderInteractionType = (it: InteractionType) => {
                 let containsInteractionType = selectedInteractionTypes.indexOf(it.code) !== -1;
@@ -524,9 +496,22 @@ namespace ItemSearchParams {
                 ? this.props.interactionTypes.filter(it => selectedSubjects.some(subj => subj.interactionTypeCodes.indexOf(it.code) !== -1))
                 : [];
 
+            const interactionTypeTags = (
+                <div className="search-tags form-group">
+                    {visibleInteractionTypes.map(renderInteractionType)}
+                    <button role="button"
+                        className={(performanceOnlySelected ? "selected " : "") + "tag"}
+                        onClick={() => this.togglePerformanceOnly()}
+                        tabIndex={0}
+                        aria-pressed={performanceOnlySelected}>
+                        Performance Items Only
+                    </button>
+                </div>
+            );
+
             const tags = visibleInteractionTypes.length === 0
                 ? <p tabIndex={0}>Please first select a subject.</p>
-                : visibleInteractionTypes.map(renderInteractionType);
+                : interactionTypeTags;
 
             return (
                 <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
@@ -537,9 +522,7 @@ namespace ItemSearchParams {
 
                         {this.state.expandInteractionTypes ? hideArrow : showArrow} Item Types
                     </label>
-                    <div className="search-tags form-group">
-                        {this.state.expandInteractionTypes ? tags : undefined}
-                    </div>
+                    {this.state.expandInteractionTypes ? tags : undefined}
                 </div>
             );
         }

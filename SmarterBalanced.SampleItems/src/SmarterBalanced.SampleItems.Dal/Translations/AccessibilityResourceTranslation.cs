@@ -127,13 +127,20 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
         public static AccessibilityResource ApplyFlags(
             this AccessibilityResource resource,
-            bool aslSupported)
+            ItemDigest itemDigest)
         {
-            if (!aslSupported && resource.ResourceCode == "AmericanSignLanguage")
+            if (itemDigest == null)
+            {
+                return resource;
+            }
+
+            if ((!itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage")
+                || (!itemDigest.AllowCalculator && resource.ResourceCode == "Calculator")) 
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
             }
+
             return resource;
         }
 

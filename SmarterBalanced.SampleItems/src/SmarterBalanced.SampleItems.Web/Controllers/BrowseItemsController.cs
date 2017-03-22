@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
-    public class ItemsSearchController : Controller
+    public class BrowseItemsController : Controller
     {
         private readonly ISampleItemsSearchRepo sampleItemsSearchRepo;
         private readonly ILogger logger;
 
-        public ItemsSearchController(ISampleItemsSearchRepo repo, ILoggerFactory loggerFactory )
+        public BrowseItemsController(ISampleItemsSearchRepo repo, ILoggerFactory loggerFactory )
         {
             sampleItemsSearchRepo = repo;
-            logger = loggerFactory.CreateLogger<ItemsSearchController>();
+            logger = loggerFactory.CreateLogger<BrowseItemsController>();
         }
 
         // GET: /<controller>/
