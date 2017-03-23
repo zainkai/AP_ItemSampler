@@ -14,8 +14,8 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
     public class ItemsSearchControllerTests
     {
-        ItemsSearchController controller;
-        ItemsSearchController controllerBadReq;
+        BrowseItemsController controller;
+        BrowseItemsController controllerBadReq;
         ItemsSearchViewModel itemsSearchViewModel;
         ItemsSearchViewModel itemsSearchViewModelBad;
         int goodItemKey = 89;
@@ -39,8 +39,8 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            controller = new ItemsSearchController(sampleItemsSearchRepoMock.Object, loggerFactory.Object);
-            controllerBadReq = new ItemsSearchController(sampleItemsSearchRepoBadRequestMock.Object, loggerFactory.Object);
+            controller = new BrowseItemsController(sampleItemsSearchRepoMock.Object, loggerFactory.Object);
+            controllerBadReq = new BrowseItemsController(sampleItemsSearchRepoBadRequestMock.Object, loggerFactory.Object);
         }
 
         /// <summary>

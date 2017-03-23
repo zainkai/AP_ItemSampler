@@ -125,15 +125,36 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return mergedFamilies;
         }
 
+        /// <summary>
+        /// Disables accessibility resources for special cases:
+        ///     - ASL and calculator are rdisabled by itemMetadata flags
+        ///     - GlobalNotes is only enabled for performance task items
+        ///     - EnglishDictionary and Thesaurus are only enabled for WER items
+        /// </summary>
         public static AccessibilityResource ApplyFlags(
             this AccessibilityResource resource,
-            bool aslSupported)
+            ItemDigest itemDigest,
+            string interactionType,
+            bool isPerformanceTask,
+            List<string> dictionarySupportedItemTypes)
         {
-            if (!aslSupported && resource.ResourceCode == "AmericanSignLanguage")
+            if (itemDigest == null)
+            {
+                return resource;
+            }
+
+            bool isUnsupportedAsl = !itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage";
+            bool isUnsupportedCalculator = !itemDigest.AllowCalculator && resource.ResourceCode == "Calculator";
+            bool isUnsupportedGlobalNotes = !isPerformanceTask && resource.ResourceCode == "GlobalNotes";
+            bool isUnsupportedDictionaryThesaurus = !dictionarySupportedItemTypes.Any(s => s == interactionType)
+                && (resource.ResourceCode == "EnglishDictionary" || resource.ResourceCode == "Thesaurus");
+
+            if (isUnsupportedAsl || isUnsupportedCalculator || isUnsupportedGlobalNotes || isUnsupportedDictionaryThesaurus) 
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
             }
+
             return resource;
         }
 

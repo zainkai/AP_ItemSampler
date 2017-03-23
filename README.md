@@ -14,7 +14,7 @@ Dev  | [![Build Status](https://travis-ci.org/osu-cass/SampleItemsWebsite.svg?br
 The majority of this project was developed using Windows 10 and Visual Studio Enterprise 2015. 
 This development environment is not required to run or contribute to the application.
 
-For more detailed documentation, see the **Documentation** folder in the root of the project.
+For more detailed documentation, see the ``docs`` folder in the root of the project.
 
 ## Installation
 - Clone the project

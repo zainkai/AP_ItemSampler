@@ -69,6 +69,25 @@
 
         renderResourceType(type: string) {
             let resources = this.props.accResourceGroups.filter(group => group.label === type)[0].accessibilityResources;
+            let resourceTypeHeader = <h3>{type}</h3>;
+
+            /* TODO: Remove after these accessibility resources are fixed */
+            if (type === "Designated Support" || type === "Accommodations") {
+                resourceTypeHeader = (
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                        <h3 style={{ display: "inline-block" }}>{type}</h3>
+                        <span style={{ marginTop: "10px" }}>&nbsp;&nbsp;(coming soon)</span>
+                    </div>
+                );
+                for (let res of resources) {
+                    res.selections = [];
+                    res.disabled = true;
+                    res.currentSelectionCode = "";
+                    res.defaultSelection = "";
+                }
+            }
+            /* TODO: REMOVE ABOVE */
+
 
             const resCount = resources.length;
             const isExpanded = (this.state.resourceTypeExpanded || {})[type];
@@ -110,7 +129,7 @@
 
             return (
                 <div key={type}>
-                    <h3>{type}</h3>
+                    {resourceTypeHeader}
                     <div className="accessibility-dropdowns">
                         {dropdowns}
                     </div>
@@ -134,6 +153,11 @@
                             </div>
                             <div className="modal-body">
                                 <p><span>Options highlighted in grey are not available for this item.</span></p>
+                                <p>
+                                    To experience the <strong>text-to-speech functionality</strong>,&nbsp;
+                                    <a href="http://www.smarterapp.org/news/2016/01/05/SecureBrowsers.html" target="_blank">the Secure Browser application</a>
+                                     &nbsp;is required.
+                                </p>
                                 <form id="accessibility-form" onSubmit={this.onSave}>
                                     <div className="accessibility-groups">
                                         {groups}
