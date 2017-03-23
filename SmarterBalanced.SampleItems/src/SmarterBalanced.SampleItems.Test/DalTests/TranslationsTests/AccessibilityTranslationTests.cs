@@ -99,11 +99,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public AccessibilityResource getResourceWithCode(string code)
+        public AccessibilityResource getResourceWithCode(string code, bool isDisabled)
         {
             AccessibilityResource resource = AccessibilityResource.Create(
                resourceCode: code,
-               disabled: false,
+               disabled: isDisabled,
                selections: ImmutableArray.Create(
                    new AccessibilitySelection(
                           code: "ACC1_SEL1",
@@ -324,7 +324,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AllowCalculator = false
             };
 
-            var resource = getResourceWithCode("AmericanSignLanguage");
+            var resource = getResourceWithCode("AmericanSignLanguage", false);
 
             var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
@@ -341,7 +341,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AllowCalculator = false
             };
 
-            var resource = getResourceWithCode("AmericanSignLanguage");
+            var resource = getResourceWithCode("AmericanSignLanguage", false);
 
             var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
@@ -350,7 +350,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         }
 
         [Fact]
-        public void TestApplyCalculatorFlagTrue()
+        public void TestEnableCalculator()
         {
             var itemDigest = new ItemDigest()
             {
@@ -358,7 +358,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AllowCalculator = true
             };
 
-            var resource = getResourceWithCode("Calculator");
+            var resource = getResourceWithCode("Calculator", false);
 
             var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
@@ -367,14 +367,46 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         }
 
         [Fact]
-        public void TestApplyCalculatorFlagFalse()
+        public void TestDisableCalculatorWithMetadataFlag()
         {
             var itemDigest = new ItemDigest()
             {
                 AslSupported = true,
                 AllowCalculator = false
             };
-            var resource = getResourceWithCode("Calculator");
+            var resource = getResourceWithCode("Calculator", false);
+
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, true);
+        }
+
+        [Fact]
+        public void TestDisableCalculatorWithDisabledResource()
+        {
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = true,
+                AllowCalculator = true
+            };
+            var resource = getResourceWithCode("Calculator", true);
+
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+
+            Assert.NotNull(resModified);
+            Assert.Equal(resModified.Disabled, true);
+        }
+
+        [Fact]
+        public void TestDisableCalculatorWithMetadataAndResource()
+        {
+            var itemDigest = new ItemDigest()
+            {
+                AslSupported = true,
+                AllowCalculator = false
+            };
+            var resource = getResourceWithCode("Calculator", true);
 
             var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
 
@@ -391,7 +423,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AslSupported = true,
                 AllowCalculator = false
             };
-            var resource = getResourceWithCode("EnglishDictionary");
+            var resource = getResourceWithCode("EnglishDictionary", false);
 
             var resModified = resource.ApplyFlags(itemDigest, "WER", false, new List<string> { "WER" });
 
@@ -408,7 +440,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AslSupported = true,
                 AllowCalculator = false
             };
-            var resource = getResourceWithCode("EnglishDictionary");
+            var resource = getResourceWithCode("EnglishDictionary", false);
 
             var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" });
 
@@ -425,7 +457,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AslSupported = true,
                 AllowCalculator = false
             };
-            var resource = getResourceWithCode("Thesaurus");
+            var resource = getResourceWithCode("Thesaurus", false);
 
             var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" });
 
@@ -442,7 +474,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AslSupported = false,
                 AllowCalculator = false
             };
-            var resource = getResourceWithCode("GlobalNotes");
+            var resource = getResourceWithCode("GlobalNotes", false);
 
             var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "MC" });
 
@@ -459,7 +491,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 AslSupported = false,
                 AllowCalculator = false
             };
-            var resource = getResourceWithCode("GlobalNotes");
+            var resource = getResourceWithCode("GlobalNotes", false);
 
             var resModified = resource.ApplyFlags(itemDigest, itemType, true, new List<string> { "MC" });
 
