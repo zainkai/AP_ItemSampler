@@ -210,8 +210,14 @@ namespace ItemSearchParams {
          */
         getExpandAll() {
             const { expandMore, expandGradeLevels, expandSubjects, expandClaims, expandInteractionTypes } = this.state;
-            const expandAll = expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
+            const expandAll = expandMore && expandGradeLevels && expandSubjects && expandClaims && expandInteractionTypes;
             return expandAll;
+        }
+
+        toggleExpandItemIDInput() {
+            this.setState({
+                expandMore: !this.state.expandMore
+            });
         }
 
         toggleExpandGradeLevels() {
@@ -242,6 +248,7 @@ namespace ItemSearchParams {
             // If everything is already expanded, then collapse everything. Otherwise, expand everything.
             const expandAll = !this.getExpandAll();
             this.setState({
+                expandMore: expandAll,
                 expandGradeLevels: expandAll,
                 expandSubjects: expandAll,
                 expandClaims: expandAll,
@@ -262,6 +269,12 @@ namespace ItemSearchParams {
         keyPressResetFilters(e: React.KeyboardEvent<HTMLElement>) {
             if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
                 this.resetFilters();
+            }
+        }
+
+        keyPressToggleExpandItemId(e: React.KeyboardEvent<HTMLElement>) {
+            if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleExpandItemIDInput();
             }
         }
 
@@ -333,9 +346,12 @@ namespace ItemSearchParams {
                 </input>
             );
             return (
-                <div className="search-category no-collapse" style={{ "maxWidth":"250px" }}>
-                    <label>Browse By Id</label>
-                    {input}
+                <div className="search-category" style={{ "maxWidth":"250px" }}>
+                    <label aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
+                        onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
+                        {this.state.expandMore ? hideArrow : showArrow} Browse By Id
+                    </label>
+                    { this.state.expandMore ? input : undefined }
                 </div>
             );
         }
