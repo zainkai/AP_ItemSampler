@@ -66,6 +66,30 @@ namespace ItemPage {
         return resource;
     }
 
+    function openPerformanceItemPopup(performanceDescriptionText: string, subject: string): void {
+        var visitedBefore = false;
+        //Cookies only store strings
+        if (subject.toLowerCase() === "math") {
+            visitedBefore = (readCookie("visitedMathPerfItem") == "true");
+            document.cookie = "visitedMathPerfItem=true";
+        } else if (subject.toLowerCase() === "ela") {
+            visitedBefore = (readCookie("visitedELAPerfItem") == "true");
+            document.cookie = "visitedELAPerfItem=true";
+        }
+        if (!visitedBefore) {
+            const windowFeatures: string = "height=200,width=400,status=yes,toolbar=no,menubar=no,location=no";
+            var popup = window.open("", "PerformancePopup", windowFeatures);
+            popup.document.write("<title>Performance Task Item</title><div>"
+                + performanceDescriptionText
+                + "<div>");
+        }
+    }
+
+    function readCookie(name: string): string | undefined {
+        var cookie = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return cookie ? cookie.pop() : '';
+    }
+
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
         let resourceTypes = resourceGroups.map(t => t.label);
@@ -82,6 +106,8 @@ namespace ItemPage {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         isPerformanceItem: boolean;
+        performanceItemDescription: string;
+        subject: string;
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
@@ -159,6 +185,9 @@ namespace ItemPage {
         }
 
         render() {
+            if (this.props.isPerformanceItem) {
+                openPerformanceItemPopup(this.props.performanceItemDescription, this.props.subject);
+            }
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
@@ -242,7 +271,7 @@ namespace ItemPage {
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {}
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
