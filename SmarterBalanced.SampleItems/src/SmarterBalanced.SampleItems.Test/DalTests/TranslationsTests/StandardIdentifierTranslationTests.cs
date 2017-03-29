@@ -1,7 +1,10 @@
-﻿using SmarterBalanced.SampleItems.Dal.Translations;
+﻿using SmarterBalanced.SampleItems.Dal.Configurations.Models;
+using SmarterBalanced.SampleItems.Dal.Providers.Models;
+using SmarterBalanced.SampleItems.Dal.Translations;
 using SmarterBalanced.SampleItems.Dal.Xml.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -27,6 +30,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         string invalidMathV5StandardString;
         string invalidMathV6StandardString;
         string noClaimString;
+        string noTargetString;
 
         public StandardIdentifierTranslationTests()
         {
@@ -41,6 +45,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             invalidMathV5StandardString = "SBAC-MA-v5:2||||6.NS.6c";
             invalidMathV6StandardString = "SBAC-MA-v6:3|||";
             noClaimString = "SBAC-ELA-v1|4-6|6.SL.2";
+            noTargetString = "SBAC-ELA-v1:3-L||6.SL.2";
         }
 
         [Fact]
@@ -292,6 +297,101 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal("NBT", identifier.ContentDomain);
             Assert.Equal("E-3", identifier.Target);
             Assert.Equal("MATH", identifier.SubjectCode);
+        }
+
+        [Fact]
+        public void TestToClaimId()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var claimId = StandardIdentifierTranslation.ToClaimId(identifier);
+            identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(noClaimString);
+            var noClaimId = StandardIdentifierTranslation.ToClaimId(identifier);
+
+            Assert.Equal("3", claimId);
+            Assert.Equal(string.Empty, noClaimId);
+        }
+
+        [Fact]
+        public void TestToTargetId()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var targetId = StandardIdentifierTranslation.ToTargetId(identifier);
+            identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(noTargetString);
+            var noTargetId = StandardIdentifierTranslation.ToTargetId(identifier);
+
+            Assert.Equal("4", targetId);
+            Assert.Equal(string.Empty, noTargetId);
+        }
+
+        [Fact(Skip = "ToDo")]
+        public void TestToStandardIdentifier()
+        {
+            int testItemKey = 1;
+            int testItemBank = 2;
+            string testGrade = "5";
+
+            ItemMetadata metadata = new ItemMetadata();
+            ItemContents contents = new ItemContents();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
+            metadata.Metadata.ItemKey = testItemKey;
+            metadata.Metadata.GradeCode = testGrade;
+            metadata.Metadata.TargetAssessmentType = "Test target string";
+            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
+            metadata.Metadata.InteractionType = "EQ";
+            metadata.Metadata.SubjectCode = "MATH";
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
+            metadata.Metadata.StandardPublications.Add(
+                new StandardPublication
+                {
+                    PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
+                });
+
+            contents.Item.ItemKey = testItemKey;
+            contents.Item.ItemBank = testItemBank;
+            contents.Item.Contents = new List<Content>();
+
+            var interactionTypes = new List<InteractionType>
+            {
+                new InteractionType(code: "EQ", label: "", description: "", order: 0)
+            };
+
+            var subjects = new List<Subject>
+            {
+                new Subject(
+                    code: "MATH",
+                    label: string.Empty,
+                    shortLabel: string.Empty,
+                    claims: ImmutableArray.Create<Claim>(),
+                    interactionTypeCodes: ImmutableArray.Create<string>())
+            };
+
+            var placeholderText = new RubricPlaceHolderText
+            {
+                RubricPlaceHolderContains = new string[0],
+                RubricPlaceHolderEquals = new string[0]
+            };
+
+            var settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "" }
+            };
+
+            AppSettings appSettings = new AppSettings
+            {
+                SettingsConfig = settings,
+                RubricPlaceHolderText = placeholderText
+            };
+            ItemDigest digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
+            StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(digest, new string[] { elaStandardString });
+
+            Assert.NotNull(identifier);
+        }
+
+        [Fact(Skip = "ToDo")]
+        public void TestCoreStandardFromIdentifier()
+        {
+            //TODO
         }
     }
 }
