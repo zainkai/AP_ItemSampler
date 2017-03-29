@@ -23,9 +23,10 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public string BrowserWarningCookie { get; set; }
         public string UserAgentRegex { get; set; }
         public int NumMoreLikeThisItems { get; set; }
+        public string ELAPerformanceDescription { get; set; }
+        public string MATHPerformanceDescription { get; set; }
         public string CoreStandardsXMLPath { get; set; }
         public string[] SupportedPublications { get; set; }
         public Dictionary<string, string> OldToNewInteractionType { get; set; }
-
     }
 }
