@@ -31,6 +31,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         string invalidMathV6StandardString;
         string noClaimString;
         string noTargetString;
+        ItemMetadata metadata;
+        ItemContents contents;
+        AppSettings appSettings;
 
         public StandardIdentifierTranslationTests()
         {
@@ -46,6 +49,63 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             invalidMathV6StandardString = "SBAC-MA-v6:3|||";
             noClaimString = "SBAC-ELA-v1|4-6|6.SL.2";
             noTargetString = "SBAC-ELA-v1:3-L||6.SL.2";
+            int testItemKey = 1;
+            int testItemBank = 2;
+            string testGrade = "5";
+
+            metadata = new ItemMetadata();
+            contents = new ItemContents();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
+            metadata.Metadata.ItemKey = testItemKey;
+            metadata.Metadata.GradeCode = testGrade;
+            metadata.Metadata.TargetAssessmentType = "Test target string";
+            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
+            metadata.Metadata.InteractionType = "EQ";
+            metadata.Metadata.SubjectCode = "MATH";
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
+            metadata.Metadata.StandardPublications.Add(
+                new StandardPublication
+                {
+                    PrimaryStandard = "SBAC-MA-v1:1|NBT|E-3|a/s|3.NBT.2",
+                    Publication = "SBAC-MA-v1"
+                });
+
+            contents.Item.ItemKey = testItemKey;
+            contents.Item.ItemBank = testItemBank;
+            contents.Item.Contents = new List<Content>();
+
+            var interactionTypes = new List<InteractionType>
+            {
+                new InteractionType(code: "EQ", label: "", description: "", order: 0)
+            };
+
+            var subjects = new List<Subject>
+            {
+                new Subject(
+                    code: "MATH",
+                    label: string.Empty,
+                    shortLabel: string.Empty,
+                    claims: ImmutableArray.Create<Claim>(),
+                    interactionTypeCodes: ImmutableArray.Create<string>())
+            };
+
+            var placeholderText = new RubricPlaceHolderText
+            {
+                RubricPlaceHolderContains = new string[0],
+                RubricPlaceHolderEquals = new string[0]
+            };
+
+            var settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "" }
+            };
+
+            appSettings = new AppSettings
+            {
+                SettingsConfig = settings,
+                RubricPlaceHolderText = placeholderText
+            };
         }
 
         [Fact]
@@ -323,75 +383,52 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(string.Empty, noTargetId);
         }
 
-        [Fact(Skip = "ToDo")]
-        public void TestToStandardIdentifier()
+        [Fact]
+        public void TestToStandardIdentifierGoodDigest()
         {
-            int testItemKey = 1;
-            int testItemBank = 2;
-            string testGrade = "5";
-
-            ItemMetadata metadata = new ItemMetadata();
-            ItemContents contents = new ItemContents();
-            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
-            contents.Item = new ItemXmlFieldRepresentation();
-            metadata.Metadata.ItemKey = testItemKey;
-            metadata.Metadata.GradeCode = testGrade;
-            metadata.Metadata.TargetAssessmentType = "Test target string";
-            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
-            metadata.Metadata.InteractionType = "EQ";
-            metadata.Metadata.SubjectCode = "MATH";
-            metadata.Metadata.StandardPublications = new List<StandardPublication>();
-            metadata.Metadata.StandardPublications.Add(
-                new StandardPublication
-                {
-                    PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2"
-                });
-
-            contents.Item.ItemKey = testItemKey;
-            contents.Item.ItemBank = testItemBank;
-            contents.Item.Contents = new List<Content>();
-
-            var interactionTypes = new List<InteractionType>
-            {
-                new InteractionType(code: "EQ", label: "", description: "", order: 0)
-            };
-
-            var subjects = new List<Subject>
-            {
-                new Subject(
-                    code: "MATH",
-                    label: string.Empty,
-                    shortLabel: string.Empty,
-                    claims: ImmutableArray.Create<Claim>(),
-                    interactionTypeCodes: ImmutableArray.Create<string>())
-            };
-
-            var placeholderText = new RubricPlaceHolderText
-            {
-                RubricPlaceHolderContains = new string[0],
-                RubricPlaceHolderEquals = new string[0]
-            };
-
-            var settings = new SettingsConfig
-            {
-                SupportedPublications = new string[] { "" }
-            };
-
-            AppSettings appSettings = new AppSettings
-            {
-                SettingsConfig = settings,
-                RubricPlaceHolderText = placeholderText
-            };
+            
             ItemDigest digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
-            StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(digest, new string[] { elaStandardString });
+            StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(digest, new string[] { "SBAC-MA-v1" });
 
             Assert.NotNull(identifier);
+            Assert.Equal(digest.SubjectCode, identifier.SubjectCode);
+            Assert.Equal("1", identifier.Claim);
+            Assert.Equal("3.NBT.2", identifier.CommonCoreStandard);
+            Assert.Equal("NBT", identifier.ContentDomain);
+            Assert.Equal("E-3", identifier.Target);
         }
 
-        [Fact(Skip = "ToDo")]
+        [Fact]
         public void TestCoreStandardFromIdentifier()
         {
-            //TODO
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var coreStandardsRowCcss = ImmutableArray.Create(
+                CoreStandardsRow.Create(
+                    subjectCode: "ELA",
+                    key: "3-l|4-6|6.SL.2",
+                    name: "",
+                    description: "CCSS Desc",
+                    levelType: "CCSS",
+                    identifier: identifier));
+
+             var coreStandardsRowTarget = ImmutableArray.Create(
+                CoreStandardsRow.Create(
+                    subjectCode: "ELA",
+                    key: "4-6|3-6",
+                    name: "",
+                    description: "Target Desc",
+                    levelType: "Target",
+                    identifier: identifier));
+
+            CoreStandardsXml coreStandardsXml = new CoreStandardsXml(coreStandardsRowTarget, coreStandardsRowCcss);
+            CoreStandards core = StandardIdentifierTranslation.CoreStandardFromIdentifier(coreStandardsXml, identifier);
+
+            Assert.NotNull(core);
+            Assert.Equal(core.CommonCoreStandardsId, "6.SL.2");
+            Assert.Equal(core.TargetId, "4-6");
+            Assert.Equal(core.TargetIdLabel, "4");
+            Assert.Equal(core.TargetDescription, "Target Desc");
+            Assert.Equal(core.CommonCoreStandardsDescription, "CCSS Desc");
         }
     }
 }
