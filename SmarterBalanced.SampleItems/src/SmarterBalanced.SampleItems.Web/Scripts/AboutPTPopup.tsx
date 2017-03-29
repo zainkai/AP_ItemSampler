@@ -42,9 +42,21 @@
             }
         }
 
+        getSubjectHeader(): string {
+            switch (this.props.subject.toLowerCase()) {
+                case "math":
+                    return "Note about Math Performance Task Items";
+                case "ela":
+                    return "Note about ELA Performance Task Items";
+                default:
+                    return "";
+            }
+        }
+
+
         render() {
             this.shouldShowOnLoad();
-            const subject = this.getSubjectText();
+            const header = this.getSubjectHeader();
             return (
                 <div className="modal fade" id="about-performance-tasks-popup-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
                     <div className="modal-dialog share-modal" role="document">
@@ -53,7 +65,7 @@
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                                <h4 className="modal-title" id="myModalLabel">About {subject} Performance Tasks</h4>
+                                <h4 className="modal-title" id="myModalLabel">{header}</h4>
                             </div>
                             <div className="modal-body">
                                 <p dangerouslySetInnerHTML={{ __html: this.props.description }} />

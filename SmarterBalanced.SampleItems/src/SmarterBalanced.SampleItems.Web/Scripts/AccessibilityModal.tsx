@@ -152,11 +152,12 @@
                                 <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
                             </div>
                             <div className="modal-body">
-                                <p><span>Options highlighted in grey are not available for this item.</span></p>
+                                <p><span>Options displayed in grey are not available for this item.</span></p>
                                 <p>
                                     To experience the <strong>text-to-speech functionality</strong>,&nbsp;
-                                    <a href="http://www.smarterapp.org/news/2016/01/05/SecureBrowsers.html" target="_blank">the Secure Browser application</a>
-                                     &nbsp;is required.
+                                    please visit the&nbsp;
+                                    <a href="http://www.smarterapp.org/news/2016/01/05/SecureBrowsers.html" target="_blank">Smarter Balanced Practice Test.</a>
+                                   
                                 </p>
                                 <form id="accessibility-form" onSubmit={this.onSave}>
                                     <div className="accessibility-groups">
