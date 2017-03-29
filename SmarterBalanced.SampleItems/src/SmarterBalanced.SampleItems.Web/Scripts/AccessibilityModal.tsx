@@ -156,7 +156,7 @@
                                 <p>
                                     To experience the <strong>text-to-speech functionality</strong>,&nbsp;
                                     please visit the&nbsp;
-                                    <a href="http://www.smarterapp.org/news/2016/01/05/SecureBrowsers.html" target="_blank">Smarter Balanced Practice Test.</a>
+                                    <a href="http://www.smarterbalanced.org/assessments/practice-and-training-tests/ " target="_blank">Smarter Balanced Practice Test.</a>
                                    
                                 </p>
                                 <form id="accessibility-form" onSubmit={this.onSave}>
