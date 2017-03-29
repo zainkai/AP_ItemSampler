@@ -213,7 +213,7 @@ namespace ItemPage {
                         onReset={this.props.onReset} />
                     <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
                     <Share.ShareModal iSAAP={isaap} />
-                    <AboutPTPopup.Modal subject={this.props.subject} description={this.props.performanceItemDescription} />
+                    <AboutPTPopup.Modal subject={this.props.subject} description={this.props.performanceItemDescription} isPerformance={this.props.isPerformanceItem} />
                     <AboutPT.Modal subject={this.props.subject} description={this.props.performanceItemDescription} />
                 </div >
             );

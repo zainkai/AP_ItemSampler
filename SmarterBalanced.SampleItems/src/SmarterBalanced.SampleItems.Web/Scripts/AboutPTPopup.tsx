@@ -2,6 +2,7 @@
     export interface Props {
         subject: string;
         description: string;
+        isPerformance: boolean;
     }
 
     function readCookie(name: string): string | undefined {
@@ -12,6 +13,9 @@
     export class Modal extends React.Component<Props, {}> {
 
         shouldShowOnLoad(): void {
+            if (!this.props.isPerformance) {
+                return;
+            }
             var visitedBefore = false;
             //Cookies only store strings
             if (this.props.subject.toLowerCase() === "math") {
