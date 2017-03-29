@@ -72,7 +72,7 @@
             let resourceTypeHeader = <h3>{type}</h3>;
 
             /* TODO: Remove after these accessibility resources are fixed */
-            if (type === "Designated Support" || type === "Accommodations") {
+            if (type === "Accommodations") {
                 resourceTypeHeader = (
                     <div style={{ display: "flex", alignItems: "center"}}>
                         <h3 style={{ display: "inline-block" }}>{type}</h3>
