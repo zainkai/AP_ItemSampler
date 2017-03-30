@@ -68,11 +68,13 @@
         }
 
         renderResourceType(type: string) {
-            let resources = this.props.accResourceGroups.filter(group => group.label === type)[0].accessibilityResources;
+            let resources = this.props.accResourceGroups
+                .filter(group => group.label === type)[0]
+                .accessibilityResources;
             let resourceTypeHeader = <h3>{type}</h3>;
 
             /* TODO: Remove after these accessibility resources are fixed */
-            if (type === "Designated Support" || type === "Accommodations") {
+            if (type === "Designated Supports" || type === "Accommodations") {
                 resourceTypeHeader = (
                     <div style={{ display: "flex", alignItems: "center"}}>
                         <h3 style={{ display: "inline-block" }}>{type}</h3>
@@ -97,13 +99,14 @@
 
             let dropdowns = resources.map(res => {
                 let selectedCode = (this.state.resourceSelections || {})[res.label] || res.currentSelectionCode;
+                let selections = res.selections.filter(s => !s.hidden);
                 let ddprops: Dropdown.Props = {
                     defaultSelection: res.currentSelectionCode,
                     label: res.label,
-                    selections: res.selections,
+                    selections: selections,
                     selectionCode: selectedCode,
                     disabled: res.disabled,
-                    updateSelection: this.updateSelection,
+                    updateSelection: this.updateSelection
                 }
                 return <Dropdown.Dropdown{...ddprops} key={res.label} />;
             });

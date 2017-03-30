@@ -17,21 +17,21 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         AccessibilityResourceGroup group1 = new AccessibilityResourceGroup("", 1,
                 ImmutableArray.Create(
                     AccessibilityResource.Create(resourceCode: "AmericanSignLanguage", currentSelectionCode: "TDS_ASL0", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("TDS_ASL0", "", 1, false),
-                        new AccessibilitySelection("TDS_ASL1", "", 2, false))),
+                        new AccessibilitySelection("TDS_ASL0", "", 1, false, false),
+                        new AccessibilitySelection("TDS_ASL1", "", 2, false, false))),
                     AccessibilityResource.Create(resourceCode: "ColorContrast", currentSelectionCode: "TDS_CC0", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("TDS_CC0", "", 1, false),
-                        new AccessibilitySelection("TDS_CCInvert", "", 2, false)))));
+                        new AccessibilitySelection("TDS_CC0", "", 1, false, false),
+                        new AccessibilitySelection("TDS_CCInvert", "", 2, false, false)))));
 
         AccessibilityResourceGroup group2 = new AccessibilityResourceGroup("", 2,
                 ImmutableArray.Create(
                     AccessibilityResource.Create(resourceCode: "ClosedCaptioning", currentSelectionCode: "TDS_ClosedCap0", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("TDS_ClosedCap0", "", 1, false),
-                        new AccessibilitySelection("TDS_ClosedCap1", "", 2, false))),
+                        new AccessibilitySelection("TDS_ClosedCap0", "", 1, false, false),
+                        new AccessibilitySelection("TDS_ClosedCap1", "", 2, false, false))),
 
                     AccessibilityResource.Create(resourceCode: "Language", currentSelectionCode: "ENU", selections: ImmutableArray.Create(
-                        new AccessibilitySelection("ENU", "", 1, false),
-                        new AccessibilitySelection("ESN", "", 2, false)))));
+                        new AccessibilitySelection("ENU", "", 1, false, false),
+                        new AccessibilitySelection("ESN", "", 2, false, false)))));
 
         ImmutableArray<AccessibilityResourceGroup> groups;
 
