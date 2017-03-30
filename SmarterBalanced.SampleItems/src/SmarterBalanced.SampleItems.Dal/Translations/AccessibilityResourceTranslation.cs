@@ -63,14 +63,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         private static AccessibilitySelection MergeSelection(AccessibilitySelection sel, AccessibilityFamilyResource familyResource)
         {
             var familySel = familyResource.Selections.SingleOrDefault(fs => fs.Code == sel.SelectionCode);
-            var selDisabled = familyResource.Disabled || familySel == null;
-            var label = string.IsNullOrEmpty(familySel?.Label) ? sel.Label : familySel.Label;
+            var selDisabled = familyResource.Disabled || familySel == null || familySel.Hidden;
+            string label = (!string.IsNullOrEmpty(familySel?.Label)) ? familySel.Label : sel.Label;
 
             var newSelection = new AccessibilitySelection(
                 code: sel.SelectionCode,
                 label: label,
                 order: sel.Order,
-                disabled: selDisabled);
+                disabled: selDisabled,
+                hidden: familySel?.Hidden ?? sel.Hidden);
 
             return newSelection;
         }
@@ -86,16 +87,18 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 .Select(sel => MergeSelection(sel, familyResource))
                 .ToImmutableArray();
 
-            var matchingSelection = newSelections.FirstOrDefault(s => s.SelectionCode == globalResource.DefaultSelection);
+            string defaultSelection = (!string.IsNullOrEmpty(familyResource.DefaultSelection)) ? familyResource.DefaultSelection : globalResource.DefaultSelection;
+
+            var matchingSelection = newSelections.FirstOrDefault(s => s.SelectionCode == defaultSelection);
             bool isDefaultInvalid = matchingSelection == null || matchingSelection.Disabled;
 
             string newDefault = isDefaultInvalid
-                ? newSelections.FirstOrDefault(s => !s.Disabled)?.SelectionCode ?? string.Empty
-                : globalResource.DefaultSelection;
+                ? newSelections.FirstOrDefault(s => !s.Disabled && !s.Hidden)?.SelectionCode ?? defaultSelection
+                : defaultSelection;
 
             var newResource = new AccessibilityResource(
                 resourceCode: globalResource.ResourceCode,
-                currentSelectionCode: globalResource.CurrentSelectionCode,
+                currentSelectionCode: newDefault,
                 order: globalResource.Order,
                 defaultSelection: newDefault,
                 selections: newSelections,

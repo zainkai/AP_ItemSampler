@@ -11,30 +11,35 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Label { get; }
         public int? Order { get; }
         public bool Disabled { get; }
+        public bool Hidden { get; }
 
         public AccessibilitySelection(
             string code,
             string label,
             int? order,
-            bool disabled)
+            bool disabled,
+            bool hidden)
         {
             SelectionCode = code;
             Label = label;
             Order = order;
             Disabled = disabled;
+            Hidden = hidden;
         }
 
         public static AccessibilitySelection Create(
             string code = "",
             string label = "",
             int? order = null,
-            bool disabled = false)
+            bool disabled = false,
+            bool hidden = false)
         {
             var sel = new AccessibilitySelection(
                 code: code,
                 order: order,
                 disabled: disabled,
-                label: label);
+                label: label,
+                hidden: hidden);
 
             return sel;
         }
@@ -45,7 +50,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 code: SelectionCode,
                 label: Label,
                 order: Order,
-                disabled: disabled);
+                disabled: disabled,
+                hidden: Hidden);
 
             return newSelection;
         }
@@ -56,7 +62,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                     code: (string)xmlSelection.Element("Code"),
                     label: (string)xmlSelection.Element("Text")?.Element("Label"),
                     order: (int?)xmlSelection.Element("Order"),
-                    disabled: false);
+                    disabled: false,
+                    hidden: false);
 
             return selection;
         }
