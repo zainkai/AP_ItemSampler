@@ -2,12 +2,13 @@
 set -ev
 
 #Do nothing if this is a pull request.
-if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then exit 0 fi
+# Pull request is either false, or the PR number if it is a PR.
+if [[ ! ( "$TRAVIS_PULL_REQUEST" == "false" ) ]]; then exit 0; fi
 
 Region="us-west-2"
 aws ecr get-login --region $Region | source /dev/stdin
 
-if [ ( "$BRANCH" == "feature_travis-docker" ] || [ "$BRANCH" == "dev" ] || [ "$BRANCH" == "stage" ] || [ "$BRANCH" == "master" ) && "$TRAVIS_PULL_REQUEST" == "false" ]
+if ( [ "$BRANCH" == "feature_travis-docker" ] || [ "$BRANCH" == "dev" ] || [ "$BRANCH" == "stage" ] || [ "$BRANCH" == "master" ] ) && [ "$TRAVIS_PULL_REQUEST" == "false" ]
 then
     ServiceName="SampleItemsWebsite-dev"
     if [ "$BRANCH" == "dev" ]
