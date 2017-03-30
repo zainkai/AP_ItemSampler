@@ -12,15 +12,16 @@
 namespace ItemPage {
 
     function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
-        let str = "";
+        let isaapCodes = "TDS_ITM1;"; // always enable item tools menu
         for (let group of accResourceGroups) {
             for (let res of group.accessibilityResources) {
                 if (res.currentSelectionCode && !res.disabled) {
-                    str += res.currentSelectionCode + ";";
+                    isaapCodes += res.currentSelectionCode + ";";
                 }
             }
         }
-        return encodeURIComponent(str);
+
+        return encodeURIComponent(isaapCodes);
     }
 
     function resetResource(model: AccessibilityResource): AccessibilityResource {
@@ -62,7 +63,10 @@ namespace ItemPage {
             newSelection.currentSelectionCode = "";
             return newSelection;
         }
-        return resource;
+        return resource; function readCookie(name: string): string | undefined {
+            var cookie = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return cookie ? cookie.pop() : '';
+        }
     }
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
@@ -81,6 +85,8 @@ namespace ItemPage {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         isPerformanceItem: boolean;
+        performanceItemDescription: string;
+        subject: string;
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
@@ -146,7 +152,7 @@ namespace ItemPage {
                 <span>
                     <span className="item-nav-long-label">This is a </span><b>Performance Task</b>
                 </span>
-            ); 
+            );
 
             return (
                 <a className="item-nav-btn" data-toggle="modal" data-target="#about-performance-tasks-modal-container"
@@ -158,8 +164,8 @@ namespace ItemPage {
         }
 
         render() {
-            let isaap = "";//TODO: toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl;
+            let isaap = toiSAAP(this.props.accResourceGroups);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (
@@ -176,8 +182,9 @@ namespace ItemPage {
                             <a className="item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
-                                {moreText}                               
+                                {moreText}
                             </a>
+
                             <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
                                 onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
@@ -187,9 +194,12 @@ namespace ItemPage {
                             {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
 
                         </div>
-                        <div className="item-nav-right-group" role="group" aria-label="Second group" disabled>
-                            <p>Coming Soon</p>&nbsp;&nbsp;
-                            <a type="button" className="accessibility-btn btn btn-primary" disabled>
+
+                        <div className="item-nav-right-group" role="group" aria-label="Second group">
+                            <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
+                                data-target="#accessibility-modal-container"
+                                onClick={e => ga("send", "event", "button", "OpenAccessibility")}
+                                onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                                 Accessibility
                             </a>
@@ -203,41 +213,15 @@ namespace ItemPage {
                         onReset={this.props.onReset} />
                     <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
                     <Share.ShareModal iSAAP={isaap} />
-                    <div className="modal fade" id="about-performance-tasks-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
-                        <div className="modal-dialog share-modal" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 className="modal-title" id="myModalLabel">About Performance Tasks</h4>
-                                </div>
-                                <div className="modal-body">
-                                    <p>
-                                        <b>Performance tasks</b> measure a student’s ability to demonstrate critical-thinking and
-                                        problem-solving skills.
-                                        Performance tasks challenge students to apply their knowledge and skills to respond to
-                                        complex real-world problems. They can be best described as collections of questions and
-                                        activities that are coherently connected to a single theme or scenario. These activities
-                                        are meant to measure capacities such as depth of understanding, writing and research
-                                        skills, and complex analysis, which cannot be adequately assessed with traditional
-                                        assessment questions. The performance tasks are taken on a computer (but are not computer
-                                        adaptive) and will take one to two class periods to complete.
-                                    </p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button className="btn btn-primary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <AboutPTPopup.Modal subject={this.props.subject} description={this.props.performanceItemDescription} isPerformance={this.props.isPerformanceItem} />
+                    <AboutPT.Modal subject={this.props.subject} description={this.props.performanceItemDescription} />
+                </div >
             );
         }
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {}
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
@@ -264,7 +248,7 @@ namespace ItemPage {
 
         onReset = () => {
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", "", "; path=/");
-            
+
             const newAccResourceGroups = this.itemProps.accResourceGroups.map(g => {
                 const newGroup = Object.assign({}, g);
                 newGroup.accessibilityResources = newGroup.accessibilityResources.map(resetResource);
@@ -273,7 +257,7 @@ namespace ItemPage {
 
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
-            
+
             this.render();
         }
 

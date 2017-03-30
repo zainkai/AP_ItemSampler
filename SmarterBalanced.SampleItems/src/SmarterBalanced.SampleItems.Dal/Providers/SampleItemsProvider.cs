@@ -15,10 +15,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 {
     public static class SampleItemsProvider
     {
-
         public static SampleItemsContext LoadContext(AppSettings appSettings, ILogger logger)
         {
-
             CoreStandardsXml standardsXml = LoadCoreStandards(appSettings.SettingsConfig.CoreStandardsXMLPath);
             var accessibilityResourceFamilies = LoadAccessibility(appSettings.SettingsConfig.AccommodationsXMLPath);
             var interactionGroup = LoadInteractionGroup(appSettings.SettingsConfig.InteractionTypesXMLPath);
@@ -62,7 +60,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             AppSettings appSettings)
         {
             string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
-            
 
             var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
@@ -80,7 +77,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
             return itemDigests;
         }
-
 
         private static ImmutableArray<MergedAccessibilityFamily> LoadAccessibility(string accessibilityPath)
         {
@@ -106,7 +102,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 targetRows: targets,
                 ccssRows: ccss);
         }
-
 
         private static ImmutableArray<Subject> LoadSubjects(string subjectFile, ImmutableArray<InteractionFamily> interactionFamilies)
         {

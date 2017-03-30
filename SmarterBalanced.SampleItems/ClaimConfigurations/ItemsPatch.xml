@@ -476,11 +476,6 @@
     <Target>A</Target>
   </row>
   <row>
-    <ItemId>2649</ItemId>
-    <Claim></Claim>
-    <Target></Target>
-  </row>
-  <row>
     <ItemId>3521</ItemId>
     <Claim>Claim 3</Claim>
     <Target>A</Target>
@@ -582,18 +577,8 @@
   </row>
   <row>
     <ItemId>2647</ItemId>
-    <Claim></Claim>
-    <Target></Target>
-  </row>
-  <row>
-    <ItemId>2667</ItemId>
-    <Claim></Claim>
-    <Target></Target>
-  </row>
-  <row>
-    <ItemId>2665</ItemId>
-    <Claim></Claim>
-    <Target></Target>
+    <Claim>Claim 4</Claim>
+    <Target>7</Target>
   </row>
   <row>
     <ItemId>3601</ItemId>
@@ -634,11 +619,6 @@
     <ItemId>3300</ItemId>
     <Claim>Claim 1</Claim>
     <Target>B</Target>
-  </row>
-  <row>
-    <ItemId>2696</ItemId>
-    <Claim></Claim>
-    <Target></Target>
   </row>
   <row>
     <ItemId>3286</ItemId>
@@ -729,11 +709,6 @@
     <ItemId>3302</ItemId>
     <Claim>Claim 1</Claim>
     <Target>E</Target>
-  </row>
-  <row>
-    <ItemId>2698</ItemId>
-    <Claim></Claim>
-    <Target></Target>
   </row>
   <row>
     <ItemId>3635</ItemId>

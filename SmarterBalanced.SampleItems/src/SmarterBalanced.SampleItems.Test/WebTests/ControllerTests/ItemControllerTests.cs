@@ -80,6 +80,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 accessibilityCookieName: accCookieName,
                 isPerformanceItem: false,
                 accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
+                subject: "MATH",
                 moreLikeThisVM: default(MoreLikeThisViewModel),
                 aboutThisItemVM: aboutThisItemVM);
 
@@ -87,6 +88,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
                 isPerformanceItem: false,
+                subject: "MATH",
                 aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
 

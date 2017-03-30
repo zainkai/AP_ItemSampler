@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    var ivsURL = ViewData["ItemViewerService"] ?? "";
 }
 
 
@@ -22,7 +21,7 @@
     <div class="text-center">
 
         <a class="btn-lg btn-primary home-container-button"
-           href="@Url.Action(action: "Index", controller: "ItemsSearch")">
+           href="@Url.Action(action: "Index", controller: "BrowseItems")">
 
             Browse Test Items
         </a>
@@ -36,8 +35,6 @@
         </a>
 
     </div>
-
-    <iframe src="@ivsURL" style="display: none;"></iframe>
 </div>
 
 <environment names="Development">

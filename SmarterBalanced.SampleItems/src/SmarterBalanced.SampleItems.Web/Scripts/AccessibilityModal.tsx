@@ -69,6 +69,25 @@
 
         renderResourceType(type: string) {
             let resources = this.props.accResourceGroups.filter(group => group.label === type)[0].accessibilityResources;
+            let resourceTypeHeader = <h3>{type}</h3>;
+
+            /* TODO: Remove after these accessibility resources are fixed */
+            if (type === "Designated Support" || type === "Accommodations") {
+                resourceTypeHeader = (
+                    <div style={{ display: "flex", alignItems: "center"}}>
+                        <h3 style={{ display: "inline-block" }}>{type}</h3>
+                        <span style={{ marginTop: "10px" }}>&nbsp;&nbsp;(coming soon)</span>
+                    </div>
+                );
+                for (let res of resources) {
+                    res.selections = [];
+                    res.disabled = true;
+                    res.currentSelectionCode = "";
+                    res.defaultSelection = "";
+                }
+            }
+            /* TODO: REMOVE ABOVE */
+
 
             const resCount = resources.length;
             const isExpanded = (this.state.resourceTypeExpanded || {})[type];
@@ -110,7 +129,7 @@
 
             return (
                 <div key={type}>
-                    <h3>{type}</h3>
+                    {resourceTypeHeader}
                     <div className="accessibility-dropdowns">
                         {dropdowns}
                     </div>
@@ -133,7 +152,13 @@
                                 <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
                             </div>
                             <div className="modal-body">
-                                <p><span>Options highlighted in grey are not available for this item.</span></p>
+                                <p><span>Options displayed in grey are not available for this item.</span></p>
+                                <p>
+                                    To experience the <strong>text-to-speech functionality</strong>,&nbsp;
+                                    please visit the&nbsp;
+                                    <a href="http://www.smarterbalanced.org/assessments/practice-and-training-tests/ " target="_blank">Smarter Balanced Practice Test.</a>
+                                   
+                                </p>
                                 <form id="accessibility-form" onSubmit={this.onSave}>
                                     <div className="accessibility-groups">
                                         {groups}

@@ -80,8 +80,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 f.Grades.Contains(grade) &&
                 f.Subjects.Contains(itemDigest.SubjectCode));
 
+            var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
+            var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
+            bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
+
             var flaggedResources = family?.Resources
-                .Select(r => r.ApplyFlags(aslSupported: itemDigest.AslSupported))
+                .Select(r => r.ApplyFlags(itemDigest, interactionType?.Code, isPerformance, settings.SettingsConfig.DictionarySupportedItemTypes))
                 .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
             var groups = settings.SettingsConfig.AccessibilityTypes
@@ -89,10 +93,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 .OrderBy(g => g.Order)
                 .ToImmutableArray();
 
-
-            var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
-            var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
-            bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
