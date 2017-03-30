@@ -48,7 +48,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
         private static AccessibilityResource ApplyIsaap(this AccessibilityResource resource, string[] isaap)
         {
-            var issapSelection = resource.Selections.FirstOrDefault(sel => isaap.Contains(sel.SelectionCode));
+            var issapSelection = resource.Selections.FirstOrDefault(sel => isaap.Equals(sel.SelectionCode));
             if (issapSelection == null)
             {
                 return resource;
@@ -59,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
         private static AccessibilityResource ApplySelectedCode(this AccessibilityResource resource, string code)
         {
-            var newSelection = resource.Selections.FirstOrDefault(sel => sel.SelectionCode.Contains(code));
+            var newSelection = resource.Selections.FirstOrDefault(sel => sel.SelectionCode.Equals(code));
             if (newSelection == null || newSelection.Disabled)
             {
                 return resource;
