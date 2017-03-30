@@ -50,10 +50,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                     return GradeLevels.Grade8;
                 case "09": 
                 case "9":
-                    return GradeLevels.Grade9;
-                case "10": return GradeLevels.Grade10;
-                case "11": return GradeLevels.Grade11;
-                case "12": return GradeLevels.Grade12;
+                case "10": 
+                case "11": 
+                case "12":
+                    return GradeLevels.High;
                 case "NA": return GradeLevels.NA;
                 default: throw new ArgumentException($"String \"{s}\" is not a valid grade level.");
             }
