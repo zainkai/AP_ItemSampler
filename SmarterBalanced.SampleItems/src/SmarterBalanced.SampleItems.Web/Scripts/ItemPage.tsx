@@ -58,6 +58,7 @@ namespace ItemPage {
                 selectionCode: "",
                 disabled: true,
                 order: 0,
+                hidden: false
             };
             newSelection.selections.push(disabledOption);
             newSelection.currentSelectionCode = "";
