@@ -4,6 +4,7 @@
         label: string;
         selectionCode: string;
         order: number;
+        hidden: boolean;
     }
 
     export interface Props {
@@ -26,14 +27,14 @@
 
         renderOption = (selection: Selection) => {
             const disabledCSS: string = selection.disabled ? "option-disabled" : "option-enabled";
+            const label = this.props.disabled ? "" : selection.label;
             return (
                 <option value={selection.selectionCode}
                     disabled={selection.disabled}
                     key={selection.selectionCode}
                     className={disabledCSS}
                     selected={this.props.selectionCode === selection.selectionCode}>
-
-                    {selection.label}
+                    {label}
                 </option>
             );
         }

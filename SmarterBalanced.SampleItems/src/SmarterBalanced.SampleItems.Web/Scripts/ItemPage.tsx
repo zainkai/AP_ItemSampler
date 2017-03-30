@@ -58,12 +58,16 @@ namespace ItemPage {
                 selectionCode: "",
                 disabled: true,
                 order: 0,
+                hidden: false
             };
             newSelection.selections.push(disabledOption);
             newSelection.currentSelectionCode = "";
             return newSelection;
         }
-        return resource;
+        return resource; function readCookie(name: string): string | undefined {
+            var cookie = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return cookie ? cookie.pop() : '';
+        }
     }
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
@@ -82,6 +86,8 @@ namespace ItemPage {
         itemViewerServiceUrl: string;
         accessibilityCookieName: string;
         isPerformanceItem: boolean;
+        performanceItemDescription: string;
+        subject: string;
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
@@ -208,41 +214,15 @@ namespace ItemPage {
                         onReset={this.props.onReset} />
                     <MoreLikeThis.Modal {...this.props.moreLikeThisVM} />
                     <Share.ShareModal iSAAP={isaap} />
-                    <div className="modal fade" id="about-performance-tasks-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
-                        <div className="modal-dialog share-modal" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 className="modal-title" id="myModalLabel">About Performance Tasks</h4>
-                                </div>
-                                <div className="modal-body">
-                                    <p>
-                                        <b>Performance tasks</b> measure a student’s ability to demonstrate critical-thinking and
-                                        problem-solving skills.
-                                        Performance tasks challenge students to apply their knowledge and skills to respond to
-                                        complex real-world problems. They can be best described as collections of questions and
-                                        activities that are coherently connected to a single theme or scenario. These activities
-                                        are meant to measure capacities such as depth of understanding, writing and research
-                                        skills, and complex analysis, which cannot be adequately assessed with traditional
-                                        assessment questions. The performance tasks are taken on a computer (but are not computer
-                                        adaptive) and will take one to two class periods to complete.
-                                    </p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button className="btn btn-primary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <AboutPTPopup.Modal subject={this.props.subject} description={this.props.performanceItemDescription} isPerformance={this.props.isPerformanceItem} />
+                    <AboutPT.Modal subject={this.props.subject} description={this.props.performanceItemDescription} />
+                </div >
             );
         }
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {}
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 

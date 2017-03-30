@@ -26,6 +26,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     order: 1,
                     disabled: false,
                     defaultSelection: "ACC1_SEL1",
+                    currentSelectionCode:  "ACC1_SEL1",
                     label: "Accessibility 1",
                     description: "Accessibility Selection One",
                     selections: ImmutableArray.Create(
@@ -33,12 +34,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                             code: "ACC1_SEL1",
                             order: 1,
                             disabled: false,
-                            label: "Selection 1"))),
+                            label: "Selection 1",
+                            hidden: false))),
                 AccessibilityResource.Create(
                     resourceCode: "ACC2",
                     order: 2,
                     disabled: false,
                     defaultSelection: "ACC2_SEL2",
+                    currentSelectionCode:  "ACC2_SEL2",
                     label: "Accessibility 2",
                     description: "Accessibility Selection Two",
                     selections: ImmutableArray.Create(
@@ -46,12 +49,14 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                             code: "ACC2_SEL1",
                             order: 1,
                             disabled: false,
-                            label: "Selection 1"),
+                            label: "Selection 1",
+                            hidden: false),
                         new AccessibilitySelection(
                             code: "ACC2_SEL2",
                             order: 2,
                             disabled: false,
-                            label: "Selection 2")))
+                            label: "Selection 2",
+                            hidden: false)))
             };
 
             PartialResources = new List<AccessibilityResource>
@@ -76,7 +81,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             familyResource = new AccessibilityFamilyResource(
                 resourceCode: "TDS_CC",
                 selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
-                disabled: false);
+                disabled: false,
+                defaultSelection: null);
 
             globalResource = new AccessibilityResource(
                 resourceCode: "TDS_CC",
@@ -84,10 +90,10 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 order: 5,
                 defaultSelection: "TDS_CC0",
                 selections: ImmutableArray.Create(
-                    new AccessibilitySelection("TDS_CC0", "Black on White", 2, false),
-                    new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false),
-                    new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false),
-                    new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false)),
+                    new AccessibilitySelection("TDS_CC0", "Black on White", 2, false, false),
+                    new AccessibilitySelection("TDS_CCInvert", "Reverse Contrast", 2, false, false),
+                    new AccessibilitySelection("TDS_CCMagenta", "Black on Rose", 2, false, false),
+                    new AccessibilitySelection("TDS_CCMedGrayLtGray", "Medium Gray on Light Gray", 2, false, false)),
                 label: "globalResource",
                 description: "globalResource",
                 disabled: false,
@@ -109,7 +115,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                           code: "ACC1_SEL1",
                           order: 1,
                           disabled: true,
-                          label: "Selection 1")));
+                          label: "Selection 1",
+                          hidden: false)));
 
             return resource;
     }
@@ -129,7 +136,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 selections: ImmutableArray.Create(
                     AccessibilityFamilySelection.Create(code: "ACC2_SEL1"),
                     AccessibilityFamilySelection.Create(code: "ACC2_SEL2")),
-                disabled: false);
+                disabled: false,
+                defaultSelection: null);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
                 .MergeGlobalResource(partialResource, globalResource);
@@ -153,6 +161,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
                 resourceCode: "ACC2",
                 disabled: true,
+                defaultSelection: null,
                 selections: ImmutableArray.Create(
                     AccessibilityFamilySelection.Create(code: "ACC2_SEL1"),
                     AccessibilityFamilySelection.Create(code: "ACC2_SEL2")));
@@ -162,7 +171,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.True(outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
-            Assert.Equal(string.Empty, outputResource.DefaultSelection);
+            Assert.Equal(globalResource.DefaultSelection, outputResource.DefaultSelection);
             Assert.Equal(globalResource.Selections.Length, outputResource.Selections.Length);
 
             foreach (var sel in outputResource.Selections)
@@ -184,7 +193,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
             resourceCode: "ACC2",
             selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
-            disabled: false);
+            disabled: false,
+            defaultSelection: null);
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
                 .MergeGlobalResource(partialResource, globalResource);
@@ -192,7 +202,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
-            Assert.Equal(string.Empty, outputResource.DefaultSelection);
             Assert.Equal(globalResource.Selections.Count(), outputResource.Selections.Count());
             foreach (var sel in outputResource.Selections)
             {
@@ -206,6 +215,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         /// that only contains one select element. Also check that default
         /// AccessibilityResource selection is updated
         /// </summary>
+        /// TODO: Talk to Alex: I think this test had a bug before. 
         [Fact]
         public void TestToAccessibilityDisabledSomeSelections()
         {
@@ -213,12 +223,13 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             AccessibilityFamilyResource partialResource = new AccessibilityFamilyResource(
             resourceCode: "TDS_CC",
             disabled: false,
+            defaultSelection: null,
             selections: ImmutableArray.Create(AccessibilityFamilySelection.Create(code: "ACC2_SEL1")));
 
             AccessibilityResource outputResource = AccessibilityResourceTranslation
                 .MergeGlobalResource(partialResource, globalResource);
 
-            Assert.Equal(globalResource.CurrentSelectionCode, outputResource.CurrentSelectionCode);
+            Assert.Equal("ACC2_SEL1", outputResource.CurrentSelectionCode);
             Assert.Equal(false, outputResource.Disabled);
             Assert.Equal(globalResource.Label, outputResource.Label);
 
@@ -263,7 +274,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             AccessibilityFamilyResource familyResource = new AccessibilityFamilyResource(
              resourceCode: "ACC1",
              selections: ImmutableArray<AccessibilityFamilySelection>.Empty,
-             disabled: false);
+             disabled: false,
+             defaultSelection: null);
             resource.Add(familyResource);
 
             AccessibilityFamily noPartialResources = new AccessibilityFamily(

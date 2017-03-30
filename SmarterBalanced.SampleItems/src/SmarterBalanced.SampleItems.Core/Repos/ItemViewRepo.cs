@@ -88,6 +88,27 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return associatedStimulusDigests;
         }
 
+        private string GetPerformanceDescription(SampleItem item)
+        {
+            if(!item.IsPerformanceItem)
+            {
+                //No description for non performance items
+                return string.Empty;
+            }
+
+            if(item.Subject.Code.ToLower() == "math")
+            {
+                return context.AppSettings.SettingsConfig.MATHPerformanceDescription;
+            }
+
+            else if (item.Subject.Code.ToLower() == "ela")
+            {
+                return context.AppSettings.SettingsConfig.ELAPerformanceDescription;
+            }
+            //Unknown subject
+            return string.Empty;
+        }
+
         public ItemViewModel GetItemViewModel(
             int bankKey,
             int itemKey,
@@ -110,7 +131,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
-                aboutThisItemVM: aboutThisItem);
+                aboutThisItemVM: aboutThisItem,
+                subject: sampleItem.Subject.Code,
+                performanceItemDescription: GetPerformanceDescription(sampleItem));
 
             return itemViewModel;
         }

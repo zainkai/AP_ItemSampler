@@ -18,13 +18,19 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public MoreLikeThisViewModel MoreLikeThisVM { get; }
 
+        public string PerformanceItemDescription { get; }
+
+        public string Subject { get; }
+
         public ItemViewModel(
             string itemViewerServiceUrl,
             string accessibilityCookieName,
             bool isPerformanceItem,
             ImmutableArray<AccessibilityResourceGroup> accResourceGroups,
             MoreLikeThisViewModel moreLikeThisVM,
-            AboutThisItemViewModel aboutThisItemVM)
+            AboutThisItemViewModel aboutThisItemVM,
+            string subject,
+            string performanceItemDescription = "")
         {
             ItemViewerServiceUrl = itemViewerServiceUrl;
             AccessibilityCookieName = accessibilityCookieName;
@@ -32,6 +38,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             AboutThisItemVM = aboutThisItemVM;
             AccResourceGroups = accResourceGroups;
             MoreLikeThisVM = moreLikeThisVM;
+            Subject = subject;
+            PerformanceItemDescription = performanceItemDescription;
         }
     }
 }
