@@ -36,14 +36,14 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
         AccessibilityResourceGroup group3 = new AccessibilityResourceGroup("", 2,
         ImmutableArray.Create(
             AccessibilityResource.Create(resourceCode: "ClosedCaptioning", currentSelectionCode: "TDS_ClosedCap0", disabled: true, selections: ImmutableArray.Create(
-                new AccessibilitySelection("TDS_ClosedCap0", "", 1, true),
-                new AccessibilitySelection("TDS_ClosedCap1", "", 2, true))),
+                new AccessibilitySelection("TDS_ClosedCap0", "", 1, true, false),
+                new AccessibilitySelection("TDS_ClosedCap1", "", 2, true, false))),
             AccessibilityResource.Create(resourceCode: "Language", currentSelectionCode: "ENU", disabled: true, selections: ImmutableArray.Create(
-                new AccessibilitySelection("ENU", "", 1, true),
-                new AccessibilitySelection("ESN", "", 2, true))),
+                new AccessibilitySelection("ENU", "", 1, true, false),
+                new AccessibilitySelection("ESN", "", 2, true, false))),
             AccessibilityResource.Create(resourceCode: "AmericanSignLanguage", currentSelectionCode: "TDS_ASL0", selections: ImmutableArray.Create(
-                new AccessibilitySelection("TDS_ASL0", "", 1, false),
-                new AccessibilitySelection("TDS_ASL1", "", 2, false)))));
+                new AccessibilitySelection("TDS_ASL0", "", 1, false, false),
+                new AccessibilitySelection("TDS_ASL1", "", 2, false, false)))));
 
         ImmutableArray<AccessibilityResourceGroup> groups;
         ImmutableArray<AccessibilityResourceGroup> groupsDisabledOptions;
