@@ -91,6 +91,8 @@ namespace ItemPage {
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
+        brailleItemCodes: string[];
+        braillePassageCodes: string[];
     }
 
     export interface Props extends ViewModel {
