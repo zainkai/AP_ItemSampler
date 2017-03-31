@@ -16,6 +16,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         Claim Claim1, Claim2;
         Subject Math, Ela;
         InteractionType ItEla, ItMath;
+        List<AccessibilityResource> Resources;
+        SettingsConfig settings;
 
         [Fact]
         public void TestToSampleItems()
@@ -57,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             accessibilityType.Label = "Accessibility 1";
             accessibilityType.Order = 1;
 
-            var settings = new SettingsConfig
+            settings = new SettingsConfig
             {
                 SupportedPublications = new string[] { "SupportedPubs" },
                 AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
@@ -73,7 +75,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             ItemDigest digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
             var digests = ImmutableArray.Create(digest);
 
-            List<AccessibilityResource> Resources = new List<AccessibilityResource>
+            Resources = new List<AccessibilityResource>
             {
                 AccessibilityResource.Create(
                     resourceCode: "ACC1",
@@ -172,6 +174,24 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(items[0].InteractionType.Code, ItMath.Code);
             Assert.Equal(items[0].InteractionType.Label, ItMath.Label);
             Assert.Equal(items[0].Subject.Code, digest.SubjectCode);
+        }
+
+        [Fact(Skip ="ToDo")]
+        public void TestGroupItemResources()
+        {
+            var accessibilityType = new AccessibilityType();
+            accessibilityType.Id = "Acc1Type";
+            accessibilityType.Label = "Accessibility 1";
+            accessibilityType.Order = 1;
+
+            settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "SupportedPubs" },
+                AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
+                InteractionTypesToItem = new Dictionary<string, string>(),
+                DictionarySupportedItemTypes = new List<string>()
+            };
+
         }
     }
 }
