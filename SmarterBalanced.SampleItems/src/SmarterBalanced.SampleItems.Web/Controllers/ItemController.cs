@@ -87,18 +87,11 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return View(itemViewModel);
         }
 
-        public async Task<ActionResult> Braille()
+        public async Task<ActionResult> Braille(int? bankKey, int? itemKey, string brailleCode)
         {
-            var ftpClient = new FtpClient(new FtpClientConfiguration
-            {
-                Host = "ftps.smarterbalanced.org",
-                Username = "anonymous",
-                Password = "guest"
-            });
-            await ftpClient.LoginAsync();
-            var ftpReadStream = await ftpClient.OpenFileReadStreamAsync("/~sbacpublic/Public/Member_Procedures_Manual_10-30-2015.pdf");
+            var ftpReadStream = await repo.GetFtpFile(bankKey.Value, itemKey.Value, brailleCode);
 
-            return new FileStreamResult(ftpReadStream, "text");
+            return new FileStreamResult(ftpReadStream, "text/plain");
 
         }
 
