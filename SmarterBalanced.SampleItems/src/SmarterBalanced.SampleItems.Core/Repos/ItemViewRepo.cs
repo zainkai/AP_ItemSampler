@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using System.Text;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using CoreFtp;
+using System.Collections.Concurrent;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -109,7 +111,73 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return string.Empty;
         }
 
-        public ItemViewModel GetItemViewModel(
+        private ImmutableArray<string> GetItemBrailleCodes(SampleItem item)
+        {
+            List<string> brailleCodes = new List<string>();
+            foreach(AccessibilityResourceGroup group in item.AccessibilityResourceGroups)
+            {
+                foreach (AccessibilityResource res in group.AccessibilityResources)
+                {
+
+                    if(res.ResourceCode == "BrailleType")
+                    {
+                        foreach (AccessibilitySelection sel in res.Selections)
+                        {
+                            brailleCodes.Add(sel.SelectionCode);
+                        }
+                    }
+
+                }
+            }
+            return brailleCodes.ToImmutableArray();
+        }
+
+        private string getBrailleTypeFromCode(string code)
+        {
+            //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
+            var bt = code.Split('_');
+            if(bt.Length != 3)
+            {
+                return "";
+            }
+            return bt[2];  
+        }
+
+        private async Task<ImmutableArray<string>> AvailableBrailleFormats(IEnumerable<string> codes, SampleItem item)
+        {
+            BlockingCollection<string> validCodes = new BlockingCollection<string>();
+            var subject = item.Subject.Code;
+            var grade = item.Grade.IndividualGradeToNumString();
+            var itemId = item.ItemKey;
+
+            var ftpClient = new FtpClient(new FtpClientConfiguration
+            {
+                Host = "ftps.smarterbalanced.org",
+                Username = "anonymous",
+                Password = "guest"
+            });
+            await ftpClient.LoginAsync();
+            foreach(string code in codes)
+            {
+                var brailleType = getBrailleTypeFromCode(code);
+                if(brailleType == "")
+                {
+                    //If there is no braille type to not check for a file
+                    continue;
+                }
+                string filePath = $"~sbacpublic/Public/PracticeAndTrainingTests/2016-2017_PracticeAndTrainingBrailleFiles/{subject}/{grade}/item-{itemId}/item_{itemId}_enu_{brailleType}.brf";
+                try {
+                    var filesize = await ftpClient.GetFileSizeAsync(filePath);
+                    validCodes.Add(code);
+                } catch(Exception e)
+                {
+                    var foo = e.Data;//No file for that combination of itemKey, grade, subject, and braille type
+                }
+            }
+            return validCodes.ToImmutableArray();
+        }
+
+        public async Task<ItemViewModel> GetItemViewModel(
             int bankKey,
             int itemKey,
             string[] iSAAPCodes,
@@ -125,6 +193,11 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
 
+            //Checking for file exsistence is slooooooooooow.
+            //We should check if the item supports braille first
+            var brailleItemCodes = await AvailableBrailleFormats(GetItemBrailleCodes(sampleItem), sampleItem);
+            var braillePassageCodes = await AvailableBrailleFormats(GetItemBrailleCodes(sampleItem), sampleItem);
+
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: GetItemViewerUrl(sampleItem),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
@@ -133,6 +206,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
                 aboutThisItemVM: aboutThisItem,
                 subject: sampleItem.Subject.Code,
+                brailleItemCodes: brailleItemCodes,
+                braillePassageCodes: braillePassageCodes,
                 performanceItemDescription: GetPerformanceDescription(sampleItem));
 
             return itemViewModel;

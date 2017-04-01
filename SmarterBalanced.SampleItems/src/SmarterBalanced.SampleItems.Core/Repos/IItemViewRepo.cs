@@ -9,7 +9,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public interface IItemViewRepo
     {
-        ItemViewModel GetItemViewModel(
+        Task<ItemViewModel> GetItemViewModel(
             int bankKey,
             int itemKey,
             string[] iSAAPCodes,

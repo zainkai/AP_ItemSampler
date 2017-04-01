@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoreFtp;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SmarterBalanced.SampleItems.Core.Repos;
@@ -62,7 +63,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <param name="iSAAP"></param>
-        public IActionResult Details(int? bankKey, int? itemKey, string iSAAP)
+        public async Task<IActionResult> Details(int? bankKey, int? itemKey, string iSAAP)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
@@ -76,7 +77,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             string[] isaapCodes = string.IsNullOrEmpty(iSAAP) ? new string[0] : iSAAP.Split(';');
 
-            var itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookiePreferences);
+            var itemViewModel = await repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookiePreferences);
             if (itemViewModel == null)
             {
                 logger.LogWarning($"{nameof(Details)} invalid item {bankKey} {itemKey}");
@@ -85,6 +86,22 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             return View(itemViewModel);
         }
+
+        public async Task<ActionResult> Braille()
+        {
+            var ftpClient = new FtpClient(new FtpClientConfiguration
+            {
+                Host = "ftps.smarterbalanced.org",
+                Username = "anonymous",
+                Password = "guest"
+            });
+            await ftpClient.LoginAsync();
+            var ftpReadStream = await ftpClient.OpenFileReadStreamAsync("/~sbacpublic/Public/Member_Procedures_Manual_10-30-2015.pdf");
+
+            return new FileStreamResult(ftpReadStream, "text");
+
+        }
+
     }
 
 }
