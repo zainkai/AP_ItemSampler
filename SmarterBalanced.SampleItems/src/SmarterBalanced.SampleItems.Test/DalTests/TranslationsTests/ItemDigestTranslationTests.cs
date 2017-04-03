@@ -119,7 +119,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 }
             };
 
-                contents.Item.ItemKey = 2;
+            contents.Item.ItemKey = 2;
             contents.Item.ItemBank = 3;
             contents.Item.Contents = new List<Content>();    
             var exception = Record.Exception(() => ItemDigestTranslation.ToItemDigest(metadata, contents, new AppSettings()));

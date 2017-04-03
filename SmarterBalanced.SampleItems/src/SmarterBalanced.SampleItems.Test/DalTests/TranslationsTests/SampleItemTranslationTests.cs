@@ -18,62 +18,72 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         InteractionType ItEla, ItMath;
         List<AccessibilityResource> Resources;
         SettingsConfig settings;
+        ItemMetadata metadata;
+        AppSettings appSettings;
+        ItemContents contents;
+        AccessibilityType accessibilityType;
+        ItemDigest digest;
+        List<RubricEntry> rubricEntries;
+        List<RubricSample> rubricSamples;
+        RubricList rubricList;
 
-        [Fact]
-        public void TestToSampleItems()
+        public SampleItemTranslationTests()
         {
-            int testItemKey = 1;
-            int testItemBank = 2;
-            string testGrade = "5";
-
-            ItemMetadata metadata = new ItemMetadata();
-            ItemContents contents = new ItemContents();
-            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
-            contents.Item = new ItemXmlFieldRepresentation();
-            metadata.Metadata.ItemKey = testItemKey;
-            metadata.Metadata.GradeCode = testGrade;
-            metadata.Metadata.TargetAssessmentType = "Test target string";
-            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
-            metadata.Metadata.InteractionType = "2";
-            metadata.Metadata.SubjectCode = "MATH";
-            metadata.Metadata.MaximumNumberOfPoints = 2;
-            metadata.Metadata.StandardPublications = new List<StandardPublication>();
-            metadata.Metadata.StandardPublications.Add(
-                new StandardPublication
+            rubricEntries = new List<RubricEntry>()
+            {
+                new RubricEntry
                 {
-                    PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2",
-                    Publication = "SupportedPubs"
-                });
-
-            contents.Item.ItemKey = testItemKey;
-            contents.Item.ItemBank = testItemBank;
-            contents.Item.Contents = new List<Content>();
-            var placeholderText = new RubricPlaceHolderText
-            {
-                RubricPlaceHolderContains = new string[0],
-                RubricPlaceHolderEquals = new string[0]
+                        Scorepoint = "0",
+                        Name = "TestName",
+                        Value = "TestValue"
+                },
+                new RubricEntry
+                {
+                        Scorepoint = "1",
+                        Name = "TestName1",
+                        Value = "TestValue1"
+                }
             };
 
-            var accessibilityType = new AccessibilityType();
-            accessibilityType.Id = "Acc1Type";
-            accessibilityType.Label = "Accessibility 1";
-            accessibilityType.Order = 1;
-
-            settings = new SettingsConfig
+            var sampleResponces = new List<SampleResponse>()
             {
-                SupportedPublications = new string[] { "SupportedPubs" },
-                AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
-                InteractionTypesToItem = new Dictionary<string, string>(),
-                DictionarySupportedItemTypes = new List<string>()
+                new SampleResponse()
+                {
+                    Purpose = "TestPurpose",
+                    ScorePoint = "0",
+                    Name = "TestName",
+                    SampleContent = "TestSampleContent"
+                },
+                new SampleResponse()
+                {
+                    Purpose = "TestPurpose1",
+                    ScorePoint = "1",
+                    Name = "TestName1",
+                    SampleContent = "TestSampleContent1"
+                }
             };
 
-            AppSettings appSettings = new AppSettings
+            rubricSamples = new List<RubricSample>()
             {
-                SettingsConfig = settings,
-                RubricPlaceHolderText = placeholderText
+                 new RubricSample
+                 {
+                        MaxValue = "MaxVal",
+                        MinValue = "MinVal",
+                        SampleResponses = sampleResponces
+                 },
+                 new RubricSample
+                 {
+                        MaxValue = "MaxVal1",
+                        MinValue = "MinVal1",
+                        SampleResponses = new List<SampleResponse>()
+                 }
             };
-            ItemDigest digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
-            var digests = ImmutableArray.Create(digest);
+
+            rubricList = new RubricList()
+            {
+                Rubrics = rubricEntries,
+                RubricSamples = rubricSamples
+            };
 
             Resources = new List<AccessibilityResource>
             {
@@ -117,6 +127,65 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                             hidden: false)))
             };
 
+            accessibilityType = new AccessibilityType();
+            accessibilityType.Id = "Acc1Type";
+            accessibilityType.Label = "Accessibility 1";
+            accessibilityType.Order = 1;
+
+            int testItemKey = 1;
+            int testItemBank = 2;
+            string testGrade = "5";
+
+            metadata = new ItemMetadata();
+            contents = new ItemContents();
+            metadata.Metadata = new SmarterAppMetadataXmlRepresentation();
+            contents.Item = new ItemXmlFieldRepresentation();
+            metadata.Metadata.ItemKey = testItemKey;
+            metadata.Metadata.GradeCode = testGrade;
+            metadata.Metadata.TargetAssessmentType = "Test target string";
+            metadata.Metadata.SufficientEvidenceOfClaim = "Test claim string";
+            metadata.Metadata.InteractionType = "2";
+            metadata.Metadata.SubjectCode = "MATH";
+            metadata.Metadata.MaximumNumberOfPoints = 2;
+            metadata.Metadata.StandardPublications = new List<StandardPublication>();
+            metadata.Metadata.StandardPublications.Add(
+                new StandardPublication
+                {
+                    PrimaryStandard = "SBAC-ELA-v1:3-L|4-6|6.SL.2",
+                    Publication = "SupportedPubs"
+                });
+
+            contents.Item.ItemKey = testItemKey;
+            contents.Item.ItemBank = testItemBank;
+            contents.Item.Contents = new List<Content>();
+            var placeholderText = new RubricPlaceHolderText
+            {
+                RubricPlaceHolderContains = new string[] { "RubricSampleText", "RubricSampleText1" },
+                RubricPlaceHolderEquals = new string[0]
+            };
+
+            settings = new SettingsConfig
+            {
+                SupportedPublications = new string[] { "SupportedPubs" },
+                AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
+                InteractionTypesToItem = new Dictionary<string, string>(),
+                DictionarySupportedItemTypes = new List<string>(),
+                LanguageToLabel = new Dictionary<string, string>()
+            };
+
+            appSettings = new AppSettings
+            {
+                SettingsConfig = settings,
+                RubricPlaceHolderText = placeholderText
+            };
+
+            digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
+        }
+
+        [Fact]
+        public void TestToSampleItems()
+        {
+            var digests = ImmutableArray.Create(digest);
             ImmutableArray<AccessibilityFamilyResource> noPartialResources = ImmutableArray.Create<AccessibilityFamilyResource>();
             var subjectMath = ImmutableArray.Create("MATH");
             AccessibilityFamily noPartialResourcesFamily = new AccessibilityFamily(
@@ -176,22 +245,45 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(items[0].Subject.Code, digest.SubjectCode);
         }
 
-        [Fact(Skip ="ToDo")]
+        [Fact]
         public void TestGroupItemResources()
         {
-            var accessibilityType = new AccessibilityType();
-            accessibilityType.Id = "Acc1Type";
-            accessibilityType.Label = "Accessibility 1";
-            accessibilityType.Order = 1;
+            var accessibilityResources = ImmutableArray.Create(Resources[0], Resources[1]);
+            var resourceGroup = SampleItemTranslation.GroupItemResources(accessibilityType, accessibilityResources);
 
-            settings = new SettingsConfig
+            Assert.NotNull(resourceGroup);
+            Assert.Equal(accessibilityType.Label, resourceGroup.Label);
+            Assert.Equal(accessibilityType.Id, resourceGroup.AccessibilityResources[0].ResourceTypeId);
+            Assert.Equal(accessibilityType.Order, resourceGroup.Order);
+            Assert.Equal(accessibilityResources[0].Description, resourceGroup.AccessibilityResources[0].Description);
+            Assert.Equal(accessibilityResources[0].CurrentSelectionCode, resourceGroup.AccessibilityResources[0].CurrentSelectionCode);
+            Assert.Equal(accessibilityResources[0].Disabled, resourceGroup.AccessibilityResources[0].Disabled);
+            Assert.Equal(accessibilityResources[0].DefaultSelection, resourceGroup.AccessibilityResources[0].DefaultSelection);
+            Assert.Equal(accessibilityResources[0].ResourceCode, resourceGroup.AccessibilityResources[0].ResourceCode);
+        }
+
+        [Fact]
+        public void TestGetRubrics()
+        {
+            appSettings.SettingsConfig.LanguageToLabel.Add("ENU", "English");
+            digest.Contents = new List<Content>()
             {
-                SupportedPublications = new string[] { "SupportedPubs" },
-                AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
-                InteractionTypesToItem = new Dictionary<string, string>(),
-                DictionarySupportedItemTypes = new List<string>()
+                new Content()
+                {
+                    Language = "ENU",
+                    RubricList = rubricList
+                }
             };
+            var rubrics = SampleItemTranslation.GetRubrics(digest, appSettings);
 
+            Assert.NotNull(rubrics);
+            Assert.Equal(rubrics[0].Language, "English");
+            Assert.Equal(rubrics[0].RubricEntries.Length, 2);
+            Assert.Equal(rubrics[0].Samples.Length, 1);
+            Assert.Equal(rubrics[0].RubricEntries[0], rubricEntries[0]);
+            Assert.Equal(rubrics[0].RubricEntries[1], rubricEntries[1]);
+            Assert.Equal(rubrics[0].Samples[0], rubricSamples[0]);
+            Assert.Equal(rubrics[0].Samples[0].SampleResponses, rubricSamples[0].SampleResponses);
         }
     }
 }
