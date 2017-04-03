@@ -89,7 +89,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             Assert.Equal(SelectedCode(result, "Language"), "ENU");
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void TestApplyPreferencesYesIsaapNoCookie()
         {
             var result = groups.ApplyPreferences(isaap, new Dictionary<string, string>());
@@ -103,7 +103,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             Assert.Equal(SelectedCode(result, "Language"), "ESN");//changed
         }
 
-        [Fact(Skip ="TODO")]
+        [Fact]
         public void TestApplyPreferencesYesIsaapYesCookie()
         {
             var result = groups.ApplyPreferences(isaap, cookie);

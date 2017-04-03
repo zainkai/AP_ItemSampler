@@ -29,7 +29,7 @@
             if (brailleUrl == "") {
                 return null;
             } else {
-                return ( <a href={brailleUrl}>Download Braille Files</a> );
+                return ( <a href={brailleUrl} download>Download Braille Files</a> );
             }
         }
     }
