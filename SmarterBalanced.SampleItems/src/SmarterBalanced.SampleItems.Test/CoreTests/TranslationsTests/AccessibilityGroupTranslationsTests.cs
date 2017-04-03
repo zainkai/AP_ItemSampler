@@ -33,7 +33,20 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
                         new AccessibilitySelection("ENU", "", 1, false, false),
                         new AccessibilitySelection("ESN", "", 2, false, false)))));
 
+        AccessibilityResourceGroup group3 = new AccessibilityResourceGroup("", 2,
+        ImmutableArray.Create(
+            AccessibilityResource.Create(resourceCode: "ClosedCaptioning", currentSelectionCode: "TDS_ClosedCap0", disabled: true, selections: ImmutableArray.Create(
+                new AccessibilitySelection("TDS_ClosedCap0", "", 1, true, false),
+                new AccessibilitySelection("TDS_ClosedCap1", "", 2, true, false))),
+            AccessibilityResource.Create(resourceCode: "Language", currentSelectionCode: "ENU", disabled: true, selections: ImmutableArray.Create(
+                new AccessibilitySelection("ENU", "", 1, true, false),
+                new AccessibilitySelection("ESN", "", 2, true, false))),
+            AccessibilityResource.Create(resourceCode: "AmericanSignLanguage", currentSelectionCode: "TDS_ASL0", selections: ImmutableArray.Create(
+                new AccessibilitySelection("TDS_ASL0", "", 1, false, false),
+                new AccessibilitySelection("TDS_ASL1", "", 2, false, false)))));
+
         ImmutableArray<AccessibilityResourceGroup> groups;
+        ImmutableArray<AccessibilityResourceGroup> groupsDisabledOptions;
 
         Dictionary<string, string> cookie = new Dictionary<string, string>()
         {
@@ -41,14 +54,27 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
             {"ClosedCaptioning", "TDS_ClosedCap1" },
         };
 
+        Dictionary<string, string> badCookie = new Dictionary<string, string>()
+        {
+            {"Language", "ENU" },
+            {"ClosedCaptioning", "TDS_ClosedCap0" },
+        };
+
         string[] isaap = new string[] {
             "TDS_ASL1",
+            "ESN",
+        };
+
+        string[] badIsaap = new string[] {
+            "TDS_ASL0",
             "ESN",
         };
 
         public AccessibilityGroupTranslationsTests()
         {
             groups = ImmutableArray.Create(group1, group2);
+            groupsDisabledOptions = ImmutableArray.Create(group3);
+
         }
 
         #region ApplyPreferences
@@ -119,11 +145,52 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.TranslationsTests
 
         #endregion
 
-        //TODO: add test for having cookie and/or issap cookie having an option
-        //then applying it to a group that has the option disabled.
+        [Fact]
+        public void TestApplyPreferencesCookieOptionDisabled()
+        {
+            var result = groupsDisabledOptions.ApplyPreferences(new string[] { }, badCookie);
 
+            Assert.NotNull(result);
+
+            //applying cookie to a group that has the option disabled.
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL0");
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap0");
+            Assert.Equal(SelectedCode(result, "Language"), "ENU");
+            Assert.Equal(result[0].AccessibilityResources[0].Disabled, true);//Assert option is still disabled
+            Assert.Equal(result[0].AccessibilityResources[1].Disabled, true);
+            Assert.Equal(result[0].AccessibilityResources[2].Disabled, false);
+        }
+
+        [Fact]
+        public void TestApplyPreferencesIsaapOptionDisabled()
+        {
+            var result = groupsDisabledOptions.ApplyPreferences(isaap, new Dictionary<string, string>());
+
+            Assert.NotNull(result);
+
+            //applying cookie to a group that has the option disabled.
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL1");
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap0");
+            Assert.Equal(SelectedCode(result, "Language"), "ENU");
+            Assert.Equal(result[0].AccessibilityResources[0].Disabled, true);//Assert option is still disabled
+            Assert.Equal(result[0].AccessibilityResources[1].Disabled, true);
+            Assert.Equal(result[0].AccessibilityResources[2].Disabled, false);
+        }
+
+        [Fact]
+        public void TestApplyPreferencesIsaapCookieOptionDisabled()
+        {
+            var result = groupsDisabledOptions.ApplyPreferences(badIsaap, badCookie);
+
+            Assert.NotNull(result);
+
+            //applying cookie to a group that has the option disabled.
+            Assert.Equal(SelectedCode(result, "AmericanSignLanguage"), "TDS_ASL0");
+            Assert.Equal(SelectedCode(result, "ClosedCaptioning"), "TDS_ClosedCap0");
+            Assert.Equal(SelectedCode(result, "Language"), "ENU");
+            Assert.Equal(result[0].AccessibilityResources[0].Disabled, true);//Assert option is still disabled
+            Assert.Equal(result[0].AccessibilityResources[1].Disabled, true);
+            Assert.Equal(result[0].AccessibilityResources[2].Disabled, false);
+        }
     }
-
-
 }
-
