@@ -91,6 +91,8 @@ namespace ItemPage {
         accResourceGroups: AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
+        brailleItemCodes: string[];
+        braillePassageCodes: string[];
     }
 
     export interface Props extends ViewModel {
@@ -164,6 +166,18 @@ namespace ItemPage {
             );
         }
 
+        getBrailleAccommodation(accResourceGroups: AccResourceGroup[]): string {
+            var currentBrailleType = "";
+            for (let group of accResourceGroups) {
+                for (let resource of group.accessibilityResources) {
+                    if (resource.label == "Braille Type" && !resource.disabled) {
+                        currentBrailleType = resource.currentSelectionCode;
+                    }
+                }
+            }        
+            return currentBrailleType;
+        }
+
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
@@ -206,6 +220,12 @@ namespace ItemPage {
                             </a>
                         </div>
                     </div>
+                    <Braille.BrailleLink
+                        currentSelectionCode={this.getBrailleAccommodation(this.props.accResourceGroups)}
+                        brailleItemCodes={this.props.brailleItemCodes}
+                        braillePassageCodes={this.props.braillePassageCodes}
+                        bankKey={this.props.aboutThisItemVM.itemCardViewModel.bankKey}
+                        itemKey={this.props.aboutThisItemVM.itemCardViewModel.itemKey} />
                     <ItemFrame url={ivsUrl} />
                     <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
