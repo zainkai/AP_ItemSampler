@@ -22,6 +22,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public string Subject { get; }
 
+        public ImmutableArray<string> BrailleItemCodes { get; }
+        public ImmutableArray<string> BraillePassageCodes { get; }
+
         public ItemViewModel(
             string itemViewerServiceUrl,
             string accessibilityCookieName,
@@ -30,6 +33,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             MoreLikeThisViewModel moreLikeThisVM,
             AboutThisItemViewModel aboutThisItemVM,
             string subject,
+            ImmutableArray<string> brailleItemCodes,
+            ImmutableArray<string> braillePassageCodes,
             string performanceItemDescription = "")
         {
             ItemViewerServiceUrl = itemViewerServiceUrl;
@@ -39,6 +44,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             AccResourceGroups = accResourceGroups;
             MoreLikeThisVM = moreLikeThisVM;
             Subject = subject;
+            BrailleItemCodes = brailleItemCodes;
+            BraillePassageCodes = braillePassageCodes;
             PerformanceItemDescription = performanceItemDescription;
         }
     }
