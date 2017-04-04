@@ -96,6 +96,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
+            //TODO: Add supported files from ftp
+            ImmutableArray<string> brailleItemCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
+            ImmutableArray<string> braillePassageCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
+
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
                 itemKey: itemDigest.ItemKey,
@@ -115,7 +119,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 grade: grade,
                 coreStandards: coreStandards,
                 fieldTestUse: fieldTestUse,
-                interactionTypeSubCat: interactionTypeSubCat);
+                interactionTypeSubCat: interactionTypeSubCat,
+                brailleItemCodes: brailleItemCodes,
+                braillePassageCodes: braillePassageCodes);
 
             return sampleItem;
         }
