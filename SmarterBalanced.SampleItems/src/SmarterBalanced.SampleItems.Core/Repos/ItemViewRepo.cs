@@ -158,8 +158,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
                 aboutThisItemVM: aboutThisItem,
                 subject: sampleItem.Subject.Code,
-                brailleItemCodes: sampleItem.ItemBrailleCodes,
-                braillePassageCodes: sampleItem.PassageBrailleCodes,
+                brailleItemCodes: sampleItem.BrailleItemCodes,
+                braillePassageCodes: sampleItem.BraillePassageCodes,
                 performanceItemDescription: GetPerformanceDescription(sampleItem));
 
             return itemViewModel;
