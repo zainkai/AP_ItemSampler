@@ -70,6 +70,31 @@ namespace ItemPage {
         }
     }
 
+    //Checks if Braille is enabled, if so sets Streamline mode on
+    export function setStreamlineMode(resourceGroups: AccResourceGroup[]) {
+        if (this.getBrailleAccommodation(resourceGroups) != "TDS_BT0") { //braille disabled
+            for (let group of resourceGroups) {
+                for (let resource of group.accessibilityResources) {
+                    if (resource.label == "Streamlined Interface") {
+                        resource.currentSelectionCode = "TDS_SLM1"; //Streamlined
+                    }
+                }
+            }
+        }
+    }
+
+    export function getBrailleAccommodation(accResourceGroups: AccResourceGroup[]): string {
+        var currentBrailleType = "";
+        for (let group of accResourceGroups) {
+            for (let resource of group.accessibilityResources) {
+                if (resource.label == "Braille Type" && !resource.disabled) {
+                    currentBrailleType = resource.currentSelectionCode;
+                }
+            }
+        }
+        return currentBrailleType;
+    }
+
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
         let resourceTypes = resourceGroups.map(t => t.label);
@@ -166,18 +191,6 @@ namespace ItemPage {
             );
         }
 
-        getBrailleAccommodation(accResourceGroups: AccResourceGroup[]): string {
-            var currentBrailleType = "";
-            for (let group of accResourceGroups) {
-                for (let resource of group.accessibilityResources) {
-                    if (resource.label == "Braille Type" && !resource.disabled) {
-                        currentBrailleType = resource.currentSelectionCode;
-                    }
-                }
-            }        
-            return currentBrailleType;
-        }
-
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
@@ -221,7 +234,7 @@ namespace ItemPage {
                         </div>
                     </div>
                     <Braille.BrailleLink
-                        currentSelectionCode={this.getBrailleAccommodation(this.props.accResourceGroups)}
+                        currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
                         brailleItemCodes={this.props.brailleItemCodes}
                         braillePassageCodes={this.props.braillePassageCodes}
                         bankKey={this.props.aboutThisItemVM.itemCardViewModel.bankKey}

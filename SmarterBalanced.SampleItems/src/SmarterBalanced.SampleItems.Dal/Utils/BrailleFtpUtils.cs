@@ -44,10 +44,10 @@ namespace SmarterBalanced.SampleItems.Dal.Utils
             return bt[2];
         }
 
-        public static async Task<ImmutableArray<string>> AvailableItemBraille(FtpClient ftpClient, 
-            IEnumerable<string> codes, 
-            int itemKey, 
-            string subject, 
+        public static async Task<ImmutableArray<string>> AvailableItemBraille(FtpClient ftpClient,
+            IEnumerable<string> codes,
+            int itemKey,
+            string subject,
             string grade)
         {
             string directory = GetItemDirectoryPath(itemKey, subject, grade);
@@ -118,6 +118,14 @@ namespace SmarterBalanced.SampleItems.Dal.Utils
         private static string GetItemDirectoryPath(int id, string subject, string grade)
         {
             return $"/~sbacpublic/Public/PracticeAndTrainingTests/2016-2017_PracticeAndTrainingBrailleFiles/{subject}/{grade}/item-{id}/";
+        }
+
+        public static string BuildBrailleFilePath(SampleItem item, string code)
+        {
+            var subject = item.Subject.Code;
+            var grade = item.Grade.IndividualGradeToNumString();
+            var itemId = item.ItemKey;
+            return $"~sbacpublic/Public/PracticeAndTrainingTests/2016-2017_PracticeAndTrainingBrailleFiles/{subject}/{grade}/item-{itemId}/item_{itemId}_enu_{code}.brf";
         }
 
         private static string GetPassageDirectoryPath(int id, string subject, string grade)

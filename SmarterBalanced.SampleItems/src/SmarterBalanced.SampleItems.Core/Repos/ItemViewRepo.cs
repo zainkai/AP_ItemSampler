@@ -129,7 +129,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 Password = "guest"
             });
             await ftpClient.LoginAsync();
-            var filePath = "";
+            var filePath = BrailleFtpUtils.BuildBrailleFilePath(item, brailleType); 
             var ftpStream = await ftpClient.OpenFileReadStreamAsync(filePath);
             return ftpStream;
         }

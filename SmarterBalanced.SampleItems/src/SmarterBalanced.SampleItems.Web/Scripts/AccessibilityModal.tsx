@@ -125,6 +125,7 @@
 
         render() {
             const types = ItemPage.getResourceTypes(this.props.accResourceGroups);
+            ItemPage.setStreamlineMode(this.props.accResourceGroups);
             const groups = types.map(t => this.renderResourceType(t));
             return (
                 <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-hidden="true">
