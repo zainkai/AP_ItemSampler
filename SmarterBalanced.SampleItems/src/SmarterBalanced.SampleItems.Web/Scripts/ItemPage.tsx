@@ -72,10 +72,11 @@ namespace ItemPage {
 
     //Checks if Braille is enabled, if so sets Streamline mode on
     export function setStreamlineMode(resourceGroups: AccResourceGroup[]) {
-        if (this.getBrailleAccommodation(resourceGroups) != "TDS_BT0") { //braille disabled
+        let currentBrailleType = this.getBrailleAccommodation(resourceGroups);
+        if (currentBrailleType != "TDS_BT0") { //All braille disabled
             for (let group of resourceGroups) {
                 for (let resource of group.accessibilityResources) {
-                    if (resource.label == "Streamlined Interface") {
+                    if (resource.label == "Streamlined Interface" && resource.currentSelectionCode != "TDS_SLM1") {
                         resource.currentSelectionCode = "TDS_SLM1"; //Streamlined
                     }
                 }
