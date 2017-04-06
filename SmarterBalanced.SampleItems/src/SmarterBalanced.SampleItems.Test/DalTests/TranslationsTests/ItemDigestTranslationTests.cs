@@ -13,7 +13,6 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 {
     public class ItemDigestTranslationTests
     {
-        //TODO: Add test for target
         /// <summary>
         /// Test translating a single ItemMetadata object and a single ItemContents object into an ItemDigest object
         /// </summary>
