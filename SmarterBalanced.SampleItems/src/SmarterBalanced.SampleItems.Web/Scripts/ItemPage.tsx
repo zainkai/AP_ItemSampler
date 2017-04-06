@@ -193,6 +193,7 @@ namespace ItemPage {
         }
 
         render() {
+            ItemPage.setStreamlineMode(this.props.accResourceGroups);
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
@@ -222,6 +223,13 @@ namespace ItemPage {
 
                             {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
 
+                            <Braille.BrailleLink
+                                currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
+                                brailleItemCodes={this.props.brailleItemCodes}
+                                braillePassageCodes={this.props.braillePassageCodes}
+                                bankKey={this.props.aboutThisItemVM.itemCardViewModel.bankKey}
+                                itemKey={this.props.aboutThisItemVM.itemCardViewModel.itemKey} />
+
                         </div>
 
                         <div className="item-nav-right-group" role="group" aria-label="Second group">
@@ -234,12 +242,6 @@ namespace ItemPage {
                             </a>
                         </div>
                     </div>
-                    <Braille.BrailleLink
-                        currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
-                        brailleItemCodes={this.props.brailleItemCodes}
-                        braillePassageCodes={this.props.braillePassageCodes}
-                        bankKey={this.props.aboutThisItemVM.itemCardViewModel.bankKey}
-                        itemKey={this.props.aboutThisItemVM.itemCardViewModel.itemKey} />
                     <ItemFrame url={ivsUrl} />
                     <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
