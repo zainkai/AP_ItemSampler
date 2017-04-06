@@ -28,8 +28,14 @@
             let brailleUrl = this.buildUrl(this.props.bankKey, this.props.itemKey);
             if (brailleUrl == "") {
                 return null;
-            } else {
-                return ( <a href={brailleUrl}>Download Braille Files</a> );
+            } else { 
+                return (
+                    <div className="item-nav-btn">
+                        <a href={brailleUrl} download >
+                            <span className="glyphicon glyphicon-download-alt glyphicon-pad"/>
+                            Download Braille Embossing
+                        </a>
+                    </div>);
             }
         }
     }

@@ -55,6 +55,7 @@
         onSave = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
             e.preventDefault();
             this.props.onSave(this.state.resourceSelections || {});
+
         }
 
         onCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -72,24 +73,6 @@
                 .filter(group => group.label === type)[0]
                 .accessibilityResources;
             let resourceTypeHeader = <h3>{type}</h3>;
-
-            /* TODO: Remove after these accessibility resources are fixed */
-            if (type === "Accommodations") {
-                resourceTypeHeader = (
-                    <div style={{ display: "flex", alignItems: "center"}}>
-                        <h3 style={{ display: "inline-block" }}>{type}</h3>
-                        <span style={{ marginTop: "10px" }}>&nbsp;&nbsp;(coming soon)</span>
-                    </div>
-                );
-                for (let res of resources) {
-                    res.selections = [];
-                    res.disabled = true;
-                    res.currentSelectionCode = "";
-                    res.defaultSelection = "";
-                }
-            }
-            /* TODO: REMOVE ABOVE */
-
 
             const resCount = resources.length;
             const isExpanded = (this.state.resourceTypeExpanded || {})[type];

@@ -15,7 +15,8 @@
     "System.Runtime.Serialization.Xml": "4.3.0",
     "System.Threading.Tasks.Parallel": "4.3.0",
     "System.Xml.XmlDocument": "4.3.0",
-    "System.Xml.XmlSerializer": "4.3.0"
+    "System.Xml.XmlSerializer": "4.3.0",
+    "CoreFtp": "1.3.4"
   },
   "frameworks": {
     "netstandard1.6": {

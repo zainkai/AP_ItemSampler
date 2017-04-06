@@ -15,6 +15,7 @@ using CoreFtp;
 using System.Collections.Concurrent;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Dal.Utils;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -113,90 +114,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return string.Empty;
         }
 
-        private ImmutableArray<string> GetItemBrailleCodes(SampleItem item)
-        {
-            List<string> brailleCodes = new List<string>();
-            foreach(AccessibilityResourceGroup group in item.AccessibilityResourceGroups)
-            {
-                foreach (AccessibilityResource res in group.AccessibilityResources)
-                {
-
-                    if(res.ResourceCode == "BrailleType")
-                    {
-                        foreach (AccessibilitySelection sel in res.Selections)
-                        {
-                            brailleCodes.Add(sel.SelectionCode);
-                        }
-                    }
-
-                }
-            }
-            return brailleCodes.ToImmutableArray();
-        }
-
-        private string getBrailleTypeFromCode(string code)
-        {
-            //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
-            var bt = code.Split('_');
-            if(bt.Length != 3)
-            {
-                return string.Empty;
-            }
-            return bt[2];  
-        }
-
-        /// <summary>
-        /// Takes an item and a list of braille accessibility codes and returns which ones have files associated with them on the SB FTP server.
-        /// </summary>
-        /// <param name="codes"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        private async Task<ImmutableArray<string>> AvailableBrailleFormats(IEnumerable<string> codes, SampleItem item)
-        {
-            BlockingCollection<string> validCodes = new BlockingCollection<string>();
-            var subject = item.Subject.Code;
-            var grade = item.Grade.IndividualGradeToNumString();
-            var itemId = item.ItemKey;
-
-            var ftpClient = new FtpClient(new FtpClientConfiguration
-            {
-                Host = "ftps.smarterbalanced.org",
-                Username = "anonymous",
-                Password = "guest"
-            });
-            await ftpClient.LoginAsync();
-            foreach(string code in codes)
-            {
-                var brailleType = getBrailleTypeFromCode(code);
-                if(brailleType == "")
-                {
-                    //If there is no braille type to not check for a file
-                    continue;
-                }
-                string filePath = BuildBrailleFilePath(item, brailleType);
-                try {
-                    var filesize = await ftpClient.GetFileSizeAsync(filePath);
-                    validCodes.Add(code);
-                } catch(Exception)
-                {
-                    //No file for that combination of itemKey, grade, subject, and braille type
-                }
-            }
-            return validCodes.ToImmutableArray();
-        }
-
-        private string BuildBrailleFilePath(SampleItem item, string code)
-        {
-            var subject = item.Subject.Code;
-            var grade = item.Grade.IndividualGradeToNumString();
-            var itemId = item.ItemKey;
-            return $"~sbacpublic/Public/PracticeAndTrainingTests/2016-2017_PracticeAndTrainingBrailleFiles/{subject}/{grade}/item-{itemId}/item_{itemId}_enu_{code}.brf";
-        }
-
         public async Task<Stream> GetFtpFile(int itemBank, int itemKey, string brailleCode)
         {
             SampleItem item = GetSampleItem(itemBank, itemKey);
-            var brailleType = getBrailleTypeFromCode(brailleCode);
+            var brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
             if(brailleType == string.Empty)
             {
                 throw new ArgumentException("Invalid Braille Type");
@@ -208,7 +129,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 Password = "guest"
             });
             await ftpClient.LoginAsync();
-            var filePath = BuildBrailleFilePath(item, brailleType);
+            var filePath = BrailleFtpUtils.BuildBrailleFilePath(item, brailleType); 
             var ftpStream = await ftpClient.OpenFileReadStreamAsync(filePath);
             return ftpStream;
         }
@@ -229,11 +150,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
 
-            //Checking for file exsistence is slooooooooooow.
-            //We should check if the item supports braille first
-            var brailleItemCodes = await AvailableBrailleFormats(GetItemBrailleCodes(sampleItem), sampleItem);
-            var braillePassageCodes = await AvailableBrailleFormats(GetItemBrailleCodes(sampleItem), sampleItem);
-
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: GetItemViewerUrl(sampleItem),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
@@ -242,8 +158,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
                 aboutThisItemVM: aboutThisItem,
                 subject: sampleItem.Subject.Code,
-                brailleItemCodes: brailleItemCodes,
-                braillePassageCodes: braillePassageCodes,
+                brailleItemCodes: sampleItem.BrailleItemCodes,
+                braillePassageCodes: sampleItem.BraillePassageCodes,
                 performanceItemDescription: GetPerformanceDescription(sampleItem));
 
             return itemViewModel;
