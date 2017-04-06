@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Dal.Utils;
+using System.IO.Compression;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -77,7 +78,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             List<SampleItem> associatedStimulusDigests = context.SampleItems
                 .Where(i => i.IsPerformanceItem &&
                     i.AssociatedStimulus == item.AssociatedStimulus &&
-                    (i.FieldTestUse != null 
+                    (i.FieldTestUse != null
                         && i.FieldTestUse.Code.Equals(item.FieldTestUse?.Code))
                     )
                 .OrderByDescending(i => i.ItemKey == item.ItemKey)
@@ -95,13 +96,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         private string GetPerformanceDescription(SampleItem item)
         {
-            if(!item.IsPerformanceItem)
+            if (!item.IsPerformanceItem)
             {
                 //No description for non performance items
                 return string.Empty;
             }
 
-            if(item.Subject.Code.ToLower() == "math")
+            if (item.Subject.Code.ToLower() == "math")
             {
                 return context.AppSettings.SettingsConfig.MATHPerformanceDescription;
             }
@@ -114,27 +115,53 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return string.Empty;
         }
 
-        public async Task<Stream> GetFtpFile(int itemBank, int itemKey, string brailleCode)
+        public async Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode)
         {
             SampleItem item = GetSampleItem(itemBank, itemKey);
             var brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
-            if(brailleType == string.Empty)
+            string zipName = $"item-{itemBank}-{itemKey}-braille.zip";
+            if (brailleType == string.Empty)
             {
                 throw new ArgumentException("Invalid Braille Type");
             }
-            var ftpClient = new FtpClient(new FtpClientConfiguration
+
+
+            //Files for testing. Replace with actual braille files
+            List<string> fileNames = new List<string>();
+            fileNames.Add("item_2964_enu_ecl.brf");
+            fileNames.Add("item_2964_enu_exl.brf");
+            fileNames.Add("item_2964_enu_ucl.BRF");
+
+            using (var ftpClient = new FtpClient(new FtpClientConfiguration
             {
-                Host = "ftps.smarterbalanced.org",
-                Username = "anonymous",
-                Password = "guest"
-            });
-            await ftpClient.LoginAsync();
-            var filePath = BrailleFtpUtils.BuildBrailleFilePath(item, brailleType); 
-            var ftpStream = await ftpClient.OpenFileReadStreamAsync(filePath);
-            return ftpStream;
+                Host = context.AppSettings.SettingsConfig.SmarterBalancedFtpHost,
+                Username = context.AppSettings.SettingsConfig.SmarterBalancedFtpUsername,
+                Password = context.AppSettings.SettingsConfig.SmarterBalancedFtpPassword
+            }))
+            {
+                await ftpClient.LoginAsync();
+                await ftpClient.ChangeWorkingDirectoryAsync("/~sbacpublic/Public/PracticeAndTrainingTests/2016-2017_PracticeAndTrainingBrailleFiles/ELA/06/item-2964/");
+
+                var memoryStream = new MemoryStream();
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (string fileName in fileNames)
+                    {
+                        var entry = archive.CreateEntry(fileName);
+                        using (var ftpStream = await ftpClient.OpenFileReadStreamAsync(fileName))
+                        using (var entryStream = entry.Open())
+                        {
+                            ftpStream.CopyTo(entryStream);
+                        }
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return memoryStream;
+            }
+
         }
 
-        public async Task<ItemViewModel> GetItemViewModel(
+        public ItemViewModel GetItemViewModel(
             int bankKey,
             int itemKey,
             string[] iSAAPCodes,
@@ -188,7 +215,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             if (itemCards == null)
             {
                 return null;
-            } 
+            }
 
             string label = grade.ToDisplayString();
             var column = new MoreLikeThisColumn(
@@ -242,7 +269,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 .Where(i => i.Grade == gradeBelow)
                 .OrderBy(i => i, comparer)
                 .Take(numExpected);
-            
+
             var moreLikeThisVM = new MoreLikeThisViewModel(
                 ToColumn(cardsGradeBelow, gradeBelow),
                 ToColumn(cardsSameGrade, grade),
