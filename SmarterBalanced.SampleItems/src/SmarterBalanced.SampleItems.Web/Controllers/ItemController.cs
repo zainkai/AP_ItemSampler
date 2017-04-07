@@ -7,6 +7,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -95,7 +96,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                     bankKey.Value, 
                     itemKey.Value, 
                     brailleCode);
-                return new FileStreamResult(ftpReadStream, "application/zip");
+                return File(ftpReadStream, "application/zip", $"{bankKey.Value}-{itemKey.Value}-braille.zip");
             } catch(Exception e)
             {
                 return BadRequest();
