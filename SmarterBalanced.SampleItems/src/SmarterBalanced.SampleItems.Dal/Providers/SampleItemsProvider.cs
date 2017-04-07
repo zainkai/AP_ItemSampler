@@ -26,7 +26,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
             var itemPatchPath = appSettings.SettingsConfig.PatchXMLPath;
             var itemPatchRoot = XmlSerialization.DeserializeXml<ItemPatchRoot>(filePath: itemPatchPath);
-            var brailleFileInfo = BrailleManifestReader.GetBrailleFileInfo(appSettings.SettingsConfig.BrailleFileManifestPath);
+            var brailleFileInfo = BrailleManifestReader.GetBrailleFileInfo(appSettings).Result;
 
             var sampleItems = SampleItemTranslation.ToSampleItems(
                 digests: itemDigests,

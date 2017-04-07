@@ -6,7 +6,7 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
     {
         public string ContentItemDirectory { get; set; }
         public string ContentRootDirectory { get; set; }
-        public string BrailleFileManifestPath { get; set; }
+        public string BrailleFileManifest { get; set; }
         public string AccommodationsXMLPath { get; set; }
         public string InteractionTypesXMLPath { get; set; }
         public string ClaimsXMLPath { get; set; }

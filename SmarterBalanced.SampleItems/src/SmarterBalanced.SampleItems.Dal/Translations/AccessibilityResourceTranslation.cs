@@ -141,7 +141,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             ItemDigest itemDigest,
             string interactionType,
             bool isPerformanceTask,
-            List<string> dictionarySupportedItemTypes)
+            List<string> dictionarySupportedItemTypes,
+            IEnumerable<string> supportedBraille)
         {
             if (itemDigest == null)
             {
@@ -158,6 +159,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
+            } else if(resource.ResourceCode == "BrailleType")
+            {
+                return resource.DisableUnsupportedBraille(supportedBraille);
             }
 
             return resource;

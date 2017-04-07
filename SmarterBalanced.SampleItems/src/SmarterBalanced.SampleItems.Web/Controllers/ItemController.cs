@@ -90,13 +90,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         public async Task<ActionResult> Braille(int? bankKey, int? itemKey, string brailleCode)
         {
+            var fileName = ItemViewRepo.GenerateBrailleZipName(itemKey.Value, brailleCode);
             try
             {
                 var ftpReadStream = await repo.GetItemBrailleZip(
                     bankKey.Value, 
                     itemKey.Value, 
                     brailleCode);
-                return File(ftpReadStream, "application/zip", $"{itemKey.Value}-braille.zip");
+                return File(ftpReadStream, "application/zip", fileName);
             } catch(Exception e)
             {
                 return BadRequest();

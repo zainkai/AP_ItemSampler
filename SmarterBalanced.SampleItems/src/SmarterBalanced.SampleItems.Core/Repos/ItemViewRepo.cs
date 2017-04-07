@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using SmarterBalanced.SampleItems.Dal.Utils;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -114,27 +115,83 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             //Unknown subject
             return string.Empty;
         }
+        private string GetItemFtpDirectory(SampleItem item)
+        {
+           return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject.Code}/{item.Grade.IndividualGradeToNumString()}/item-{item.ItemKey}";
+        }
+
+        private string GetPassageFtpDirectory(SampleItem item)
+        {
+            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject}/{item.Grade.IndividualGradeToNumString()}/stim-{item.AssociatedStimulus.Value}";
+        }
+
+        private ImmutableArray<string> GetItemBrailleDirectories(SampleItem item)
+        {
+            List<string> itemDirectories = new List<string>();
+            itemDirectories.Add(GetItemFtpDirectory(item));
+            if (item.IsPerformanceItem)
+            {
+                foreach (SampleItem associatedItem in GetAssociatedPerformanceItems(item))
+                {
+                    itemDirectories.Add(GetItemFtpDirectory(associatedItem));
+                }
+            }
+            if (item.AssociatedStimulus.HasValue)
+            {
+                itemDirectories.Add(GetPassageFtpDirectory(item));
+            }
+            return itemDirectories.ToImmutableArray();
+        }
+
+        public async Task<Dictionary<string, string>> GetBrailleFileNames(
+            FtpClient ftpClient, 
+            IEnumerable<string> baseDirectories, 
+            string brailleCode)
+        {
+            string brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode).ToLower();
+            Dictionary<string, string> brailleFiles = new Dictionary<string, string>();
+            foreach (string directory in baseDirectories)
+            {
+                
+                try
+                {
+                    await ftpClient.ChangeWorkingDirectoryAsync(directory);
+                }
+                catch (CoreFtp.Infrastructure.FtpException)
+                {
+                    continue;
+                }
+                
+                var files = await ftpClient.ListFilesAsync();
+                var fileNames = files.Select(f => f.Name).Where(f => Regex.IsMatch(f, $"(?i){brailleType}"));
+                foreach(string file in fileNames)
+                {
+                    if (!brailleFiles.ContainsKey(file))
+                    {
+                        brailleFiles.Add(file, $"{directory}/{file}");
+                    }
+                }
+            }
+            return brailleFiles;
+        }
+
+        public static string GenerateBrailleZipName(int itemId, string brailleCode)
+        {
+            return $"{itemId}-{BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode)}.zip";
+        }
+
 
         public async Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode)
         {
             SampleItem item = GetSampleItem(itemBank, itemKey);
             string brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
-            string zipName = $"item-{itemBank}-{itemKey}-braille.zip";
             if (brailleType == string.Empty)
             {
                 throw new ArgumentException("Invalid Braille Type");
             }
 
-            string itemDirectory = $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject}/{item.Grade.IndividualGradeToNumString()}/item-{itemKey}";
-
-            //Files for testing. Replace with actual braille files
-            List<string> itemFileNames = new List<string>();
-            itemFileNames.Add("item_2964_enu_ecl.brf");
-            itemFileNames.Add("item_2964_enu_exl.brf");
-            itemFileNames.Add("item_2964_enu_ucl.BRF");
-            List<string> stimFileNames = new List<string>();
+            ImmutableArray<string> itemDirectories = GetItemBrailleDirectories(item);
             
-
             using (var ftpClient = new FtpClient(new FtpClientConfiguration
             {
                 Host = context.AppSettings.SettingsConfig.SmarterBalancedFtpHost,
@@ -143,15 +200,15 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }))
             {
                 await ftpClient.LoginAsync();
-                await ftpClient.ChangeWorkingDirectoryAsync("/~sbacpublic/Public/PracticeAndTrainingTests/2016-2017_PracticeAndTrainingBrailleFiles/ELA/06/item-2964/");
+                var brailleFiles = await GetBrailleFileNames(ftpClient, itemDirectories, brailleCode);
 
                 var memoryStream = new MemoryStream();
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    foreach (string fileName in itemFileNames)
+                    foreach (KeyValuePair<string, string> file in brailleFiles)
                     {
-                        var entry = archive.CreateEntry(fileName);
-                        using (var ftpStream = await ftpClient.OpenFileReadStreamAsync(fileName))
+                        var entry = archive.CreateEntry(file.Key);
+                        using (var ftpStream = await ftpClient.OpenFileReadStreamAsync(file.Value))
                         using (var entryStream = entry.Open())
                         {
                             ftpStream.CopyTo(entryStream);
