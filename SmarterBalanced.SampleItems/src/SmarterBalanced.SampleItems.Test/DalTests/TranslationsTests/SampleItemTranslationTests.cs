@@ -157,7 +157,8 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             CoreStandardsXml coreStandardsXml = new CoreStandardsXml(coreStandardsRowTarget, coreStandardsRowCcss);
             var itemPatch = ImmutableArray.Create(new ItemPatch());
-            var items = SampleItemTranslation.ToSampleItems(digests, resourceFamilies, interactionTypes, subjects, coreStandardsXml, itemPatch, appSettings);
+            var brailleFileInfo = new List<BrailleFileInfo>();
+            var items = SampleItemTranslation.ToSampleItems(digests, resourceFamilies, interactionTypes, subjects, coreStandardsXml, itemPatch, brailleFileInfo, appSettings);
 
             Assert.NotNull(items);
             Assert.Equal(items[0].AccessibilityResourceGroups[0].AccessibilityResources[0].Label, Resources[0].Label);

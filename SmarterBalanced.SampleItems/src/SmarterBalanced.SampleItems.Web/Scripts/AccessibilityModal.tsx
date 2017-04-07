@@ -55,6 +55,7 @@
         onSave = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
             e.preventDefault();
             this.props.onSave(this.state.resourceSelections || {});
+
         }
 
         onCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
