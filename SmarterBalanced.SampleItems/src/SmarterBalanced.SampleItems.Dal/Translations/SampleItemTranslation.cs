@@ -23,7 +23,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<Subject> subjects,
             CoreStandardsXml standardsXml,
             IList<ItemPatch> patches,
-            AppSettings settings)
+            IList<BrailleFileInfo> brailleFileInfo,
+            AppSettings settings
+            )
         {
             var sampleItems = digests.Select(d =>
                 ToSampleItem(
@@ -33,7 +35,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     interactionTypes: interactionTypes,
                     resourceFamilies: resourceFamilies,
                     patches: patches,
-                    settings: settings))
+                    brailleFileInfo: brailleFileInfo,
+                    settings: settings
+                    ))
                 .ToImmutableArray();
 
             return sampleItems;
@@ -49,6 +53,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<InteractionType> interactionTypes,
             IList<MergedAccessibilityFamily> resourceFamilies,
             IList<ItemPatch> patches,
+            IList<BrailleFileInfo> brailleFileInfo,
             AppSettings settings)
         {
             var supportedPubs = settings.SettingsConfig.SupportedPublications;
@@ -96,9 +101,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
-            //TODO: Add supported files from ftp
-            ImmutableArray<string> brailleItemCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
-            ImmutableArray<string> braillePassageCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
+            ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where(f => f.ItemKey == itemDigest.ItemKey).Select(b => b.BrailleType).ToImmutableArray();
+            ImmutableArray<string> braillePassageCodes;
+            if (itemDigest.AssociatedPassage.HasValue)
+            {
+                braillePassageCodes = brailleFileInfo.Where(f => f.ItemKey == itemDigest.AssociatedPassage.Value).Select(b => b.BrailleType).ToImmutableArray();
+            } else
+            {
+                braillePassageCodes = ImmutableArray.Create<string>();
+            }
 
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,

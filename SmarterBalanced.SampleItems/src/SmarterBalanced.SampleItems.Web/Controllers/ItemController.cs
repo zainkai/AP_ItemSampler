@@ -96,7 +96,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                     bankKey.Value, 
                     itemKey.Value, 
                     brailleCode);
-                return File(ftpReadStream, "application/zip", $"{bankKey.Value}-{itemKey.Value}-braille.zip");
+                return File(ftpReadStream, "application/zip", $"{itemKey.Value}-braille.zip");
             } catch(Exception e)
             {
                 return BadRequest();

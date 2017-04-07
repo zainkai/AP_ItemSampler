@@ -118,19 +118,22 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         public async Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode)
         {
             SampleItem item = GetSampleItem(itemBank, itemKey);
-            var brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
+            string brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
             string zipName = $"item-{itemBank}-{itemKey}-braille.zip";
             if (brailleType == string.Empty)
             {
                 throw new ArgumentException("Invalid Braille Type");
             }
 
+            string itemDirectory = $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject}/{item.Grade.IndividualGradeToNumString()}/item-{itemKey}";
 
             //Files for testing. Replace with actual braille files
-            List<string> fileNames = new List<string>();
-            fileNames.Add("item_2964_enu_ecl.brf");
-            fileNames.Add("item_2964_enu_exl.brf");
-            fileNames.Add("item_2964_enu_ucl.BRF");
+            List<string> itemFileNames = new List<string>();
+            itemFileNames.Add("item_2964_enu_ecl.brf");
+            itemFileNames.Add("item_2964_enu_exl.brf");
+            itemFileNames.Add("item_2964_enu_ucl.BRF");
+            List<string> stimFileNames = new List<string>();
+            
 
             using (var ftpClient = new FtpClient(new FtpClientConfiguration
             {
@@ -145,7 +148,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 var memoryStream = new MemoryStream();
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    foreach (string fileName in fileNames)
+                    foreach (string fileName in itemFileNames)
                     {
                         var entry = archive.CreateEntry(fileName);
                         using (var ftpStream = await ftpClient.OpenFileReadStreamAsync(fileName))
