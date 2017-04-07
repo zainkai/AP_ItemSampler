@@ -88,7 +88,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
             var newSelections = Selections
                 .Select(s => s.WithDisabled(!supportedCodes
-                    .Any(c => c == s.SelectionCode))
+                    .Any(c => c == s.SelectionCode || s.SelectionCode == "TDS_BT0"))
                 ).ToImmutableArray();
 
             return WithSelections(newSelections);

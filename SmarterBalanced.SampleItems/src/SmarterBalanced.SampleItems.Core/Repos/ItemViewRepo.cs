@@ -5,17 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmarterBalanced.SampleItems.Core.Translations;
-using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Text;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using CoreFtp;
-using System.Collections.Concurrent;
 using System.IO;
-using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Dal.Utils;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
@@ -143,12 +137,23 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return itemDirectories.ToImmutableArray();
         }
 
+        private static string GetBrailleTypeFromCode(string code)
+        {
+            //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
+            var bt = code.Split('_');
+            if (bt.Length != 3)
+            {
+                return string.Empty;
+            }
+            return bt[2];
+        }
+
         public async Task<Dictionary<string, string>> GetBrailleFileNames(
             FtpClient ftpClient, 
             IEnumerable<string> baseDirectories, 
             string brailleCode)
         {
-            string brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode).ToLower();
+            string brailleType = GetBrailleTypeFromCode(brailleCode).ToLower();
             Dictionary<string, string> brailleFiles = new Dictionary<string, string>();
             foreach (string directory in baseDirectories)
             {
@@ -177,14 +182,14 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         public static string GenerateBrailleZipName(int itemId, string brailleCode)
         {
-            return $"{itemId}-{BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode)}.zip";
+            return $"{itemId}-{GetBrailleTypeFromCode(brailleCode)}.zip";
         }
 
 
         public async Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode)
         {
             SampleItem item = GetSampleItem(itemBank, itemKey);
-            string brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
+            string brailleType = GetBrailleTypeFromCode(brailleCode);
             if (brailleType == string.Empty)
             {
                 throw new ArgumentException("Invalid Braille Type");

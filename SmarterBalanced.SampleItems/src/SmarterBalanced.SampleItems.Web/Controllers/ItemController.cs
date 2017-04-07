@@ -98,7 +98,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                     itemKey.Value, 
                     brailleCode);
                 return File(ftpReadStream, "application/zip", fileName);
-            } catch(Exception e)
+            } catch(Exception)
             {
                 return BadRequest();
             }
