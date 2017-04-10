@@ -34,6 +34,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public FieldTestUse FieldTestUse { get;}
         public CoreStandards CoreStandards { get; }
         public string InteractionTypeSubCat{ get; }
+        public ImmutableArray<string> BrailleItemCodes { get; }
+        public ImmutableArray<string> BraillePassageCodes { get; }
 
         public SampleItem(
             int bankKey,
@@ -54,7 +56,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool isPerformanceItem,
             CoreStandards coreStandards,
             FieldTestUse fieldTestUse,
-            string interactionTypeSubCat
+            string interactionTypeSubCat,
+            ImmutableArray<string> brailleItemCodes,
+            ImmutableArray<string> braillePassageCodes
             )
         {
             BankKey = bankKey;
@@ -76,6 +80,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             CoreStandards = coreStandards;
             FieldTestUse = fieldTestUse;
             InteractionTypeSubCat = interactionTypeSubCat;
+            BrailleItemCodes = brailleItemCodes;
+            BraillePassageCodes = braillePassageCodes;
         }
 
         public static SampleItem Create(
@@ -97,7 +103,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool isPerformanceItem = false,
             CoreStandards coreStandards = null,
             FieldTestUse fieldTestUse = null,
-            string interactionTypeSubCat = "")
+            string interactionTypeSubCat = "",
+            ImmutableArray<string> brailleItemCodes = new ImmutableArray<string>(),
+            ImmutableArray<string>  braillePassageCodes = new ImmutableArray<string>())
         {
             return new SampleItem(
                 bankKey,
@@ -118,7 +126,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 isPerformanceItem,
                 coreStandards,
                 fieldTestUse,
-                interactionTypeSubCat);
+                interactionTypeSubCat,
+                brailleItemCodes,
+                braillePassageCodes
+                );
         }
 
         public override string ToString()

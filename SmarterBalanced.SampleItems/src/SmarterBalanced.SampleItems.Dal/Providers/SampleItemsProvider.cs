@@ -26,6 +26,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
             var itemPatchPath = appSettings.SettingsConfig.PatchXMLPath;
             var itemPatchRoot = XmlSerialization.DeserializeXml<ItemPatchRoot>(filePath: itemPatchPath);
+            var brailleFileInfo = BrailleManifestReader.GetBrailleFileInfo(appSettings).Result;
 
             var sampleItems = SampleItemTranslation.ToSampleItems(
                 digests: itemDigests,
@@ -34,7 +35,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 interactionTypes: interactionGroup.InteractionTypes,
                 subjects: subjects,
                 patches: itemPatchRoot.Patches,
-                standardsXml: standardsXml);
+                standardsXml: standardsXml,
+                brailleFileInfo: brailleFileInfo);
 
             var itemCards = sampleItems
                 .Select(i => i.ToItemCardViewModel())

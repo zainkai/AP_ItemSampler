@@ -338,7 +338,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var resource = getResourceWithCode("AmericanSignLanguage", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>(), new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -355,7 +355,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var resource = getResourceWithCode("AmericanSignLanguage", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>(), new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
@@ -372,7 +372,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var resource = getResourceWithCode("Calculator", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>(), new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
@@ -388,7 +388,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("Calculator", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>(), new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -404,7 +404,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("Calculator", true);
 
-            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>(), new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -420,7 +420,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("Calculator", true);
 
-            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>());
+            var resModified = resource.ApplyFlags(itemDigest, "", false, new List<string>(), new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -437,7 +437,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("EnglishDictionary", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, "WER", false, new List<string> { "WER" });
+            var resModified = resource.ApplyFlags(itemDigest, "WER", false, new List<string> { "WER" }, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);
@@ -454,7 +454,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("EnglishDictionary", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" });
+            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" }, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -471,7 +471,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("Thesaurus", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" });
+            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "WER" }, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -488,7 +488,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("GlobalNotes", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "MC" });
+            var resModified = resource.ApplyFlags(itemDigest, itemType, false, new List<string> { "MC" }, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, true);
@@ -505,7 +505,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             };
             var resource = getResourceWithCode("GlobalNotes", false);
 
-            var resModified = resource.ApplyFlags(itemDigest, itemType, true, new List<string> { "MC" });
+            var resModified = resource.ApplyFlags(itemDigest, itemType, true, new List<string> { "MC" }, new List<string>());
 
             Assert.NotNull(resModified);
             Assert.Equal(resModified.Disabled, false);

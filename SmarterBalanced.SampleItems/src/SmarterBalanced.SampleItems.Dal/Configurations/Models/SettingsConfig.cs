@@ -6,6 +6,7 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
     {
         public string ContentItemDirectory { get; set; }
         public string ContentRootDirectory { get; set; }
+        public string BrailleFileManifest { get; set; }
         public string AccommodationsXMLPath { get; set; }
         public string InteractionTypesXMLPath { get; set; }
         public string ClaimsXMLPath { get; set; }
@@ -23,6 +24,10 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public string BrowserWarningCookie { get; set; }
         public string UserAgentRegex { get; set; }
         public int NumMoreLikeThisItems { get; set; }
+        public string SmarterBalancedFtpHost { get; set; }
+        public string SmarterBalancedFtpUsername { get; set; }
+        public string SmarterBalancedFtpPassword { get; set; }
+        public string BrailleFtpBaseDirectory { get; set; }
         public string ELAPerformanceDescription { get; set; }
         public string MATHPerformanceDescription { get; set; }
         public string CoreStandardsXMLPath { get; set; }

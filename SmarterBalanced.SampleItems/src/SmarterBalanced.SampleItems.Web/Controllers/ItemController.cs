@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoreFtp;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SmarterBalanced.SampleItems.Core.Repos;
@@ -6,6 +7,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -85,6 +87,23 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             return View(itemViewModel);
         }
+
+        public async Task<ActionResult> Braille(int? bankKey, int? itemKey, string brailleCode)
+        {
+            var fileName = ItemViewRepo.GenerateBrailleZipName(itemKey.Value, brailleCode);
+            try
+            {
+                var ftpReadStream = await repo.GetItemBrailleZip(
+                    bankKey.Value, 
+                    itemKey.Value, 
+                    brailleCode);
+                return File(ftpReadStream, "application/zip", fileName);
+            } catch(Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 
 }
