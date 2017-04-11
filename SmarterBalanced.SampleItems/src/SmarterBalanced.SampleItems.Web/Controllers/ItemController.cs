@@ -97,6 +97,15 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                     bankKey.Value, 
                     itemKey.Value, 
                     brailleCode);
+
+                Response.Cookies.Append("brailleDLstarted", "1", new Microsoft.AspNetCore.Http.CookieOptions {
+                    Path = "/",
+                    HttpOnly = false,
+                    Secure = false,
+                    Expires = DateTimeOffset.Now.AddSeconds(10)
+                }
+                    
+                    );
                 return File(ftpReadStream, "application/zip", fileName);
             } catch(Exception)
             {

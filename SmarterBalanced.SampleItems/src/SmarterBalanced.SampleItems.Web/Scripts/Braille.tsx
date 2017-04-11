@@ -1,5 +1,18 @@
 ﻿namespace Braille {
 
+    function getCookie(name: string): string | null {
+        const nameLenPlus = (name.length + 1);
+        return document.cookie
+            .split(';')
+            .map(c => c.trim())
+            .filter(cookie => {
+                return cookie.substring(0, nameLenPlus) === `${name}=`;
+            })
+            .map(cookie => {
+                return decodeURIComponent(cookie.substring(nameLenPlus));
+            })[0] || null;
+    }
+
     export interface Props {
         currentSelectionCode: string;
         brailleItemCodes: string[];
@@ -8,9 +21,17 @@
         itemKey: number;
     }
 
-    export class BrailleLink extends React.Component<Props, {}> {
+    interface State {
+        displaySpinner: {};
+    }
+    export class BrailleLink extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
+            this.state = {
+                displaySpinner: {
+                    display: 'none',
+                }
+            };
         }
 
         buildUrl(bankKey: number, itemKey: number, ): string {
@@ -24,16 +45,43 @@
             return "";
         }
 
+        enableSpinner(): void {
+                this.setState({
+                    displaySpinner: {
+                    }
+                });
+        }
+
+        checkDownloadCookie() {
+            if (getCookie("brailleDLstarted") == "1") {
+                this.setState({
+                    displaySpinner: {
+                        display: 'none',
+                    }
+                });
+                return;
+            }
+            const dlCheck = this.checkDownloadCookie;
+            setTimeout(dlCheck.bind(this), 1000);
+            return;
+        }
+
+        watchForDlStart(): void {
+            this.enableSpinner();
+            this.checkDownloadCookie();
+        }
+
         render() {
             let brailleUrl = this.buildUrl(this.props.bankKey, this.props.itemKey);
             if (brailleUrl == "") {
                 return null;
             } else { 
                 return (
-                    <a className="item-nav-btn" href={brailleUrl} download >
-                            <span className="glyphicon glyphicon-download-alt glyphicon-pad"/>
+                    <a className="item-nav-btn" href={brailleUrl} download onClick={() => this.watchForDlStart()} >
+                        <span className="glyphicon glyphicon-download-alt glyphicon-pad" />
                             Download Braille Embossing
-                        </a>
+                        <span className="glyphicon glyphicon-refresh glyphicon-pad rotating" style={this.state.displaySpinner} />
+                        </a> 
                   );
             }
         }
