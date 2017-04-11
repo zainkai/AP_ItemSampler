@@ -52,13 +52,18 @@
                 });
         }
 
+        disableSpinner(): void {
+            this.setState({
+                displaySpinner: {
+                    display:'none'
+                }
+            });
+        }
+
         checkDownloadCookie() {
             if (getCookie("brailleDLstarted") == "1") {
-                this.setState({
-                    displaySpinner: {
-                        display: 'none',
-                    }
-                });
+                this.disableSpinner();
+                document.cookie = "brailleDLstarted" + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;"
                 return;
             }
             const dlCheck = this.checkDownloadCookie;
