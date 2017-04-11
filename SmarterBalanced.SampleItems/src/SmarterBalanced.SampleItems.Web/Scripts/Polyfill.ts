@@ -3,6 +3,14 @@ declare interface ObjectConstructor {
     assign<T1, T2>(target: T1, ...sources: T2[]): T1 & T2;
 }
 
+declare interface Array<T> {
+    find(predicate: (search: T) => boolean): T;
+}
+
+declare interface String {
+    startsWith(str: string): boolean;
+}
+
 if (typeof Object.assign != 'function') {
     Object.assign = function<T1, T2>(target: T1, varArgs: T2[]) { // .length of function is 2
         'use strict';
@@ -27,3 +35,4 @@ if (typeof Object.assign != 'function') {
         return to;
     };
 }
+

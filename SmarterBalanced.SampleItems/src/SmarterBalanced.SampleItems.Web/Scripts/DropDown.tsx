@@ -12,8 +12,9 @@
         disabled: boolean;
         selectionCode: string;
         selections: Selection[];
-        updateSelection(code: string, label: string): void;
+        updateSelection(selectionCode: string, resourceCode: string): void;
         defaultSelection: string;
+        resourceCode: string;
     }
 
     export class Dropdown extends React.Component<Props, {}> {
@@ -22,7 +23,7 @@
         }
 
         onChange = (event: React.FormEvent<HTMLSelectElement>) => {
-            this.props.updateSelection(event.currentTarget.value, this.props.label);
+            this.props.updateSelection(event.currentTarget.value, this.props.resourceCode);
         }
 
         renderOption = (selection: Selection) => {
