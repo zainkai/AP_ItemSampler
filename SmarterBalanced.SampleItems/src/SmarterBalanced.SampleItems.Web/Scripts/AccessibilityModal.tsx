@@ -45,10 +45,13 @@
             });
         }
 
-        updateSelection = (code: string, label: string) => {
+        updateSelection = (selectionCode: string, resourceCode: string) => {
             const newSelections = Object.assign({}, this.state.resourceSelections || {});
-            newSelections[label] = code;
+            newSelections[resourceCode] = selectionCode;
+            if (resourceCode === "BrailleType" && selectionCode != "TDS_BT0") {
+                newSelections["StreamlinedInterface"] = "TDS_SLM1";
 
+            }
             this.setState({ resourceSelections: newSelections });
         }
 
@@ -98,7 +101,7 @@
             }
 
             let dropdowns = resources.map(res => {
-                let selectedCode = (this.state.resourceSelections || {})[res.label] || res.currentSelectionCode;
+                let selectedCode = (this.state.resourceSelections || {})[res.resourceCode] || res.currentSelectionCode;
                 let selections = res.selections.filter(s => !s.hidden);
                 let ddprops: Dropdown.Props = {
                     defaultSelection: res.currentSelectionCode,
@@ -106,9 +109,10 @@
                     selections: selections,
                     selectionCode: selectedCode,
                     disabled: res.disabled,
-                    updateSelection: this.updateSelection
+                    updateSelection: this.updateSelection,
+                    resourceCode: res.resourceCode
                 }
-                return <Dropdown.Dropdown{...ddprops} key={res.label} />;
+                return <Dropdown.Dropdown{...ddprops} key={res.resourceCode} />;
             });
 
             let expandButton: JSX.Element | undefined;

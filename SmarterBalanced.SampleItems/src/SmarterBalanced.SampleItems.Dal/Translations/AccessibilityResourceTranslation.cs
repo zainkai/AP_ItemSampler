@@ -141,7 +141,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             ItemDigest itemDigest,
             string interactionType,
             bool isPerformanceTask,
-            List<string> dictionarySupportedItemTypes)
+            List<string> dictionarySupportedItemTypes,
+            IEnumerable<string> supportedBraille,
+            Claim claim)
         {
             if (itemDigest == null)
             {
@@ -153,11 +155,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             bool isUnsupportedGlobalNotes = !isPerformanceTask && resource.ResourceCode == "GlobalNotes";
             bool isUnsupportedDictionaryThesaurus = !dictionarySupportedItemTypes.Any(s => s == interactionType)
                 && (resource.ResourceCode == "EnglishDictionary" || resource.ResourceCode == "Thesaurus");
+            bool isUnsupportedClosedCaptioning = !(claim?.ClaimNumber == "3" && itemDigest.SubjectCode == "ELA") && resource.ResourceCode == "ClosedCaptioning";
 
-            if (isUnsupportedAsl || isUnsupportedCalculator || isUnsupportedGlobalNotes || isUnsupportedDictionaryThesaurus) 
+            if (isUnsupportedAsl || isUnsupportedCalculator || isUnsupportedGlobalNotes || isUnsupportedDictionaryThesaurus || isUnsupportedClosedCaptioning) 
             {
                 var newResource = resource.ToDisabled();
                 return newResource;
+            } else if(resource.ResourceCode == "BrailleType")
+            {
+                return resource.DisableUnsupportedBraille(supportedBraille);
             }
 
             return resource;

@@ -7,6 +7,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <param name="iSAAP"></param>
-        public async Task<IActionResult> Details(int? bankKey, int? itemKey, string iSAAP)
+        public IActionResult Details(int? bankKey, int? itemKey, string iSAAP)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
             {
@@ -77,7 +78,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
             string[] isaapCodes = string.IsNullOrEmpty(iSAAP) ? new string[0] : iSAAP.Split(';');
 
-            var itemViewModel = await repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookiePreferences);
+            var itemViewModel = repo.GetItemViewModel(bankKey.Value, itemKey.Value, isaapCodes, cookiePreferences);
             if (itemViewModel == null)
             {
                 logger.LogWarning($"{nameof(Details)} invalid item {bankKey} {itemKey}");
@@ -89,10 +90,18 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         public async Task<ActionResult> Braille(int? bankKey, int? itemKey, string brailleCode)
         {
-            var ftpReadStream = await repo.GetFtpFile(bankKey.Value, itemKey.Value, brailleCode);
-
-            return new FileStreamResult(ftpReadStream, "text/plain");
-
+            var fileName = ItemViewRepo.GenerateBrailleZipName(itemKey.Value, brailleCode);
+            try
+            {
+                var ftpReadStream = await repo.GetItemBrailleZip(
+                    bankKey.Value, 
+                    itemKey.Value, 
+                    brailleCode);
+                return File(ftpReadStream, "application/zip", fileName);
+            } catch(Exception)
+            {
+                return BadRequest();
+            }
         }
 
     }

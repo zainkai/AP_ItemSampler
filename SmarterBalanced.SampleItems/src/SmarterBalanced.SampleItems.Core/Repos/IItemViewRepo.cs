@@ -10,8 +10,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 {
     public interface IItemViewRepo
     {
-        Task<Stream> GetFtpFile(int itemBank, int itemKey, string brailleCode);
-        Task<ItemViewModel> GetItemViewModel(
+        ItemViewModel GetItemViewModel(
             int bankKey,
             int itemKey,
             string[] iSAAPCodes,
@@ -20,5 +19,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         MoreLikeThisViewModel GetMoreLikeThis(SampleItem sampleItem);
 
         AboutThisItemViewModel GetAboutThisItemViewModel(SampleItem sampleItem);
+
+        Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode);
     }
 }

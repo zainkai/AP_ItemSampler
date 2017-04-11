@@ -70,31 +70,26 @@ namespace ItemPage {
         }
     }
 
-    //Checks if Braille is enabled, if so sets Streamline mode on
-    export function setStreamlineMode(resourceGroups: AccResourceGroup[]) {
-        let currentBrailleType = this.getBrailleAccommodation(resourceGroups);
-        if (currentBrailleType != "TDS_BT0") { //All braille disabled
-            for (let group of resourceGroups) {
-                for (let resource of group.accessibilityResources) {
-                    if (resource.label == "Streamlined Interface" && resource.currentSelectionCode != "TDS_SLM1") {
-                        resource.currentSelectionCode = "TDS_SLM1"; //Streamlined
-                    }
-                }
+    export function getResource(resourceCode: string, resourceGroups: AccResourceGroup[]): AccessibilityResource | null {
+        for (let accGroup of resourceGroups) {
+            const resource = accGroup.accessibilityResources.find(rg => rg.resourceCode == resourceCode);
+            if (resource) {
+                return resource;
             }
         }
+
+        return null;
     }
 
     export function getBrailleAccommodation(accResourceGroups: AccResourceGroup[]): string {
-        var currentBrailleType = "";
-        for (let group of accResourceGroups) {
-            for (let resource of group.accessibilityResources) {
-                if (resource.label == "Braille Type" && !resource.disabled) {
-                    currentBrailleType = resource.currentSelectionCode;
-                }
-            }
+        const brailleResource = getResource("BrailleType", accResourceGroups);
+        if (brailleResource) {
+            return brailleResource.currentSelectionCode;
         }
-        return currentBrailleType;
+
+        return "";
     }
+
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
@@ -193,7 +188,6 @@ namespace ItemPage {
         }
 
         render() {
-            ItemPage.setStreamlineMode(this.props.accResourceGroups);
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
@@ -258,7 +252,7 @@ namespace ItemPage {
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {}
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
@@ -268,7 +262,7 @@ namespace ItemPage {
                 const newResources: AccessibilityResource[] = [];
                 for (let res of newGroup.accessibilityResources) {
                     const newRes = Object.assign({}, res);
-                    newRes.currentSelectionCode = selections[newRes.label] || newRes.currentSelectionCode;
+                    newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
                     newResources.push(newRes);
                 }
                 newGroup.accessibilityResources = newResources;
