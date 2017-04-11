@@ -30,12 +30,11 @@
                 return null;
             } else { 
                 return (
-                    <div className="item-nav-btn">
-                        <a href={brailleUrl} download >
+                    <a className="item-nav-btn" href={brailleUrl} download >
                             <span className="glyphicon glyphicon-download-alt glyphicon-pad"/>
                             Download Braille Embossing
                         </a>
-                    </div>);
+                  );
             }
         }
     }
