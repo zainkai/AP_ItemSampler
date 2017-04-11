@@ -233,6 +233,75 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Assert.Equal(System.Math.Min(expectedSame, 3), countSame);
 
         }
+
+        [Fact(Skip = "ToDo")]
+        public void TestGetAboutThisItemViewModelGoodItem()
+        {
+             var rubricEntries = new List<RubricEntry>()
+            {
+                new RubricEntry
+                {
+                        Scorepoint = "0",
+                        Name = "TestName",
+                        Value = "TestValue"
+                },
+                new RubricEntry
+                {
+                        Scorepoint = "1",
+                        Name = "TestName1",
+                        Value = "TestValue1"
+                }
+            };
+
+            var sampleResponces = new List<SampleResponse>()
+            {
+                new SampleResponse()
+                {
+                    Purpose = "TestPurpose",
+                    ScorePoint = "0",
+                    Name = "TestName",
+                    SampleContent = "TestSampleContent"
+                },
+                new SampleResponse()
+                {
+                    Purpose = "TestPurpose1",
+                    ScorePoint = "1",
+                    Name = "TestName1",
+                    SampleContent = "TestSampleContent1"
+                }
+            };
+
+            var rubricSamples = new List<RubricSample>()
+            {
+                 new RubricSample
+                 {
+                        MaxValue = "MaxVal",
+                        MinValue = "MinVal",
+                        SampleResponses = sampleResponces
+                 },
+                 new RubricSample
+                 {
+                        MaxValue = "MaxVal1",
+                        MinValue = "MinVal1",
+                        SampleResponses = new List<SampleResponse>()
+                 }
+            };
+            var entries = ImmutableArray.Create(rubricEntries);
+            var samples = ImmutableArray.Create(rubricSamples);
+
+            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(PerformanceDigest);
+
+            Assert.NotNull(aboutThisItemViewModel);
+
+        }
+
+        [Fact]
+        public void TestGetAboutThisItemViewModelBadItem()
+        {
+            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(null);
+
+            Assert.Null(aboutThisItemViewModel);
+        }
         #endregion
     }
 }
