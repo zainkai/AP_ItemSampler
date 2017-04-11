@@ -60,20 +60,26 @@
             });
         }
 
-        checkDownloadCookie() {
+        checkDownloadCookie(count: number) {
+            count++;
             if (getCookie("brailleDLstarted") == "1") {
                 this.disableSpinner();
                 document.cookie = "brailleDLstarted" + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;"
                 return;
             }
+            if (count > 20) {
+                document.cookie = "brailleDLstarted" + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;"
+                this.disableSpinner();
+                return;
+            }
             const dlCheck = this.checkDownloadCookie;
-            setTimeout(dlCheck.bind(this), 1000);
+            setTimeout(dlCheck.bind(this), 1000, count);
             return;
         }
 
         watchForDlStart(): void {
             this.enableSpinner();
-            this.checkDownloadCookie();
+            this.checkDownloadCookie(0);
         }
 
         render() {
