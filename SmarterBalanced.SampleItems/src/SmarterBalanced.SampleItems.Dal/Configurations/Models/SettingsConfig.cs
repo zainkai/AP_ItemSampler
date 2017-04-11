@@ -23,6 +23,9 @@ namespace SmarterBalanced.SampleItems.Dal.Configurations.Models
         public string BrowserWarningCookie { get; set; }
         public string UserAgentRegex { get; set; }
         public int NumMoreLikeThisItems { get; set; }
+        public string SmarterBalancedFtpHost { get; set; }
+        public string SmarterBalancedFtpUsername { get; set; }
+        public string SmarterBalancedFtpPassword { get; set; }
         public string ELAPerformanceDescription { get; set; }
         public string MATHPerformanceDescription { get; set; }
         public string CoreStandardsXMLPath { get; set; }

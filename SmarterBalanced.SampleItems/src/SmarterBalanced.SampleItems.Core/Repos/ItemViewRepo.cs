@@ -11,6 +11,11 @@ using Microsoft.Extensions.Logging;
 using System.Text;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using CoreFtp;
+using System.Collections.Concurrent;
+using System.IO;
+using Microsoft.AspNetCore.Mvc;
+using SmarterBalanced.SampleItems.Dal.Utils;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -109,7 +114,27 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return string.Empty;
         }
 
-        public ItemViewModel GetItemViewModel(
+        public async Task<Stream> GetFtpFile(int itemBank, int itemKey, string brailleCode)
+        {
+            SampleItem item = GetSampleItem(itemBank, itemKey);
+            var brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
+            if(brailleType == string.Empty)
+            {
+                throw new ArgumentException("Invalid Braille Type");
+            }
+            var ftpClient = new FtpClient(new FtpClientConfiguration
+            {
+                Host = "ftps.smarterbalanced.org",
+                Username = "anonymous",
+                Password = "guest"
+            });
+            await ftpClient.LoginAsync();
+            var filePath = BrailleFtpUtils.BuildBrailleFilePath(item, brailleType); 
+            var ftpStream = await ftpClient.OpenFileReadStreamAsync(filePath);
+            return ftpStream;
+        }
+
+        public async Task<ItemViewModel> GetItemViewModel(
             int bankKey,
             int itemKey,
             string[] iSAAPCodes,
@@ -133,6 +158,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
                 aboutThisItemVM: aboutThisItem,
                 subject: sampleItem.Subject.Code,
+                brailleItemCodes: sampleItem.BrailleItemCodes,
+                braillePassageCodes: sampleItem.BraillePassageCodes,
                 performanceItemDescription: GetPerformanceDescription(sampleItem));
 
             return itemViewModel;

@@ -42,5 +42,18 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 commonCoreStandardsDescription: commonCoreStandardsDescription);
         }
 
+        public CoreStandards WithTargetCCSSDescriptions(
+         string targetDescription = "",
+         string commonCoreStandardsDescription = "")
+        {
+            return new CoreStandards(
+                targetDescription: targetDescription,
+                targetId: TargetId,
+                targetIdLabel: TargetIdLabel,
+                commonCoreStandardsId: CommonCoreStandardsId,
+                commonCoreStandardsDescription: commonCoreStandardsDescription);
+        }
+
+
     }
 }

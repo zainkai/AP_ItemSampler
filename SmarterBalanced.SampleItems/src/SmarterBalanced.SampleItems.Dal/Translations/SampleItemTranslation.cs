@@ -54,6 +54,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var supportedPubs = settings.SettingsConfig.SupportedPublications;
             var rubrics = GetRubrics(itemDigest, settings);
             StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(itemDigest, supportedPubs);
+            CoreStandards coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
 
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
             if (patch != null)
@@ -67,9 +68,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 {
                     identifier = identifier.WithClaimAndTarget(claimNumber, patch.Target);
                 }
+
+                coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
+                coreStandards = coreStandards.WithTargetCCSSDescriptions(patch.TargetDescription, patch.CCSSDescription);
             }
-            
-            var coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
+
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
@@ -96,6 +99,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
+            //TODO: Add supported files from ftp
+            ImmutableArray<string> brailleItemCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
+            ImmutableArray<string> braillePassageCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
+
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
                 itemKey: itemDigest.ItemKey,
@@ -115,11 +122,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 grade: grade,
                 coreStandards: coreStandards,
                 fieldTestUse: fieldTestUse,
-                interactionTypeSubCat: interactionTypeSubCat);
+                interactionTypeSubCat: interactionTypeSubCat,
+                brailleItemCodes: brailleItemCodes,
+                braillePassageCodes: braillePassageCodes);
 
             return sampleItem;
         }
-
 
         public static AccessibilityResourceGroup GroupItemResources(
             AccessibilityType accType,

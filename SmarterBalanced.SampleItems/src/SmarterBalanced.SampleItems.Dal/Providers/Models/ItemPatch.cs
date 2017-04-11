@@ -16,5 +16,11 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         [XmlElement("Target")]
         public string Target { get; set; }
+
+        [XmlElement("TargetDesc")]
+        public string TargetDescription { get; set; }
+
+        [XmlElement("CCSSDesc")]
+        public string CCSSDescription { get; set; }
     }
 }
