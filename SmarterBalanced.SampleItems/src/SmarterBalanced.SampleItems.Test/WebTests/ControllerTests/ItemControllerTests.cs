@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Collections.Immutable;
 using SmarterBalanced.SampleItems.Dal.Translations;
+using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
 {
@@ -82,7 +83,9 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
                 subject: "MATH",
                 moreLikeThisVM: default(MoreLikeThisViewModel),
-                aboutThisItemVM: aboutThisItemVM);
+                aboutThisItemVM: aboutThisItemVM,
+                brailleItemCodes: new ImmutableArray<string>(),
+                braillePassageCodes: new ImmutableArray<string>());
 
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
@@ -91,15 +94,16 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 subject: "MATH",
                 aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
-
-                moreLikeThisVM: default(MoreLikeThisViewModel));
+                moreLikeThisVM: default(MoreLikeThisViewModel),
+                brailleItemCodes: new ImmutableArray<string>(),
+                braillePassageCodes: new ImmutableArray<string>());
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
 
             itemViewRepoMock
                 .Setup(repo =>
                     repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<Dictionary<string, string>>()))
-                .Returns(itemViewModel);
+                .Returns(Task.FromResult(itemViewModel));
 
             itemViewRepoMock
                 .Setup(repo =>
@@ -108,7 +112,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                         itemKey,
                         It.Is<string[]>(ss => Enumerable.SequenceEqual(ss, iSAAP.Split(';'))),
                         It.IsAny<Dictionary<string, string>>()))
-                .Returns(itemViewModel);
+                .Returns(Task.FromResult(itemViewModel));
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
@@ -125,7 +129,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(bankKey, itemKey, iSAAP);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewResult = Assert.IsType<ViewResult>(result.Result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
 
             Assert.Equal(itemViewModel, model);
@@ -140,7 +144,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(null, itemKey, iSAAP);
 
-            Assert.IsType<BadRequestResult>(result);
+            Assert.IsType<BadRequestResult>(result.Result);
         }
 
         /// <summary>
@@ -151,7 +155,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(bankKey + 1, itemKey + 1, iSAAP);
 
-            Assert.IsType<BadRequestResult>(result);
+            Assert.IsType<BadRequestResult>(result.Result);
         }
 
         /// <summary>
@@ -162,7 +166,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(bankKey, itemKey, string.Empty);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewResult = Assert.IsType<ViewResult>(result.Result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
 
             Assert.Equal(itemViewModel, model);

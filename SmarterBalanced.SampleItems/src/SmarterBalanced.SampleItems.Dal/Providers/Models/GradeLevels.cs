@@ -98,6 +98,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             }
         }
 
+        public static string IndividualGradeToNumString(this GradeLevels grade)
+        {
+            switch (grade)
+            {
+                case GradeLevels.Grade3: return "03";
+                case GradeLevels.Grade4: return "04";
+                case GradeLevels.Grade5: return "05";
+                case GradeLevels.Grade6: return "06";
+                case GradeLevels.Grade7: return "07";
+                case GradeLevels.Grade8: return "08";
+                case GradeLevels.Grade9: return "09";
+                case GradeLevels.Grade10: return "10";
+                case GradeLevels.Grade11: return "11";
+                case GradeLevels.Grade12: return "12";
+                default: return string.Empty;
+            }
+        }
+
         public static string ToDisplayString(this GradeLevels grades)
         {
             var flagString = FlagToString(grades);
