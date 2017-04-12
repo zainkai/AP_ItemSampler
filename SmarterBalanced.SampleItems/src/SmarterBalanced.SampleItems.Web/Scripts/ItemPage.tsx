@@ -12,7 +12,7 @@
 namespace ItemPage {
 
     function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
-        let isaapCodes = "TDS_ITM1;"; // always enable item tools menu
+        let isaapCodes = "TDS_ITM1;TDS_APC_SCRUBBER;"; // always enable item tools menu
         for (let group of accResourceGroups) {
             for (let res of group.accessibilityResources) {
                 if (res.currentSelectionCode && !res.disabled) {
