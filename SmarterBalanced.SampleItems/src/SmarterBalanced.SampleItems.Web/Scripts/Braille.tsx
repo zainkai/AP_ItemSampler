@@ -32,7 +32,7 @@
                 return (
                     <a className="item-nav-btn" href={brailleUrl} download >
                             <span className="glyphicon glyphicon-download-alt glyphicon-pad"/>
-                            Download Braille Embossing
+                            Download Braille Embossing File(s)
                         </a>
                   );
             }

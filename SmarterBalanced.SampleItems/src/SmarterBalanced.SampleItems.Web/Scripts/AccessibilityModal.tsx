@@ -45,12 +45,16 @@
             });
         }
 
+        /** Updates the selection based on user input, if item is braille, streamlined mode needs to be adjusted */
         updateSelection = (selectionCode: string, resourceCode: string) => {
             const newSelections = Object.assign({}, this.state.resourceSelections || {});
             newSelections[resourceCode] = selectionCode;
-            if (resourceCode === "BrailleType" && selectionCode != "TDS_BT0") {
-                newSelections["StreamlinedInterface"] = "TDS_SLM1";
-
+            if (resourceCode === "BrailleType") {
+                if (selectionCode == "TDS_BT0") {
+                    newSelections["StreamlinedInterface"] = "TDS_SLM0";
+                } else {
+                    newSelections["StreamlinedInterface"] = "TDS_SLM1";
+                }
             }
             this.setState({ resourceSelections: newSelections });
         }

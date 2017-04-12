@@ -112,7 +112,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         private string GetItemRootDirectory(SampleItem item)
         {
-            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject.ShortLabel}/{item.Grade.IndividualGradeToNumString()}";
+            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}{item.Subject.ShortLabel}/{item.Grade.IndividualGradeToNumString()}";
         }
         private string GetItemFtpDirectory(SampleItem item)
         {
