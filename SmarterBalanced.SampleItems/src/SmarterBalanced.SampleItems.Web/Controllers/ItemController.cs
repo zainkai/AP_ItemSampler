@@ -90,6 +90,11 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
         public async Task<ActionResult> Braille(int? bankKey, int? itemKey, string brailleCode)
         {
+            if(!bankKey.HasValue || !itemKey.HasValue || string.IsNullOrEmpty(brailleCode))
+            {
+                return BadRequest();
+            }
+
             var fileName = ItemViewRepo.GenerateBrailleZipName(itemKey.Value, brailleCode);
             try
             {
@@ -98,8 +103,10 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                     itemKey.Value, 
                     brailleCode);
                 return File(ftpReadStream, "application/zip", fileName);
-            } catch(Exception)
+            } catch(Exception e)
             {
+                logger.LogError($"{nameof(Braille)} failed to load braille for {itemKey.Value}, message {e.Message}");
+
                 return BadRequest();
             }
         }

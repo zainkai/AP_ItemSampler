@@ -109,14 +109,19 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             //Unknown subject
             return string.Empty;
         }
+
+        private string GetItemRootDirectory(SampleItem item)
+        {
+            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject.ShortLabel}/{item.Grade.IndividualGradeToNumString()}";
+        }
         private string GetItemFtpDirectory(SampleItem item)
         {
-           return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject.Code}/{item.Grade.IndividualGradeToNumString()}/item-{item.ItemKey}";
+           return $"{GetItemRootDirectory(item)}/item-{item.ItemKey}";
         }
 
         private string GetPassageFtpDirectory(SampleItem item)
         {
-            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}/{item.Subject}/{item.Grade.IndividualGradeToNumString()}/stim-{item.AssociatedStimulus.Value}";
+            return $"{GetItemRootDirectory(item)}/stim-{item.AssociatedStimulus.Value}";
         }
 
         private ImmutableArray<string> GetItemBrailleDirectories(SampleItem item)
@@ -190,9 +195,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             SampleItem item = GetSampleItem(itemBank, itemKey);
             string brailleType = GetBrailleTypeFromCode(brailleCode);
-            if (brailleType == string.Empty)
+            if (brailleType == string.Empty || item == null)
             {
-                throw new ArgumentException("Invalid Braille Type");
+                throw new ArgumentException("Invalid arguments for item or braille");
             }
 
             ImmutableArray<string> itemDirectories = GetItemBrailleDirectories(item);
