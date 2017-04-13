@@ -253,7 +253,7 @@ paket-files/
 
 #Javascript/Typescript
 _references.js
-**/wwwroot/scripts/*
+/**/wwwroot/scripts/
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/.tscache/*
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/Scripts/.baseDir.ts
 
@@ -262,12 +262,12 @@ _references.js
 **/*.min.css
 
 # css generated from less files
-**/wwwroot/css/*
+/**/wwwroot/css/
 
 #jmeter
 /jmeter/Results/
 
 #lib
-**/wwwroot/lib/*
+/**/wwwroot/lib/
 
 

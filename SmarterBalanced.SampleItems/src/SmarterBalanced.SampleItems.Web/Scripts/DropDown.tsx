@@ -31,6 +31,7 @@
             const label = this.props.disabled ? "" : selection.label;
             return (
                 <option value={selection.selectionCode}
+                    aria-label={selection.label}
                     disabled={selection.disabled}
                     key={selection.selectionCode}
                     className={disabledCSS}
@@ -45,8 +46,9 @@
             const options = this.props.selections.map(this.renderOption);
             return (
                 <div className={classes}>
-                    <label>{this.props.label}</label><br />
+                    <label htmlFor={this.props.resourceCode}> { this.props.label }</label><br />
                     <select className="form-control"
+                        id={this.props.resourceCode}
                         disabled={this.props.disabled}
                         onChange={this.onChange}
                         value={this.props.selectionCode}>
