@@ -31,6 +31,7 @@
             const label = this.props.disabled ? "" : selection.label;
             return (
                 <option value={selection.selectionCode}
+                    aria-label={selection.label}
                     disabled={selection.disabled}
                     key={selection.selectionCode}
                     className={disabledCSS}

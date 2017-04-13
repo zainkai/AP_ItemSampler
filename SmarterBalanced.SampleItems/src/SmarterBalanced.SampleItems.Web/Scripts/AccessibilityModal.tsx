@@ -45,6 +45,17 @@
             });
         }
 
+        keyboardToggleResourceType(e: React.KeyboardEvent<HTMLAnchorElement>, resourceType: string): void {
+            if (e.keyCode == 23 || e.keyCode == 13) {
+                const expandeds = Object.assign({}, this.state.resourceTypeExpanded || {});
+                expandeds[resourceType] = !expandeds[resourceType];
+
+                this.setState({
+                    resourceTypeExpanded: expandeds
+                });
+            }
+        }
+
         /** Updates the selection based on user input, if item is braille, streamlined mode needs to be adjusted */
         updateSelection = (selectionCode: string, resourceCode: string) => {
             const newSelections = Object.assign({}, this.state.resourceSelections || {});
@@ -108,14 +119,20 @@
             } else if (isExpanded) {
                 expandButton =
                     <a className="expand-button"
-                        onClick={() => this.toggleResourceType(type)}>
+                        tabIndex={0}
+                        aria-label="Show less options"
+                        onClick={() => this.toggleResourceType(type)}
+                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show less
                     </a>;
             } else {
                 expandButton =
                     <a className="expand-button"
-                        onClick={() => this.toggleResourceType(type)}>
+                    tabIndex={0}
+                    aria-abel="Show all options"
+                    onClick={() => this.toggleResourceType(type)}
+                    onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show all
                     </a>;
