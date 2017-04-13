@@ -21,11 +21,11 @@ script:
   - dotnet restore ../
   - dotnet build 
   - npm install 
+  - bower install
   - grunt all
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/
   - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
 
-matrix:
   include:
   - os: linux
     dist: trusty
