@@ -268,7 +268,7 @@ _references.js
 /jmeter/Results/
 
 #lib
-wwwroot/css
+wwwroot/css/
 wwwroot/scripts/
 wwwroot/lib/
 
