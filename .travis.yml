@@ -21,7 +21,7 @@ script:
   - dotnet restore ../
   - dotnet build 
   - npm install 
-  - bower install
+  - $(npm bin)/bower install
   - grunt all
   - cd /home/travis/build/osu-cass/SampleItemsWebsite/
   - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
