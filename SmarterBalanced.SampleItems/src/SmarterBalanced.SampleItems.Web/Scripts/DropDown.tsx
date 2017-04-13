@@ -46,8 +46,9 @@
             const options = this.props.selections.map(this.renderOption);
             return (
                 <div className={classes}>
-                    <label>{this.props.label}</label><br />
+                    <label htmlFor={this.props.resourceCode}> { this.props.label }</label><br />
                     <select className="form-control"
+                        id={this.props.resourceCode}
                         disabled={this.props.disabled}
                         onChange={this.onChange}
                         value={this.props.selectionCode}>
