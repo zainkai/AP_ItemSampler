@@ -136,7 +136,7 @@
             const types = ItemPage.getResourceTypes(this.props.accResourceGroups);
             const groups = types.map(t => this.renderResourceType(t));
             return (
-                <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-hidden="true">
+                <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-describedby="Accessibility Options Modal" aria-hidden="true">
                     <div className="modal-dialog accessibility-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
