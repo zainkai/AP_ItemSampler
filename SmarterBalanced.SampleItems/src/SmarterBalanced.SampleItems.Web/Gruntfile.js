@@ -66,6 +66,15 @@ module.exports = function (grunt) {
                 files: ["Styles/*.less"],
                 tasks: ["less"]
             }
+        },
+        "bower-install-simple": {
+            options: {
+            },
+            "prod": {
+                options: {
+                }
+            }
+            
         }
     });
 
@@ -75,8 +84,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-bower-install-simple');
 
-    grunt.registerTask("all", ['clean', 'ts', 'less', 'cssmin', 'uglify']);
+
+    grunt.registerTask("bower-install", ["bower-install-simple"]);
+    grunt.registerTask("all", ['clean', 'ts', 'less', 'cssmin', 'uglify', 'bower-install']);
     grunt.registerTask("tsrecompile", ['clean:ts', 'ts', 'uglify']);
     grunt.registerTask("lessrecompile", ['clean:css', 'less', 'cssmin']);
 
