@@ -90,7 +90,7 @@
                 return (
                     <a className="item-nav-btn" href={brailleUrl} download onClick={() => this.watchForDlStart()} >
                         <span className="glyphicon glyphicon-download-alt glyphicon-pad" />
-                            Download Braille Embossing
+                            Download Braille Embossing File(s)
                         <span className="glyphicon glyphicon-refresh glyphicon-pad rotating" style={this.state.displaySpinner} />
                         </a> 
                   );

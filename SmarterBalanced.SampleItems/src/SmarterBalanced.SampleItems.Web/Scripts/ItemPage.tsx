@@ -12,7 +12,7 @@
 namespace ItemPage {
 
     function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
-        let isaapCodes = "TDS_ITM1;"; // always enable item tools menu
+        let isaapCodes = "TDS_ITM1;TDS_APC_SCRUBBER;"; // always enable item tools menu
         for (let group of accResourceGroups) {
             for (let res of group.accessibilityResources) {
                 if (res.currentSelectionCode && !res.disabled) {
@@ -133,35 +133,35 @@ namespace ItemPage {
         }
 
         openAboutItemModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#about-item-modal-container"));
                 modal.modal();
             }
         }
 
         openMoreLikeThisModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#more-like-this-modal-container"));
                 modal.modal();
             }
         }
 
         openShareModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#share-modal-container"));
                 modal.modal();
             }
         }
 
         openPerfTaskModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#about-performance-tasks-modal-container"));
                 modal.modal();
             }
         }
 
         openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
             }

@@ -39,6 +39,13 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return Json(items);
         }
 
+        [HttpGet]
+        public IActionResult ViewItems()
+        {
+            var items = sampleItemsSearchRepo.GetSampleItemViewModels();
+            return Json(items);
+        }
+
     }
 
 }

@@ -90,6 +90,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
+
+            if (fieldTestUse == null)
+            {
+                var operationalUse = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_OPUse");
+                fieldTestUse = FieldTestUse.Create(operationalUse, itemDigest.SubjectCode);
+            }
+
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
             ImmutableArray<string> braillePassageCodes;
             ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
@@ -107,13 +114,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 braillePassageCodes = ImmutableArray.Create<string>();
             }
 
+            bool aslSupported = AslSupported(itemDigest);
             var flaggedResources = family?.Resources
                 .Select(r => r.ApplyFlags(
                     itemDigest,
                     interactionType?.Code, isPerformance, 
                     settings.SettingsConfig.DictionarySupportedItemTypes, 
                     brailleItemCodes,
-                    claim))
+                    claim,
+                    aslSupported))
                 .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
             var groups = settings.SettingsConfig.AccessibilityTypes
@@ -124,6 +133,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
+
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
                 itemKey: itemDigest.ItemKey,
@@ -132,7 +142,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 depthOfKnowledge: itemDigest.DepthOfKnowledge,
                 sufficentEvidenceOfClaim: itemDigest.SufficentEvidenceOfClaim,
                 associatedStimulus: itemDigest.AssociatedStimulus,
-                aslSupported: itemDigest.AslSupported,
+                aslSupported: aslSupported,
                 allowCalculator: itemDigest.AllowCalculator,
                 isPerformanceItem: isPerformance,
                 accessibilityResourceGroups: groups,
@@ -224,6 +234,36 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
-  
+        private static bool AslSupportedContents(List<Content> content)
+        {
+            if(content == null)
+            {
+                return false;
+            }
+
+            bool foundAslAttachment = content
+             .Any(c => c.Attachments != null &&
+                 c.Attachments.Any(a => !string.IsNullOrEmpty(a.Type) &&
+                     a.Type.ToLower().Contains("asl")));
+
+            return foundAslAttachment;
+        }
+
+        public static bool AslSupported(ItemDigest digest)
+        {
+            if (!digest.Contents.Any())
+            {
+                return digest.AslSupported ?? false;
+            }
+
+            bool foundAslAttachment = AslSupportedContents(digest.Contents);
+            bool foundStimAslAttachment = AslSupportedContents(digest.StimulusDigest?.Contents);
+            bool aslAttachment = foundAslAttachment || foundStimAslAttachment;
+
+            bool aslSupported = (digest.AslSupported.HasValue) ? (digest.AslSupported.Value && aslAttachment) : aslAttachment;
+
+            return aslSupported;
+        }
+
     }
 }

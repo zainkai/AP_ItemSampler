@@ -15,8 +15,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string SufficentEvidenceOfClaim { get; set; }
         public int? AssociatedStimulus { get; set; }
         public int? AssociatedPassage { get; set; }
-
-        public bool AslSupported { get; set; }
+        public bool? AslSupported { get; set; }
         public bool AllowCalculator { get; set; }
         public string DepthOfKnowledge { get; set; }
         public string SubjectCode { get; set; }
@@ -26,7 +25,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public List<StandardPublication> StandardPublications { get; set; }
         public List<Content> Contents { get; set; }
         public List<ItemMetadataAttribute> ItemMetadataAttributes { get; set; }
-
+        public StimulusDigest StimulusDigest { get; set; }
         public override string ToString()
         {
             return $"{BankKey}-{ItemKey}";

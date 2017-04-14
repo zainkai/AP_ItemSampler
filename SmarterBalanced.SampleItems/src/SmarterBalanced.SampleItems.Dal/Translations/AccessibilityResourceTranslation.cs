@@ -135,7 +135,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         ///     - GlobalNotes is only enabled for performance task items
         ///     - EnglishDictionary and Thesaurus are only enabled for WER items
         /// </summary>
-        /// TODO: Add flags for braille for item only, pass in supported codes, if disabling a braille option, do not disable resource but selection
         public static AccessibilityResource ApplyFlags(
             this AccessibilityResource resource,
             ItemDigest itemDigest,
@@ -143,14 +142,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             bool isPerformanceTask,
             List<string> dictionarySupportedItemTypes,
             IEnumerable<string> supportedBraille,
-            Claim claim)
+            Claim claim,
+            bool aslSupported)
         {
-            if (itemDigest == null)
+            if (itemDigest == null || resource.Disabled)
             {
                 return resource;
             }
 
-            bool isUnsupportedAsl = !itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage";
+            bool isUnsupportedAsl = !aslSupported && resource.ResourceCode == "AmericanSignLanguage";
             bool isUnsupportedCalculator = (!itemDigest.AllowCalculator || resource.Disabled) && resource.ResourceCode == "Calculator";
             bool isUnsupportedGlobalNotes = !isPerformanceTask && resource.ResourceCode == "GlobalNotes";
             bool isUnsupportedDictionaryThesaurus = !dictionarySupportedItemTypes.Any(s => s == interactionType)
