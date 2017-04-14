@@ -76,7 +76,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml
         /// <returns></returns>
         public static IEnumerable<FileInfo> FindContentXmlFiles(string directory)
         {
-            Regex filePattern = new Regex(@"item-\d+-\d+.xml");
+            Regex filePattern = new Regex(@"(item|stim)-\d+-\d+.xml");
             var directoryInfo = new DirectoryInfo(directory);
             
             var files = directoryInfo
