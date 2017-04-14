@@ -117,22 +117,24 @@
             if (resCount <= 4) {
                 expandButton = undefined;
             } else if (isExpanded) {
+                let ariaText = "Display fewer " + type + "options";
                 expandButton =
                     <a className="expand-button"
                         tabIndex={0}
-                        aria-label="Show less options"
+                        aria-label={ariaText}
                         onClick={() => this.toggleResourceType(type)}
                         onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show less
                     </a>;
             } else {
+                let ariaText = "Display all " + type + " options";
                 expandButton =
                     <a className="expand-button"
-                    tabIndex={0}
-                    aria-abel="Show all options"
-                    onClick={() => this.toggleResourceType(type)}
-                    onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
+                        tabIndex={0}
+                        aria-label={ariaText}
+                        onClick={() => this.toggleResourceType(type)}
+                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show all
                     </a>;
@@ -177,9 +179,9 @@
                                 </form>
                             </div>
                             <div className="modal-footer">
-                                <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
-                                <button className="btn btn-primary" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
-                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
+                                <button className="btn btn-primary" aria-label="Update options and reload item" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
+                                <button className="btn btn-primary" aria-label="Reset all options to default and reload item" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
+                                <button className="btn btn-primary btn-cancel" aria-label="Cancel and undo changes" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                             </div>
                         </div>
                     </div>
