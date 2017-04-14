@@ -122,7 +122,8 @@
                     <a className="expand-button"
                         tabIndex={0}
                         aria-label={ariaText}
-                        onClick={() => this.toggleResourceType(type)}>
+                        onClick={() => this.toggleResourceType(type)}
+                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show less
                     </a>;
