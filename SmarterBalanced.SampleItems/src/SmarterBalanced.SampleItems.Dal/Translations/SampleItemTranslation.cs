@@ -90,6 +90,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
+
+            if (fieldTestUse == null)
+            {
+                var operationalUse = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_OPUse");
+                fieldTestUse = FieldTestUse.Create(operationalUse, itemDigest.SubjectCode);
+            }
+
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
             ImmutableArray<string> braillePassageCodes;
             ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
