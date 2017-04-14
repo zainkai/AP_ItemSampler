@@ -21,7 +21,7 @@ function itemPageLink(bankKey: number, itemKey: number) {
 class ItemCard extends React.Component<ItemCardViewModel, {}> {
 
     handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13 || e.keyCode === 23) {
             itemPageLink(bankKey, itemKey);
         }
     }
@@ -33,7 +33,9 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
                 onClick={e => itemPageLink(bankKey, itemKey)}
                 onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}
                 tabIndex={0}>
-                <div className="card-contents">
+                <div className="card-contents"
+                    onClick={e => itemPageLink(bankKey, itemKey)}
+                    onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}>
                     <h4 className="card-title">{this.props.title}</h4>
                     <p className="card-text subject">
                         <span className="card-text-label">Subject:</span>
