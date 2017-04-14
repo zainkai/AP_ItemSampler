@@ -33,6 +33,7 @@
                 <option value={selection.selectionCode}
                     aria-label={selection.label}
                     disabled={selection.disabled}
+                    aria-hiden={selection.disabled}
                     key={selection.selectionCode}
                     className={disabledCSS}
                     selected={this.props.selectionCode === selection.selectionCode}>
@@ -50,6 +51,7 @@
                     <select className="form-control"
                         id={this.props.resourceCode}
                         disabled={this.props.disabled}
+                        aria-hidden={this.props.disabled}
                         onChange={this.onChange}
                         value={this.props.selectionCode}>
                         {options}
