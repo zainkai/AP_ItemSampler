@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
+using SmarterBalanced.SampleItems.Core.Translations;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
@@ -68,6 +69,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 InteractionTypes = context.InteractionTypes,
                 Subjects = context.Subjects
             };
+        }
+
+        public IList<SampleItemViewModel> GetSampleItemViewModels()
+        {
+            var items = context.SampleItems.Select(s => s.ToSampleItemViewModel()).ToList();
+
+            return items;
         }
     }
 }

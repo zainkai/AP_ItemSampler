@@ -227,6 +227,21 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
+        private static bool AslSupportedContents(List<Content> content)
+        {
+            if(content == null)
+            {
+                return false;
+            }
+
+            bool foundAslAttachment = content
+             .Any(c => c.Attachments != null &&
+                 c.Attachments.Any(a => !string.IsNullOrEmpty(a.Type) &&
+                     a.Type.ToLower().Contains("asl")));
+
+            return foundAslAttachment;
+        }
+
         public static bool AslSupported(ItemDigest digest)
         {
             if (!digest.Contents.Any())
@@ -234,12 +249,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 return digest.AslSupported ?? false;
             }
 
-            bool foundAslAttachment = digest.Contents
-                .Any(c => c.Attachments != null && 
-                    c.Attachments.Any(a => !string.IsNullOrEmpty(a.Type) && 
-                        a.Type.ToLower().Contains("asl")));
+            bool foundAslAttachment = AslSupportedContents(digest.Contents);
+            bool foundStimAslAttachment = AslSupportedContents(digest.StimulusDigest?.Contents);
+            bool aslAttachment = foundAslAttachment || foundStimAslAttachment;
 
-            bool aslSupported = (digest.AslSupported.HasValue) ? (digest.AslSupported.Value && foundAslAttachment) : foundAslAttachment;
+            bool aslSupported = (digest.AslSupported.HasValue) ? (digest.AslSupported.Value && aslAttachment) : aslAttachment;
 
             return aslSupported;
         }

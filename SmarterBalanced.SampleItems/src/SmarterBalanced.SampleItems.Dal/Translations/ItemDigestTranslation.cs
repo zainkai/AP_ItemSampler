@@ -28,12 +28,26 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             BlockingCollection<ItemDigest> digests = new BlockingCollection<ItemDigest>();
             Parallel.ForEach(itemMetadata, metadata =>
             {
-                var matchingItems = itemContents.Where(c => c.Item.ItemKey == metadata.Metadata.ItemKey);
+                if (metadata.Metadata?.InteractionType == "Stimulus")
+                {
+                    return;
+                }
+
+                var matchingItems = itemContents.Where(c => c.Item?.ItemKey == metadata.Metadata?.ItemKey);
                 var itemsCount = matchingItems.Count();
+
+                var stimContents = itemContents.FirstOrDefault(c => metadata.Metadata?.AssociatedStimulus == c.Passage?.ItemKey);
+                var stimMeta = itemMetadata.FirstOrDefault(c => metadata.Metadata?.AssociatedStimulus == c.Metadata?.ItemKey);
+                StimulusDigest stimDigest = null;
+
+                if(stimContents != null && stimMeta != null)
+                {
+                    stimDigest = ToStimulusDigest(stimMeta, stimContents);
+                }
 
                 if (itemsCount == 1)
                 {
-                    ItemDigest itemDigest = ToItemDigest(metadata, matchingItems.First(), settings);
+                    ItemDigest itemDigest = ToItemDigest(metadata, matchingItems.First(), settings, stimDigest);
 
                     digests.Add(itemDigest);
                 }
@@ -53,7 +67,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
         public static ItemDigest ToItemDigest(
             ItemMetadata itemMetadata,
             ItemContents itemContents,
-            AppSettings settings)
+            AppSettings settings,
+            StimulusDigest stimulusDigest = null)
         {
             if (itemMetadata == null) { throw new ArgumentNullException(nameof(itemMetadata)); }
             if (itemMetadata.Metadata == null) { throw new ArgumentNullException(nameof(itemMetadata.Metadata)); }
@@ -98,7 +113,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 MaximumNumberOfPoints = itemMetadata.Metadata.MaximumNumberOfPoints,
                 StandardPublications = itemMetadata.Metadata.StandardPublications,
                 SubjectCode = itemMetadata.Metadata.SubjectCode,
-                ItemMetadataAttributes = itemContents.Item.ItemMetadataAttributes
+                ItemMetadataAttributes = itemContents.Item.ItemMetadataAttributes,
+                StimulusDigest = stimulusDigest
             };
 
             return digest;
@@ -114,5 +130,23 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return null;
         }
 
+        public static StimulusDigest ToStimulusDigest(
+            ItemMetadata itemMetadata,
+            ItemContents itemContents)
+        {
+            if (itemMetadata == null) { throw new ArgumentNullException(nameof(itemMetadata)); }
+            if (itemMetadata.Metadata == null) { throw new ArgumentNullException(nameof(itemMetadata.Metadata)); }
+            if (itemContents == null) { throw new ArgumentNullException(nameof(itemContents)); }
+            if (itemContents.Passage == null) { throw new ArgumentNullException(nameof(itemContents.Passage)); }
+
+            StimulusDigest digest = new StimulusDigest()
+            {
+                ItemKey = itemContents.Passage.ItemKey,
+                BankKey = itemContents.Passage.ItemBank,
+                Contents = itemContents.Passage.Contents,
+            };
+
+            return digest;
+        }
     }
 }

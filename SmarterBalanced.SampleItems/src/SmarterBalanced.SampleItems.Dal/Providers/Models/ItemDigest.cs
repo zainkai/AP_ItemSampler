@@ -25,7 +25,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public List<StandardPublication> StandardPublications { get; set; }
         public List<Content> Contents { get; set; }
         public List<ItemMetadataAttribute> ItemMetadataAttributes { get; set; }
-
+        public StimulusDigest StimulusDigest { get; set; }
         public override string ToString()
         {
             return $"{BankKey}-{ItemKey}";

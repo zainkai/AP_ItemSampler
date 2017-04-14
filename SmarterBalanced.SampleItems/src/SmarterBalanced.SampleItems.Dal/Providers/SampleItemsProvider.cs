@@ -61,7 +61,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
             AppSettings appSettings)
         {
-            string contentDir = appSettings.SettingsConfig.ContentItemDirectory;
+            string contentDir = appSettings.SettingsConfig.ContentRootDirectory;
 
             var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
