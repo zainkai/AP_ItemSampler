@@ -15,8 +15,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string SufficentEvidenceOfClaim { get; set; }
         public int? AssociatedStimulus { get; set; }
         public int? AssociatedPassage { get; set; }
-
-        public bool AslSupported { get; set; }
+        public bool? AslSupported { get; set; }
         public bool AllowCalculator { get; set; }
         public string DepthOfKnowledge { get; set; }
         public string SubjectCode { get; set; }

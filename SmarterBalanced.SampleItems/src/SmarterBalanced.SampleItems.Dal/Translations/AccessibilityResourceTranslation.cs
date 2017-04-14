@@ -142,14 +142,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             bool isPerformanceTask,
             List<string> dictionarySupportedItemTypes,
             IEnumerable<string> supportedBraille,
-            Claim claim)
+            Claim claim,
+            bool aslSupported)
         {
             if (itemDigest == null || resource.Disabled)
             {
                 return resource;
             }
 
-            bool isUnsupportedAsl = !itemDigest.AslSupported && resource.ResourceCode == "AmericanSignLanguage";
+            bool isUnsupportedAsl = !aslSupported && resource.ResourceCode == "AmericanSignLanguage";
             bool isUnsupportedCalculator = (!itemDigest.AllowCalculator || resource.Disabled) && resource.ResourceCode == "Calculator";
             bool isUnsupportedGlobalNotes = !isPerformanceTask && resource.ResourceCode == "GlobalNotes";
             bool isUnsupportedDictionaryThesaurus = !dictionarySupportedItemTypes.Any(s => s == interactionType)

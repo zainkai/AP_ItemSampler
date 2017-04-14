@@ -107,13 +107,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 braillePassageCodes = ImmutableArray.Create<string>();
             }
 
+            bool aslSupported = AslSupported(itemDigest);
             var flaggedResources = family?.Resources
                 .Select(r => r.ApplyFlags(
                     itemDigest,
                     interactionType?.Code, isPerformance, 
                     settings.SettingsConfig.DictionarySupportedItemTypes, 
                     brailleItemCodes,
-                    claim))
+                    claim,
+                    aslSupported))
                 .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
             var groups = settings.SettingsConfig.AccessibilityTypes
@@ -124,6 +126,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
+
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
                 itemKey: itemDigest.ItemKey,
@@ -132,7 +135,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 depthOfKnowledge: itemDigest.DepthOfKnowledge,
                 sufficentEvidenceOfClaim: itemDigest.SufficentEvidenceOfClaim,
                 associatedStimulus: itemDigest.AssociatedStimulus,
-                aslSupported: itemDigest.AslSupported,
+                aslSupported: aslSupported,
                 allowCalculator: itemDigest.AllowCalculator,
                 isPerformanceItem: isPerformance,
                 accessibilityResourceGroups: groups,
@@ -224,6 +227,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
-  
+        public static bool AslSupported(ItemDigest digest)
+        {
+            if (!digest.Contents.Any())
+            {
+                return digest.AslSupported ?? false;
+            }
+
+            bool foundAslAttachment = digest.Contents
+                .Any(c => c.Attachments != null && 
+                    c.Attachments.Any(a => !string.IsNullOrEmpty(a.Type) && 
+                        a.Type.ToLower().Contains("asl")));
+
+            bool aslSupported = (digest.AslSupported.HasValue) ? (digest.AslSupported.Value && foundAslAttachment) : foundAslAttachment;
+
+            return aslSupported;
+        }
+
     }
 }

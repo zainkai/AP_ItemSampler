@@ -88,7 +88,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType,
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
-                AslSupported = (itemMetadata.Metadata.AccessibilityTagsASLLanguage ?? "Y") == "Y",
+                AslSupported =  itemMetadata.Metadata.AccessibilityTagsASLLanguage.AslSupportedStringToBool(),
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
                 Contents = itemContents.Item.Contents,
@@ -102,6 +102,16 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             };
 
             return digest;
+        }
+
+        private static bool? AslSupportedStringToBool(this string str)
+        {
+            if(!string.IsNullOrEmpty(str))
+            {
+                return str.ToLower() == "y";
+            }
+
+            return null;
         }
 
     }
