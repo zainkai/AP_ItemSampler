@@ -117,22 +117,23 @@
             if (resCount <= 4) {
                 expandButton = undefined;
             } else if (isExpanded) {
+                let ariaText = "Display fewer " + type + "options";
                 expandButton =
                     <a className="expand-button"
                         tabIndex={0}
-                        aria-label="Show less options"
-                        onClick={() => this.toggleResourceType(type)}
-                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
+                        aria-label={ariaText}
+                        onClick={() => this.toggleResourceType(type)}>
 
                         Show less
                     </a>;
             } else {
+                let ariaText = "Display all " + type + " options";
                 expandButton =
                     <a className="expand-button"
-                    tabIndex={0}
-                    aria-abel="Show all options"
-                    onClick={() => this.toggleResourceType(type)}
-                    onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
+                        tabIndex={0}
+                        aria-label={ariaText}
+                        onClick={() => this.toggleResourceType(type)}
+                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show all
                     </a>;
