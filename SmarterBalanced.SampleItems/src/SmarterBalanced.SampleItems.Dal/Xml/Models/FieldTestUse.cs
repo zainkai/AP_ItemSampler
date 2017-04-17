@@ -1,16 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 {
-    public class FieldTestUse
+    public class FieldTestUse 
     {
         public int? QuestionNumber { get; set; }
         public string Code { get; set; }
 
         public string Section { get; set; }
+
+        public int? CodeYear { get; set; }
+
+        private static FieldTestUse Create(Match match)
+        {
+            if(match.Groups.Count != 6)
+            {
+                return null;
+            }
+            int temp;
+            int? codeYear = int.TryParse(match.Groups[4].Value, out temp) ? temp : (int?)null;
+            int? questionNumber = int.TryParse(match.Groups[5].Value, out temp) ? temp : (int?)null;
+
+            FieldTestUse fieldTestUse = new FieldTestUse
+            {
+                Code = match.Groups[3].Value,
+                QuestionNumber = questionNumber,
+                Section = match.Groups[2].Value,
+                CodeYear = codeYear
+            };
+
+            return fieldTestUse;
+
+        }
 
         public static FieldTestUse Create(ItemMetadataAttribute attribute, string subjectCode)
         {
@@ -19,36 +45,23 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
                 return null;
             }
 
-            string section = string.Empty;
-            int questionNumber;
-            string[] parts = attribute.Value.Split(';')?
-                .FirstOrDefault()?
-                .Split(new string[] { "::" }, StringSplitOptions.None);
-
-            int reqParts = (subjectCode == "ELA") ? 5 : 4;
-            if (parts == null || parts.Count() != reqParts)
+            MatchCollection matches = Regex.Matches(input: attribute.Value, pattern: @"(S(\d)..)*(SP{1}(\d{2}))\s\((\d)\)");
+            if (matches.Count == 0)
             {
                 return null;
             }
 
-            if(subjectCode == "ELA")
+            List<FieldTestUse> fields = new List<FieldTestUse>();
+            foreach (Match match in matches)
             {
-                section = parts.ElementAtOrDefault(3);
+                var fieldUse = Create(match);
+                if(fieldUse != null)
+                {
+                    fields.Add(Create(match));
+                }
             }
 
-            parts = parts.LastOrDefault()
-                .Split(new string[] { "(", ")" }, StringSplitOptions.None);
-
-            int.TryParse(parts.ElementAtOrDefault(1), out questionNumber);
-
-            FieldTestUse fieldTestUse = new FieldTestUse
-            {
-                Code = parts.FirstOrDefault(),
-                QuestionNumber = questionNumber,
-                Section = section
-            };
-
-            return fieldTestUse;
+            return fields.FirstOrDefault();
         }
     }
 }
