@@ -64,25 +64,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
             if (patch != null)
             {
-                string claimNumber = Regex.Match(input: patch.Claim, pattern: @"\d+").Value;
-                if (identifier == null)
-                {
-                    identifier = StandardIdentifier.Create(claim: claimNumber, target: patch.Target);
-                }
-                else
-                {
-                    identifier = identifier.WithClaimAndTarget(claimNumber, patch.Target);
-                }
-
-                coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
-                coreStandards = coreStandards.WithTargetCCSSDescriptions(patch.TargetDescription, patch.CCSSDescription);
+                coreStandards = ApplyPatchToCoreStandards(identifier, coreStandards, standardsXml, patch);
             }
 
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
 
-            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId());
+            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
 
             var family = resourceFamilies.FirstOrDefault(f =>
                 f.Grades.Contains(grade) &&
@@ -91,10 +80,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
 
-            if (fieldTestUse == null)
+            if (patch != null && !string.IsNullOrEmpty(patch.QuestionNumber))
             {
-                var operationalUse = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_OPUse");
-                fieldTestUse = FieldTestUse.Create(operationalUse, itemDigest.SubjectCode);
+                fieldTestUse = ApplyPatchFieldTestUse(fieldTestUse, patch);
             }
 
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
@@ -265,5 +253,46 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return aslSupported;
         }
 
+        private static CoreStandards ApplyPatchToCoreStandards(StandardIdentifier identifier, 
+            CoreStandards coreStandards, 
+            CoreStandardsXml standardsXml, 
+            ItemPatch patch)
+        {
+            string claimNumber = Regex.Match(input: patch.Claim, pattern: @"\d+").Value;
+            if (identifier == null)
+            {
+                identifier = StandardIdentifier.Create(claim: claimNumber, target: patch.Target);
+            }
+            else
+            {
+                string target = (!string.IsNullOrEmpty(patch.Target)) ? patch.Target : identifier.Target;
+                claimNumber = (!string.IsNullOrEmpty(claimNumber)) ? claimNumber : identifier.Claim;
+                identifier = identifier.WithClaimAndTarget(claimNumber, target);
+            }
+
+            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.TargetDescription;
+            string ccssDesc = (!string.IsNullOrEmpty(patch.CCSSDescription)) ? patch.CCSSDescription : coreStandards?.CommonCoreStandardsDescription;
+            coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
+            coreStandards = coreStandards.WithTargetCCSSDescriptions(targetDesc, ccssDesc);
+
+            return coreStandards;
+
+        }
+
+        private static FieldTestUse ApplyPatchFieldTestUse(FieldTestUse fieldTestUse, ItemPatch patch)
+        {
+            int patchQuestion;
+            int.TryParse(patch.QuestionNumber, out patchQuestion);
+
+            var newFieldTestUse = new FieldTestUse
+            {
+                Code = fieldTestUse?.Code,
+                CodeYear = fieldTestUse?.CodeYear,
+                QuestionNumber = patchQuestion,
+                Section = fieldTestUse?.Section
+            };
+
+            return newFieldTestUse;
+        }
     }
 }

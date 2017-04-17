@@ -302,7 +302,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                   targetIdLabel: itemIdentifier?.ToTargetId(),
                   commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
                   commonCoreStandardsDescription: ccssRow?.Description,
-                  targetDescription: targetRow?.Description);
+                  targetDescription: targetRow?.Description,
+                  claimId: itemIdentifier.ToClaimId());
         }
 
     }
