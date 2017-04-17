@@ -73,9 +73,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             List<SampleItem> associatedStimulusDigests = context.SampleItems
                 .Where(i => i.IsPerformanceItem &&
                     i.AssociatedStimulus == item.AssociatedStimulus &&
-                    (i.FieldTestUse != null
-                        && i.FieldTestUse.Code.Equals(item.FieldTestUse?.Code))
-                    )
+                    i.Grade == item.Grade && i.Subject.Code == item.Subject.Code)
                 .OrderByDescending(i => i.ItemKey == item.ItemKey)
                 .ThenBy(i => i.FieldTestUse?.Section)
                 .ThenBy(i => i.FieldTestUse?.QuestionNumber).ToList();
