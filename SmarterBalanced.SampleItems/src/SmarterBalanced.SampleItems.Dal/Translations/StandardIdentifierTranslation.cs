@@ -51,23 +51,23 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             switch (publication)
             {
                 case "SBAC-ELA-v1":
-                    standardIdentifier = ElaV1Standard(parts);
+                    standardIdentifier = ElaV1Standard(parts, standards);
                     break;
 
                 case "SBAC-MA-v1":
-                    standardIdentifier = MaV1Standard(parts);
+                    standardIdentifier = MaV1Standard(parts, standards);
                     break;
 
                 case "SBAC-MA-v4":
-                    standardIdentifier = MaV4Standard(parts);
+                    standardIdentifier = MaV4Standard(parts, standards);
                     break;
 
                 case "SBAC-MA-v5":
-                    standardIdentifier = MaV5Standard(parts);
+                    standardIdentifier = MaV5Standard(parts, standards);
                     break;
 
                 case "SBAC-MA-v6":
-                    standardIdentifier = MaV6Standard(parts);
+                    standardIdentifier = MaV6Standard(parts, standards);
                     break;
             }
 
@@ -91,57 +91,62 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return string.Empty;
         }
 
-        public static StandardIdentifier ElaV1Standard(string[] parts)
+        public static StandardIdentifier ElaV1Standard(string[] parts, string publication)
         {
 
             return StandardIdentifier.Create(
                     claim: GetStandardPartOrDefault(parts, 0),
                     target: GetStandardPartOrDefault(parts, 1),
                     commonCoreStandard: GetStandardPartOrDefault(parts, 2),
-                    subjectCode: "ELA");
+                    subjectCode: "ELA",
+                    publication: publication);
         }
 
-        public static StandardIdentifier MaV1Standard(string[] parts)
+        public static StandardIdentifier MaV1Standard(string[] parts, string publication)
         {
             return StandardIdentifier.Create(
                     claim: GetStandardPartOrDefault(parts, 0),
                     target: GetStandardPartOrDefault(parts, 2),
                     commonCoreStandard: GetStandardPartOrDefault(parts, 4),
                     contentDomain: GetStandardPartOrDefault(parts, 1),
-                    subjectCode: "MATH");
+                    subjectCode: "MATH",
+                    publication: publication);
         }
 
-        public static StandardIdentifier MaV4Standard(string[] parts)
+        public static StandardIdentifier MaV4Standard(string[] parts, string publication)
         {
-            return StandardIdentifier.Create(
-                    claim: GetStandardPartOrDefault(parts, 0),
-                    target: GetStandardPartOrDefault(parts, 2),
-                    contentDomain: GetStandardPartOrDefault(parts, 1),
-                    emphasis: GetStandardPartOrDefault(parts, 3),
-                    commonCoreStandard: GetStandardPartOrDefault(parts, 4),
-                    subjectCode: "MATH");
-        }
-
-        public static StandardIdentifier MaV5Standard(string[] parts)
-        {
-
             return StandardIdentifier.Create(
                     claim: GetStandardPartOrDefault(parts, 0),
                     target: GetStandardPartOrDefault(parts, 2),
                     contentDomain: GetStandardPartOrDefault(parts, 1),
                     emphasis: GetStandardPartOrDefault(parts, 3),
                     commonCoreStandard: GetStandardPartOrDefault(parts, 4),
-                    subjectCode: "MATH");
+                    subjectCode: "MATH",
+                    publication: publication);
         }
 
-        public static StandardIdentifier MaV6Standard(string[] parts)
+        public static StandardIdentifier MaV5Standard(string[] parts, string publication)
+        {
+
+            return StandardIdentifier.Create(
+                    claim: GetStandardPartOrDefault(parts, 0),
+                    target: GetStandardPartOrDefault(parts, 2),
+                    contentDomain: GetStandardPartOrDefault(parts, 1),
+                    emphasis: GetStandardPartOrDefault(parts, 3),
+                    commonCoreStandard: GetStandardPartOrDefault(parts, 4),
+                    subjectCode: "MATH",
+                    publication: publication);
+        }
+
+        public static StandardIdentifier MaV6Standard(string[] parts, string publication)
         {
             return StandardIdentifier.Create(
                     claim: GetStandardPartOrDefault(parts, 0),
                     target: GetStandardPartOrDefault(parts, 3),
                     contentCategory: GetStandardPartOrDefault(parts, 1),
                     targetSet: GetStandardPartOrDefault(parts, 2),
-                    subjectCode: "MATH");
+                    subjectCode: "MATH",
+                    publication: publication);
         }
 
         public static StandardIdentifier ElaCoreStandardToTarget(string[] parts)
@@ -275,8 +280,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             }
         }
 
-
-        //TODO: refactor
         public static CoreStandards CoreStandardFromIdentifier(
             CoreStandardsXml standardsXml,
             StandardIdentifier itemIdentifier)
@@ -303,7 +306,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                   commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
                   commonCoreStandardsDescription: ccssRow?.Description,
                   targetDescription: targetRow?.Description,
-                  claimId: itemIdentifier.ToClaimId());
+                  claimId: itemIdentifier?.ToClaimId(),
+                  publication: itemIdentifier?.Publication);
         }
 
     }

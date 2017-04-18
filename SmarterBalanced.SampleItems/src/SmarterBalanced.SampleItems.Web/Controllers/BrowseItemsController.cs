@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CsvHelper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
@@ -40,12 +42,27 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewItems()
+        public IActionResult ExportItems()
         {
             var items = sampleItemsSearchRepo.GetSampleItemViewModels();
             return Json(items);
         }
 
+        [HttpGet]
+        public IActionResult Export()
+        {
+            var items = sampleItemsSearchRepo.GetSampleItemViewModels();
+            var csvStream = new MemoryStream();
+            using (var writer = new StreamWriter(csvStream))
+            {
+                using (var csv = new CsvWriter(writer))
+                {
+                    csv.WriteRecords(items);
+                    writer.Flush();
+                    return File(csvStream.ToArray(), "text/csv", "SIWItems.csv");
+                }
+            }          
+        }
     }
 
 }

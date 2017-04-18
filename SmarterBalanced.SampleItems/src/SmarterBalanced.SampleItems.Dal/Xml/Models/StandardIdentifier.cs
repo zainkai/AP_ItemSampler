@@ -15,6 +15,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         public string Emphasis { get; }
         public string CommonCoreStandard { get; }
         public string SubjectCode { get; }
+        public string Publication { get; }
 
         public StandardIdentifier(
             string subjectCode,
@@ -24,7 +25,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             string contentCategory,
             string targetSet,
             string emphasis,
-            string commonCoreStandard)
+            string commonCoreStandard,
+            string publication)
         {
             Claim = claim;
             ContentDomain = contentDomain;
@@ -34,6 +36,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             Emphasis = emphasis;
             CommonCoreStandard = commonCoreStandard;
             SubjectCode = subjectCode;
+            Publication = publication;
         }
 
         public StandardIdentifier WithClaimAndTarget(string claim, string target)
@@ -46,7 +49,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
                 targetSet: TargetSet,
                 emphasis: Emphasis,
                 commonCoreStandard: CommonCoreStandard,
-                subjectCode: SubjectCode);
+                subjectCode: SubjectCode,
+                publication: Publication);
 
             return result;
         }
@@ -59,7 +63,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             string targetSet = null,
             string emphasis = null,
             string commonCoreStandard = null,
-            string subjectCode = null)
+            string subjectCode = null,
+            string publication = null)
         {
             return new StandardIdentifier(
             claim: claim,
@@ -69,7 +74,8 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
             targetSet: targetSet,
             emphasis: emphasis,
             commonCoreStandard: commonCoreStandard,
-            subjectCode: subjectCode);
+            subjectCode: subjectCode,
+            publication: publication);
         }
 
     }

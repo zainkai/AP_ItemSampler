@@ -102,11 +102,11 @@ namespace ItemsSearch {
             let resultsElement: JSX.Element[] | JSX.Element | undefined;
             if (searchResults.kind === "success" || searchResults.kind === "reloading") {
                 resultsElement = searchResults.content.length === 0
-                    ? <span className="placeholder-text">No results found for the given search terms.</span>
+                    ? <span className="placeholder-text" role="alert">No results found for the given search terms.</span>
                     : searchResults.content.map(digest =>
                         <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
-                resultsElement = <div className="placeholder-text">An error occurred. Please try again later.</div>;
+                resultsElement = <div className="placeholder-text" role="alert">An error occurred. Please try again later.</div>;
             } else {
                 resultsElement = undefined;
             }
@@ -119,7 +119,7 @@ namespace ItemsSearch {
                         onChange={(params) => this.beginSearch(params)}
                         selectSingleResult={() => this.selectSingleResult()}
                         isLoading={isLoading} />
-                    <div className="search-results">
+                    <div className="search-results" >
                         {resultsElement}
                     </div>
                 </div>

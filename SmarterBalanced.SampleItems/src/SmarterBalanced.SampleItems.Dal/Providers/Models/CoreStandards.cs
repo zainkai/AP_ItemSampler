@@ -13,6 +13,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string CommonCoreStandardsId { get; }
         public string CommonCoreStandardsDescription { get; }
         public string ClaimId { get; }
+        public string Publication { get; }
 
         public CoreStandards(
             string targetDescription,
@@ -20,7 +21,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string targetIdLabel,
             string commonCoreStandardsId,
             string commonCoreStandardsDescription,
-            string claimId)
+            string claimId,
+            string publication)
         {
             TargetDescription = targetDescription;
             TargetId = targetId;
@@ -28,6 +30,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             CommonCoreStandardsId = commonCoreStandardsId;
             CommonCoreStandardsDescription = commonCoreStandardsDescription;
             ClaimId = claimId;
+            Publication = publication;
         }
 
         public static CoreStandards Create(
@@ -36,7 +39,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
           string targetIdLabel = "",
           string commonCoreStandardsId = "",
           string commonCoreStandardsDescription = "",
-          string claimId = "")
+          string claimId = "",
+          string publication = "")
         {
             return new CoreStandards(
                 targetDescription: targetDescription,
@@ -44,7 +48,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 targetIdLabel:  targetIdLabel,
                 commonCoreStandardsId: commonCoreStandardsId,
                 commonCoreStandardsDescription: commonCoreStandardsDescription,
-                claimId: claimId);
+                claimId: claimId,
+                publication: publication);
         }
 
         public CoreStandards WithTargetCCSSDescriptions(
@@ -57,7 +62,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 targetIdLabel: TargetIdLabel,
                 commonCoreStandardsId: CommonCoreStandardsId,
                 commonCoreStandardsDescription: commonCoreStandardsDescription,
-                claimId : ClaimId);
+                claimId : ClaimId,
+                publication: Publication);
         }
 
 
