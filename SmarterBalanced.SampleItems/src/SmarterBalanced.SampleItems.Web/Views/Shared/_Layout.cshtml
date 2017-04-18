@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head class="site-header-font">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,7 +24,7 @@
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
 <body>
-    <nav>
+    <nav role="navigation">
         <div class="sbNav">
             <div class="sbNav-titleGroup">
                 <div class="sbNav-titleGroup-item">
@@ -51,11 +51,11 @@
         </div>
     </nav>
 
-    <div class="container">
+    <main class="container" role="main">
         @RenderBody()
-    </div>
+    </main>
 
-    <footer>
+    <footer role="contentinfo">
         <a class="footer-practiceTests" href="http://practice.smarterbalanced.org/">Practice and training tests are available here.</a>
         <div class="footer-copyright">
             <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>

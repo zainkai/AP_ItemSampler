@@ -325,7 +325,7 @@ namespace ItemSearchParams {
                             </div>
                         </div>
                     </div>
-                    <div className="search-categories">
+                    <div className="search-categories" aria-live="polite" aria-relevant="all">
                         {this.renderGrades()}
                         {this.renderSubjects()}
                         {this.renderClaims()}
