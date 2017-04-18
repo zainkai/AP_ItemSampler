@@ -63,8 +63,7 @@
       "docker-compose.yml",
       "appsettings*.json",
       "Dockerfile",
-      ".dockerignore",
-      "robots.txt"
+      ".dockerignore"
     ],
     "exclude": [ "wwwroot/scripts/*.js.map" ]
   },

@@ -119,7 +119,7 @@ namespace ItemsSearch {
                         onChange={(params) => this.beginSearch(params)}
                         selectSingleResult={() => this.selectSingleResult()}
                         isLoading={isLoading} />
-                    <div className="search-results" aria-live="polite" aria-relevant="additions removals" >
+                    <div className="search-results" >
                         {resultsElement}
                     </div>
                 </div>
