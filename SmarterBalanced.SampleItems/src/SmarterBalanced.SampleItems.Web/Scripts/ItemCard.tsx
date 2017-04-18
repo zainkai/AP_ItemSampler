@@ -26,6 +26,10 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
         }
     }
 
+    shouldComponentUpdate(nextProps: Readonly<ItemCardViewModel>, nextState: Readonly<{}>, nextContext: any): boolean {
+        return false;
+    }
+
     render() {
         const { bankKey, itemKey } = this.props;
         return (
