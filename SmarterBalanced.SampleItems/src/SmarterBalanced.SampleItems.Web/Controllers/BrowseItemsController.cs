@@ -42,14 +42,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewItems()
+        public IActionResult ExportItems()
         {
             var items = sampleItemsSearchRepo.GetSampleItemViewModels();
             return Json(items);
         }
 
         [HttpGet]
-        public IActionResult ExportItems()
+        public IActionResult Export()
         {
             var items = sampleItemsSearchRepo.GetSampleItemViewModels();
             var csvStream = new MemoryStream();
@@ -59,7 +59,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 {
                     csv.WriteRecords(items);
                     writer.Flush();
-                    return File(csvStream.ToArray(), "text/csv", "items.csv");
+                    return File(csvStream.ToArray(), "text/csv", "SIWItems.csv");
                 }
             }          
         }
