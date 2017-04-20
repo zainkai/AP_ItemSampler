@@ -53,7 +53,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             var items = sampleItemsSearchRepo.GetSampleItemViewModels();
             var csvStream = new MemoryStream();
-            using (var writer = new StreamWriter(csvStream))
+            using (var writer = new StreamWriter(csvStream, System.Text.Encoding.UTF8))
             {
                 using (var csv = new CsvWriter(writer))
                 {
@@ -64,5 +64,4 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             }          
         }
     }
-
 }
