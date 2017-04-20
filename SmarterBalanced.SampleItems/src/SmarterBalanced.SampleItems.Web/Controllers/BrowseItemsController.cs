@@ -53,15 +53,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         {
             var items = sampleItemsSearchRepo.GetSampleItemViewModels();
             var csvStream = new MemoryStream();
-            using (var writer = new StreamWriter(csvStream, System.Text.Encoding.UTF8))
-            {
-                using (var csv = new CsvWriter(writer))
-                {
-                    csv.WriteRecords(items);
-                    writer.Flush();
-                    return File(csvStream.ToArray(), "text/csv", "SIWItems.csv");
-                }
-            }          
+            var writer = new StreamWriter(csvStream);
+            var csv = new CsvWriter(writer);
+
+            csv.WriteRecords(items);
+            writer.Flush();
+            csvStream.Seek(0, SeekOrigin.Begin);
+
+            return File(csvStream, "text/csv", "SIWItems.csv");
         }
     }
 }
