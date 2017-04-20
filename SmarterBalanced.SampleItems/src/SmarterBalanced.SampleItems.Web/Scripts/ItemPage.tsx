@@ -12,7 +12,7 @@
 namespace ItemPage {
 
     function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
-        let isaapCodes = "TDS_ITM1;"; // always enable item tools menu
+        let isaapCodes = "TDS_ITM1;TDS_APC_SCRUBBER;"; // always enable item tools menu
         for (let group of accResourceGroups) {
             for (let res of group.accessibilityResources) {
                 if (res.currentSelectionCode && !res.disabled) {
@@ -70,31 +70,26 @@ namespace ItemPage {
         }
     }
 
-    //Checks if Braille is enabled, if so sets Streamline mode on
-    export function setStreamlineMode(resourceGroups: AccResourceGroup[]) {
-        let currentBrailleType = this.getBrailleAccommodation(resourceGroups);
-        if (currentBrailleType != "TDS_BT0") { //All braille disabled
-            for (let group of resourceGroups) {
-                for (let resource of group.accessibilityResources) {
-                    if (resource.label == "Streamlined Interface" && resource.currentSelectionCode != "TDS_SLM1") {
-                        resource.currentSelectionCode = "TDS_SLM1"; //Streamlined
-                    }
-                }
+    export function getResource(resourceCode: string, resourceGroups: AccResourceGroup[]): AccessibilityResource | null {
+        for (let accGroup of resourceGroups) {
+            const resource = accGroup.accessibilityResources.find(rg => rg.resourceCode == resourceCode);
+            if (resource) {
+                return resource;
             }
         }
+
+        return null;
     }
 
     export function getBrailleAccommodation(accResourceGroups: AccResourceGroup[]): string {
-        var currentBrailleType = "";
-        for (let group of accResourceGroups) {
-            for (let resource of group.accessibilityResources) {
-                if (resource.label == "Braille Type" && !resource.disabled) {
-                    currentBrailleType = resource.currentSelectionCode;
-                }
-            }
+        const brailleResource = getResource("BrailleType", accResourceGroups);
+        if (brailleResource) {
+            return brailleResource.currentSelectionCode;
         }
-        return currentBrailleType;
+
+        return "";
     }
+
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
@@ -138,35 +133,35 @@ namespace ItemPage {
         }
 
         openAboutItemModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#about-item-modal-container"));
                 modal.modal();
             }
         }
 
         openMoreLikeThisModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#more-like-this-modal-container"));
                 modal.modal();
             }
         }
 
         openShareModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#share-modal-container"));
                 modal.modal();
             }
         }
 
         openPerfTaskModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#about-performance-tasks-modal-container"));
                 modal.modal();
             }
         }
 
         openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
-            if (e.keyCode === 13 || e.keyCode === 23) {
+            if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
             }
@@ -193,7 +188,6 @@ namespace ItemPage {
         }
 
         render() {
-            ItemPage.setStreamlineMode(this.props.accResourceGroups);
             let isaap = toiSAAP(this.props.accResourceGroups);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
@@ -258,7 +252,7 @@ namespace ItemPage {
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {}
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
@@ -268,7 +262,7 @@ namespace ItemPage {
                 const newResources: AccessibilityResource[] = [];
                 for (let res of newGroup.accessibilityResources) {
                     const newRes = Object.assign({}, res);
-                    newRes.currentSelectionCode = selections[newRes.label] || newRes.currentSelectionCode;
+                    newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
                     newResources.push(newRes);
                 }
                 newGroup.accessibilityResources = newResources;

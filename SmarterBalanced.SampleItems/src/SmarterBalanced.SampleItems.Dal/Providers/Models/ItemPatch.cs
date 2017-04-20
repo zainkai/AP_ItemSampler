@@ -22,5 +22,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         [XmlElement("CCSSDesc")]
         public string CCSSDescription { get; set; }
+
+        [XmlElement("Section")]
+        public string QuestionNumber { get; set; }
     }
 }

@@ -103,7 +103,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
             itemViewRepoMock
                 .Setup(repo =>
                     repo.GetItemViewModel(bankKey, itemKey, It.Is<string[]>(strings => strings.Length == 0), It.IsAny<Dictionary<string, string>>()))
-                .Returns(Task.FromResult(itemViewModel));
+                .Returns(itemViewModel);
 
             itemViewRepoMock
                 .Setup(repo =>
@@ -112,7 +112,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                         itemKey,
                         It.Is<string[]>(ss => Enumerable.SequenceEqual(ss, iSAAP.Split(';'))),
                         It.IsAny<Dictionary<string, string>>()))
-                .Returns(Task.FromResult(itemViewModel));
+                .Returns(itemViewModel);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
@@ -129,7 +129,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(bankKey, itemKey, iSAAP);
 
-            var viewResult = Assert.IsType<ViewResult>(result.Result);
+            var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
 
             Assert.Equal(itemViewModel, model);
@@ -144,7 +144,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(null, itemKey, iSAAP);
 
-            Assert.IsType<BadRequestResult>(result.Result);
+            Assert.IsType<BadRequestResult>(result);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(bankKey + 1, itemKey + 1, iSAAP);
 
-            Assert.IsType<BadRequestResult>(result.Result);
+            Assert.IsType<BadRequestResult>(result);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
         {
             var result = controller.Details(bankKey, itemKey, string.Empty);
 
-            var viewResult = Assert.IsType<ViewResult>(result.Result);
+            var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<ItemViewModel>(viewResult.ViewData.Model);
 
             Assert.Equal(itemViewModel, model);

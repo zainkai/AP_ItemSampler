@@ -77,7 +77,8 @@ namespace AboutItems {
             }
 
             return (
-                <div dangerouslySetInnerHTML={{ __html: desc }} className= "aboutitems-desc" />
+                <div aria-live="polite" aria-relevant="text"
+                    dangerouslySetInnerHTML={{ __html: desc }} className="aboutitems-desc" />
             );
         }
 
@@ -113,7 +114,7 @@ namespace AboutItems {
 
         renderItemFrame() {
             return (
-                <div className="aboutitem-iframe">
+                <div className="aboutitem-iframe" aria-live="polite" aria-relevant="additions removals" >
                      <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="item-nav-left-group" role="group" aria-label="First group">
                         <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"

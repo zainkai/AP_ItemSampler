@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head class="site-header-font">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,7 +24,7 @@
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
 <body>
-    <nav>
+    <nav role="navigation">
         <div class="sbNav">
             <div class="sbNav-titleGroup">
                 <div class="sbNav-titleGroup-item">
@@ -51,11 +51,11 @@
         </div>
     </nav>
 
-    <div class="container">
+    <main class="container" role="main">
         @RenderBody()
-    </div>
+    </main>
 
-    <footer>
+    <footer role="contentinfo">
         <a class="footer-practiceTests" href="http://practice.smarterbalanced.org/">Practice and training tests are available here.</a>
         <div class="footer-copyright">
             <p>&copy; The Regents of the University of California – Smarter Balanced Assessment Consortium</p>
@@ -72,11 +72,11 @@
         <script src="~/lib/react/react-dom.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.3.min.js"
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.2.1.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.4/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
         </script>

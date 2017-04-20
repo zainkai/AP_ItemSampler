@@ -11,5 +11,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
     {
         [XmlElement("item")]
         public ItemXmlFieldRepresentation Item { get; set; }
+
+        [XmlElement("passage")]
+        public ItemXmlFieldRepresentation Passage { get; set; }
     }
 }

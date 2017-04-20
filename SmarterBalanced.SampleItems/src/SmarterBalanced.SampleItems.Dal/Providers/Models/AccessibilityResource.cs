@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Immutable;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
@@ -76,6 +77,21 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 resourceType: ResourceTypeId);
 
             return newResource;
+        }
+
+        public AccessibilityResource DisableUnsupportedBraille(IEnumerable<string> supportedCodes)
+        {
+            if (ResourceCode != "BrailleType")
+            {
+                return this;
+            }
+
+            var newSelections = Selections
+                .Select(s => s.WithDisabled(!supportedCodes
+                    .Any(c => (c == s.SelectionCode && !s.Disabled) || s.SelectionCode == "TDS_BT0"))
+                ).ToImmutableArray();
+
+            return WithSelections(newSelections);
         }
 
         public AccessibilityResource ToDisabled()

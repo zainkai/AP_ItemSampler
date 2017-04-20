@@ -58,7 +58,7 @@
             this.shouldShowOnLoad();
             const header = this.getSubjectHeader();
             return (
-                <div className="modal fade" id="about-performance-tasks-popup-modal-container" tabIndex={-1} role="dialog" aria-hidden="true">
+                <div className="modal fade" id="about-performance-tasks-popup-modal-container" tabIndex={-1} role="dialog" aria-hidden="true" aria-labelledby="About Performance Tasks" aria-describedby="About Performance Tasks">
                     <div className="modal-dialog share-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">

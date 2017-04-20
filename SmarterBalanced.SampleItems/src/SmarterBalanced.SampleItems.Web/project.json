@@ -24,7 +24,8 @@
     },
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
     "SmarterBalanced.SampleItems.Core": "1.0.0-*",
-    "SmarterBalanced.SampleItems.Dal": "1.0.0-*"
+    "SmarterBalanced.SampleItems.Dal": "1.0.0-*",
+    "SimpleMvcSitemap": "3.0.0"
   },
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"

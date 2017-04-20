@@ -12,8 +12,9 @@
         disabled: boolean;
         selectionCode: string;
         selections: Selection[];
-        updateSelection(code: string, label: string): void;
+        updateSelection(selectionCode: string, resourceCode: string): void;
         defaultSelection: string;
+        resourceCode: string;
     }
 
     export class Dropdown extends React.Component<Props, {}> {
@@ -22,7 +23,7 @@
         }
 
         onChange = (event: React.FormEvent<HTMLSelectElement>) => {
-            this.props.updateSelection(event.currentTarget.value, this.props.label);
+            this.props.updateSelection(event.currentTarget.value, this.props.resourceCode);
         }
 
         renderOption = (selection: Selection) => {
@@ -30,7 +31,9 @@
             const label = this.props.disabled ? "" : selection.label;
             return (
                 <option value={selection.selectionCode}
+                    aria-label={selection.label}
                     disabled={selection.disabled}
+                    aria-hiden={selection.disabled}
                     key={selection.selectionCode}
                     className={disabledCSS}
                     selected={this.props.selectionCode === selection.selectionCode}>
@@ -44,9 +47,11 @@
             const options = this.props.selections.map(this.renderOption);
             return (
                 <div className={classes}>
-                    <label>{this.props.label}</label><br />
+                    <label htmlFor={this.props.resourceCode}> { this.props.label }</label><br />
                     <select className="form-control"
+                        id={this.props.resourceCode}
                         disabled={this.props.disabled}
+                        aria-hidden={this.props.disabled}
                         onChange={this.onChange}
                         value={this.props.selectionCode}>
                         {options}

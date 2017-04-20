@@ -45,10 +45,28 @@
             });
         }
 
-        updateSelection = (code: string, label: string) => {
-            const newSelections = Object.assign({}, this.state.resourceSelections || {});
-            newSelections[label] = code;
+        keyboardToggleResourceType(e: React.KeyboardEvent<HTMLAnchorElement>, resourceType: string): void {
+            if (e.keyCode == 23 || e.keyCode == 13) {
+                const expandeds = Object.assign({}, this.state.resourceTypeExpanded || {});
+                expandeds[resourceType] = !expandeds[resourceType];
 
+                this.setState({
+                    resourceTypeExpanded: expandeds
+                });
+            }
+        }
+
+        /** Updates the selection based on user input, if item is braille, streamlined mode needs to be adjusted */
+        updateSelection = (selectionCode: string, resourceCode: string) => {
+            const newSelections = Object.assign({}, this.state.resourceSelections || {});
+            newSelections[resourceCode] = selectionCode;
+            if (resourceCode === "BrailleType") {
+                if (selectionCode == "TDS_BT0") {
+                    newSelections["StreamlinedInterface"] = "TDS_SLM0";
+                } else {
+                    newSelections["StreamlinedInterface"] = "TDS_SLM1";
+                }
+            }
             this.setState({ resourceSelections: newSelections });
         }
 
@@ -74,23 +92,6 @@
                 .accessibilityResources;
             let resourceTypeHeader = <h3>{type}</h3>;
 
-            /* TODO: Remove after these accessibility resources are fixed */
-            if (type === "Accommodations") {
-                resourceTypeHeader = (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <h3 style={{ display: "inline-block" }}>{type}</h3>
-                        <span style={{ marginTop: "10px" }}>&nbsp;&nbsp;(coming soon)</span>
-                    </div>
-                );
-                for (let res of resources) {
-                    res.selections = [];
-                    res.disabled = true;
-                    res.currentSelectionCode = "";
-                    res.defaultSelection = "";
-                }
-            }
-            /* TODO: REMOVE ABOVE */
-
             const resCount = resources.length;
             const isExpanded = (this.state.resourceTypeExpanded || {})[type];
             if (!isExpanded) {
@@ -98,7 +99,7 @@
             }
 
             let dropdowns = resources.map(res => {
-                let selectedCode = (this.state.resourceSelections || {})[res.label] || res.currentSelectionCode;
+                let selectedCode = (this.state.resourceSelections || {})[res.resourceCode] || res.currentSelectionCode;
                 let selections = res.selections.filter(s => !s.hidden);
                 let ddprops: Dropdown.Props = {
                     defaultSelection: res.currentSelectionCode,
@@ -106,25 +107,34 @@
                     selections: selections,
                     selectionCode: selectedCode,
                     disabled: res.disabled,
-                    updateSelection: this.updateSelection
+                    updateSelection: this.updateSelection,
+                    resourceCode: res.resourceCode
                 }
-                return <Dropdown.Dropdown{...ddprops} key={res.label} />;
+                return <Dropdown.Dropdown{...ddprops} key={res.resourceCode} />;
             });
 
             let expandButton: JSX.Element | undefined;
             if (resCount <= 4) {
                 expandButton = undefined;
             } else if (isExpanded) {
+                let ariaText = "Display fewer " + type + "options";
                 expandButton =
                     <a className="expand-button"
-                        onClick={() => this.toggleResourceType(type)}>
+                        tabIndex={0}
+                        aria-label={ariaText}
+                        onClick={() => this.toggleResourceType(type)}
+                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show less
                     </a>;
             } else {
+                let ariaText = "Display all " + type + " options";
                 expandButton =
                     <a className="expand-button"
-                        onClick={() => this.toggleResourceType(type)}>
+                        tabIndex={0}
+                        aria-label={ariaText}
+                        onClick={() => this.toggleResourceType(type)}
+                        onKeyUp={(e) => this.keyboardToggleResourceType(e, type)}>
 
                         Show all
                     </a>;
@@ -145,7 +155,7 @@
             const types = ItemPage.getResourceTypes(this.props.accResourceGroups);
             const groups = types.map(t => this.renderResourceType(t));
             return (
-                <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-hidden="true">
+                <div className="modal fade" id="accessibility-modal-container" tabIndex={-1} role="dialog" aria-labelledby="Accessibility Options Modal" aria-describedby="Accessibility Options Modal" aria-hidden="true">
                     <div className="modal-dialog accessibility-modal" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -169,9 +179,9 @@
                                 </form>
                             </div>
                             <div className="modal-footer">
-                                <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
-                                <button className="btn btn-primary" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
-                                <button className="btn btn-primary btn-cancel" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
+                                <button className="btn btn-primary" aria-label="Update options and reload item" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
+                                <button className="btn btn-primary" aria-label="Reset all options to default and reload item" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
+                                <button className="btn btn-primary btn-cancel" aria-label="Cancel and undo changes" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                             </div>
                         </div>
                     </div>

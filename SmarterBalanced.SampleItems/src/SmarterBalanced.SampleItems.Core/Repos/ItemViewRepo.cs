@@ -5,17 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmarterBalanced.SampleItems.Core.Translations;
-using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Text;
-using Newtonsoft.Json;
 using System.Collections.Immutable;
 using CoreFtp;
-using System.Collections.Concurrent;
 using System.IO;
-using Microsoft.AspNetCore.Mvc;
-using SmarterBalanced.SampleItems.Dal.Utils;
+using System.IO.Compression;
+using System.Text.RegularExpressions;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
@@ -75,11 +71,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             var associatedStimulus = item.AssociatedStimulus;
             List<SampleItem> associatedStimulusDigests = context.SampleItems
-                .Where(i => i.IsPerformanceItem &&
+                .Where(i => i.IsPerformanceItem && 
+                    i.FieldTestUse != null &&
                     i.AssociatedStimulus == item.AssociatedStimulus &&
-                    (i.FieldTestUse != null 
-                        && i.FieldTestUse.Code.Equals(item.FieldTestUse?.Code))
-                    )
+                    i.Grade == item.Grade && i.Subject?.Code == item.Subject?.Code)
                 .OrderByDescending(i => i.ItemKey == item.ItemKey)
                 .ThenBy(i => i.FieldTestUse?.Section)
                 .ThenBy(i => i.FieldTestUse?.QuestionNumber).ToList();
@@ -95,13 +90,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         private string GetPerformanceDescription(SampleItem item)
         {
-            if(!item.IsPerformanceItem)
+            if (!item.IsPerformanceItem)
             {
                 //No description for non performance items
                 return string.Empty;
             }
 
-            if(item.Subject.Code.ToLower() == "math")
+            if (item.Subject.Code.ToLower() == "math")
             {
                 return context.AppSettings.SettingsConfig.MATHPerformanceDescription;
             }
@@ -114,27 +109,128 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return string.Empty;
         }
 
-        public async Task<Stream> GetFtpFile(int itemBank, int itemKey, string brailleCode)
+        private string GetItemRootDirectory(SampleItem item)
         {
-            SampleItem item = GetSampleItem(itemBank, itemKey);
-            var brailleType = BrailleFtpUtils.GetBrailleTypeFromCode(brailleCode);
-            if(brailleType == string.Empty)
-            {
-                throw new ArgumentException("Invalid Braille Type");
-            }
-            var ftpClient = new FtpClient(new FtpClientConfiguration
-            {
-                Host = "ftps.smarterbalanced.org",
-                Username = "anonymous",
-                Password = "guest"
-            });
-            await ftpClient.LoginAsync();
-            var filePath = BrailleFtpUtils.BuildBrailleFilePath(item, brailleType); 
-            var ftpStream = await ftpClient.OpenFileReadStreamAsync(filePath);
-            return ftpStream;
+            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}{item.Subject.Code}/{item.Grade.IndividualGradeToNumString()}";
+        }
+        private string GetItemFtpDirectory(SampleItem item)
+        {
+           return $"{GetItemRootDirectory(item)}/item-{item.ItemKey}";
         }
 
-        public async Task<ItemViewModel> GetItemViewModel(
+        private string GetPassageFtpDirectory(SampleItem item)
+        {
+            return $"{GetItemRootDirectory(item)}/stim-{item.AssociatedStimulus.Value}";
+        }
+
+        private ImmutableArray<string> GetItemBrailleDirectories(SampleItem item)
+        {
+            List<string> itemDirectories = new List<string>();
+            itemDirectories.Add(GetItemFtpDirectory(item));
+            if (item.IsPerformanceItem)
+            {
+                foreach (SampleItem associatedItem in GetAssociatedPerformanceItems(item))
+                {
+                    itemDirectories.Add(GetItemFtpDirectory(associatedItem));
+                }
+            }
+            if (item.AssociatedStimulus.HasValue)
+            {
+                itemDirectories.Add(GetPassageFtpDirectory(item));
+            }
+            return itemDirectories.ToImmutableArray();
+        }
+
+        private static string GetBrailleTypeFromCode(string code)
+        {
+            //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
+            var bt = code.Split('_');
+            if (bt.Length != 3)
+            {
+                return string.Empty;
+            }
+            return bt[2];
+        }
+
+        public async Task<Dictionary<string, string>> GetBrailleFileNames(
+            FtpClient ftpClient, 
+            IEnumerable<string> baseDirectories, 
+            string brailleCode)
+        {
+            string brailleType = GetBrailleTypeFromCode(brailleCode).ToLower();
+            Dictionary<string, string> brailleFiles = new Dictionary<string, string>();
+            foreach (string directory in baseDirectories)
+            {
+                
+                try
+                {
+                    await ftpClient.ChangeWorkingDirectoryAsync(directory);
+                }
+                catch (CoreFtp.Infrastructure.FtpException)
+                {
+                    continue;
+                }
+                
+                var files = await ftpClient.ListFilesAsync();
+                var fileNames = files.Select(f => f.Name).Where(f => Regex.IsMatch(f, $"(?i){brailleType}"));
+                foreach(string file in fileNames)
+                {
+                    if (!brailleFiles.ContainsKey(file))
+                    {
+                        brailleFiles.Add(file, $"{directory}/{file}");
+                    }
+                }
+            }
+            return brailleFiles;
+        }
+
+        public static string GenerateBrailleZipName(int itemId, string brailleCode)
+        {
+            return $"{itemId}-{GetBrailleTypeFromCode(brailleCode)}.zip";
+        }
+
+
+        public async Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode)
+        {
+            SampleItem item = GetSampleItem(itemBank, itemKey);
+            string brailleType = GetBrailleTypeFromCode(brailleCode);
+            if (brailleType == string.Empty || item == null)
+            {
+                throw new ArgumentException("Invalid arguments for item or braille");
+            }
+
+            ImmutableArray<string> itemDirectories = GetItemBrailleDirectories(item);
+            
+            using (var ftpClient = new FtpClient(new FtpClientConfiguration
+            {
+                Host = context.AppSettings.SettingsConfig.SmarterBalancedFtpHost,
+                Username = context.AppSettings.SettingsConfig.SmarterBalancedFtpUsername,
+                Password = context.AppSettings.SettingsConfig.SmarterBalancedFtpPassword
+            }))
+            {
+                await ftpClient.LoginAsync();
+                var brailleFiles = await GetBrailleFileNames(ftpClient, itemDirectories, brailleCode);
+
+                var memoryStream = new MemoryStream();
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (KeyValuePair<string, string> file in brailleFiles)
+                    {
+                        var entry = archive.CreateEntry(file.Key);
+                        using (var ftpStream = await ftpClient.OpenFileReadStreamAsync(file.Value))
+                        using (var entryStream = entry.Open())
+                        {
+                            ftpStream.CopyTo(entryStream);
+                        }
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return memoryStream;
+            }
+
+        }
+
+        public ItemViewModel GetItemViewModel(
             int bankKey,
             int itemKey,
             string[] iSAAPCodes,
@@ -188,7 +284,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             if (itemCards == null)
             {
                 return null;
-            } 
+            }
 
             string label = grade.ToDisplayString();
             var column = new MoreLikeThisColumn(
@@ -242,7 +338,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 .Where(i => i.Grade == gradeBelow)
                 .OrderBy(i => i, comparer)
                 .Take(numExpected);
-            
+
             var moreLikeThisVM = new MoreLikeThisViewModel(
                 ToColumn(cardsGradeBelow, gradeBelow),
                 ToColumn(cardsSameGrade, grade),

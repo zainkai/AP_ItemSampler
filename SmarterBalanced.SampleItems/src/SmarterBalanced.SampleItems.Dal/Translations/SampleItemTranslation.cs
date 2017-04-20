@@ -23,7 +23,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<Subject> subjects,
             CoreStandardsXml standardsXml,
             IList<ItemPatch> patches,
-            AppSettings settings)
+            IList<BrailleFileInfo> brailleFileInfo,
+            AppSettings settings
+            )
         {
             var sampleItems = digests.Select(d =>
                 ToSampleItem(
@@ -33,7 +35,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     interactionTypes: interactionTypes,
                     resourceFamilies: resourceFamilies,
                     patches: patches,
-                    settings: settings))
+                    brailleFileInfo: brailleFileInfo,
+                    settings: settings
+                    ))
                 .ToImmutableArray();
 
             return sampleItems;
@@ -49,6 +53,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<InteractionType> interactionTypes,
             IList<MergedAccessibilityFamily> resourceFamilies,
             IList<ItemPatch> patches,
+            IList<BrailleFileInfo> brailleFileInfo,
             AppSettings settings)
         {
             var supportedPubs = settings.SettingsConfig.SupportedPublications;
@@ -59,25 +64,14 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
             if (patch != null)
             {
-                string claimNumber = Regex.Match(input: patch.Claim, pattern: @"\d+").Value;
-                if (identifier == null)
-                {
-                    identifier = StandardIdentifier.Create(claim: claimNumber, target: patch.Target);
-                }
-                else
-                {
-                    identifier = identifier.WithClaimAndTarget(claimNumber, patch.Target);
-                }
-
-                coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
-                coreStandards = coreStandards.WithTargetCCSSDescriptions(patch.TargetDescription, patch.CCSSDescription);
+                coreStandards = ApplyPatchToCoreStandards(identifier, coreStandards, standardsXml, patch);
             }
 
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
 
-            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == identifier.ToClaimId());
+            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
 
             var family = resourceFamilies.FirstOrDefault(f =>
                 f.Grades.Contains(grade) &&
@@ -85,10 +79,38 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
-            bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
 
+            if (patch != null && !string.IsNullOrEmpty(patch.QuestionNumber))
+            {
+                fieldTestUse = ApplyPatchFieldTestUse(fieldTestUse, patch);
+            }
+
+            bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
+            ImmutableArray<string> braillePassageCodes;
+            ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
+                (f => f.ItemKey == itemDigest.ItemKey)
+                .Select(b => b.BrailleType).ToImmutableArray();
+
+            if (itemDigest.AssociatedPassage.HasValue)
+            {
+                braillePassageCodes = brailleFileInfo
+                    .Where(f => f.ItemKey == itemDigest.AssociatedPassage.Value)
+                    .Select(b => b.BrailleType).ToImmutableArray();
+            }
+            else
+            {
+                braillePassageCodes = ImmutableArray.Create<string>();
+            }
+
+            bool aslSupported = AslSupported(itemDigest);
             var flaggedResources = family?.Resources
-                .Select(r => r.ApplyFlags(itemDigest, interactionType?.Code, isPerformance, settings.SettingsConfig.DictionarySupportedItemTypes))
+                .Select(r => r.ApplyFlags(
+                    itemDigest,
+                    interactionType?.Code, isPerformance, 
+                    settings.SettingsConfig.DictionarySupportedItemTypes, 
+                    brailleItemCodes,
+                    claim,
+                    aslSupported))
                 .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
             var groups = settings.SettingsConfig.AccessibilityTypes
@@ -99,9 +121,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
-            //TODO: Add supported files from ftp
-            ImmutableArray<string> brailleItemCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
-            ImmutableArray<string> braillePassageCodes = ImmutableArray.Create( "TDS_BT_EXN", "TDS_BT_ECN" );
 
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
@@ -111,7 +130,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 depthOfKnowledge: itemDigest.DepthOfKnowledge,
                 sufficentEvidenceOfClaim: itemDigest.SufficentEvidenceOfClaim,
                 associatedStimulus: itemDigest.AssociatedStimulus,
-                aslSupported: itemDigest.AslSupported,
+                aslSupported: aslSupported,
                 allowCalculator: itemDigest.AllowCalculator,
                 isPerformanceItem: isPerformance,
                 accessibilityResourceGroups: groups,
@@ -151,7 +170,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var rubrics = digest.Contents.Select(c => c.ToRubric(maxPoints, settings)).Where(r => r != null).ToImmutableArray();
             return rubrics;
         }
-
 
         /// <summary>
         /// Returns a Single Rubric from content and filters out any placeholder text
@@ -204,6 +222,77 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return rubric;
         }
 
-  
+        private static bool AslSupportedContents(List<Content> content)
+        {
+            if(content == null)
+            {
+                return false;
+            }
+
+            bool foundAslAttachment = content
+             .Any(c => c.Attachments != null &&
+                 c.Attachments.Any(a => !string.IsNullOrEmpty(a.Type) &&
+                     a.Type.ToLower().Contains("asl")));
+
+            return foundAslAttachment;
+        }
+
+        public static bool AslSupported(ItemDigest digest)
+        {
+            if (!digest.Contents.Any())
+            {
+                return digest.AslSupported ?? false;
+            }
+
+            bool foundAslAttachment = AslSupportedContents(digest.Contents);
+            bool foundStimAslAttachment = AslSupportedContents(digest.StimulusDigest?.Contents);
+            bool aslAttachment = foundAslAttachment || foundStimAslAttachment;
+
+            bool aslSupported = (digest.AslSupported.HasValue) ? (digest.AslSupported.Value && aslAttachment) : aslAttachment;
+
+            return aslSupported;
+        }
+
+        private static CoreStandards ApplyPatchToCoreStandards(StandardIdentifier identifier, 
+            CoreStandards coreStandards, 
+            CoreStandardsXml standardsXml, 
+            ItemPatch patch)
+        {
+            string claimNumber = Regex.Match(input: patch.Claim, pattern: @"\d+").Value;
+            if (identifier == null)
+            {
+                identifier = StandardIdentifier.Create(claim: claimNumber, target: patch.Target);
+            }
+            else
+            {
+                string target = (!string.IsNullOrEmpty(patch.Target)) ? patch.Target : identifier.Target;
+                claimNumber = (!string.IsNullOrEmpty(claimNumber)) ? claimNumber : identifier.Claim;
+                identifier = identifier.WithClaimAndTarget(claimNumber, target);
+            }
+
+            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.TargetDescription;
+            string ccssDesc = (!string.IsNullOrEmpty(patch.CCSSDescription)) ? patch.CCSSDescription : coreStandards?.CommonCoreStandardsDescription;
+            coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
+            coreStandards = coreStandards.WithTargetCCSSDescriptions(targetDesc, ccssDesc);
+
+            return coreStandards;
+
+        }
+
+        private static FieldTestUse ApplyPatchFieldTestUse(FieldTestUse fieldTestUse, ItemPatch patch)
+        {
+            int patchQuestion;
+            int.TryParse(patch.QuestionNumber, out patchQuestion);
+
+            var newFieldTestUse = new FieldTestUse
+            {
+                Code = fieldTestUse?.Code,
+                CodeYear = fieldTestUse?.CodeYear,
+                QuestionNumber = patchQuestion,
+                Section = fieldTestUse?.Section
+            };
+
+            return newFieldTestUse;
+        }
     }
 }

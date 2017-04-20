@@ -12,19 +12,25 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string TargetIdLabel { get; }
         public string CommonCoreStandardsId { get; }
         public string CommonCoreStandardsDescription { get; }
+        public string ClaimId { get; }
+        public string Publication { get; }
 
         public CoreStandards(
             string targetDescription,
             string targetId,
             string targetIdLabel,
             string commonCoreStandardsId,
-            string commonCoreStandardsDescription)
+            string commonCoreStandardsDescription,
+            string claimId,
+            string publication)
         {
             TargetDescription = targetDescription;
             TargetId = targetId;
             TargetIdLabel = targetIdLabel;
             CommonCoreStandardsId = commonCoreStandardsId;
             CommonCoreStandardsDescription = commonCoreStandardsDescription;
+            ClaimId = claimId;
+            Publication = publication;
         }
 
         public static CoreStandards Create(
@@ -32,14 +38,18 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
           string targetId = "",
           string targetIdLabel = "",
           string commonCoreStandardsId = "",
-          string commonCoreStandardsDescription = "")
+          string commonCoreStandardsDescription = "",
+          string claimId = "",
+          string publication = "")
         {
             return new CoreStandards(
                 targetDescription: targetDescription,
                 targetId: targetId,
                 targetIdLabel:  targetIdLabel,
                 commonCoreStandardsId: commonCoreStandardsId,
-                commonCoreStandardsDescription: commonCoreStandardsDescription);
+                commonCoreStandardsDescription: commonCoreStandardsDescription,
+                claimId: claimId,
+                publication: publication);
         }
 
         public CoreStandards WithTargetCCSSDescriptions(
@@ -51,7 +61,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 targetId: TargetId,
                 targetIdLabel: TargetIdLabel,
                 commonCoreStandardsId: CommonCoreStandardsId,
-                commonCoreStandardsDescription: commonCoreStandardsDescription);
+                commonCoreStandardsDescription: commonCoreStandardsDescription,
+                claimId : ClaimId,
+                publication: Publication);
         }
 
 
