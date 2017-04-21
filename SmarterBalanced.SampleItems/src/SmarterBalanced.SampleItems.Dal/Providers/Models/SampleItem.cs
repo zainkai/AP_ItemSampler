@@ -17,7 +17,6 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public int ItemKey { get; }
         public string ItemType { get; }
 
-
         public GradeLevels Grade { get; }
         public Subject Subject { get; }
         public Claim Claim { get; }
@@ -36,6 +35,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string InteractionTypeSubCat{ get; }
         public ImmutableArray<string> BrailleItemCodes { get; }
         public ImmutableArray<string> BraillePassageCodes { get; }
+        public bool BrailleOnlyItem { get; }
+        public int? CopiedFromItem { get; }
 
         public SampleItem(
             int bankKey,
@@ -58,7 +59,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             FieldTestUse fieldTestUse,
             string interactionTypeSubCat,
             ImmutableArray<string> brailleItemCodes,
-            ImmutableArray<string> braillePassageCodes
+            ImmutableArray<string> braillePassageCodes,
+            bool brailleOnlyItem,
+            int? copiedFromitem
             )
         {
             BankKey = bankKey;
@@ -82,6 +85,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             InteractionTypeSubCat = interactionTypeSubCat;
             BrailleItemCodes = brailleItemCodes;
             BraillePassageCodes = braillePassageCodes;
+            CopiedFromItem = copiedFromitem;
+            BrailleOnlyItem = brailleOnlyItem;
         }
 
         public static SampleItem Create(
@@ -105,7 +110,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             FieldTestUse fieldTestUse = null,
             string interactionTypeSubCat = "",
             ImmutableArray<string> brailleItemCodes = new ImmutableArray<string>(),
-            ImmutableArray<string>  braillePassageCodes = new ImmutableArray<string>())
+            ImmutableArray<string>  braillePassageCodes = new ImmutableArray<string>(),
+            bool brailleOnlyItem = false,
+            int? copiedFromItem = null)
         {
             return new SampleItem(
                 bankKey,
@@ -128,7 +135,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 fieldTestUse,
                 interactionTypeSubCat,
                 brailleItemCodes,
-                braillePassageCodes
+                braillePassageCodes,
+                brailleOnlyItem,
+                copiedFromItem
                 );
         }
 

@@ -62,20 +62,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             CoreStandards coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
 
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
+            int? copiedFromItem = null;
+
             if (patch != null)
             {
+                int tmp;
+                copiedFromItem = int.TryParse(patch.BrailleCopiedId, out tmp) ? (int?)tmp : null;
                 coreStandards = ApplyPatchToCoreStandards(identifier, coreStandards, standardsXml, patch);
             }
+
+            bool brailleOnly = copiedFromItem.HasValue;
 
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
 
             var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
-
-            var family = resourceFamilies.FirstOrDefault(f =>
-                f.Grades.Contains(grade) &&
-                f.Subjects.Contains(itemDigest.SubjectCode));
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
@@ -86,41 +88,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             }
 
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
-            ImmutableArray<string> braillePassageCodes;
-            ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
-                (f => f.ItemKey == itemDigest.ItemKey)
-                .Select(b => b.BrailleType).ToImmutableArray();
-
-            if (itemDigest.AssociatedPassage.HasValue)
-            {
-                braillePassageCodes = brailleFileInfo
-                    .Where(f => f.ItemKey == itemDigest.AssociatedPassage.Value)
-                    .Select(b => b.BrailleType).ToImmutableArray();
-            }
-            else
-            {
-                braillePassageCodes = ImmutableArray.Create<string>();
-            }
-
+            var brailleItemCodes = GetBrailleItemCodes(itemDigest, brailleFileInfo);
+            var braillePassageCodes = GetBraillePassageCodes(itemDigest, brailleFileInfo);
             bool aslSupported = AslSupported(itemDigest);
-            var flaggedResources = family?.Resources
-                .Select(r => r.ApplyFlags(
-                    itemDigest,
-                    interactionType?.Code, isPerformance, 
-                    settings.SettingsConfig.DictionarySupportedItemTypes, 
-                    brailleItemCodes,
-                    claim,
-                    aslSupported))
-                .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
-            var groups = settings.SettingsConfig.AccessibilityTypes
-                .Select(accType => GroupItemResources(accType, flaggedResources))
-                .OrderBy(g => g.Order)
-                .ToImmutableArray();
+            var groups = GetAccessibilityResourceGroups(itemDigest, resourceFamilies, grade, 
+                isPerformance, aslSupported, claim, interactionType, brailleItemCodes, settings);
 
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
-
 
             SampleItem sampleItem = new SampleItem(
                 itemType: itemDigest.ItemType,
@@ -143,7 +119,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 fieldTestUse: fieldTestUse,
                 interactionTypeSubCat: interactionTypeSubCat,
                 brailleItemCodes: brailleItemCodes,
-                braillePassageCodes: braillePassageCodes);
+                braillePassageCodes: braillePassageCodes,
+                brailleOnlyItem: brailleOnly,
+                copiedFromitem: copiedFromItem);
 
             return sampleItem;
         }
@@ -162,6 +140,66 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 accessibilityResources: matchingResources);
 
             return group;
+        }
+
+        public static ImmutableArray<string> GetBrailleItemCodes(ItemDigest itemDigest, IList<BrailleFileInfo> brailleFileInfo)
+        {
+            ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
+                (f => f.ItemKey == itemDigest.ItemKey)
+                .Select(b => b.BrailleType).ToImmutableArray();
+
+            return brailleItemCodes;
+        }
+
+        public static ImmutableArray<string> GetBraillePassageCodes(ItemDigest itemDigest, IList<BrailleFileInfo> brailleFileInfo)
+        {
+            ImmutableArray<string> braillePassageCodes;
+
+            if (itemDigest.AssociatedPassage.HasValue)
+            {
+                braillePassageCodes = brailleFileInfo
+                    .Where(f => f.ItemKey == itemDigest.AssociatedPassage.Value)
+                    .Select(b => b.BrailleType).ToImmutableArray();
+            }
+            else
+            {
+                braillePassageCodes = ImmutableArray.Create<string>();
+            }
+
+            return braillePassageCodes;
+        }
+
+        public static ImmutableArray<AccessibilityResourceGroup> GetAccessibilityResourceGroups(
+            ItemDigest itemDigest,
+            IList<MergedAccessibilityFamily> resourceFamilies,
+            GradeLevels grade,
+            bool isPerformance,
+            bool aslSupported,
+            Claim claim,
+            InteractionType interactionType,
+            ImmutableArray<string> brailleItemCodes,
+            AppSettings settings)
+        {
+            var family = resourceFamilies.FirstOrDefault(f =>
+               f.Grades.Contains(grade) &&
+               f.Subjects.Contains(itemDigest.SubjectCode));
+
+            var flaggedResources = family?.Resources
+             .Select(r => r.ApplyFlags(
+                 itemDigest,
+                 interactionType?.Code, isPerformance,
+                 settings.SettingsConfig.DictionarySupportedItemTypes,
+                 brailleItemCodes,
+                 claim,
+                 aslSupported))
+             .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
+
+            var groups = settings.SettingsConfig.AccessibilityTypes
+                .Select(accType => GroupItemResources(accType, flaggedResources))
+                .OrderBy(g => g.Order)
+                .ToImmutableArray();
+
+            return groups;
         }
 
         public static ImmutableArray<Rubric> GetRubrics(ItemDigest digest, AppSettings settings)
@@ -293,6 +331,19 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             };
 
             return newFieldTestUse;
+        }
+
+        private static int? GetCopiedFromItem(string desc)
+        {
+            int val;
+            if (string.IsNullOrEmpty(desc))
+            {
+                return null;
+            }
+
+            var match = Regex.Match(input: desc, pattern: @"^(?=.*\bCloned\b)(?=.*\b(\d{4,6})).*$");
+
+            return match.Success && int.TryParse(match.Groups[1]?.Value, out val) ? (int?)val : null;
         }
     }
 }
