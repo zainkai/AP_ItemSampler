@@ -61,12 +61,31 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(itemDigest, supportedPubs);
             CoreStandards coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
 
+            var brailleItemCodes = GetBrailleItemCodes(itemDigest.ItemKey, brailleFileInfo);
+            var braillePassageCodes = GetBraillePassageCodes(itemDigest, brailleFileInfo);
+
+            var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
+            var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
+
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
+<<<<<<< Updated upstream
+=======
+            var copiedItemPatch = patches.FirstOrDefault(p => p.BrailleCopiedId == itemDigest.ItemKey.ToString());
+
+            var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
+            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
+
+            var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
+            var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
+
+            int? copiedFromItem = null;
+>>>>>>> Stashed changes
             if (patch != null)
             {
                 coreStandards = ApplyPatchToCoreStandards(identifier, coreStandards, standardsXml, patch);
             }
 
+<<<<<<< Updated upstream
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
@@ -79,13 +98,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
+=======
+            if(copiedItemPatch != null)
+            {
+                var copyBrailleItemCodes = GetBrailleItemCodes(copiedItemPatch.ItemId, brailleFileInfo);
+                brailleItemCodes = brailleItemCodes.Concat(copyBrailleItemCodes).Distinct().ToImmutableArray();
+            }
+>>>>>>> Stashed changes
 
             if (patch != null && !string.IsNullOrEmpty(patch.QuestionNumber))
             {
                 fieldTestUse = ApplyPatchFieldTestUse(fieldTestUse, patch);
             }
 
+            bool brailleOnly = copiedFromItem.HasValue;
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
+<<<<<<< Updated upstream
             ImmutableArray<string> braillePassageCodes;
             ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
                 (f => f.ItemKey == itemDigest.ItemKey)
@@ -117,6 +145,12 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 .Select(accType => GroupItemResources(accType, flaggedResources))
                 .OrderBy(g => g.Order)
                 .ToImmutableArray();
+=======
+         
+            bool aslSupported = AslSupported(itemDigest);
+            var groups = GetAccessibilityResourceGroups(itemDigest, resourceFamilies, grade, 
+                isPerformance, aslSupported, claim, interactionType, brailleItemCodes, settings);
+>>>>>>> Stashed changes
 
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
@@ -164,6 +198,69 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return group;
         }
 
+<<<<<<< Updated upstream
+=======
+        public static ImmutableArray<string> GetBrailleItemCodes(int itemKey, IList<BrailleFileInfo> brailleFileInfo)
+        {
+            ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
+                (f => f.ItemKey == itemKey)
+                .Select(b => b.BrailleType).ToImmutableArray();
+
+            return brailleItemCodes;
+        }
+
+        public static ImmutableArray<string> GetBraillePassageCodes(ItemDigest itemDigest, IList<BrailleFileInfo> brailleFileInfo)
+        {
+            ImmutableArray<string> braillePassageCodes;
+
+            if (itemDigest.AssociatedPassage.HasValue)
+            {
+                braillePassageCodes = brailleFileInfo
+                    .Where(f => f.ItemKey == itemDigest.AssociatedPassage.Value)
+                    .Select(b => b.BrailleType).ToImmutableArray();
+            }
+            else
+            {
+                braillePassageCodes = ImmutableArray.Create<string>();
+            }
+
+            return braillePassageCodes;
+        }
+
+        public static ImmutableArray<AccessibilityResourceGroup> GetAccessibilityResourceGroups(
+            ItemDigest itemDigest,
+            IList<MergedAccessibilityFamily> resourceFamilies,
+            GradeLevels grade,
+            bool isPerformance,
+            bool aslSupported,
+            Claim claim,
+            InteractionType interactionType,
+            ImmutableArray<string> brailleItemCodes,
+            AppSettings settings)
+        {
+            var family = resourceFamilies.FirstOrDefault(f =>
+               f.Grades.Contains(grade) &&
+               f.Subjects.Contains(itemDigest.SubjectCode));
+
+            var flaggedResources = family?.Resources
+             .Select(r => r.ApplyFlags(
+                 itemDigest,
+                 interactionType?.Code, isPerformance,
+                 settings.SettingsConfig.DictionarySupportedItemTypes,
+                 brailleItemCodes,
+                 claim,
+                 aslSupported))
+             .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
+
+            var groups = settings.SettingsConfig.AccessibilityTypes
+                .Select(accType => GroupItemResources(accType, flaggedResources))
+                .OrderBy(g => g.Order)
+                .ToImmutableArray();
+
+            return groups;
+        }
+
+>>>>>>> Stashed changes
         public static ImmutableArray<Rubric> GetRubrics(ItemDigest digest, AppSettings settings)
         {
             int? maxPoints = digest.MaximumNumberOfPoints;

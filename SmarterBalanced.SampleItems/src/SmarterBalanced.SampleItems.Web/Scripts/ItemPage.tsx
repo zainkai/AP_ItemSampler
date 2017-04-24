@@ -90,6 +90,16 @@ namespace ItemPage {
         return "";
     }
 
+    export function isBrailleEnabled(accResourceGroups: AccResourceGroup[]): boolean {
+        const brailleResource = getResource("BrailleType", accResourceGroups);
+        if (brailleResource && !brailleResource.currentSelectionCode.endsWith("0")) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
@@ -105,6 +115,8 @@ namespace ItemPage {
 
     export interface ViewModel {
         itemViewerServiceUrl: string;
+        itemNames: string;
+        brailleItemNames: string;
         accessibilityCookieName: string;
         isPerformanceItem: boolean;
         performanceItemDescription: string;
@@ -189,7 +201,9 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
+            const itemNames = (isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=",itemNames, "&isaap=", isaap);
+
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (

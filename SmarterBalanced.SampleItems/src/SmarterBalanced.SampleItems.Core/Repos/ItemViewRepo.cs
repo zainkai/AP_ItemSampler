@@ -40,25 +40,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given SampleItem.
         /// </summary>
-        public string GetItemViewerUrl(SampleItem item)
+        public string GetItemViewerUrl()
         {
-            string items;
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            if (item == null)
-            {
-                return string.Empty;
-            }
-
-            if (item.IsPerformanceItem)
-            {
-                items = string.Join(",", GetPeformanceItemNames(item));
-            }
-            else
-            {
-                items = item.ToString();
-            }
-
-            return $"{baseUrl}/items?ids={items}";
+            return baseUrl;
         }
 
         /// <summary>
@@ -69,7 +54,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// <returns></returns>
         private List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
         {
-            var associatedStimulus = item.AssociatedStimulus;
             List<SampleItem> associatedStimulusDigests = context.SampleItems
                 .Where(i => i.IsPerformanceItem && 
                     i.FieldTestUse != null &&
@@ -77,16 +61,55 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     i.Grade == item.Grade && i.Subject?.Code == item.Subject?.Code)
                 .OrderByDescending(i => i.ItemKey == item.ItemKey)
                 .ThenBy(i => i.FieldTestUse?.Section)
-                .ThenBy(i => i.FieldTestUse?.QuestionNumber).ToList();
+                .ThenBy(i => i.FieldTestUse?.QuestionNumber)
+                .ToList();
 
             return associatedStimulusDigests;
         }
 
-        private List<string> GetPeformanceItemNames(SampleItem item)
+        private string GetItemNames(SampleItem item)
         {
-            var associatedStimulusDigests = GetAssociatedPerformanceItems(item)?.Select(d => d.ToString()).ToList();
-            return associatedStimulusDigests;
+            var itemNames = item.ToString();
+
+            if (item.IsPerformanceItem)
+            {
+                itemNames = string.Join(",", GetAssociatedPerformanceItems(item).Select(d => d.ToString()));
+            }
+
+            return itemNames;
         }
+
+        private string GetBrailleItemNames(SampleItem item)
+        {
+            var items = GetAssociatedBrailleItems(item);
+            var names = items.Select(i => i.ToString());
+            string res = string.Join(",", names);
+
+            return res;
+        }
+
+        private IList<SampleItem> GetAssociatedBrailleItems(SampleItem item)
+        {
+            var items = Enumerable.Repeat(item, 1);
+
+            if (item.IsPerformanceItem)
+            {
+                items = GetAssociatedPerformanceItems(item);
+            }
+
+            var order = items.Select(i => i.ItemKey).ToList();
+
+            var matchingBraille = context.SampleItems.Where(s => s.BrailleOnlyItem &&
+                items.Any(i => i.ItemKey == s.CopiedFromItem));
+
+            var itemNames = items.Where(pt => !matchingBraille.Any(bi => bi.CopiedFromItem == pt.ItemKey))
+                .Concat(matchingBraille)
+                .OrderBy(i => order.IndexOf(i.CopiedFromItem ?? i.ItemKey))
+                .ToList();
+
+            return itemNames;
+        }
+
 
         private string GetPerformanceDescription(SampleItem item)
         {
@@ -129,11 +152,12 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             itemDirectories.Add(GetItemFtpDirectory(item));
             if (item.IsPerformanceItem)
             {
-                foreach (SampleItem associatedItem in GetAssociatedPerformanceItems(item))
+                foreach (SampleItem associatedItem in GetAssociatedBrailleItems(item))
                 {
                     itemDirectories.Add(GetItemFtpDirectory(associatedItem));
                 }
             }
+
             if (item.AssociatedStimulus.HasValue)
             {
                 itemDirectories.Add(GetPassageFtpDirectory(item));
@@ -247,7 +271,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
 
             var itemViewModel = new ItemViewModel(
-                itemViewerServiceUrl: GetItemViewerUrl(sampleItem),
+                itemViewerServiceUrl: context.AppSettings.SettingsConfig.ItemViewerServiceURL,
+                itemNames: GetItemNames(sampleItem),
+                brailleItemNames: GetBrailleItemNames(sampleItem),
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,

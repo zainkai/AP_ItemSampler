@@ -9,6 +9,7 @@ declare interface Array<T> {
 
 declare interface String {
     startsWith(str: string): boolean;
+    endsWith(str: string): boolean;
 }
 
 if (typeof Object.assign != 'function') {
@@ -64,3 +65,10 @@ if (!String.prototype.startsWith) {
         return this.substr(0, searchString.length) === searchString;
     };
 }
+
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function (suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
+
