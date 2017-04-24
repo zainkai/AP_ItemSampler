@@ -120,7 +120,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return itemNames;
         }
 
-
         private string GetPerformanceDescription(SampleItem item)
         {
             if (!item.IsPerformanceItem)
@@ -175,7 +174,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return itemDirectories.ToImmutableArray();
         }
 
-        private static string GetBrailleTypeFromCode(string code)
+        private string GetBrailleTypeFromCode(string code)
         {
             //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
             var bt = code.Split('_');
@@ -202,6 +201,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 }
                 catch (CoreFtp.Infrastructure.FtpException)
                 {
+                    logger.LogError($"Failed to load braille from ftp server for {directory}");
                     continue;
                 }
                 
@@ -218,7 +218,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return brailleFiles;
         }
 
-        public static string GenerateBrailleZipName(int itemId, string brailleCode)
+        public string GenerateBrailleZipName(int itemId, string brailleCode)
         {
             return $"{itemId}-{GetBrailleTypeFromCode(brailleCode)}.zip";
         }
@@ -258,6 +258,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                         }
                     }
                 }
+
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 return memoryStream;
             }
@@ -384,6 +385,18 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return moreLikeThisVM;
         }
 
+        public AboutThisItemViewModel GetAboutThisItemViewModel(int itemBank, int itemKey)
+        {
+            var sampleItem = context.SampleItems.FirstOrDefault(s => s.ItemKey == itemKey && s.BankKey == itemBank);
+            if(sampleItem == null)
+            {
+                throw new Exception($"invalid request for {itemBank}-{itemKey}");
+            }
+
+            var aboutThis = GetAboutThisItemViewModel(sampleItem);
+
+            return aboutThis;
+        }
     }
 
 }

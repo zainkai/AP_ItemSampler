@@ -162,7 +162,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return group;
         }
 
-
         public static ImmutableArray<string> GetBrailleItemCodes(int itemKey, IList<BrailleFileInfo> brailleFileInfo)
         {
             ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
@@ -222,7 +221,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             return groups;
         }
-
 
         public static ImmutableArray<Rubric> GetRubrics(ItemDigest digest, AppSettings settings)
         {
