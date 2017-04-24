@@ -68,8 +68,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
 
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
-<<<<<<< Updated upstream
-=======
+
             var copiedItemPatch = patches.FirstOrDefault(p => p.BrailleCopiedId == itemDigest.ItemKey.ToString());
 
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
@@ -79,7 +78,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
 
             int? copiedFromItem = null;
->>>>>>> Stashed changes
             if (patch != null)
             {
                 int tmp;
@@ -87,22 +85,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 coreStandards = ApplyPatchToCoreStandards(identifier, coreStandards, standardsXml, patch);
             }
 
-<<<<<<< Updated upstream
-            var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
-            var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
-            var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
-
-            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
-
-            var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
-            var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
-=======
             if(copiedItemPatch != null)
             {
                 var copyBrailleItemCodes = GetBrailleItemCodes(copiedItemPatch.ItemId, brailleFileInfo);
                 brailleItemCodes = brailleItemCodes.Concat(copyBrailleItemCodes).Distinct().ToImmutableArray();
             }
->>>>>>> Stashed changes
 
             if (patch != null && !string.IsNullOrEmpty(patch.QuestionNumber))
             {
@@ -111,11 +98,6 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             bool brailleOnly = copiedFromItem.HasValue;
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
-<<<<<<< Updated upstream
-            ImmutableArray<string> braillePassageCodes;
-            ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
-                (f => f.ItemKey == itemDigest.ItemKey)
-                .Select(b => b.BrailleType).ToImmutableArray();
 
             if (itemDigest.AssociatedPassage.HasValue)
             {
@@ -130,16 +112,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
 
             bool aslSupported = AslSupported(itemDigest);
 
-            var groups = settings.SettingsConfig.AccessibilityTypes
-                .Select(accType => GroupItemResources(accType, flaggedResources))
-                .OrderBy(g => g.Order)
-                .ToImmutableArray();
-=======
-         
-            bool aslSupported = AslSupported(itemDigest);
             var groups = GetAccessibilityResourceGroups(itemDigest, resourceFamilies, grade, 
                 isPerformance, aslSupported, claim, interactionType, brailleItemCodes, settings);
->>>>>>> Stashed changes
 
             string interactionTypeSubCat = "";
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
@@ -188,8 +162,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return group;
         }
 
-<<<<<<< Updated upstream
-=======
+
         public static ImmutableArray<string> GetBrailleItemCodes(int itemKey, IList<BrailleFileInfo> brailleFileInfo)
         {
             ImmutableArray<string> brailleItemCodes = brailleFileInfo.Where
@@ -250,7 +223,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             return groups;
         }
 
->>>>>>> Stashed changes
+
         public static ImmutableArray<Rubric> GetRubrics(ItemDigest digest, AppSettings settings)
         {
             int? maxPoints = digest.MaximumNumberOfPoints;

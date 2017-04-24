@@ -14,7 +14,8 @@ module.exports = function (grunt) {
     grunt.initConfig({
         clean: {
             css: ["wwwroot/css/*"],
-            ts: ["wwwroot/scripts/*", "temp"]
+            ts: ["wwwroot/scripts/*", "temp"],
+            lib: ["wwwroot/lib/*", "temp"]
         },
 
         uglify: {
