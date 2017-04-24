@@ -52,7 +52,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
+        public List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
         {
             List<SampleItem> associatedStimulusDigests = context.SampleItems
                 .Where(i => i.IsPerformanceItem && 
@@ -67,8 +67,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return associatedStimulusDigests;
         }
 
-        private string GetItemNames(SampleItem item)
+        public string GetItemNames(SampleItem item)
         {
+            if(item == null)
+            {
+                return string.Empty;
+            }
+
             var itemNames = item.ToString();
 
             if (item.IsPerformanceItem)
@@ -79,8 +84,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return itemNames;
         }
 
-        private string GetBrailleItemNames(SampleItem item)
+        public string GetBrailleItemNames(SampleItem item)
         {
+            if (item == null)
+            {
+                return string.Empty;
+            }
+
             var items = GetAssociatedBrailleItems(item);
             var names = items.Select(i => i.ToString());
             string res = string.Join(",", names);
@@ -88,7 +98,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return res;
         }
 
-        private IList<SampleItem> GetAssociatedBrailleItems(SampleItem item)
+        public IList<SampleItem> GetAssociatedBrailleItems(SampleItem item)
         {
             var items = Enumerable.Repeat(item, 1);
 

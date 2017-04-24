@@ -126,25 +126,25 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         public void TestGetItemUrl()
         {
             var result = ItemViewRepo.GetSampleItem(GoodBankKey, GoodItemKey);
-            var url = ItemViewRepo.GetItemViewerUrl(result);
+            var url = ItemViewRepo.GetItemNames(result);
 
             Assert.NotNull(url);
-            Assert.Equal("/items?ids=1-4", url);
+            Assert.Equal("1-4", url);
         }
 
         [Fact]
         public void TestGetItemUrlMultiple()
         {
-            var url = ItemViewRepo.GetItemViewerUrl(PerformanceDigest);
+            var url = ItemViewRepo.GetItemNames(PerformanceDigest);
 
             Assert.NotNull(url);
-            Assert.Equal("/items?ids=1-209,5-210", url);
+            Assert.Equal("1-209,5-210", url);
         }
 
         [Fact]
         public void TestGetItemUrlNull()
         {
-            var url = ItemViewRepo.GetItemViewerUrl(null);
+            var url = ItemViewRepo.GetItemNames(null);
             Assert.Equal(string.Empty, url);
         }
 
