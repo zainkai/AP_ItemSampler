@@ -95,7 +95,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 return BadRequest();
             }
 
-            var fileName = ItemViewRepo.GenerateBrailleZipName(itemKey.Value, brailleCode);
+            var fileName = repo.GenerateBrailleZipName(itemKey.Value, brailleCode);
             try
             {
                 var ftpReadStream = await repo.GetItemBrailleZip(
@@ -118,6 +118,18 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
 
                 return BadRequest();
             }
+        }
+
+        public IActionResult AboutThisItemViewModel(int? bankKey, int? itemKey)
+        {
+            if(!bankKey.HasValue || !itemKey.HasValue)
+            {
+                return BadRequest();
+            }
+
+            var aboutThis = repo.GetAboutThisItemViewModel(bankKey.Value, itemKey.Value);
+
+            return Json(aboutThis);
         }
 
     }

@@ -139,7 +139,7 @@ namespace ItemPage {
         constructor(props: Props) {
             super(props);
         }
-
+    
         saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
             this.props.onSave(resourceSelections);
         }
@@ -267,7 +267,6 @@ namespace ItemPage {
 
     export class Controller {
         constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
-
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
             const newGroups: AccResourceGroup[] = [];
@@ -287,7 +286,7 @@ namespace ItemPage {
 
             let cookieValue = toCookie(this.itemProps.accResourceGroups);
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", cookieValue, "; path=/");
-
+            this.fetchUpdatedAboutThisItem();
             this.render();
         }
 
@@ -302,8 +301,40 @@ namespace ItemPage {
 
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
+            this.fetchUpdatedAboutThisItem();
 
             this.render();
+        }
+
+        fetchUpdatedAboutThisItem() {
+            const itemNames = (isBrailleEnabled(this.itemProps.accResourceGroups)) ? this.itemProps.brailleItemNames : this.itemProps.itemNames;
+            const itemName = itemNames.split(",")[0].split("-");
+
+            const params = {
+                bankKey: itemName[0],
+                itemKey: itemName[1]
+            };
+
+            $.ajax({
+                dataType: "JSON",
+                type: "GET",
+                url: "/Item/AboutThisItemViewModel",
+                data: params,
+                success: this.onFetchedUpdatedViewModel
+            });
+        }
+
+        onFetchedUpdatedViewModel = (viewModel: AboutThisItem.Props) => {
+            if (!viewModel) {
+                console.log("An error occurred updating the item.");
+                return;
+            }
+
+            this.itemProps = Object.assign({}, this.itemProps);
+            this.itemProps.aboutThisItemVM = Object.assign({}, this.itemProps.aboutThisItemVM);
+            this.itemProps.aboutThisItemVM = Object.assign({}, viewModel);
+            this.render();
+          
         }
 
         render() {
