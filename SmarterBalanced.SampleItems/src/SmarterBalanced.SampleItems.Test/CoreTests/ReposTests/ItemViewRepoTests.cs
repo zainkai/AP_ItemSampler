@@ -22,6 +22,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         ImmutableArray<SampleItem> SampleItems;
         ItemViewRepo ItemViewRepo;
         SampleItemsContext Context;
+        FieldTestUse fieldTestUseVar;
         int GoodItemKey;
         int BadItemKey;
         int GoodBankKey;
@@ -44,7 +45,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
             ElaDigest = SampleItem.Create(bankKey: BadBankKey, itemKey: BadItemKey);
 
-            var fieldTestUseVar = new FieldTestUse();
+            fieldTestUseVar = new FieldTestUse();
             fieldTestUseVar.Code = "ELA";
             fieldTestUseVar.QuestionNumber = 1;
 
@@ -253,23 +254,14 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         }
 
-        [Fact(Skip = "ToDo")]
+        [Fact]
         public void TestGetAboutThisItemViewModelGoodItem()
         {
-            var rubricEntries = new List<RubricEntry>()
+            var rubricEntry = new RubricEntry
             {
-                new RubricEntry
-                {
-                        Scorepoint = "0",
-                        Name = "TestName",
-                        Value = "TestValue"
-                },
-                new RubricEntry
-                {
-                        Scorepoint = "1",
-                        Name = "TestName1",
-                        Value = "TestValue1"
-                }
+                Scorepoint = "0",
+                Name = "TestName",
+                Value = "TestValue"
             };
 
             var sampleResponces = new List<SampleResponse>()
@@ -290,28 +282,32 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
                 }
             };
 
-            var rubricSamples = new List<RubricSample>()
+            var rubricSample = new RubricSample
             {
-                 new RubricSample
-                 {
-                        MaxValue = "MaxVal",
-                        MinValue = "MinVal",
-                        SampleResponses = sampleResponces
-                 },
-                 new RubricSample
-                 {
-                        MaxValue = "MaxVal1",
-                        MinValue = "MinVal1",
-                        SampleResponses = new List<SampleResponse>()
-                 }
+                MaxValue = "MaxVal",
+                MinValue = "MinVal",
+                SampleResponses = sampleResponces
             };
-            var entries = ImmutableArray.Create(rubricEntries);
-            var samples = ImmutableArray.Create(rubricSamples);
 
-            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(PerformanceDigest);
+            var entries = ImmutableArray.Create(rubricEntry);
+            var samples = ImmutableArray.Create(rubricSample);
+            var rubric = new Rubric("ENU", entries, samples);
+            var rubrics = ImmutableArray.Create(rubric);
+            SampleItem item = SampleItem.Create(
+                bankKey: GoodBankKey,
+                itemKey: 209,
+                isPerformanceItem: true,
+                associatedStimulus: 1,
+                fieldTestUse: fieldTestUseVar,
+                rubrics: rubrics,
+                depthOfKnowledge: "TestDepth");
+
+            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(item);
 
             Assert.NotNull(aboutThisItemViewModel);
-
+            Assert.Equal(aboutThisItemViewModel.Rubrics.Length, 1);
+            Assert.Equal(aboutThisItemViewModel.Rubrics[0], rubric);
+            Assert.Equal(aboutThisItemViewModel.DepthOfKnowledge, "TestDepth");
         }
 
         [Fact]
