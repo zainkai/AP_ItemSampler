@@ -266,7 +266,9 @@ namespace ItemPage {
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {
+            this.fetchUpdatedAboutThisItem();
+        }
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
             const newGroups: AccResourceGroup[] = [];

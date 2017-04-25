@@ -15,8 +15,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public bool IsPerformanceItem { get; }
 
-        public AboutThisItemViewModel AboutThisItemVM { get; }
-
         public ImmutableArray<AccessibilityResourceGroup> AccResourceGroups { get; }
 
         public MoreLikeThisViewModel MoreLikeThisVM { get; }
@@ -34,7 +32,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             bool isPerformanceItem,
             ImmutableArray<AccessibilityResourceGroup> accResourceGroups,
             MoreLikeThisViewModel moreLikeThisVM,
-            AboutThisItemViewModel aboutThisItemVM,
             string subject,
             ImmutableArray<string> brailleItemCodes,
             ImmutableArray<string> braillePassageCodes,
@@ -45,7 +42,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             ItemViewerServiceUrl = itemViewerServiceUrl;
             AccessibilityCookieName = accessibilityCookieName;
             IsPerformanceItem = isPerformanceItem;
-            AboutThisItemVM = aboutThisItemVM;
             AccResourceGroups = accResourceGroups;
             MoreLikeThisVM = moreLikeThisVM;
             Subject = subject;

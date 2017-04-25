@@ -277,8 +277,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var aboutThisItem = GetAboutThisItemViewModel(sampleItem);
-
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
 
             var itemViewModel = new ItemViewModel(
@@ -289,7 +287,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
-                aboutThisItemVM: aboutThisItem,
                 subject: sampleItem.Subject.Code,
                 brailleItemCodes: sampleItem.BrailleItemCodes,
                 braillePassageCodes: sampleItem.BraillePassageCodes,
