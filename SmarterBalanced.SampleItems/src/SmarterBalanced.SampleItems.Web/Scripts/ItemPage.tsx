@@ -115,8 +115,8 @@ namespace ItemPage {
 
     export interface ItemIdentifier {
         itemName: string;
-        itemKey: number;
         bankKey: number;
+        itemKey: number;
     }
 
     export interface ViewModel {
@@ -212,7 +212,7 @@ namespace ItemPage {
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             const itemNames = (isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=",itemNames, "&isaap=", isaap);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, "&scrollToId=", this.props.currentItem.itemName);
 
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
@@ -245,8 +245,8 @@ namespace ItemPage {
                                 currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
                                 brailleItemCodes={this.props.brailleItemCodes}
                                 braillePassageCodes={this.props.braillePassageCodes}
-                                bankKey={this.props.}
-                                itemKey={this.props.aboutThisItemVM.itemCardViewModel.itemKey} />
+                                bankKey={this.props.currentItem.bankKey}
+                                itemKey={this.props.currentItem.itemKey} />
 
                         </div>
 
@@ -289,10 +289,20 @@ namespace ItemPage {
                     const newRes = Object.assign({}, res); 
                     newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
                     newResources.push(newRes);
+                    if (newRes.resourceCode === "BrailleType") {
+                        if (newRes.currentSelectionCode === "TDS_BT0") {
+                            this.itemProps.currentItem = this.itemProps.nonBrailleItem;
+                        }
+                        else
+                        {
+                            this.itemProps.currentItem = this.itemProps.brailleItem;
+                        }
+                    }
                 }
                 newGroup.accessibilityResources = newResources;
                 newGroups.push(newGroup);
             }
+
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newGroups;
 
@@ -310,7 +320,7 @@ namespace ItemPage {
                 newGroup.accessibilityResources = newGroup.accessibilityResources.map(resetResource);
                 return newGroup;
             });
-
+            this.itemProps.currentItem = this.itemProps.nonBrailleItem;
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
             this.fetchUpdatedAboutThisItem();

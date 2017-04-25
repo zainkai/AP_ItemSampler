@@ -278,11 +278,51 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
 
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
+            ItemIdentifier brailleItem;
+            ItemIdentifier currentItem;
+            ItemIdentifier nonBrailleItem = new ItemIdentifier(
+                $"{bankKey}-{itemKey}",
+                bankKey,
+                itemKey);
+
+            //If any braille items were copied from this item we need to know which ones they are.
+            var matchingBrailleItems = context.SampleItems.Where(s => s.BrailleOnlyItem &&
+                sampleItem.ItemKey == s.CopiedFromItem);
+            if (matchingBrailleItems.Any())
+            {
+                //If there are multiple there is no way of knowing which is the correct one, so take the first.
+                var brailleBankKey = matchingBrailleItems.First().ItemKey;
+                var brailleItemKey = matchingBrailleItems.First().ItemKey;
+                brailleItem = new ItemIdentifier(
+                    $"{brailleBankKey}-{brailleItemKey}",
+                    brailleBankKey,
+                    brailleItemKey);
+            }
+            else {
+                brailleItem = nonBrailleItem;
+            }
+
+            var brailleSelected = groups.Where(
+                g => g.AccessibilityResources.Where(
+                    r => r.ResourceCode == "BrailleType" && r.CurrentSelectionCode != "TDS_BT0").Any()).Any();
+
+            if (brailleSelected)
+            {
+                currentItem = brailleItem;
+            }
+            else
+            {
+                currentItem = nonBrailleItem;
+            }
+            
 
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: context.AppSettings.SettingsConfig.ItemViewerServiceURL,
                 itemNames: GetItemNames(sampleItem),
                 brailleItemNames: GetBrailleItemNames(sampleItem),
+                brailleItem: brailleItem,
+                nonBrailleItem: nonBrailleItem,
+                currentItem: currentItem,
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,

@@ -8,18 +8,19 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
     public class ItemIdentifier
     {
         public string ItemName { get; }
-        public string ItemKey { get; }
-        public string BankKey { get; }
+        public int ItemKey { get; }
+        public int BankKey { get; }
 
         public ItemIdentifier(
             string itemName,
-            string itemKey,
-            string bankKey
+            int bankKey,
+            int itemKey
+            
             )
         {
             ItemName = itemName;
-            ItemKey = itemKey;
             BankKey = bankKey;
+            ItemKey = itemKey;
         }
     }
 }
