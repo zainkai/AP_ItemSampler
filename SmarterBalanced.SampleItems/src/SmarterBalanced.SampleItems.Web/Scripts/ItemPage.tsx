@@ -289,19 +289,11 @@ namespace ItemPage {
                     const newRes = Object.assign({}, res); 
                     newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
                     newResources.push(newRes);
-                    if (newRes.resourceCode === "BrailleType") {
-                        if (newRes.currentSelectionCode === "TDS_BT0") {
-                            this.itemProps.currentItem = this.itemProps.nonBrailleItem;
-                        }
-                        else
-                        {
-                            this.itemProps.currentItem = this.itemProps.brailleItem;
-                        }
-                    }
                 }
                 newGroup.accessibilityResources = newResources;
                 newGroups.push(newGroup);
             }
+            this.itemProps.currentItem = isBrailleEnabled(newGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
 
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newGroups;

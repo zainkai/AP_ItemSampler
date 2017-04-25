@@ -183,7 +183,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             {
                 itemDirectories.Add(GetPassageFtpDirectory(item));
             }
-            return itemDirectories.ToImmutableArray();
+            return itemDirectories.Distinct().ToImmutableArray();
         }
 
         private string GetBrailleTypeFromCode(string code)
