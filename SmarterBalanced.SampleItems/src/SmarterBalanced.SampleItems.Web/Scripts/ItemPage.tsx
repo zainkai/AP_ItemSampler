@@ -113,10 +113,19 @@ namespace ItemPage {
         accessibilityResources: AccessibilityResource[];
     }
 
+    export interface ItemIdentifier {
+        itemName: string;
+        itemKey: number;
+        bankKey: number;
+    }
+
     export interface ViewModel {
         itemViewerServiceUrl: string;
         itemNames: string;
         brailleItemNames: string;
+        brailleItem: ItemIdentifier;
+        nonBrailleItem: ItemIdentifier;
+        currentItem: ItemIdentifier;
         accessibilityCookieName: string;
         isPerformanceItem: boolean;
         performanceItemDescription: string;
@@ -126,6 +135,7 @@ namespace ItemPage {
         aboutThisItemVM: AboutThisItem.Props;
         brailleItemCodes: string[];
         braillePassageCodes: string[];
+     
     }
 
     export interface Props extends ViewModel {
@@ -235,7 +245,7 @@ namespace ItemPage {
                                 currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
                                 brailleItemCodes={this.props.brailleItemCodes}
                                 braillePassageCodes={this.props.braillePassageCodes}
-                                bankKey={this.props.aboutThisItemVM.itemCardViewModel.bankKey}
+                                bankKey={this.props.}
                                 itemKey={this.props.aboutThisItemVM.itemCardViewModel.itemKey} />
 
                         </div>
@@ -276,7 +286,7 @@ namespace ItemPage {
                 const newGroup = Object.assign({}, group);
                 const newResources: AccessibilityResource[] = [];
                 for (let res of newGroup.accessibilityResources) {
-                    const newRes = Object.assign({}, res);
+                    const newRes = Object.assign({}, res); 
                     newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
                     newResources.push(newRes);
                 }
