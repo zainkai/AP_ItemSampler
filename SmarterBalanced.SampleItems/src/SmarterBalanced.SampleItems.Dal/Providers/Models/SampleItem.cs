@@ -145,5 +145,19 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         {
             return $"{BankKey}-{ItemKey}";
         }
-    }    
+    }
+    public class SampleItemComparer : IEqualityComparer<SampleItem>
+    {
+        public bool Equals(SampleItem a, SampleItem b)
+        {
+            return (a.BankKey == b.BankKey && a.ItemKey == b.ItemKey);
+        }
+
+        public int GetHashCode(SampleItem obj)
+        {
+            int hashItemBank = obj.BankKey.GetHashCode();
+            int hashItemKey = obj.ItemKey.GetHashCode();
+            return hashItemBank ^ hashItemKey;
+        }
+    }
 }

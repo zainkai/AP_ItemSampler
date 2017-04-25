@@ -120,6 +120,13 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return itemNames;
         }
 
+        private ImmutableArray<SampleItem> GetAllAssociatedItems(SampleItem item)
+        {
+            var brailleItems = GetAssociatedBrailleItems(item);
+            var associatedItems = GetAssociatedPerformanceItems(item);
+            return brailleItems.Union(associatedItems).ToImmutableArray();
+        }
+
         private string GetPerformanceDescription(SampleItem item)
         {
             if (!item.IsPerformanceItem)
@@ -159,6 +166,11 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         {
             List<string> itemDirectories = new List<string>();
             itemDirectories.Add(GetItemFtpDirectory(item));
+            var associatedItems = GetAllAssociatedItems(item);
+            foreach (SampleItem associatedItem in associatedItems)
+            {
+                itemDirectories.Add(GetItemFtpDirectory(associatedItem));
+            }
             if (item.IsPerformanceItem)
             {
                 foreach (SampleItem associatedItem in GetAssociatedBrailleItems(item))
@@ -291,7 +303,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             if (matchingBrailleItems.Any())
             {
                 //If there are multiple there is no way of knowing which is the correct one, so take the first.
-                var brailleBankKey = matchingBrailleItems.First().ItemKey;
+                var brailleBankKey = matchingBrailleItems.First().BankKey;
                 var brailleItemKey = matchingBrailleItems.First().ItemKey;
                 brailleItem = new ItemIdentifier(
                     $"{brailleBankKey}-{brailleItemKey}",
