@@ -112,6 +112,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 case GradeLevels.Grade10: return "10";
                 case GradeLevels.Grade11: return "11";
                 case GradeLevels.Grade12: return "12";
+                case GradeLevels.High: return "11";
                 default: return string.Empty;
             }
         }
