@@ -16,8 +16,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public ItemIdentifier BrailleItem { get; }
 
-        public ItemIdentifier CurrentItem { get; }
-
         public string AccessibilityCookieName { get; }
 
         public bool IsPerformanceItem { get; }
@@ -44,7 +42,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             ImmutableArray<string> braillePassageCodes,
             ItemIdentifier brailleItem,
             ItemIdentifier nonBrailleItem,
-            ItemIdentifier currentItem,
             string performanceItemDescription = "",
             string itemNames = "",
             string brailleItemNames = ""
@@ -60,7 +57,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             BraillePassageCodes = braillePassageCodes;
             BrailleItem = brailleItem;
             NonBrailleItem = nonBrailleItem;
-            CurrentItem = currentItem;
             PerformanceItemDescription = performanceItemDescription;
             ItemNames = itemNames;
             BrailleItemCodes = brailleItemCodes;

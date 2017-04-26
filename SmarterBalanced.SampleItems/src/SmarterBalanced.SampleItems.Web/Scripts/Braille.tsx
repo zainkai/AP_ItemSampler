@@ -22,15 +22,14 @@
     }
 
     interface State {
-        displaySpinner: {};
+        displaySpinner: boolean;
+        
     }
     export class BrailleLink extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
             this.state = {
-                displaySpinner: {
-                    display: 'none',
-                }
+                displaySpinner: false
             };
         }
 
@@ -47,16 +46,13 @@
 
         enableSpinner(): void {
                 this.setState({
-                    displaySpinner: {
-                    }
+                    displaySpinner: true
                 });
         }
 
         disableSpinner(): void {
             this.setState({
-                displaySpinner: {
-                    display:'none'
-                }
+                displaySpinner: false
             });
         }
 
@@ -82,17 +78,28 @@
             this.checkDownloadCookie(0);
         }
 
+        renderLoading() {
+            if (!this.state.displaySpinner) {
+                return null;
+            } else {
+                return (
+                    <span className="glyphicon glyphicon-refresh glyphicon-pad rotating" />
+                );
+            }
+        }
+
         render() {
             let brailleUrl = this.buildUrl(this.props.bankKey, this.props.itemKey);
             if (brailleUrl == "") {
                 return null;
-            } else { 
+            } else {
                 return (
-                    <a className="item-nav-btn" aria-live="polite" aria-relevant="additions removals"
-                        href={brailleUrl} download onClick={() => this.watchForDlStart()} >
+                    <a className={"item-nav-btn" } aria-live="polite" aria-relevant="additions removals"
+                        href={brailleUrl} download onClick={() => this.watchForDlStart()}
+                        disabled={this.state.displaySpinner}>
                         <span className="glyphicon glyphicon-download-alt glyphicon-pad" />
-                            Download Braille Embossing File(s)
-                        <span className="glyphicon glyphicon-refresh glyphicon-pad rotating" style={this.state.displaySpinner} />
+                        Download Braille Embossing File(s)
+                        {this.renderLoading()}
                         </a> 
                   );
             }

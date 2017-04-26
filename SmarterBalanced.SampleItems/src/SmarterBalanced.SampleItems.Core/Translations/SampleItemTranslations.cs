@@ -37,5 +37,16 @@ namespace SmarterBalanced.SampleItems.Core.Translations
 
             return vm;
         }
+
+        public static ItemIdentifier ToItemIdentifier(this SampleItem sampleItem)
+        {
+            var item = new ItemIdentifier(
+                    itemKey: sampleItem.ItemKey,
+                    itemName: sampleItem.ToString(),
+                    bankKey: sampleItem.BankKey);
+
+            return item;
+           
+        }
     }
 }

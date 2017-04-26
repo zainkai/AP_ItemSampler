@@ -120,8 +120,22 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return itemNames;
         }
 
+        public SampleItem GetAssoicatedBrailleItem(SampleItem item)
+        {
+            var matchingBraille = context.SampleItems
+                .FirstOrDefault(s => s.BrailleOnlyItem &&
+                    s.CopiedFromItem == item.ItemKey);
+
+            return matchingBraille;
+        }
+
         private ImmutableArray<SampleItem> GetAllAssociatedItems(SampleItem item)
         {
+            if (item.BrailleOnlyItem && item.CopiedFromItem.HasValue)
+            {
+                item = GetSampleItem(item.BankKey, item.CopiedFromItem.Value);
+            }
+
             var brailleItems = GetAssociatedBrailleItems(item);
             var associatedItems = GetAssociatedPerformanceItems(item);
             return brailleItems.Union(associatedItems).ToImmutableArray();
@@ -164,25 +178,16 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         private ImmutableArray<string> GetItemBrailleDirectories(SampleItem item)
         {
-            List<string> itemDirectories = new List<string>();
-            itemDirectories.Add(GetItemFtpDirectory(item));
             var associatedItems = GetAllAssociatedItems(item);
-            foreach (SampleItem associatedItem in associatedItems)
-            {
-                itemDirectories.Add(GetItemFtpDirectory(associatedItem));
-            }
-            if (item.IsPerformanceItem)
-            {
-                foreach (SampleItem associatedItem in GetAssociatedBrailleItems(item))
-                {
-                    itemDirectories.Add(GetItemFtpDirectory(associatedItem));
-                }
-            }
+            associatedItems.Add(item);
+
+            List<string> itemDirectories = associatedItems.Select(a => GetItemFtpDirectory(a)).ToList();
 
             if (item.AssociatedStimulus.HasValue)
             {
                 itemDirectories.Add(GetPassageFtpDirectory(item));
             }
+
             return itemDirectories.Distinct().ToImmutableArray();
         }
 
@@ -290,43 +295,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
 
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
-            ItemIdentifier brailleItem;
-            ItemIdentifier currentItem;
-            ItemIdentifier nonBrailleItem = new ItemIdentifier(
-                $"{bankKey}-{itemKey}",
-                bankKey,
-                itemKey);
+            var associatedBraille = GetAssoicatedBrailleItem(sampleItem);
 
-            //If any braille items were copied from this item we need to know which ones they are.
-            var matchingBrailleItems = context.SampleItems.Where(s => s.BrailleOnlyItem &&
-                sampleItem.ItemKey == s.CopiedFromItem);
-            if (matchingBrailleItems.Any())
-            {
-                //If there are multiple there is no way of knowing which is the correct one, so take the first.
-                var brailleBankKey = matchingBrailleItems.First().BankKey;
-                var brailleItemKey = matchingBrailleItems.First().ItemKey;
-                brailleItem = new ItemIdentifier(
-                    $"{brailleBankKey}-{brailleItemKey}",
-                    brailleBankKey,
-                    brailleItemKey);
-            }
-            else {
-                brailleItem = nonBrailleItem;
-            }
-
-            var brailleSelected = groups.Where(
-                g => g.AccessibilityResources.Where(
-                    r => r.ResourceCode == "BrailleType" && r.CurrentSelectionCode != "TDS_BT0").Any()).Any();
-
-            if (brailleSelected)
-            {
-                currentItem = brailleItem;
-            }
-            else
-            {
-                currentItem = nonBrailleItem;
-            }
-            
+            ItemIdentifier nonBrailleItem = sampleItem.ToItemIdentifier();
+            ItemIdentifier brailleItem = (associatedBraille ?? sampleItem).ToItemIdentifier();
 
             var itemViewModel = new ItemViewModel(
                 itemViewerServiceUrl: context.AppSettings.SettingsConfig.ItemViewerServiceURL,
@@ -334,7 +306,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 brailleItemNames: GetBrailleItemNames(sampleItem),
                 brailleItem: brailleItem,
                 nonBrailleItem: nonBrailleItem,
-                currentItem: currentItem,
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,
@@ -437,7 +408,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         public AboutThisItemViewModel GetAboutThisItemViewModel(int itemBank, int itemKey)
         {
             var sampleItem = context.SampleItems.FirstOrDefault(s => s.ItemKey == itemKey && s.BankKey == itemBank);
-            if(sampleItem == null)
+            if (sampleItem == null)
             {
                 throw new Exception($"invalid request for {itemBank}-{itemKey}");
             }

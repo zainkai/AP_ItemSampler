@@ -277,8 +277,10 @@ namespace ItemPage {
 
     export class Controller {
         constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {
+            this.itemProps.currentItem = isBrailleEnabled(this.itemProps.accResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
             this.fetchUpdatedAboutThisItem();
         }
+
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
             const newGroups: AccResourceGroup[] = [];
@@ -293,14 +295,15 @@ namespace ItemPage {
                 newGroup.accessibilityResources = newResources;
                 newGroups.push(newGroup);
             }
-            this.itemProps.currentItem = isBrailleEnabled(newGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
 
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newGroups;
-
             let cookieValue = toCookie(this.itemProps.accResourceGroups);
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", cookieValue, "; path=/");
+
+            this.itemProps.currentItem = isBrailleEnabled(newGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
             this.fetchUpdatedAboutThisItem();
+
             this.render();
         }
 
@@ -315,18 +318,19 @@ namespace ItemPage {
             this.itemProps.currentItem = this.itemProps.nonBrailleItem;
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
+
+            this.itemProps.currentItem = isBrailleEnabled(newAccResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
             this.fetchUpdatedAboutThisItem();
 
             this.render();
         }
 
         fetchUpdatedAboutThisItem() {
-            const itemNames = (isBrailleEnabled(this.itemProps.accResourceGroups)) ? this.itemProps.brailleItemNames : this.itemProps.itemNames;
-            const itemName = itemNames.split(",")[0].split("-");
+            const item = this.itemProps.currentItem;
 
             const params = {
-                bankKey: itemName[0],
-                itemKey: itemName[1]
+                bankKey: item.bankKey,
+                itemKey: item.itemKey
             };
 
             $.ajax({
