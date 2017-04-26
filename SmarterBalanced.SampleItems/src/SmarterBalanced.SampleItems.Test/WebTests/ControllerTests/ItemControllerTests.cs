@@ -83,20 +83,22 @@ namespace SmarterBalanced.SampleItems.Test.WebTests.ControllerTests
                 accResourceGroups: default(ImmutableArray<AccessibilityResourceGroup>),
                 subject: "MATH",
                 moreLikeThisVM: default(MoreLikeThisViewModel),
-                aboutThisItemVM: aboutThisItemVM,
                 brailleItemCodes: new ImmutableArray<string>(),
-                braillePassageCodes: new ImmutableArray<string>());
+                braillePassageCodes: new ImmutableArray<string>(),
+                brailleItem: null,
+                nonBrailleItem: null);
 
             itemViewModelCookie = new ItemViewModel(
                 itemViewerServiceUrl: string.Empty,
                 accessibilityCookieName: string.Empty,
                 isPerformanceItem: false,
                 subject: "MATH",
-                aboutThisItemVM: aboutItemCookie,
                 accResourceGroups: accessibilityResourceGroups.ToImmutableArray(),
                 moreLikeThisVM: default(MoreLikeThisViewModel),
                 brailleItemCodes: new ImmutableArray<string>(),
-                braillePassageCodes: new ImmutableArray<string>());
+                braillePassageCodes: new ImmutableArray<string>(),
+                brailleItem: null,
+                nonBrailleItem: null);
 
             var itemViewRepoMock = new Mock<IItemViewRepo>();
 
