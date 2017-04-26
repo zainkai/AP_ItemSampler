@@ -32,7 +32,8 @@ namespace SmarterBalanced.SampleItems.Core.Translations
              stimulusKey: sampleItem.AssociatedStimulus,
              ccssDesc: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
              targetDesc: sampleItem.CoreStandards?.TargetDescription,
-             publication: sampleItem.CoreStandards?.Publication);
+             publication: sampleItem.CoreStandards?.Publication,
+             depthOfKnowledge: sampleItem.DepthOfKnowledge);
 
             return vm;
         }

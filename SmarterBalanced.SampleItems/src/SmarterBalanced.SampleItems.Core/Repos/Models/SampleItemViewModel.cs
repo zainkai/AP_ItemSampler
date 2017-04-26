@@ -24,6 +24,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         public string Publication { get; }
         public string TargetDescription { get; }
         public string CcssDescription { get; }
+        public string DepthOfKnowledge { get; }
 
         public SampleItemViewModel(
         int bankKey,
@@ -42,7 +43,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         int? stimulusKey,
         string targetDescription,
         string ccssDescription,
-        string publication)
+        string publication,
+        string depthOfKnowledge)
         {
             BankKey = bankKey;
             ItemKey = itemKey;
@@ -61,6 +63,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             TargetDescription = targetDescription;
             CcssDescription = ccssDescription;
             Publication = publication;
+            DepthOfKnowledge = depthOfKnowledge;
         }
 
         /// <summary>
@@ -83,7 +86,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
            int? stimulusKey = null,
            string targetDesc = "",
            string ccssDesc = "",
-           string publication = "")
+           string publication = "",
+           string depthOfKnowledge = "")
         {
             return new SampleItemViewModel(
                 bankKey: bankKey,
@@ -102,7 +106,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 stimulusKey: stimulusKey,
                 ccssDescription: ccssDesc,
                 targetDescription: targetDesc,
-                publication: publication);
+                publication: publication,
+                depthOfKnowledge: depthOfKnowledge);
         }
 
     }
