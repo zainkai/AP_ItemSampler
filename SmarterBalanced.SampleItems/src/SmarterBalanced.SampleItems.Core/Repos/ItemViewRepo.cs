@@ -59,8 +59,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                     i.FieldTestUse != null &&
                     i.AssociatedStimulus == item.AssociatedStimulus &&
                     i.Grade == item.Grade && i.Subject?.Code == item.Subject?.Code)
-                .OrderByDescending(i => i.ItemKey == item.ItemKey)
-                .ThenBy(i => i.FieldTestUse?.Section)
+                .OrderBy(i => i.FieldTestUse?.Section)
                 .ThenBy(i => i.FieldTestUse?.QuestionNumber)
                 .ToList();
 
