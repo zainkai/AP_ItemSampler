@@ -57,27 +57,22 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             AppSettings settings)
         {
             var supportedPubs = settings.SettingsConfig.SupportedPublications;
-            var rubrics = GetRubrics(itemDigest, settings);
-            StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(itemDigest, supportedPubs);
-            CoreStandards coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
-
+            var rubrics = GetRubrics(itemDigest, settings);       
             var brailleItemCodes = GetBrailleItemCodes(itemDigest.ItemKey, brailleFileInfo);
             var braillePassageCodes = GetBraillePassageCodes(itemDigest, brailleFileInfo);
-
             var interactionType = interactionTypes.FirstOrDefault(t => t.Code == itemDigest.InteractionTypeCode);
             var grade = GradeLevelsUtils.FromString(itemDigest.GradeCode);
-
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
-
             var copiedItemPatch = patches.FirstOrDefault(p => p.BrailleCopiedId == itemDigest.ItemKey.ToString());
-
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
-            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
 
+            StandardIdentifier identifier = StandardIdentifierTranslation.ToStandardIdentifier(itemDigest, supportedPubs);
+            CoreStandards coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
             int? copiedFromItem = null;
+
             if (patch != null)
             {
                 int tmp;
@@ -96,6 +91,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 fieldTestUse = ApplyPatchFieldTestUse(fieldTestUse, patch);
             }
 
+            var claim = subject?.Claims.FirstOrDefault(t => t.ClaimNumber == coreStandards.ClaimId);
             bool brailleOnly = copiedFromItem.HasValue;
             bool isPerformance = fieldTestUse != null && itemDigest.AssociatedPassage.HasValue;
 
