@@ -44,14 +44,16 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         [HttpGet]
         public IActionResult ExportItems()
         {
-            var items = sampleItemsSearchRepo.GetSampleItemViewModels();
+            var baseUrl = Request.Host.ToString();
+            var items = sampleItemsSearchRepo.GetSampleItemViewModels(baseUrl);
             return Json(items);
         }
 
         [HttpGet]
         public IActionResult Export()
         {
-            var items = sampleItemsSearchRepo.GetSampleItemViewModels();
+            var baseUrl = Request.Host.ToString();
+            var items = sampleItemsSearchRepo.GetSampleItemViewModels(baseUrl);
             var csvStream = new MemoryStream();
             var writer = new StreamWriter(csvStream);
             var csv = new CsvWriter(writer);

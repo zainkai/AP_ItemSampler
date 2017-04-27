@@ -71,9 +71,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             };
         }
 
-        public IList<SampleItemViewModel> GetSampleItemViewModels()
+        public IList<SampleItemViewModel> GetSampleItemViewModels(string baseUrl)
         {
-            var items = context.SampleItems.Select(s => s.ToSampleItemViewModel()).ToList();
+            var items = context.SampleItems.Select(s => s.ToSampleItemViewModel(baseUrl)).ToList();
 
             return items;
         }

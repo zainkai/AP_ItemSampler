@@ -31,6 +31,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         [XmlElement("BrailleCopiedId")]
         public string BrailleCopiedId { get; set; }
-        
+
+        [XmlElement("DepthOfKnowledge")]
+        public string DepthOfKnowledge { get; set; }
     }
 }
