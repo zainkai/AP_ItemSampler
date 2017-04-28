@@ -33,9 +33,7 @@ namespace SmarterBalanced.SampleItems.Core.Translations
              stimulusKey: sampleItem.AssociatedStimulus,
              ccssDesc: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
              targetDesc: sampleItem.CoreStandards?.TargetDescription,
-             publication: sampleItem.CoreStandards?.Publication,
-             url : url);
-             publication: sampleItem.CoreStandards?.Publication,
+             url : url,
              depthOfKnowledge: sampleItem.DepthOfKnowledge);
 
             return vm;

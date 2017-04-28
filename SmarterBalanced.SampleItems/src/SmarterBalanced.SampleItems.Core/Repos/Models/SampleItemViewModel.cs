@@ -21,7 +21,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         public bool IsPerformanceItem { get; set; }
         public bool AslSupported { get; }
         public int? StimulusKey { get;}
-        public string Publication { get; }
         public string TargetDescription { get; }
         public string CcssDescription { get; }
         public string DepthOfKnowledge { get; }
@@ -44,9 +43,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         int? stimulusKey,
         string targetDescription,
         string ccssDescription,
-        string publication,
-        string url)
-        string publication,
+        string url,
         string depthOfKnowledge)
         {
             BankKey = bankKey;
@@ -65,7 +62,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             StimulusKey = stimulusKey;
             TargetDescription = targetDescription;
             CcssDescription = ccssDescription;
-            Publication = publication;
             DepthOfKnowledge = depthOfKnowledge;
             Url = url;
         }
@@ -90,9 +86,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
            int? stimulusKey = null,
            string targetDesc = "",
            string ccssDesc = "",
-           string publication = "",
-           string depthOfKnowledge = "")
-           string publication = "",
+           string depthOfKnowledge = "",
            string url = "")
         {
             return new SampleItemViewModel(
@@ -112,9 +106,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 stimulusKey: stimulusKey,
                 ccssDescription: ccssDesc,
                 targetDescription: targetDesc,
-                publication: publication,
-                url: url);
-                publication: publication,
+                url: url,
                 depthOfKnowledge: depthOfKnowledge);
         }
 
