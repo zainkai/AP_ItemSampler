@@ -65,6 +65,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             var patch = patches.FirstOrDefault(p => p.ItemId == itemDigest.ItemKey);
             var copiedItemPatch = patches.FirstOrDefault(p => p.BrailleCopiedId == itemDigest.ItemKey.ToString());
             var subject = subjects.FirstOrDefault(s => s.Code == itemDigest.SubjectCode);
+            var depthOfKnowledge = itemDigest.DepthOfKnowledge;
+            var itemType = itemDigest.ItemType;
 
             var fieldTestUseAttribute = itemDigest.ItemMetadataAttributes?.FirstOrDefault(a => a.Code == "itm_FTUse");
             var fieldTestUse = FieldTestUse.Create(fieldTestUseAttribute, itemDigest.SubjectCode);
@@ -77,6 +79,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             {
                 int tmp;
                 copiedFromItem = int.TryParse(patch.BrailleCopiedId, out tmp) ? (int?)tmp : null;
+                depthOfKnowledge = !string.IsNullOrEmpty(patch.DepthOfKnowledge) ? patch.DepthOfKnowledge : depthOfKnowledge;
+                itemType = !string.IsNullOrEmpty(patch.ItemType) ? patch.ItemType : itemType;
                 coreStandards = ApplyPatchToCoreStandards(identifier, coreStandards, standardsXml, patch);
             }
 
@@ -115,11 +119,11 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
             SampleItem sampleItem = new SampleItem(
-                itemType: itemDigest.ItemType,
+                itemType: itemType,
                 itemKey: itemDigest.ItemKey,
                 bankKey: itemDigest.BankKey,
                 targetAssessmentType: itemDigest.TargetAssessmentType,
-                depthOfKnowledge: itemDigest.DepthOfKnowledge,
+                depthOfKnowledge: depthOfKnowledge,
                 sufficentEvidenceOfClaim: itemDigest.SufficentEvidenceOfClaim,
                 associatedStimulus: itemDigest.AssociatedStimulus,
                 aslSupported: aslSupported,

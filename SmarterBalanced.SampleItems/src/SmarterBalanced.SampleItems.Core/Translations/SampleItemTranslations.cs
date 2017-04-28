@@ -10,10 +10,11 @@ namespace SmarterBalanced.SampleItems.Core.Translations
     public static class SampleItemTranslations
     {
 
-        public static SampleItemViewModel ToSampleItemViewModel(this SampleItem sampleItem)
+        public static SampleItemViewModel ToSampleItemViewModel(this SampleItem sampleItem, string baseUrl)
         {
             string claimTitle = (string.IsNullOrEmpty(sampleItem.Claim?.ClaimNumber)) ? string.Empty : $"Claim {sampleItem.Claim.ClaimNumber}";
             string title = $"{sampleItem.Subject?.ShortLabel} {sampleItem.Grade.ToDisplayString()} {claimTitle}";
+            string url = $"{baseUrl}/Item/Details?bankKey={sampleItem.BankKey}&itemKey={sampleItem.ItemKey}";
 
             var vm = SampleItemViewModel.Create(
              bankKey: sampleItem.BankKey,
@@ -32,6 +33,8 @@ namespace SmarterBalanced.SampleItems.Core.Translations
              stimulusKey: sampleItem.AssociatedStimulus,
              ccssDesc: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
              targetDesc: sampleItem.CoreStandards?.TargetDescription,
+             publication: sampleItem.CoreStandards?.Publication,
+             url : url);
              publication: sampleItem.CoreStandards?.Publication,
              depthOfKnowledge: sampleItem.DepthOfKnowledge);
 
