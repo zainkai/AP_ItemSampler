@@ -99,6 +99,16 @@ namespace ItemPage {
         return false;
     }
 
+    export function isStreamlinedEnabled(accResourceGroups: AccResourceGroup[]): boolean {
+        const resource = getResource("StreamlinedInterface", accResourceGroups);
+        if (resource && !resource.currentSelectionCode.endsWith("0")) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
@@ -212,7 +222,8 @@ namespace ItemPage {
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
             const itemNames = (isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, "&scrollToId=", this.props.currentItem.itemName);
+            let scrollTo: string = isStreamlinedEnabled(this.props.accResourceGroups) ? "" : ("&scrollToId=").concat(this.props.currentItem.itemName);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, scrollTo);
 
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
