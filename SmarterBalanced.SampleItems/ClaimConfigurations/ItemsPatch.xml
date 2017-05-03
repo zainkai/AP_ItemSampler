@@ -6,7 +6,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Fluently add and subtract within 1000 using strategies and algorithms based on place value, properties of operations, and/or the relationship between addition and subtraction.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Fluently add and subtract within 1000 using strategies and algorithms based on place value, properties of operations, and/or the relationship between addition and subtraction.,Use the four operations to solve word problems involving distances, intervals of time, liquid volumes, masses of objects, and money, including problems involving simple fractions or decimals, and problems that require expressing measurements given in a larger unit in terms of a smaller unit. Represent measurement quantities using diagrams such as number line diagrams that feature a measurement scale.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -16,7 +16,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Multiply one-digit whole numbers by multiples of 10 in the range 10–90 (e.g., 9 × 80, 5 × 60) using strategies based on place value and properties of operations.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Solve multistep word problems posed with whole numbers and having whole-number answers using the four operations, including problems in which remainders must be interpreted. Represent these problems using equations with a letter standing for the unknown quantity. Assess the reasonableness of answers using mental computation and estimation strategies including rounding.,Use the four operations to solve word problems involving distances, intervals of time, liquid volumes, masses of objects, and money, including problems involving simple fractions or decimals, and problems that require expressing measurements given in a larger unit in terms of a smaller unit. Represent measurement quantities using diagrams such as number line diagrams that feature a measurement scale.</CCSSDesc>
 		<ItemType>TI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -26,7 +26,7 @@
 		<Claim>Math4</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Interpret functions that arise in applications in terms of the context.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Solve multistep word problems posed with whole numbers and having whole-number answers using the four operations, including problems in which remainders must be interpreted. Represent these problems using equations with a letter standing for the unknown quantity. Assess the reasonableness of answers using mental computation and estimation strategies including rounding.,Use the four operations to solve word problems involving distances, intervals of time, liquid volumes, masses of objects, and money, including problems involving simple fractions or decimals, and problems that require expressing measurements given in a larger unit in terms of a smaller unit. Represent measurement quantities using diagrams such as number line diagrams that feature a measurement scale.</CCSSDesc>
 		<ItemType>SA</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -46,7 +46,7 @@
 		<Claim>Math4</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Create equations in two variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -66,7 +66,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Graph square root, cube root, and piecewise-defined functions, including step functions and absolute value functions.</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -76,7 +76,7 @@
 		<Claim>Math4</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Fit a linear function for a scatter plot that suggests a linear association.</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -86,7 +86,7 @@
 		<Claim>Math4</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Not Applicable,Build new functions from existing functions.</CCSSDesc>
+		<CCSSDesc>Create equations in two variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -106,7 +106,7 @@
 		<Claim>Math4</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Create equations in two variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -166,7 +166,7 @@
 		<Claim>Math4</Claim>
 		<Target>E</Target>
 		<TargetDesc>Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Apply the area and perimeter formulas for rectangles in real world and mathematical problems. For example, find the width of a rectangular room given the area of the flooring and the length, by viewing the area formula as a multiplication equation with an unknown factor.</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -176,7 +176,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Solve word problems involving addition and subtraction of fractions referring to the same whole, including cases of unlike denominators, e.g., by using visual fraction models or equations to represent the problem. Use benchmark fractions and number sense of fractions to estimate mentally and assess the reasonableness of answers. For example, recognize an incorrect result 2/5 + 1/2 = 3/7, by observing that 3/7 &lt; 1/2.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -196,7 +196,7 @@
 		<Claim>Math3</Claim>
 		<Target>C</Target>
 		<TargetDesc>State logical assumptions being used.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Create equations in two variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -286,10 +286,10 @@
 		<Claim>Math4</Claim>
 		<Target>E</Target>
 		<TargetDesc>Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Apply the area and perimeter formulas for rectangles in real world and mathematical problems. For example, find the width of a rectangular room given the area of the flooring and the length, by viewing the area formula as a multiplication equation with an unknown factor.</CCSSDesc>
 		<ItemType>A</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
-				<BrailleCopiedId>1490</BrailleCopiedId>
+		<BrailleCopiedId>1490</BrailleCopiedId>
 
 	</row>
 	<row>
@@ -298,10 +298,10 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Interpret functions that arise in applications in terms of the context.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
-				<BrailleCopiedId>1484</BrailleCopiedId>
+		<BrailleCopiedId>1484</BrailleCopiedId>
 
 	</row>
 	<row>
@@ -310,7 +310,7 @@
 		<Claim>Math4</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc/>
+		<CCSSDesc>Fit a linear function for a scatter plot that suggests a linear association.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -755,7 +755,7 @@
 		<Grade>6</Grade>
 		<Claim>Math1</Claim>
 		<Target>C</Target>
-		<TargetDesc>Compute fluently with muti-digit numbers and find common factors and multiples.</TargetDesc>
+		<TargetDesc>Compute fluently with multi-digit numbers and find common factors and multiples.</TargetDesc>
 		<CCSSDesc>Fluently divide multi-digit numbers using the standard algorithm.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>1</DepthOfKnowledge>
@@ -786,7 +786,7 @@
 		<Claim>Math4</Claim>
 		<Target>D</Target>
 		<TargetDesc>Interpret results in the context of a situation.</TargetDesc>
-		<CCSSDesc>Not Applicable,Draw a scaled picture graph and a scaled bar graph to represent a data set with several categories. Solve one- and two-step “how many more” and “how many less” problems using information presented in scaled bar graphs. For example, draw a bar graph in which each square in the bar graph might represent 5 pets.</CCSSDesc>
+		<CCSSDesc>Draw a scaled picture graph and a scaled bar graph to represent a data set with several categories. Solve one- and two-step “how many more” and “how many less” problems using information presented in scaled bar graphs. For example, draw a bar graph in which each square in the bar graph might represent 5 pets.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -1036,7 +1036,7 @@
 		<Claim>Math4</Claim>
 		<Target>F</Target>
 		<TargetDesc>Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).</TargetDesc>
-		<CCSSDesc>Not Applicable,Not Applicable,Create equations in two or more variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.</CCSSDesc>
+		<CCSSDesc>Create equations in two or more variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -1086,7 +1086,7 @@
 		<Claim>Math3</Claim>
 		<Target>D</Target>
 		<TargetDesc>Use the technique of breaking an argument into cases.</TargetDesc>
-		<CCSSDesc>Use informal arguments to establish facts about the angle sum and exterior angle of triangles, about the angles created when parallel lines are cut by a transversal, and the angle-angle criterion for similarity of triangles. For example, arrange three copies of the same triangle so that the sum of the three angles appears to form a line, and give an argument in terms of transversals why this is so.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Use informal arguments to establish facts about the angle sum and exterior angle of triangles, about the angles created when parallel lines are cut by a transversal, and the angle-angle criterion for similarity of triangles. For example, arrange three copies of the same triangle so that the sum of the three angles appears to form a line, and give an argument in terms of transversals why this is so.</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -1106,7 +1106,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Not Applicable,Solve systems of equations.</CCSSDesc>
+		<CCSSDesc>Solve systems of equations</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -1186,7 +1186,7 @@
 		<Claim>Math3</Claim>
 		<Target>D</Target>
 		<TargetDesc>Use the technique of breaking an argument into cases.</TargetDesc>
-		<CCSSDesc>Understand a fraction 1/b as the quantity formed by 1 part when a whole is partitioned into b equal parts; understand a fraction a/b as the quantity formed by a parts of size 1/b.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Understand a fraction 1/b as the quantity formed by 1 part when a whole is partitioned into b equal parts; understand a fraction a/b as the quantity formed by a parts of size 1/b.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -1346,7 +1346,7 @@
 		<Claim>Math3</Claim>
 		<Target>A</Target>
 		<TargetDesc>Test propositions or conjectures with specific examples.</TargetDesc>
-		<CCSSDesc>Prove theorems about parallelograms. Theorems include: opposite sides are congruent, opposite angles are congruent, the diagonals of a parallelogram bisect each other, and conversely, rectangles are parallelograms with congruent diagonals.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Prove theorems about parallelograms. Theorems include: opposite sides are congruent, opposite angles are congruent, the diagonals of a parallelogram bisect each other, and conversely, rectangles are parallelograms with congruent diagonals.</CCSSDesc>
 		<ItemType>MS</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -1416,7 +1416,7 @@
 		<Claim>Math2</Claim>
 		<Target>C</Target>
 		<TargetDesc>Interpret results in the context of a situation.</TargetDesc>
-		<CCSSDesc>Use a pair of perpendicular number lines, called axes, to define a coordinate system, with the intersection of the lines (the origin) arranged to coincide with the 0 on each line and a given point in the plane located by using an ordered pair of numbers, called its coordinates. Understand that the first number indicates how far to travel from the origin in the direction of one axis, and the second number indicates how far to travel in the direction of the second axis, with the convention that the names of the two axes and the coordinates correspond (e.g., x-axis and x-coordinate, y-axis and y-coordinate).,Not Applicable</CCSSDesc>
+		<CCSSDesc>Use a pair of perpendicular number lines, called axes, to define a coordinate system, with the intersection of the lines (the origin) arranged to coincide with the 0 on each line and a given point in the plane located by using an ordered pair of numbers, called its coordinates. Understand that the first number indicates how far to travel from the origin in the direction of one axis, and the second number indicates how far to travel in the direction of the second axis, with the convention that the names of the two axes and the coordinates correspond (e.g., x-axis and x-coordinate, y-axis and y-coordinate).</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -1446,7 +1446,7 @@
 		<Claim>Math4</Claim>
 		<Target>F</Target>
 		<TargetDesc>Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).</TargetDesc>
-		<CCSSDesc>Use proportional relationships to solve multistep ratio and percent problems. Examples: simple interest, tax, markups and markdowns, gratuities and commissions, fees, percent increase and decrease, percent error.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Use proportional relationships to solve multistep ratio and percent problems. Examples: simple interest, tax, markups and markdowns, gratuities and commissions, fees, percent increase and decrease, percent error.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -1506,7 +1506,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Multiply a whole number of up to four digits by a one-digit whole number, and multiply two two-digit numbers, using strategies based on place value and the properties of operations. Illustrate and explain the calculation by using equations, rectangular arrays, and/or area models.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Multiply a whole number of up to four digits by a one-digit whole number, and multiply two two-digit numbers, using strategies based on place value and the properties of operations. Illustrate and explain the calculation by using equations, rectangular arrays, and/or area models.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -1696,7 +1696,7 @@
 		<Claim>Math4</Claim>
 		<Target>F</Target>
 		<TargetDesc>Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).</TargetDesc>
-		<CCSSDesc>Understand a fraction a/b with a &gt; 1 as a sum of fractions 1/b.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Understand a fraction a/b with a &gt; 1 as a sum of fractions 1/b.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -1716,7 +1716,7 @@
 		<Claim>Math3</Claim>
 		<Target>E</Target>
 		<TargetDesc>Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.</TargetDesc>
-		<CCSSDesc>Solve linear equations and inequalities in one variable, including equations with coefficients represented by letters.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Solve linear equations and inequalities in one variable, including equations with coefficients represented by letters.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -1896,7 +1896,7 @@
 		<Claim>Math4</Claim>
 		<Target>E</Target>
 		<TargetDesc>Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.</TargetDesc>
-		<CCSSDesc>Use variables to represent quantities in a real-world or mathematical problem, and construct simple equations and inequalities to solve problems by reasoning about the quantities.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Use variables to represent quantities in a real-world or mathematical problem, and construct simple equations and inequalities to solve problems by reasoning about the quantities.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -2036,7 +2036,7 @@
 		<Claim>Math2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Not Applicable,Solve real-world and mathematical problems involving area, volume and surface area of two- and three-dimensional objects composed of triangles, quadrilaterals, polygons, cubes, and right prisms.</CCSSDesc>
+		<CCSSDesc>Solve real-world and mathematical problems involving area, volume and surface area of two- and three-dimensional objects composed of triangles, quadrilaterals, polygons, cubes, and right prisms.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2166,7 +2166,7 @@
 		<Claim>Math3</Claim>
 		<Target>B</Target>
 		<TargetDesc>Construct, autonomously, chains of reasoning that will justify or refute propositions or conjectures.</TargetDesc>
-		<CCSSDesc>Fluently multiply multi-digit whole numbers using the standard algorithm.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Fluently multiply multi-digit whole numbers using the standard algorithm.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2256,7 +2256,7 @@
 		<Claim>Math3</Claim>
 		<Target>E</Target>
 		<TargetDesc>Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.</TargetDesc>
-		<CCSSDesc>Apply properties of operations as strategies to add, subtract, factor, and expand linear expressions with rational coefficients.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Apply properties of operations as strategies to add, subtract, factor, and expand linear expressions with rational coefficients.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2506,7 +2506,7 @@
 		<Claim>Math3</Claim>
 		<Target>F</Target>
 		<TargetDesc>Base arguments on concrete referents such as objects, drawings, diagrams, and actions.</TargetDesc>
-		<CCSSDesc>Classify two-dimensional figures into categories based on their properties.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Classify two-dimensional figures into categories based on their properties.</CCSSDesc>
 		<ItemType>MI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2526,7 +2526,7 @@
 		<Claim>Math3</Claim>
 		<Target>F</Target>
 		<TargetDesc>Base arguments on concrete referents such as objects, drawings, diagrams, and actions.</TargetDesc>
-		<CCSSDesc>Tell and write time to the nearest minute and measure time intervals in minutes. Solve word problems involving addition and subtraction of time intervals in minutes, e.g., by representing the problem on a number line diagram.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Tell and write time to the nearest minute and measure time intervals in minutes. Solve word problems involving addition and subtraction of time intervals in minutes, e.g., by representing the problem on a number line diagram.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2566,7 +2566,7 @@
 		<Claim>Math2</Claim>
 		<Target>C</Target>
 		<TargetDesc>Interpret results in the context of a situation.</TargetDesc>
-		<CCSSDesc>Not Applicable</CCSSDesc>
+		<CCSSDesc>Represent and solve problems involving multiplication and division., Work with equal groups of objects to gain foundations for multiplication.</CCSSDesc>
 		<ItemType>MI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2586,7 +2586,7 @@
 		<Claim>Math3</Claim>
 		<Target>D</Target>
 		<TargetDesc>Use the technique of breaking an argument into cases.</TargetDesc>
-		<CCSSDesc>Understand ordering and absolute value of rational numbers.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Understand ordering and absolute value of rational numbers.</CCSSDesc>
 		<ItemType>MI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2596,7 +2596,7 @@
 		<Claim>Math2</Claim>
 		<Target>C</Target>
 		<TargetDesc>Interpret results in the context of a situation.</TargetDesc>
-		<CCSSDesc>Fluently add and subtract within 1000 using strategies and algorithms based on place value, properties of operations, and/or the relationship between addition and subtraction.,Not Applicable</CCSSDesc>
+		<CCSSDesc>Fluently add and subtract within 1000 using strategies and algorithms based on place value, properties of operations, and/or the relationship between addition and subtraction.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -2606,7 +2606,7 @@
 		<Claim>Math4</Claim>
 		<Target>E</Target>
 		<TargetDesc>Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.</TargetDesc>
-		<CCSSDesc>Not Applicable,Use functions to model relationships between quantities.</CCSSDesc>
+		<CCSSDesc>Use functions to model relationships between quantities.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
 	</row>
@@ -3376,7 +3376,7 @@
 		<Claim>ELA1</Claim>
 		<Target>3</Target>
 		<TargetDesc>WORD MEANINGS: Determine intended meanings of words, including words with multiple meanings (academic/tier 2 words), based on context, word relationships, word structure (e.g., common roots, affixes), or use of resources (e.g., beginning dictionary)</TargetDesc>
-		<CCSSDesc>Determine the meaning of words and phrases as they are used in a text, distinguishing literal from nonliteral language.</CCSSDesc>
+		<CCSSDesc>Determine the meaning of words and phrases as they are used in a text, distinguishing literal from non-literal language.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -3436,7 +3436,7 @@
 		<Claim>ELA1</Claim>
 		<Target>7</Target>
 		<TargetDesc>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</TargetDesc>
-		<CCSSDesc>Determine the meaning of words and phrases as they are used in a text, distinguishing literal from nonliteral language.</CCSSDesc>
+		<CCSSDesc>Determine the meaning of words and phrases as they are used in a text, distinguishing literal from non-literal language.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -4099,7 +4099,7 @@
 		<CCSSDesc>Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences. A) Engage and orient the reader by establishing a context and introducing a narrator and/or characters; organize an event sequence that unfolds naturally and logically.</CCSSDesc>
 		<ItemType>WER</ItemType>
 		<DepthOfKnowledge>4</DepthOfKnowledge>
-				<Section>4</Section>
+		<Section>4</Section>
 
 	</row>
 	<row>
@@ -4863,8 +4863,8 @@
 		<Grade>Grade 3</Grade>
 		<Claim>ELA1</Claim>
 		<Target>14</Target>
-		<TargetDesc>LANGUAGE USE: Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context</TargetDesc>
-		<CCSSDesc>Demonstrate understanding of word relationships and nuances in word meanings. A) Distinguish the literal and nonliteral meanings of words and phrases in context (e.g., take steps).</CCSSDesc>
+		<TargetDesc>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</TargetDesc>
+		<CCSSDesc>Demonstrate understanding of word relationships and nuances in word meanings. A) Distinguish the literal and non-literal meanings of words and phrases in context (e.g., take steps).</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -4933,7 +4933,7 @@
 		<Grade>Grade 7</Grade>
 		<Claim>ELA1</Claim>
 		<Target>7</Target>
-		<TargetDesc>LANGUAGE USE: Interpret impact or intent of figurative language use (e.g., alliteration, onomatopoeia, imagery), literary devices (e.g., flashback, forshadowing), or connotative meanings of words and phrases used in context and their impact on reader interpretation</TargetDesc>
+		<TargetDesc>LANGUAGE USE: Interpret impact or intent of figurative language use (e.g., alliteration, onomatopoeia, imagery), literary devices (e.g., flashback, foreshadowing), or connotative meanings of words and phrases used in context and their impact on reader interpretation</TargetDesc>
 		<CCSSDesc>Determine the meaning of words and phrases as they are used in a text, including figurative and connotative meanings; analyze the impact of rhymes and other repetitions of sounds (e.g., alliteration) on a specific verse or stanza of a poem or section of a story or drama.</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>3</DepthOfKnowledge>
@@ -4993,8 +4993,8 @@
 		<Grade>Grade 3</Grade>
 		<Claim>ELA1</Claim>
 		<Target>14</Target>
-		<TargetDesc>LANGUAGE USE: Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context</TargetDesc>
-		<CCSSDesc>Distinguish the literal and nonliteral meanings of words and phrases in context (e.g., take steps).</CCSSDesc>
+		<TargetDesc>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</TargetDesc>
+		<CCSSDesc>Distinguish the literal and non-literal meanings of words and phrases in context (e.g., take steps).</CCSSDesc>
 		<ItemType>MC</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
