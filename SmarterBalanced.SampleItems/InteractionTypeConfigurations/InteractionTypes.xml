@@ -71,15 +71,6 @@
       </Description>
       <Order>2</Order>
     </Item>
-    <Item>
-      <Code>ER</Code>
-      <Label>Extended Response</Label>
-      <Description>
-        <![CDATA[<p>The Extended Response item type has a text box for a response area and requires a keyboard entry of alphanumeric characters. 
-              This item type allows for a longer response than the Short Answer item type.</p>]]>
-      </Description>
-      <Order>3</Order>
-    </Item>
 
     <Item>
       <Code>HTQ</Code>
@@ -146,7 +137,6 @@
       <SubjectCode>ELA</SubjectCode>
       <InteractionTypeCodes>
         <Code>EBSR</Code>
-        <Code>ER</Code>
         <Code>SA</Code>
         <Code>HTQ</Code>
         <Code>MC</Code>
@@ -165,7 +155,6 @@
         <Code>MI</Code>
         <Code>MS</Code>
         <Code>TI</Code>
-        <Code>ER</Code>
         <Code>SA</Code>
       </InteractionTypeCodes>
     </Family>
@@ -174,9 +163,7 @@
       <InteractionTypeCodes>
         <Code>EQ</Code>
         <Code>TI</Code>
-        <Code>ER</Code>
         <Code>EBSR</Code>
-        <Code>ER</Code>
         <Code>SA</Code>
         <Code>HTQ</Code>
         <Code>MC</Code>
