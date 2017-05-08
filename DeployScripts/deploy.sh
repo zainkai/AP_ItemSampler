@@ -7,7 +7,7 @@ ClusterName=$2
 Region="us-west-2"
 aws ecr get-login --region $Region | source /dev/stdin
 
-cd /publish/
+cd publish/
 mkdir content
 wget "$CONTENT_PACKAGE_URL" -O content.zip
 unzip -o content.zip -d content/ &> /dev/null
