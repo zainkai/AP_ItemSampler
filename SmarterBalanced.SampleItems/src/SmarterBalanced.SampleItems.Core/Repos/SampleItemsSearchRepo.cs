@@ -29,17 +29,17 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         public IList<ItemCardViewModel> GetItemCards(ItemsSearchParams parms)
         {
+            var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA && !i.BrailleOnlyItem);
+
             if (parms == null)
             {
-                return context.ItemCards;
+                return query.ToList();
             }
                 
-            var query = context.ItemCards.Where(i => i.Grade != GradeLevels.NA);
-
             int itemId;
             if (int.TryParse(parms.ItemId, out itemId))
             {
-                query = context.ItemCards.Where(i => i.ItemKey.ToString().StartsWith(itemId.ToString()));
+                query = query.Where(i => i.ItemKey.ToString().StartsWith(itemId.ToString()));
             }
 
             if (parms.Grades != GradeLevels.All && parms.Grades != GradeLevels.NA)
@@ -71,9 +71,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             };
         }
 
-        public IList<SampleItemViewModel> GetSampleItemViewModels()
+        public IList<SampleItemViewModel> GetSampleItemViewModels(string baseUrl)
         {
-            var items = context.SampleItems.Select(s => s.ToSampleItemViewModel()).ToList();
+            var items = context.SampleItems.Select(s => s.ToSampleItemViewModel(baseUrl)).ToList();
 
             return items;
         }

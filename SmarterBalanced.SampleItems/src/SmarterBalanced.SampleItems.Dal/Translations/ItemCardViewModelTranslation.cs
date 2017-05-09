@@ -26,7 +26,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 target: sampleItem.CoreStandards?.TargetIdLabel,
                 interactionTypeCode: sampleItem.InteractionType?.Code,
                 interactionTypeLabel: sampleItem.InteractionType?.Label,
-                isPerformanceItem: sampleItem.IsPerformanceItem);
+                isPerformanceItem: sampleItem.IsPerformanceItem,
+                brailleOnlyitem: sampleItem.BrailleOnlyItem);
 
             return card;
         }

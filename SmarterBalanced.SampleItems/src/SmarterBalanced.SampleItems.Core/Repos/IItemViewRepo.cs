@@ -21,5 +21,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         AboutThisItemViewModel GetAboutThisItemViewModel(SampleItem sampleItem);
 
         Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode);
+        string GenerateBrailleZipName(int itemId, string brailleCode);
+
+        AboutThisItemViewModel GetAboutThisItemViewModel(int itemBank, int itemKey);
+
     }
 }

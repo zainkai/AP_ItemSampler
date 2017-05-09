@@ -46,5 +46,9 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
 
         [XmlElement("MaximumNumberOfPoints")]
         public int? MaximumNumberOfPoints { get; set; }
+
+        [XmlElement("SmarterAppItemDescriptor")]
+        public string SmarterAppItemDescriptor { get; set; }
+
     }
 }

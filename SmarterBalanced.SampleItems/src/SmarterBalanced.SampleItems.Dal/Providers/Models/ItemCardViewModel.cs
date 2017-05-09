@@ -19,7 +19,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string Target { get; }
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
-        public bool IsPerformanceItem { get; set; }
+        public bool IsPerformanceItem { get; }
+        public bool BrailleOnlyItem { get;}
         public ItemCardViewModel(
             int bankKey,
             int itemKey,
@@ -33,7 +34,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string target,
             string interactionTypeCode,
             string interactionTypeLabel,
-            bool isPerformanceItem)
+            bool isPerformanceItem,
+            bool brailleOnlyItem)
         {
             BankKey = bankKey;
             ItemKey = itemKey;
@@ -48,6 +50,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             InteractionTypeCode = interactionTypeCode;
             InteractionTypeLabel = interactionTypeLabel;
             IsPerformanceItem = isPerformanceItem;
+            BrailleOnlyItem = brailleOnlyItem;
         }
 
         /// <summary>
@@ -66,7 +69,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string target = "",
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
-           bool isPerformanceItem = false)
+           bool isPerformanceItem = false,
+           bool brailleOnlyitem = false)
         {
             return new ItemCardViewModel(
                 bankKey: bankKey,
@@ -81,7 +85,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 target: target,
                 interactionTypeCode: interactionTypeCode,
                 interactionTypeLabel: interactionTypeLabel,
-                isPerformanceItem: isPerformanceItem);
+                isPerformanceItem: isPerformanceItem,
+                brailleOnlyItem: brailleOnlyitem);
         }
 
     }

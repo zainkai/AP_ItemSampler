@@ -15,13 +15,14 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
     public class ItemViewRepoTests
     {
-        SampleItem MathDigest, ElaDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate;
+        SampleItem MathDigest, ElaDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate, BrailleItem, BrailleItemDuplicate, BrailleItemReplace;
 
         Subject Math, Ela, NotASubject;
         Claim Claim1, Claim2;
         ImmutableArray<SampleItem> SampleItems;
         ItemViewRepo ItemViewRepo;
         SampleItemsContext Context;
+        FieldTestUse fieldTestUseVar;
         int GoodItemKey;
         int BadItemKey;
         int GoodBankKey;
@@ -44,7 +45,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             MathDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
             ElaDigest = SampleItem.Create(bankKey: BadBankKey, itemKey: BadItemKey);
 
-            var fieldTestUseVar = new FieldTestUse();
+            fieldTestUseVar = new FieldTestUse();
             fieldTestUseVar.Code = "ELA";
             fieldTestUseVar.QuestionNumber = 1;
 
@@ -54,7 +55,26 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             PerformanceDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: 209, isPerformanceItem: true, associatedStimulus: 1, fieldTestUse: fieldTestUseVar);
             PerformanceDigestDuplicate = SampleItem.Create(bankKey: DuplicateBankKey, itemKey: 210, isPerformanceItem: true, associatedStimulus: 1, fieldTestUse: fieldTestUseVar);
 
-            SampleItems = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate);
+            BrailleItem = SampleItem.Create(bankKey: GoodBankKey, itemKey: 211, isPerformanceItem: true, associatedStimulus: 1,
+                fieldTestUse: fieldTestUseVar,
+                brailleOnlyItem: false,
+                brailleItemCodes: ImmutableArray.Create("123"),
+                braillePassageCodes: ImmutableArray.Create("123"));
+
+            BrailleItemDuplicate = SampleItem.Create(bankKey: DuplicateBankKey, itemKey: 212, isPerformanceItem: true, associatedStimulus: 1,
+                fieldTestUse: fieldTestUseVar,
+                brailleOnlyItem: false,
+                brailleItemCodes: ImmutableArray.Create("123"),
+                braillePassageCodes: ImmutableArray.Create("123"));
+
+            BrailleItemReplace = SampleItem.Create(bankKey: DuplicateBankKey, itemKey: 213, isPerformanceItem: true, associatedStimulus: 2,
+                fieldTestUse: fieldTestUseVar,
+                brailleOnlyItem: true,
+                brailleItemCodes: ImmutableArray.Create("123"),
+                braillePassageCodes: ImmutableArray.Create("123"),
+                copiedFromItem: 211);
+
+            SampleItems = ImmutableArray.Create(MathDigest, ElaDigest, DuplicateDigest, DuplicateDigest, DuplicateDigest, PerformanceDigest, PerformanceDigestDuplicate, BrailleItem, BrailleItemDuplicate, BrailleItemReplace);
             var itemCards = ImmutableArray.Create(MathCard, ElaCard, DuplicateCard, DuplicateCard, DuplicateCard);
 
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
@@ -126,25 +146,25 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         public void TestGetItemUrl()
         {
             var result = ItemViewRepo.GetSampleItem(GoodBankKey, GoodItemKey);
-            var url = ItemViewRepo.GetItemViewerUrl(result);
+            var url = ItemViewRepo.GetItemNames(result);
 
             Assert.NotNull(url);
-            Assert.Equal("/items?ids=1-4", url);
+            Assert.Equal("1-4", url);
         }
 
         [Fact]
         public void TestGetItemUrlMultiple()
         {
-            var url = ItemViewRepo.GetItemViewerUrl(PerformanceDigest);
+            var url = ItemViewRepo.GetItemNames(PerformanceDigest);
 
             Assert.NotNull(url);
-            Assert.Equal("/items?ids=1-209,5-210", url);
+            Assert.Equal("1-209,5-210,1-211,5-212", url);
         }
 
         [Fact]
         public void TestGetItemUrlNull()
         {
-            var url = ItemViewRepo.GetItemViewerUrl(null);
+            var url = ItemViewRepo.GetItemNames(null);
             Assert.Equal(string.Empty, url);
         }
 
@@ -234,23 +254,14 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
 
         }
 
-        [Fact(Skip = "ToDo")]
+        [Fact]
         public void TestGetAboutThisItemViewModelGoodItem()
         {
-             var rubricEntries = new List<RubricEntry>()
+            var rubricEntry = new RubricEntry
             {
-                new RubricEntry
-                {
-                        Scorepoint = "0",
-                        Name = "TestName",
-                        Value = "TestValue"
-                },
-                new RubricEntry
-                {
-                        Scorepoint = "1",
-                        Name = "TestName1",
-                        Value = "TestValue1"
-                }
+                Scorepoint = "0",
+                Name = "TestName",
+                Value = "TestValue"
             };
 
             var sampleResponces = new List<SampleResponse>()
@@ -271,28 +282,32 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
                 }
             };
 
-            var rubricSamples = new List<RubricSample>()
+            var rubricSample = new RubricSample
             {
-                 new RubricSample
-                 {
-                        MaxValue = "MaxVal",
-                        MinValue = "MinVal",
-                        SampleResponses = sampleResponces
-                 },
-                 new RubricSample
-                 {
-                        MaxValue = "MaxVal1",
-                        MinValue = "MinVal1",
-                        SampleResponses = new List<SampleResponse>()
-                 }
+                MaxValue = "MaxVal",
+                MinValue = "MinVal",
+                SampleResponses = sampleResponces
             };
-            var entries = ImmutableArray.Create(rubricEntries);
-            var samples = ImmutableArray.Create(rubricSamples);
 
-            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(PerformanceDigest);
+            var entries = ImmutableArray.Create(rubricEntry);
+            var samples = ImmutableArray.Create(rubricSample);
+            var rubric = new Rubric("ENU", entries, samples);
+            var rubrics = ImmutableArray.Create(rubric);
+            SampleItem item = SampleItem.Create(
+                bankKey: GoodBankKey,
+                itemKey: 209,
+                isPerformanceItem: true,
+                associatedStimulus: 1,
+                fieldTestUse: fieldTestUseVar,
+                rubrics: rubrics,
+                depthOfKnowledge: "TestDepth");
+
+            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(item);
 
             Assert.NotNull(aboutThisItemViewModel);
-
+            Assert.Equal(aboutThisItemViewModel.Rubrics.Length, 1);
+            Assert.Equal(aboutThisItemViewModel.Rubrics[0], rubric);
+            Assert.Equal(aboutThisItemViewModel.DepthOfKnowledge, "TestDepth");
         }
 
         [Fact]
@@ -301,6 +316,41 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(null);
 
             Assert.Null(aboutThisItemViewModel);
+        }
+
+        #endregion
+
+        #region BrailleItems
+        [Fact]
+        public void TestGoodGetItemNames()
+        {
+            var item = ItemViewRepo.GetItemNames(PerformanceDigest);
+            var associatedItems = ItemViewRepo.GetAssociatedPerformanceItems(PerformanceDigest).Select(i => i.ToString());
+
+            Assert.True(item.Contains(associatedItems.ElementAt(0)));
+            Assert.True(item.Contains(associatedItems.ElementAt(1)));
+        }
+
+        [Fact]
+        public void TestBadGetItemNames()
+        {
+            var item = ItemViewRepo.GetItemNames(null);
+
+            Assert.Equal(item, string.Empty);
+        }
+
+        [Fact]
+        public void TestGetBrailleItemNames()
+        {
+            var item = ItemViewRepo.GetBrailleItemNames(BrailleItem);
+            var associatedItems = ItemViewRepo.GetAssociatedBrailleItems(BrailleItem).Select(i => i.ToString());
+
+            Assert.Equal(associatedItems.Count(), 4);
+            Assert.True(item.Contains(associatedItems.ElementAt(0)));
+            Assert.True(item.Contains(associatedItems.ElementAt(1)));
+            Assert.True(item.Contains(associatedItems.ElementAt(2)));
+            Assert.True(item.Contains(associatedItems.ElementAt(3)));
+            Assert.False(item.Contains("1-211"));
         }
         #endregion
     }

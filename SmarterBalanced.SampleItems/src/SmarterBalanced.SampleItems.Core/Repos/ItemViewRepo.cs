@@ -40,25 +40,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// Constructs an itemviewerservice URL to access the 
         /// item corresponding to the given SampleItem.
         /// </summary>
-        public string GetItemViewerUrl(SampleItem item)
+        public string GetItemViewerUrl()
         {
-            string items;
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
-            if (item == null)
-            {
-                return string.Empty;
-            }
-
-            if (item.IsPerformanceItem)
-            {
-                items = string.Join(",", GetPeformanceItemNames(item));
-            }
-            else
-            {
-                items = item.ToString();
-            }
-
-            return $"{baseUrl}/items?ids={items}";
+            return baseUrl;
         }
 
         /// <summary>
@@ -67,25 +52,92 @@ namespace SmarterBalanced.SampleItems.Core.Repos
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
+        public List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
         {
-            var associatedStimulus = item.AssociatedStimulus;
             List<SampleItem> associatedStimulusDigests = context.SampleItems
                 .Where(i => i.IsPerformanceItem && 
                     i.FieldTestUse != null &&
                     i.AssociatedStimulus == item.AssociatedStimulus &&
                     i.Grade == item.Grade && i.Subject?.Code == item.Subject?.Code)
-                .OrderByDescending(i => i.ItemKey == item.ItemKey)
-                .ThenBy(i => i.FieldTestUse?.Section)
-                .ThenBy(i => i.FieldTestUse?.QuestionNumber).ToList();
+                .OrderBy(i => i.FieldTestUse?.Section)
+                .ThenBy(i => i.FieldTestUse?.QuestionNumber)
+                .ToList();
 
             return associatedStimulusDigests;
         }
 
-        private List<string> GetPeformanceItemNames(SampleItem item)
+        public string GetItemNames(SampleItem item)
         {
-            var associatedStimulusDigests = GetAssociatedPerformanceItems(item)?.Select(d => d.ToString()).ToList();
-            return associatedStimulusDigests;
+            if(item == null)
+            {
+                return string.Empty;
+            }
+
+            var itemNames = item.ToString();
+
+            if (item.IsPerformanceItem)
+            {
+                itemNames = string.Join(",", GetAssociatedPerformanceItems(item).Select(d => d.ToString()));
+            }
+
+            return itemNames;
+        }
+
+        public string GetBrailleItemNames(SampleItem item)
+        {
+            if (item == null)
+            {
+                return string.Empty;
+            }
+
+            var items = GetAssociatedBrailleItems(item);
+            var names = items.Select(i => i.ToString());
+            string res = string.Join(",", names);
+
+            return res;
+        }
+
+        public IList<SampleItem> GetAssociatedBrailleItems(SampleItem item)
+        {
+            var items = Enumerable.Repeat(item, 1);
+
+            if (item.IsPerformanceItem)
+            {
+                items = GetAssociatedPerformanceItems(item);
+            }
+
+            var order = items.Select(i => i.ItemKey).ToList();
+
+            var matchingBraille = context.SampleItems.Where(s => s.BrailleOnlyItem &&
+                items.Any(i => i.ItemKey == s.CopiedFromItem));
+
+            var itemNames = items.Where(pt => !matchingBraille.Any(bi => bi.CopiedFromItem == pt.ItemKey))
+                .Concat(matchingBraille)
+                .OrderBy(i => order.IndexOf(i.CopiedFromItem ?? i.ItemKey))
+                .ToList();
+
+            return itemNames;
+        }
+
+        public SampleItem GetAssoicatedBrailleItem(SampleItem item)
+        {
+            var matchingBraille = context.SampleItems
+                .FirstOrDefault(s => s.BrailleOnlyItem &&
+                    s.CopiedFromItem == item.ItemKey);
+
+            return matchingBraille;
+        }
+
+        private ImmutableArray<SampleItem> GetAllAssociatedItems(SampleItem item)
+        {
+            if (item.BrailleOnlyItem && item.CopiedFromItem.HasValue)
+            {
+                item = GetSampleItem(item.BankKey, item.CopiedFromItem.Value);
+            }
+
+            var brailleItems = GetAssociatedBrailleItems(item);
+            var associatedItems = GetAssociatedPerformanceItems(item);
+            return brailleItems.Union(associatedItems).ToImmutableArray();
         }
 
         private string GetPerformanceDescription(SampleItem item)
@@ -125,23 +177,20 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
         private ImmutableArray<string> GetItemBrailleDirectories(SampleItem item)
         {
-            List<string> itemDirectories = new List<string>();
-            itemDirectories.Add(GetItemFtpDirectory(item));
-            if (item.IsPerformanceItem)
-            {
-                foreach (SampleItem associatedItem in GetAssociatedPerformanceItems(item))
-                {
-                    itemDirectories.Add(GetItemFtpDirectory(associatedItem));
-                }
-            }
+            var associatedItems = GetAllAssociatedItems(item);
+            associatedItems.Add(item);
+
+            List<string> itemDirectories = associatedItems.Select(a => GetItemFtpDirectory(a)).ToList();
+
             if (item.AssociatedStimulus.HasValue)
             {
                 itemDirectories.Add(GetPassageFtpDirectory(item));
             }
-            return itemDirectories.ToImmutableArray();
+
+            return itemDirectories.Distinct().ToImmutableArray();
         }
 
-        private static string GetBrailleTypeFromCode(string code)
+        private string GetBrailleTypeFromCode(string code)
         {
             //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
             var bt = code.Split('_');
@@ -168,6 +217,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 }
                 catch (CoreFtp.Infrastructure.FtpException)
                 {
+                    logger.LogError($"Failed to load braille from ftp server for {directory}");
                     continue;
                 }
                 
@@ -184,7 +234,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return brailleFiles;
         }
 
-        public static string GenerateBrailleZipName(int itemId, string brailleCode)
+        public string GenerateBrailleZipName(int itemId, string brailleCode)
         {
             return $"{itemId}-{GetBrailleTypeFromCode(brailleCode)}.zip";
         }
@@ -224,6 +274,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                         }
                     }
                 }
+
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 return memoryStream;
             }
@@ -242,17 +293,22 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var aboutThisItem = GetAboutThisItemViewModel(sampleItem);
-
             var groups = sampleItem.AccessibilityResourceGroups.ApplyPreferences(iSAAPCodes, cookiePreferences);
+            var associatedBraille = GetAssoicatedBrailleItem(sampleItem);
+
+            ItemIdentifier nonBrailleItem = sampleItem.ToItemIdentifier();
+            ItemIdentifier brailleItem = (associatedBraille ?? sampleItem).ToItemIdentifier();
 
             var itemViewModel = new ItemViewModel(
-                itemViewerServiceUrl: GetItemViewerUrl(sampleItem),
+                itemViewerServiceUrl: context.AppSettings.SettingsConfig.ItemViewerServiceURL,
+                itemNames: GetItemNames(sampleItem),
+                brailleItemNames: GetBrailleItemNames(sampleItem),
+                brailleItem: brailleItem,
+                nonBrailleItem: nonBrailleItem,
                 accessibilityCookieName: context.AppSettings.SettingsConfig.AccessibilityCookie,
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 accResourceGroups: groups,
                 moreLikeThisVM: GetMoreLikeThis(sampleItem),
-                aboutThisItemVM: aboutThisItem,
                 subject: sampleItem.Subject.Code,
                 brailleItemCodes: sampleItem.BrailleItemCodes,
                 braillePassageCodes: sampleItem.BraillePassageCodes,
@@ -348,6 +404,18 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return moreLikeThisVM;
         }
 
+        public AboutThisItemViewModel GetAboutThisItemViewModel(int itemBank, int itemKey)
+        {
+            var sampleItem = context.SampleItems.FirstOrDefault(s => s.ItemKey == itemKey && s.BankKey == itemBank);
+            if (sampleItem == null)
+            {
+                throw new Exception($"invalid request for {itemBank}-{itemKey}");
+            }
+
+            var aboutThis = GetAboutThisItemViewModel(sampleItem);
+
+            return aboutThis;
+        }
     }
 
 }

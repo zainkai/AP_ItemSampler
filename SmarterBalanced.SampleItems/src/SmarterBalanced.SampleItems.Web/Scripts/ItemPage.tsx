@@ -90,6 +90,26 @@ namespace ItemPage {
         return "";
     }
 
+    export function isBrailleEnabled(accResourceGroups: AccResourceGroup[]): boolean {
+        const brailleResource = getResource("BrailleType", accResourceGroups);
+        if (brailleResource && !brailleResource.currentSelectionCode.endsWith("0")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    export function isStreamlinedEnabled(accResourceGroups: AccResourceGroup[]): boolean {
+        const resource = getResource("StreamlinedInterface", accResourceGroups);
+        if (resource && !resource.currentSelectionCode.endsWith("0")) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
 
     // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
     export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
@@ -103,8 +123,19 @@ namespace ItemPage {
         accessibilityResources: AccessibilityResource[];
     }
 
+    export interface ItemIdentifier {
+        itemName: string;
+        bankKey: number;
+        itemKey: number;
+    }
+
     export interface ViewModel {
         itemViewerServiceUrl: string;
+        itemNames: string;
+        brailleItemNames: string;
+        brailleItem: ItemIdentifier;
+        nonBrailleItem: ItemIdentifier;
+        currentItem: ItemIdentifier;
         accessibilityCookieName: string;
         isPerformanceItem: boolean;
         performanceItemDescription: string;
@@ -114,6 +145,7 @@ namespace ItemPage {
         aboutThisItemVM: AboutThisItem.Props;
         brailleItemCodes: string[];
         braillePassageCodes: string[];
+     
     }
 
     export interface Props extends ViewModel {
@@ -127,7 +159,7 @@ namespace ItemPage {
         constructor(props: Props) {
             super(props);
         }
-
+    
         saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
             this.props.onSave(resourceSelections);
         }
@@ -189,7 +221,10 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("&isaap=", isaap);
+            const itemNames = (isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
+            let scrollTo: string = isStreamlinedEnabled(this.props.accResourceGroups) ? "" : ("&scrollToId=").concat(this.props.currentItem.itemName);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, scrollTo);
+
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (
@@ -221,8 +256,8 @@ namespace ItemPage {
                                 currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
                                 brailleItemCodes={this.props.brailleItemCodes}
                                 braillePassageCodes={this.props.braillePassageCodes}
-                                bankKey={this.props.aboutThisItemVM.itemCardViewModel.bankKey}
-                                itemKey={this.props.aboutThisItemVM.itemCardViewModel.itemKey} />
+                                bankKey={this.props.currentItem.bankKey}
+                                itemKey={this.props.currentItem.itemKey} />
 
                         </div>
 
@@ -252,7 +287,10 @@ namespace ItemPage {
     }
 
     export class Controller {
-        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) { }
+        constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {
+            this.itemProps.currentItem = isBrailleEnabled(this.itemProps.accResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
+            this.fetchUpdatedAboutThisItem();
+        }
 
         onSave = (selections: AccessibilityModal.ResourceSelections) => {
 
@@ -261,18 +299,21 @@ namespace ItemPage {
                 const newGroup = Object.assign({}, group);
                 const newResources: AccessibilityResource[] = [];
                 for (let res of newGroup.accessibilityResources) {
-                    const newRes = Object.assign({}, res);
+                    const newRes = Object.assign({}, res); 
                     newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
                     newResources.push(newRes);
                 }
                 newGroup.accessibilityResources = newResources;
                 newGroups.push(newGroup);
             }
+
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newGroups;
-
             let cookieValue = toCookie(this.itemProps.accResourceGroups);
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", cookieValue, "; path=/");
+
+            this.itemProps.currentItem = isBrailleEnabled(newGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
+            this.fetchUpdatedAboutThisItem();
 
             this.render();
         }
@@ -285,11 +326,44 @@ namespace ItemPage {
                 newGroup.accessibilityResources = newGroup.accessibilityResources.map(resetResource);
                 return newGroup;
             });
-
+            this.itemProps.currentItem = this.itemProps.nonBrailleItem;
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
 
+            this.itemProps.currentItem = isBrailleEnabled(newAccResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
+            this.fetchUpdatedAboutThisItem();
+
             this.render();
+        }
+
+        fetchUpdatedAboutThisItem() {
+            const item = this.itemProps.currentItem;
+
+            const params = {
+                bankKey: item.bankKey,
+                itemKey: item.itemKey
+            };
+
+            $.ajax({
+                dataType: "JSON",
+                type: "GET",
+                url: "/Item/AboutThisItemViewModel",
+                data: params,
+                success: this.onFetchedUpdatedViewModel
+            });
+        }
+
+        onFetchedUpdatedViewModel = (viewModel: AboutThisItem.Props) => {
+            if (!viewModel) {
+                console.log("An error occurred updating the item.");
+                return;
+            }
+
+            this.itemProps = Object.assign({}, this.itemProps);
+            this.itemProps.aboutThisItemVM = Object.assign({}, this.itemProps.aboutThisItemVM);
+            this.itemProps.aboutThisItemVM = Object.assign({}, viewModel);
+            this.render();
+          
         }
 
         render() {

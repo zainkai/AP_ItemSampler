@@ -103,7 +103,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 TargetAssessmentType = itemMetadata.Metadata.TargetAssessmentType,
                 SufficentEvidenceOfClaim = itemMetadata.Metadata.SufficientEvidenceOfClaim,
                 AssociatedStimulus = itemMetadata.Metadata.AssociatedStimulus,
-                AslSupported =  itemMetadata.Metadata.AccessibilityTagsASLLanguage.AslSupportedStringToBool(),
+                AslSupported = itemMetadata.Metadata.AccessibilityTagsASLLanguage.AslSupportedStringToBool(),
                 AllowCalculator = itemMetadata.Metadata.AllowCalculator == "Y",
                 DepthOfKnowledge = itemMetadata.Metadata.DepthOfKnowledge,
                 Contents = itemContents.Item.Contents,
@@ -114,7 +114,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 StandardPublications = itemMetadata.Metadata.StandardPublications,
                 SubjectCode = itemMetadata.Metadata.SubjectCode,
                 ItemMetadataAttributes = itemContents.Item.ItemMetadataAttributes,
-                StimulusDigest = stimulusDigest
+                StimulusDigest = stimulusDigest,
+                SmarterAppItemDescriptor = itemMetadata.Metadata.SmarterAppItemDescriptor
             };
 
             return digest;

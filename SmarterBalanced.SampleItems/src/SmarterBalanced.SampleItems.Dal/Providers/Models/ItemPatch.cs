@@ -25,5 +25,14 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 
         [XmlElement("Section")]
         public string QuestionNumber { get; set; }
+
+        [XmlElement("ItemType")]
+        public string ItemType { get; set; }
+
+        [XmlElement("BrailleCopiedId")]
+        public string BrailleCopiedId { get; set; }
+
+        [XmlElement("DepthOfKnowledge")]
+        public string DepthOfKnowledge { get; set; }
     }
 }

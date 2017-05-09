@@ -1,13 +1,17 @@
 language: csharp
 sudo: required
 node_js: 
-  - "node"
+  - "7"
 python:
   - "2.7"
 install: 
-  - pip install ecs-deploy
-  - pip install --user awscli
+  - travis_retry pip install ecs-deploy
+  - travis_retry pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
+  - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+  - travis_retry npm install 
+  - travis_retry $(npm bin)/bower install
+  - travis_retry dotnet restore ../
 
 services:
   - docker
@@ -17,14 +21,11 @@ before_script:
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
 
 script: 
-  - cd ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-  - dotnet restore ../
   - dotnet build 
-  - npm install 
-  - $(npm bin)/bower install
   - grunt all
-  - cd /home/travis/build/osu-cass/SampleItemsWebsite/
-  - dotnet test ./SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test/project.json
+  - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test
+  - dotnet test 
+  - dotnet publish $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o $TRAVIS_BUILD_DIR/publish/
 
 matrix:
   include:
@@ -38,12 +39,33 @@ matrix:
 after_success:
   - docker --version
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  - export PATH=$PATH:$HOME/.local/bin
-  - dotnet publish /home/travis/build/osu-cass/SampleItemsWebsite/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o /home/travis/build/osu-cass/SampleItemsWebsite/publish/
-  - cd /home/travis/build/osu-cass/SampleItemsWebsite/publish/
-  - docker build -t sampleitemscode .
-  - docker tag sampleitemscode:latest osucass/sampleitemscode:$BRANCH
-  - docker push osucass/sampleitemscode:$BRANCH
-  - cd /home/travis/build/osu-cass/SampleItemsWebsite
-  - chmod ugo+x DeployScripts/runEcsBuild.sh
-  - ./DeployScripts/runEcsBuild.sh
+  - cd $TRAVIS_BUILD_DIR
+  - chmod ugo+x DeployScripts/code_deploy.sh
+  - chmod ugo+x DeployScripts/deploy.sh
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ./DeployScripts/code_deploy.sh
+    on:
+      all_branches: true
+  - provider: script
+    skip_cleanup: true
+    script: ./DeployScripts/deploy.sh SampleItemsWebsite-master SampleItemsWebsite-master
+    on:
+      branch: master
+  - provider: script
+    skip_cleanup: true
+    script: ./DeployScripts/deploy.sh SampleItemsWebsite-stage SampleItemsWebsite-stage
+    on:
+      branch: stage
+  - provider: script
+    skip_cleanup: true
+    script: ./DeployScripts/deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
+    on:
+      branch: dev
+  - provider: script
+    skip_cleanup: true
+    script: ./DeployScripts/deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
+    on:
+      branch: feature_travis-docker
