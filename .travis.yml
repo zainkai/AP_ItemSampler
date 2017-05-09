@@ -52,7 +52,7 @@ deploy:
       all_branches: true
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/deploy.sh SampleItemsWebsite-master SampleItemsWebsite-master
+    script: ./DeployScripts/deploy.sh SampleItemsWebsite-prod SampleItemsWebsite-prod
     on:
       branch: master
   - provider: script
