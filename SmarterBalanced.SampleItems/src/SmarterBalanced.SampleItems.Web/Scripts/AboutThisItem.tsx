@@ -55,7 +55,6 @@ namespace AboutThisItem {
                             </div>
                             <div className="modal-body">
                                 <AboutThisItemDetailComponent {...this.props} />
-                                {rubrics}
                             </div>
                             <div className="modal-footer">
                                 <button className="btn btn-primary" form="accessibility-form" data-dismiss="modal">Close</button>
