@@ -41,32 +41,34 @@ after_success:
   - docker --version
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - cd $TRAVIS_BUILD_DIR
-  - chmod ugo+x DeployScripts/code_deploy.sh
-  - chmod ugo+x DeployScripts/deploy.sh
+  - chmod ugo+x DeployScripts/code_docker_deploy.sh
+  - chmod ugo+x DeployScripts/app_docker_deploy.sh
+  - chmod ugo+x DeployScripts/ecs_deploy.sh
+
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/code_deploy.sh
+    script: ./DeployScripts/code_docker_deploy.sh
     on:
       all_branches: true
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/deploy.sh SampleItemsWebsite-master SampleItemsWebsite-master
+    script: ./DeployScripts/app_docker_deploy.sh
+    on:
+        tags: true
+  - provider: script
+    skip_cleanup: true
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-master SampleItemsWebsite-master
     on:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/deploy.sh SampleItemsWebsite-stage SampleItemsWebsite-stage
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-stage SampleItemsWebsite-stage
     on:
       branch: stage
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
     on:
       branch: dev
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
-    on:
-      branch: feature_travis-docker
