@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
-	<row>
+		<row>
 		<ItemId>206</ItemId>
 		<Grade>Grade 4</Grade>
 		<Claim>MATH2</Claim>
@@ -66,7 +66,7 @@
 		<Claim>MATH2</Claim>
 		<Target>A</Target>
 		<TargetDesc>Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.</TargetDesc>
-		<CCSSDesc>Graph square root, cube root, and piecewise-defined functions, including step functions and absolute value functions.</CCSSDesc>
+		<CCSSDesc>Graph square root, cube root, and piecewise-defined functions, including step functions and absolute value functions.ok</CCSSDesc>
 		<ItemType>GI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
 	</row>
@@ -460,7 +460,7 @@
 		<Grade>Grade 6</Grade>
 		<Claim>MATH1</Claim>
 		<Target>A</Target>
-		<TargetDesc>Understand ration concepts and use ratio reasoning to solve problems.</TargetDesc>
+		<TargetDesc>Understand ratio concepts and use ratio reasoning to solve problems.</TargetDesc>
 		<CCSSDesc>Find a percent of a quantity as a rate per 100 (e.g., 30% of a quantity means 30/100 times the quantity); solve problems involving finding the whole, given a part and the percent.</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
@@ -1420,7 +1420,7 @@
 		<Grade>Grade 6</Grade>
 		<Claim>MATH1</Claim>
 		<Target>A</Target>
-		<TargetDesc>Understand ration concepts and use ratio reasoning to solve problems.</TargetDesc>
+		<TargetDesc>Understand ratio concepts and use ratio reasoning to solve problems.</TargetDesc>
 		<CCSSDesc>Solve unit rate problems including those involving unit pricing and constant speed. For example, if it took 7 hours to mow 4 lawns, then at that rate, how many lawns could be mowed in 35 hours? At what rate were lawns being mowed?</CCSSDesc>
 		<ItemType>EQ</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
@@ -1930,7 +1930,7 @@
 		<Grade>Grade 6</Grade>
 		<Claim>MATH1</Claim>
 		<Target>A</Target>
-		<TargetDesc>Understand ration concepts and use ratio reasoning to solve problems.</TargetDesc>
+		<TargetDesc>Understand ratio concepts and use ratio reasoning to solve problems.</TargetDesc>
 		<CCSSDesc>Make tables of equivalent ratios relating quantities with whole number measurements, find missing values in the tables, and plot the pairs of values on the coordinate plane. Use tables to compare ratios.</CCSSDesc>
 		<ItemType>TI</ItemType>
 		<DepthOfKnowledge>2</DepthOfKnowledge>
@@ -2660,7 +2660,7 @@
 		<Grade>Grade 6</Grade>
 		<Claim>MATH1</Claim>
 		<Target>A</Target>
-		<TargetDesc>Understand ration concepts and use ratio reasoning to solve problems.</TargetDesc>
+		<TargetDesc>Understand ratio concepts and use ratio reasoning to solve problems.</TargetDesc>
 		<CCSSDesc>Understand the concept of a ratio and use ratio language to describe a ratio relationship between two quantities. For example, “The ratio of wings to beaks in the bird house at the zoo was 2:1, because for every 2 wings there was 1 beak.” “For every vote candidate A received, candidate C received nearly three votes.”</CCSSDesc>
 		<ItemType>MS</ItemType>
 		<DepthOfKnowledge>1</DepthOfKnowledge>
