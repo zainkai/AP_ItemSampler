@@ -57,18 +57,20 @@ deploy:
     script: ./DeployScripts/app_docker_deploy.sh
     on:
         tags: true
-  # - provider: script
-  #   skip_cleanup: true
-  #   script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-master SampleItemsWebsite-master
-  #   on:
-  #     branch: master
+  - provider: script
+    skip_cleanup: true
+    # script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-prod SampleItemsWebsite-prod
+    script: ./DeployScripts/app_docker_deploy.sh
+    on:
+      branch: master
   - provider: script
     skip_cleanup: true
     script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-stage SampleItemsWebsite-stage
     on:
       branch: stage
-  # - provider: script
-  #   skip_cleanup: true
-  #   script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
-  #   on:
-  #     branch: dev
+  - provider: script
+    skip_cleanup: true
+    # script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
+    script: ./DeployScripts/app_docker_deploy.sh
+    on:
+      branch: dev
