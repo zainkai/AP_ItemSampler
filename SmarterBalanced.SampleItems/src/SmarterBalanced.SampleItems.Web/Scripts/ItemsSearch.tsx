@@ -1,4 +1,8 @@
-﻿
+﻿import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import * as ItemCard from './ItemCard';
+import * as ItemsSearchParams from './ItemsSearchParams';
+
 interface SubjectClaims {
     [subject: string]: { text: string; value: string }[];
 }
@@ -24,19 +28,19 @@ interface Reloading<T> {
 /** Represents the state of an asynchronously obtained resource at a particular time. */
 type Resource<T> = Loading | Success<T> | Reloading<T> | Failure
 
-interface InteractionType {
+export interface InteractionType {
     code: string;
     label: string;
 }
 
-interface Subject {
+export interface Subject {
     code: string;
     label: string;
     claims: Claim[];
     interactionTypeCodes: string[];
 }
 
-interface Claim {
+export interface Claim {
     code: string;
     label: string;
 }
@@ -49,7 +53,7 @@ namespace ItemsSearch {
     }
 
     export interface State {
-        searchResults: Resource<ItemCardViewModel[]>;
+        searchResults: Resource<ItemCard.ItemCardViewModel[]>;
     }
     
     export class ISComponent extends React.Component<Props, State> {
@@ -76,7 +80,7 @@ namespace ItemsSearch {
             this.props.apiClient.itemsSearch(params, this.onSearch.bind(this), this.onError.bind(this));
         }
 
-        onSearch(results: ItemCardViewModel[]) {
+        onSearch(results: ItemCard.ItemCardViewModel[]) {
             this.setState({ searchResults: { kind: "success", content: results } });
         }
 
@@ -88,7 +92,7 @@ namespace ItemsSearch {
             const searchResults = this.state.searchResults;
             if (searchResults.kind === "success" && searchResults.content.length === 1) {
                 const searchResult = searchResults.content[0];
-                itemPageLink(searchResult.bankKey, searchResult.itemKey);
+                ItemCard.itemPageLink(searchResult.bankKey, searchResult.itemKey);
             }
         }
 
@@ -104,7 +108,7 @@ namespace ItemsSearch {
                 resultsElement = searchResults.content.length === 0
                     ? <span className="placeholder-text" role="alert">No results found for the given search terms.</span>
                     : searchResults.content.map(digest =>
-                        <ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
+                        <ItemCard.ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
                 resultsElement = <div className="placeholder-text" role="alert">An error occurred. Please try again later.</div>;
             } else {
@@ -113,7 +117,7 @@ namespace ItemsSearch {
             const isLoading = this.isLoading();
             return (
                 <div className="search-container">
-                    <ItemSearchParams.ISPComponent
+                    <ItemsSearchParams.ISPComponent
                         interactionTypes={this.props.interactionTypes}
                         subjects={this.props.subjects}
                         onChange={(params) => this.beginSearch(params)}
@@ -130,7 +134,7 @@ namespace ItemsSearch {
 
 interface ItemsSearchClient {
     itemsSearch(params: SearchAPIParams,
-        onSuccess: (data: ItemCardViewModel[]) => void,
+        onSuccess: (data: ItemCard.ItemCardViewModel[]) => void,
         onError?: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => any): any;
 }
 
@@ -147,7 +151,7 @@ const client: ItemsSearchClient = {
     }
 };
 
-interface SearchAPIParams {
+export interface SearchAPIParams {
     itemId: string;
     gradeLevels: GradeLevels;
     subjects: string[];

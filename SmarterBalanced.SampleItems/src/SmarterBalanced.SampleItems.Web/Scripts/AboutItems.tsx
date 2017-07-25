@@ -1,4 +1,8 @@
-﻿
+﻿import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import * as $ from 'jquery';
+import * as AboutThisItem from './AboutThisItem';
+
 interface InteractionType {
     code: string;
     label: string;
@@ -153,7 +157,7 @@ namespace AboutItems {
 }
 
 
-function initializeAboutItems(viewModel: AboutItemsViewModel) {
+export function initializeAboutItems(viewModel: AboutItemsViewModel) {
     ReactDOM.render(
         <AboutItems.AIComponent {...viewModel} />,
         document.getElementById("about-items") as HTMLElement

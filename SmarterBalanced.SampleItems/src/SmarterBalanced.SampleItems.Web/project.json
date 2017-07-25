@@ -61,7 +61,7 @@
       "../../ClaimConfigurations/",
       "../../CoreStandardsConfigurations/",
       "docker-compose.yml",
-      "appsettings*.json",
+      "appsettings*.json", 
       "Dockerfile",
       ".dockerignore"
     ],

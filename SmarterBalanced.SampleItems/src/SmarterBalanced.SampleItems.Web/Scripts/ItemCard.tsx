@@ -1,5 +1,6 @@
-﻿
-interface ItemCardViewModel {
+﻿import * as React from 'react';
+
+export interface ItemCardViewModel {
     bankKey: number;
     itemKey: number;
     title: string;
@@ -14,11 +15,11 @@ interface ItemCardViewModel {
     interactionTypeLabel: string;
 }
 
-function itemPageLink(bankKey: number, itemKey: number) {
+export function itemPageLink(bankKey: number, itemKey: number) {
     window.location.href = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
 }
 
-class ItemCard extends React.Component<ItemCardViewModel, {}> {
+export class ItemCard extends React.Component<ItemCardViewModel, {}> {
 
     handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 13 || e.keyCode === 23) {
@@ -73,7 +74,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
     }
 }
 
-class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
+export class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
 
     handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 13) {

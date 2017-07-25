@@ -10,21 +10,23 @@ const lessFiles = {
     'wwwroot/css/site.css': 'Styles/site.less'
 };
 
+const webpackConfig = require("./webpack.config")
+
 module.exports = function (grunt) {
     grunt.initConfig({
         clean: {
             css: ["wwwroot/css/*"],
-            ts: ["wwwroot/scripts/*", "temp"],
-            lib: ["wwwroot/lib/*", "temp"]
+            js: ["wwwroot/scripts/*", "temp"]
         },
 
         uglify: {
             files: {
-                src: 'wwwroot/scripts/*.js',  // source files mask
+                expand: true,
+                cwd: 'wwwroot/scripts',
+                src: '**/*.js',  // source files mask
                 dest: 'wwwroot/scripts/',    // destination folder
-                expand: true,    // allow dynamic building
-                flatten: true,   // remove all unnecessary nesting
-                ext: '.min.js'   // replace .js to .min.js
+                ext: '.min.js',   // replace .js to .min.js
+                extDot: 'last'
             }
         },
 
@@ -68,14 +70,10 @@ module.exports = function (grunt) {
                 tasks: ["less"]
             }
         },
-        "bower-install-simple": {
+        webpack: {
             options: {
             },
-            "prod": {
-                options: {
-                }
-            }
-            
+            prod: webpackConfig
         }
     });
 
@@ -85,12 +83,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-ts');
-    grunt.loadNpmTasks('grunt-bower-install-simple');
+    grunt.loadNpmTasks('grunt-webpack');
 
-
-    grunt.registerTask("bower-install", ["bower-install-simple"]);
-    grunt.registerTask("all", ['clean', 'ts', 'less', 'cssmin', 'uglify', 'bower-install']);
-    grunt.registerTask("tsrecompile", ['clean:ts', 'ts', 'uglify']);
+    grunt.registerTask("all", ['clean', 'webpack:prod', 'less', 'cssmin', 'uglify']);
+    grunt.registerTask("tsrecompile", ['clean:js', 'webpack:prod', 'uglify']);
     grunt.registerTask("lessrecompile", ['clean:css', 'less', 'cssmin']);
-
 };
