@@ -4,15 +4,8 @@
   "private": true,
   "devDependencies": {
     "awesome-typescript-loader": "3.2.1",
-    "grunt-webpack": "3.0.2",
-    "source-map-loader": "0.2.1",
-    "webpack": "3.4.0",
-    "jquery": "3.2.1",
-    "jquery-validation": "1.16.0",
-    "jquery-validation-unobtrusive": "3.2.6",
-    "react": "15.6.1",
-    "react-dom": "15.6.1",
     "grunt": "1.0.1",
+    "grunt-bower-install-simple": "1.2.4",
     "grunt-cli": "1.2.0",
     "grunt-contrib-clean": "1.0.0",
     "grunt-contrib-cssmin": "1.0.2",
@@ -21,15 +14,22 @@
     "grunt-contrib-uglify": "2.0.0",
     "grunt-contrib-watch": "1.0.0",
     "grunt-ts": "6.0.0-beta.3",
+    "grunt-webpack": "3.0.2",
+    "jquery": "3.2.1",
+    "jquery-validation": "1.16.0",
+    "jquery-validation-unobtrusive": "3.2.6",
     "less": "2.7.2",
+    "react": "15.6.1",
+    "react-dom": "15.6.1",
+    "source-map-loader": "0.2.1",
     "typescript": "2.4.2",
-    "grunt-bower-install-simple": "1.2.4"
+    "webpack": "3.4.0"
   },
   "dependencies": {
+    "@types/bootstrap": "3.3.32",
     "@types/google.analytics": "0.0.29",
     "@types/jquery": "2.0.40",
     "@types/react": "15.0.39",
-    "@types/react-dom": "15.5.1",
-    "@types/bootstrap": "3.3.32"
+    "@types/react-dom": "15.5.1"
   }
 }
