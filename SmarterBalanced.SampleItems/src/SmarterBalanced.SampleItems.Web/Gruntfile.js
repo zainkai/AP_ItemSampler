@@ -71,10 +71,29 @@ module.exports = function (grunt) {
                 tasks: ["less"]
             }
         },
+
         webpack: {
             options: {
             },
             prod: webpackConfig
+        },
+
+        version: {
+            package: {
+                src: ['package.json']
+            },
+            csproj: {
+                options: {
+                    prefix: '<VersionPrefix>'
+                },
+                src: [
+                    '../SmarterBalanced.SampleItems.Core/SmarterBalanced.SampleItems.Core.csproj',
+                    '../SmarterBalanced.SampleItems.Dal/SmarterBalanced.SampleItems.Dal.csproj',
+                    '../SmarterBalanced.SampleItems.Test/SmarterBalanced.SampleItems.Test.csproj',
+                    'SmarterBalanced.SampleItems.Web.csproj'
+                ]
+            },
+            
         }
     });
 
@@ -85,8 +104,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-webpack');
+    grunt.loadNpmTasks('grunt-version');
 
     grunt.registerTask("all", ['clean', 'webpack:prod', 'less:development', 'cssmin', 'uglify']);
     grunt.registerTask("tsrecompile", ['clean:js', 'webpack:prod', 'uglify']);
     grunt.registerTask("lessrecompile", ['clean:css', 'less:development', 'cssmin']);
+    grunt.registerTask("bump-major", ['version:package:major', 'version:csproj']);
+    grunt.registerTask("bump-minor", ['version:package:minor', 'version:csproj']);
+    grunt.registerTask("bump-patch", ['version:package:patch', 'version:csproj']);
+
 };
