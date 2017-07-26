@@ -5,7 +5,7 @@ const lessFiles = {
     'wwwroot/css/about.css': 'Styles/about.less',
     'wwwroot/css/home.css': 'Styles/home.less',
     'wwwroot/css/item.css': 'Styles/item.less',
-    'wwwroot/css/nav.css': 'Styles/nav.less',
+    //'wwwroot/css/nav.css': 'Styles/nav.less',
     'wwwroot/css/search.css': 'Styles/search.less',
     'wwwroot/css/site.css': 'Styles/site.less'
 };
@@ -32,7 +32,8 @@ module.exports = function (grunt) {
 
         less: {
             development: {
-                files: lessFiles
+                files: lessFiles,
+                sourceMap: true
             },
             production: {
                 files: lessFiles
@@ -50,7 +51,7 @@ module.exports = function (grunt) {
                     "wwwroot/css/site.min.css": ["wwwroot/css/site.css"],
                     "wwwroot/css/home.min.css": ["wwwroot/css/home.css"],
                     "wwwroot/css/item.min.css": ["wwwroot/css/item.css"],
-                    "wwwroot/css/nav.min.css": ["wwwroot/css/nav.css"],
+                   // "wwwroot/css/nav.min.css": ["wwwroot/css/nav.css"],
                     "wwwroot/css/search.min.css": ["wwwroot/css/search.css"]
                 }
             }
@@ -85,7 +86,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-webpack');
 
-    grunt.registerTask("all", ['clean', 'webpack:prod', 'less', 'cssmin', 'uglify']);
+    grunt.registerTask("all", ['clean', 'webpack:prod', 'less:development', 'cssmin', 'uglify']);
     grunt.registerTask("tsrecompile", ['clean:js', 'webpack:prod', 'uglify']);
-    grunt.registerTask("lessrecompile", ['clean:css', 'less', 'cssmin']);
+    grunt.registerTask("lessrecompile", ['clean:css', 'less:development', 'cssmin']);
 };
