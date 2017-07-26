@@ -1,10 +1,11 @@
 ﻿import * as React from 'react';
+import * as GradeLevels from './GradeLevels';
 
 export interface ItemCardViewModel {
     bankKey: number;
     itemKey: number;
     title: string;
-    grade: GradeLevels;
+    grade: GradeLevels.GradeLevels;
     gradeLabel: string;
     subjectCode: string;
     subjectLabel: string;

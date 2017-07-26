@@ -2,6 +2,7 @@
 import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 import * as AboutThisItem from './AboutThisItem';
+import { ItemFrame } from './ItemViewerFrame';
 
 interface InteractionType {
     code: string;

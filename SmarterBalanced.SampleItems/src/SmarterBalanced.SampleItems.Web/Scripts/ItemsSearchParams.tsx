@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import * as ItemsSearch from './ItemsSearch';
-
+import * as GradeLevels from './GradeLevels';
 const hideArrow = (
     <span aria-label="Hide">▼</span>
 );
@@ -31,7 +31,7 @@ export interface Props {
 
 export interface State {
     itemId: string;
-    gradeLevels: GradeLevels;
+    gradeLevels: GradeLevels.GradeLevels;
     subjects: string[];
     claims: string[];
     interactionTypes: string[];
@@ -56,7 +56,7 @@ export class ISPComponent extends React.Component<Props, State> {
         const itemId = (queryObject["itemID"] || [])[0] || "";
 
         const gradeString = (queryObject["gradeLevels"] || [])[0];
-        const gradeLevels: GradeLevels = parseInt(gradeString, 10) || GradeLevels.NA;
+        const gradeLevels: GradeLevels.GradeLevels = parseInt(gradeString, 10) || GradeLevels.GradeLevels.NA;
 
         const subjects = queryObject["subjects"] || [];
         const claims = queryObject["claims"] || [];
@@ -72,7 +72,7 @@ export class ISPComponent extends React.Component<Props, State> {
             performanceOnly: performanceOnly,
 
             expandMore: itemId.length !== 0 || performanceOnly,
-            expandGradeLevels: gradeLevels !== GradeLevels.NA,
+            expandGradeLevels: gradeLevels !== GradeLevels.GradeLevels.NA,
             expandSubjects: subjects.length !== 0,
             expandClaims: claims.length !== 0,
             expandInteractionTypes: interactionTypes.length !== 0,
@@ -86,7 +86,7 @@ export class ISPComponent extends React.Component<Props, State> {
         if (this.state.claims && this.state.claims.length !== 0) {
             pairs.push("claims=" + this.state.claims.join(","));
         }
-        if (this.state.gradeLevels !== GradeLevels.NA) {
+        if (this.state.gradeLevels !== GradeLevels.GradeLevels.NA) {
             pairs.push("gradeLevels=" + this.state.gradeLevels);
         }
         if (this.state.interactionTypes && this.state.interactionTypes.length !== 0) {
@@ -121,7 +121,7 @@ export class ISPComponent extends React.Component<Props, State> {
     onChange() {
         const params: ItemsSearch.SearchAPIParams = {
             itemId: this.state.itemId || "",
-            gradeLevels: this.state.gradeLevels || GradeLevels.All,
+            gradeLevels: this.state.gradeLevels || GradeLevels.GradeLevels.All,
             subjects: this.state.subjects || [],
             claims: this.state.claims || [],
             interactionTypes: this.state.interactionTypes || [],
@@ -146,7 +146,7 @@ export class ISPComponent extends React.Component<Props, State> {
         }
     }
 
-    toggleGrades(grades: GradeLevels) {
+    toggleGrades(grades: GradeLevels.GradeLevels) {
         this.setState({
             // Exclusive OR to flip just the bits for the input grades
             gradeLevels: this.state.gradeLevels ^ grades // tslint:disable-line:no-bitwise
@@ -260,7 +260,7 @@ export class ISPComponent extends React.Component<Props, State> {
     resetFilters() {
         this.setState({
             itemId: "",
-            gradeLevels: GradeLevels.NA,
+            gradeLevels: GradeLevels.GradeLevels.NA,
             subjects: [],
             claims: [],
             interactionTypes: []
@@ -359,13 +359,13 @@ export class ISPComponent extends React.Component<Props, State> {
 
     renderGrades() {
         const gradeLevels = this.state.gradeLevels;
-        const elementarySelected = GradeLevels.contains(gradeLevels, GradeLevels.Elementary);
-        const middleSelected = GradeLevels.contains(gradeLevels, GradeLevels.Middle);
-        const highSelected = GradeLevels.contains(gradeLevels, GradeLevels.High);
+        const elementarySelected = GradeLevels.contains(gradeLevels, GradeLevels.GradeLevels.Elementary);
+        const middleSelected = GradeLevels.contains(gradeLevels, GradeLevels.GradeLevels.Middle);
+        const highSelected = GradeLevels.contains(gradeLevels, GradeLevels.GradeLevels.High);
 
         const tags = [
-            <button role="button" key={GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
-                onClick={() => this.toggleGrades(GradeLevels.Elementary)}
+            <button role="button" key={GradeLevels.GradeLevels.Elementary} className={(elementarySelected ? "selected" : "") + " tag"}
+                onClick={() => this.toggleGrades(GradeLevels.GradeLevels.Elementary)}
                 tabIndex={0}
                 aria-pressed={elementarySelected}
                 aria-label="Grades 3 to 5">
@@ -373,8 +373,8 @@ export class ISPComponent extends React.Component<Props, State> {
                 Grades 3-5
             </button>,
 
-            <button role="button" key={GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
-                onClick={() => this.toggleGrades(GradeLevels.Middle)}
+            <button role="button" key={GradeLevels.GradeLevels.Middle} className={(middleSelected ? "selected" : "") + " tag"}
+                onClick={() => this.toggleGrades(GradeLevels.GradeLevels.Middle)}
                 tabIndex={0}
                 aria-pressed={middleSelected}
                 aria-label="Grades 6 to 8">
@@ -382,8 +382,8 @@ export class ISPComponent extends React.Component<Props, State> {
                 Grades 6-8
             </button>,
 
-            <button role="button" key={GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
-                onClick={() => this.toggleGrades(GradeLevels.High)}
+            <button role="button" key={GradeLevels.GradeLevels.High} className={(highSelected ? "selected" : "") + " tag"}
+                onClick={() => this.toggleGrades(GradeLevels.GradeLevels.High)}
                 tabIndex={0}
                 aria-pressed={highSelected}>
 

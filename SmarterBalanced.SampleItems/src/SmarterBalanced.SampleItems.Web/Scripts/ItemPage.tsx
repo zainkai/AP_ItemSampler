@@ -11,6 +11,7 @@ import * as AboutPT from './AboutPT';
 import * as AboutPTPopup from './AboutPTPopup';
 import * as Braille from './Braille';
 import * as Share from './ShareModal';
+import { ItemFrame } from './ItemViewerFrame';
 
 namespace ItemPage {
 
@@ -142,7 +143,7 @@ namespace ItemPage {
             }
         }
 
-        openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+        openAccessibilityModal(e: React.KeyboardEvent<HTMLButtonElement>) {
             if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
@@ -212,13 +213,13 @@ namespace ItemPage {
                         </div>
 
                         <div className="item-nav-right-group" role="group" aria-label="Second group">
-                            <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
+                            <button className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
                                 onClick={e =>ga("send", "event", "button", "OpenAccessibility")}
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                                 Accessibility
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <ItemFrame url={ivsUrl} />
@@ -324,7 +325,7 @@ namespace ItemPage {
     }
 }
 
-function initializeItemPage(itemProps: ItemPage.ViewModel) {
+export function initializeItemPage(itemProps: ItemPage.ViewModel) {
     const controller = new ItemPage.Controller(
         itemProps,
         document.getElementById("item-container") as HTMLDivElement);

@@ -2,6 +2,7 @@
 import * as ReactDOM from 'react-dom';
 import * as ItemCard from './ItemCard';
 import * as ItemsSearchParams from './ItemsSearchParams';
+import * as GradeLevels from './GradeLevels';
 
 interface SubjectClaims {
     [subject: string]: { text: string; value: string }[];
@@ -153,7 +154,7 @@ const client: ItemsSearchClient = {
 
 export interface SearchAPIParams {
     itemId: string;
-    gradeLevels: GradeLevels;
+    gradeLevels: GradeLevels.GradeLevels;
     subjects: string[];
     claims: string[];
     interactionTypes: string[];
@@ -165,7 +166,7 @@ interface ItemsSearchViewModel {
     subjects: Subject[];
 }
 
-function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
+export function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
     ReactDOM.render(
         <ItemsSearch.ISComponent apiClient={client} {...viewModel} />,
         document.getElementById("search-container") as HTMLElement);

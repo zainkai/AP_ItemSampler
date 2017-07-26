@@ -1,4 +1,6 @@
-﻿interface FrameProps {
+﻿import * as React from 'react';
+
+interface FrameProps {
     url: string;
 }
 
@@ -6,7 +8,7 @@ interface FrameState {
     loading: boolean;
 }
 
-class ItemFrame extends React.Component<FrameProps, FrameState> {
+export class ItemFrame extends React.Component<FrameProps, FrameState> {
     constructor(props: FrameProps) {
         super(props);
         this.state = { loading: true }
