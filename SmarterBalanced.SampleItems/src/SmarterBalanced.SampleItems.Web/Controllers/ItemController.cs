@@ -72,7 +72,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
                 return BadRequest();
             }
 
-            string cookieName = appSettings.SettingsConfig.AccessibilityCookie;
+            string cookieName = appSettings.SbContent.AccessibilityCookie;
             string cookieString = Request?.Cookies[cookieName] ?? string.Empty;
             var cookiePreferences = DecodeCookie(cookieString);
 

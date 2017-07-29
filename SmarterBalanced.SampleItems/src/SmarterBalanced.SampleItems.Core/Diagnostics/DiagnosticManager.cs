@@ -110,8 +110,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns></returns>
         private async Task<List<string>> GetAwsClusterInstancesArns()
         {
-            string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
-            string awsCluster = context.AppSettings.SettingsConfig.AwsClusterName;
+            string awsRegion = context.AppSettings.SbDiagnostics.AwsRegion;
+            string awsCluster = context.AppSettings.SbDiagnostics.AwsClusterName;
             AmazonECSClient ecs = new AmazonECSClient(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
 
             ecsModel.ListContainerInstancesRequest clusterRequest = new ecsModel.ListContainerInstancesRequest();
@@ -128,8 +128,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns></returns>
         private async Task<List<string>> GetAwsClusterInstancesIds(List<string> arns)
         {
-            string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
-            string awsCluster = context.AppSettings.SettingsConfig.AwsClusterName;
+            string awsRegion = context.AppSettings.SbDiagnostics.AwsRegion;
+            string awsCluster = context.AppSettings.SbDiagnostics.AwsClusterName;
             AmazonECSClient ecs = new AmazonECSClient(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
 
             ecsModel.DescribeContainerInstancesRequest clusterRequest = new ecsModel.DescribeContainerInstancesRequest();
@@ -148,7 +148,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns></returns>
         private async Task<List<string>> GetAwsArnsIps(List<string> instancesIds)
         {
-            string awsRegion = context.AppSettings.SettingsConfig.AwsRegion;
+            string awsRegion = context.AppSettings.SbDiagnostics.AwsRegion;
             AmazonEC2Client ec2 = new AmazonEC2Client(Amazon.RegionEndpoint.GetBySystemName(awsRegion));
 
             DescribeInstancesRequest request = new DescribeInstancesRequest();
@@ -167,7 +167,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>a Task<DiagnosticStatus>.</returns>
         private async Task<DiagnosticStatus> QueryAwsNode(string ipAddress, int level)
         {
-            string statusUrl = context.AppSettings.SettingsConfig.StatusUrl;
+            string statusUrl = context.AppSettings.SbDiagnostics.StatusUrl;
             string uri = $"http://{ipAddress}/{statusUrl}{level}";
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(uri);
@@ -340,8 +340,8 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         {
             ConfigurationStatus configurationStatus = new ConfigurationStatus
             {
-                ContentBucket = context.AppSettings.SettingsConfig.AwsS3Bucket,
-                AWSRegion = context.AppSettings.SettingsConfig.AwsRegion
+                ContentBucket = context.AppSettings.SbDiagnostics.AwsS3Bucket,
+                AWSRegion = context.AppSettings.SbDiagnostics.AwsRegion
             };
 
             if (string.IsNullOrEmpty(configurationStatus.ContentBucket))
@@ -377,7 +377,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>an AccessStatus object.</returns>
         private void GetReadStatus(AccessStatus accessStatus)
         {
-            string filepath = context.AppSettings.SettingsConfig.ContentRootDirectory;
+            string filepath = context.AppSettings.SbContent.ContentRootDirectory;
 
             accessStatus.Readable = false;
             try
@@ -403,7 +403,7 @@ namespace SmarterBalanced.SampleItems.Core.Diagnostics
         /// <returns>an AccessStatus object.</returns>
         private void GetWriteStatus(AccessStatus accessStatus)
         {
-            string filepath = context.AppSettings.SettingsConfig.ContentRootDirectory;
+            string filepath = context.AppSettings.SbContent.ContentRootDirectory;
 
             filepath = Path.Combine(filepath, Path.GetRandomFileName());
             while (File.Exists(filepath))

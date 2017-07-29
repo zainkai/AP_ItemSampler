@@ -56,5 +56,32 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
 
             return context;
         }
+
+        /// <summary>
+        /// Gets a list of items that share a stimulus with the given item.
+        /// Given item is returned as the first element of the list.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
+        {
+            List<SampleItem> associatedStimulusDigests = SampleItems
+                .Where(i => i.IsPerformanceItem &&
+                    i.FieldTestUse != null &&
+                    i.AssociatedStimulus == item.AssociatedStimulus &&
+                    i.Grade == item.Grade && i.Subject?.Code == item.Subject?.Code)
+                .OrderBy(i => i.FieldTestUse?.Section)
+                .ThenBy(i => i.FieldTestUse?.QuestionNumber)
+                .ToList();
+
+            return associatedStimulusDigests;
+
+        }
+        public SampleItem GetSampleItem(int bankKey, int itemKey)
+        {
+            return SampleItems.SingleOrDefault(item => item.BankKey == bankKey && item.ItemKey == itemKey);
+
+        }
+
     }
 }
