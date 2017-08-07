@@ -35,6 +35,7 @@ export interface State {
     subjects: string[];
     claims: string[];
     interactionTypes: string[];
+    targets: string[];
     performanceOnly: boolean;
 
     expandMore: boolean;
@@ -62,6 +63,7 @@ export class ISPComponent extends React.Component<Props, State> {
         const claims = queryObject["claims"] || [];
         const interactionTypes = queryObject["interactionTypes"] || [];
         const performanceOnly = (queryObject["performanceOnly"] || [])[0] === "true";
+        const targets = queryObject["targets"] || [];
 
         this.state = {
             itemId: itemId,
@@ -69,6 +71,7 @@ export class ISPComponent extends React.Component<Props, State> {
             subjects: subjects,
             claims: claims,
             interactionTypes: interactionTypes,
+            targets: targets,
             performanceOnly: performanceOnly,
 
             expandMore: itemId.length !== 0 || performanceOnly,
@@ -100,6 +103,9 @@ export class ISPComponent extends React.Component<Props, State> {
         }
         if (this.state.performanceOnly) {
             pairs.push("performanceOnly=true");
+        }
+        if (this.state.targets && this.state.targets.length !== 0) {
+            pairs.push("targets=" + this.state.targets.join(","));
         }
 
         if (pairs.length === 0) {
@@ -195,6 +201,14 @@ export class ISPComponent extends React.Component<Props, State> {
         const containsClaim = claims.indexOf(claim) !== -1;
         this.setState({
             claims: containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim])
+        }, () => this.beginChangeTimeout());
+    }
+
+    toggleTarget(target: string) {
+        const targets = this.state.targets;
+        const containsTarget = targets.indexOf(target) !== -1;
+        this.setState({
+            targets: containsTarget ? targets.filter(t => t !== target) : targets.concat([target])
         }, () => this.beginChangeTimeout());
     }
 
@@ -442,6 +456,17 @@ export class ISPComponent extends React.Component<Props, State> {
             </div>
         );
     }
+
+    //renderTarget(target: ItemsSearch.Target): JSX.Element {
+    //    const targets = this.state.targets;
+    //    const containsTarget = targets.indexOf(target.code);
+    //    return (
+    //        <button role="button" key={target.code}
+    //            className={(containsTarget ? "selected" : "") + " tag"}
+    //            onClick={() => this.toggleClaim(target.code)}
+
+    //    );
+    //}
 
     renderClaims() {
         const selectedClaims = this.state.claims;

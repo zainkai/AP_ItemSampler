@@ -52,5 +52,20 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         }
 
 
+        public Subject WithClaimTargets(IList<CoreStandards> allTargets)
+        {
+            var newClaims = Claims
+                .Select(c => c.WithTargets(allTargets
+                    .Where(t => t.ClaimId == c.ClaimNumber)
+                    .ToList()))
+                .ToImmutableArray();
+            
+            return new Subject(
+                code: Code,
+                label: Label,
+                shortLabel: ShortLabel,
+                claims: newClaims,
+                interactionTypeCodes: InteractionTypeCodes);
+        }
     }
 }

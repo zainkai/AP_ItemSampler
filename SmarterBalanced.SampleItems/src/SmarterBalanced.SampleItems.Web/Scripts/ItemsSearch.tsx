@@ -44,6 +44,13 @@ export interface Subject {
 export interface Claim {
     code: string;
     label: string;
+    targets: Target[];
+}
+
+
+export interface Target {
+    targetIdLabel: string;
+    targetShortName: string;
 }
 
 namespace ItemsSearch {
