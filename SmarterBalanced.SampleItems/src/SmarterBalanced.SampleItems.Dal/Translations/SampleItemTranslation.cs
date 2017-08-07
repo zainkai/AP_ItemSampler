@@ -27,18 +27,28 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             AppSettings settings
             )
         {
+
             var sampleItems = digests.Select(d =>
-                ToSampleItem(
-                    itemDigest: d,
-                    standardsXml: standardsXml,
-                    subjects: subjects,
-                    interactionTypes: interactionTypes,
-                    resourceFamilies: resourceFamilies,
-                    patches: patches,
-                    brailleFileInfo: brailleFileInfo,
-                    settings: settings
-                    ))
-                .ToImmutableArray();
+                {
+                    try
+                    {
+                        return ToSampleItem(
+                           itemDigest: d,
+                           standardsXml: standardsXml,
+                           subjects: subjects,
+                           interactionTypes: interactionTypes,
+                           resourceFamilies: resourceFamilies,
+                           patches: patches,
+                           brailleFileInfo: brailleFileInfo,
+                           settings: settings
+                           );
+
+                    }catch (Exception e)
+                    {
+                        throw new Exception($"Item {d.BankKey}-{d.ItemKey}");
+                    }
+                    return null;
+                }).ToImmutableArray();
 
             return sampleItems;
         }

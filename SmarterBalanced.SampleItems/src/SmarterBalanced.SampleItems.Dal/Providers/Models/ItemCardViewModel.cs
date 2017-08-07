@@ -17,6 +17,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string ClaimCode { get; }
         public string ClaimLabel { get; }
         public string Target { get; }
+        public string TargetShortName { get; }
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
         public bool IsPerformanceItem { get; }
@@ -32,6 +33,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string claimCode,
             string claimLabel,
             string target,
+            string targetShortName,
             string interactionTypeCode,
             string interactionTypeLabel,
             bool isPerformanceItem,
@@ -47,6 +49,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             ClaimCode = claimCode;
             ClaimLabel = claimLabel;
             Target = target;
+            TargetShortName = targetShortName;
             InteractionTypeCode = interactionTypeCode;
             InteractionTypeLabel = interactionTypeLabel;
             IsPerformanceItem = isPerformanceItem;
@@ -67,6 +70,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string claimCode = "",
            string claimLabel = "",
            string target = "",
+           string targetShortName = "",
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
            bool isPerformanceItem = false,
@@ -83,6 +87,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 claimCode: claimCode,
                 claimLabel: claimLabel,
                 target: target,
+                targetShortName: targetShortName,
                 interactionTypeCode: interactionTypeCode,
                 interactionTypeLabel: interactionTypeLabel,
                 isPerformanceItem: isPerformanceItem,

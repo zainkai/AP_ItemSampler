@@ -24,6 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 claimCode: sampleItem.Claim?.Code,
                 claimLabel: sampleItem.Claim?.Label,
                 target: sampleItem.CoreStandards?.TargetIdLabel,
+                targetShortName: sampleItem.CoreStandards?.TargetShortName,
                 interactionTypeCode: sampleItem.InteractionType?.Code,
                 interactionTypeLabel: sampleItem.InteractionType?.Label,
                 isPerformanceItem: sampleItem.IsPerformanceItem,

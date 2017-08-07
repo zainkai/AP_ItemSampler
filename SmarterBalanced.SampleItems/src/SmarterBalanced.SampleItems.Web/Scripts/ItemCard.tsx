@@ -12,6 +12,7 @@ export interface ItemCardViewModel {
     claimCode: string;
     claimLabel: string;
     target: string;
+    targetShortString: string;
     interactionTypeCode: string;
     interactionTypeLabel: string;
 }
