@@ -56,7 +56,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         {
             var newClaims = Claims
                 .Select(c => c.WithTargets(allTargets
-                    .Where(t => t.ClaimId == c.ClaimNumber)
+                    .Where(t => t.ClaimId == c.ClaimNumber && t.Subject == Code)
                     .ToList()))
                 .ToImmutableArray();
             

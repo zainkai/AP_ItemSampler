@@ -16,6 +16,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string CommonCoreStandardsDescription { get; }
         public string ClaimId { get; }
         public string Publication { get; }
+        public string Subject { get; }
 
         public CoreStandards(
             string targetDescription,
@@ -24,7 +25,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string commonCoreStandardsId,
             string commonCoreStandardsDescription,
             string claimId,
-            string publication)
+            string publication,
+            string subject)
         {
             TargetDescription = RemoveShortNameFromDescription(targetDescription);
             TargetId = targetId;
@@ -34,8 +36,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             CommonCoreStandardsDescription = commonCoreStandardsDescription;
             ClaimId = claimId;
             Publication = publication;
-
-            
+            Subject = subject;
         }
 
         public static CoreStandards Create(
@@ -45,7 +46,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
           string commonCoreStandardsId = "",
           string commonCoreStandardsDescription = "",
           string claimId = "",
-          string publication = "")
+          string publication = "",
+          string subject = "")
         {
             return new CoreStandards(
                 targetDescription: targetDescription,
@@ -54,7 +56,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 commonCoreStandardsId: commonCoreStandardsId,
                 commonCoreStandardsDescription: commonCoreStandardsDescription,
                 claimId: claimId,
-                publication: publication);
+                publication: publication,
+                subject: subject);
         }
 
         public CoreStandards WithTargetCCSSDescriptions(
@@ -68,7 +71,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 commonCoreStandardsId: CommonCoreStandardsId,
                 commonCoreStandardsDescription: commonCoreStandardsDescription,
                 claimId : ClaimId,
-                publication: Publication);
+                publication: Publication,
+                subject: Subject);
         }
 
         /// <summary>
