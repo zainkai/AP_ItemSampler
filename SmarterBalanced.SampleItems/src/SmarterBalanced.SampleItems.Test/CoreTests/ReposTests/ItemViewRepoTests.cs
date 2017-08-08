@@ -80,8 +80,8 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             Math = new Subject("Math", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
             Ela = new Subject("ELA", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
             NotASubject = new Subject("NotASubject", "", "", new ImmutableArray<Claim>() { }, new ImmutableArray<string>() { });
-            Claim1 = new Claim("1", "", "");
-            Claim2 = new Claim("2", "", "");
+            Claim1 = new Claim("1", "", "", ImmutableArray.Create<CoreStandards>());
+            Claim2 = new Claim("2", "", "", ImmutableArray.Create<CoreStandards>());
 
             //generated item cards for more like this tests
             itemCards = itemCards.AddRange(MoreItemCards());
@@ -325,7 +325,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         public void TestGoodGetItemNames()
         {
             var item = ItemViewRepo.GetItemNames(PerformanceDigest);
-            var associatedItems = ItemViewRepo.GetAssociatedPerformanceItems(PerformanceDigest).Select(i => i.ToString());
+            var associatedItems = ItemViewRepo.GetItemNames(PerformanceDigest);
 
             Assert.True(item.Contains(associatedItems.ElementAt(0)));
             Assert.True(item.Contains(associatedItems.ElementAt(1)));

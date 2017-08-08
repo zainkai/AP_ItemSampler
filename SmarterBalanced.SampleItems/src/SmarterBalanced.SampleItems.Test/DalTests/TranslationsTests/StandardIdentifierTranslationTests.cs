@@ -96,15 +96,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
-            var settings = new SettingsConfig
+            var settings = new SbContentSettings
             {
-                SupportedPublications = new string[] { "" }
+                SupportedPublications = new string[] { "" },
+                RubricPlaceHolderText = placeholderText
             };
 
             appSettings = new AppSettings
             {
-                SettingsConfig = settings,
-                RubricPlaceHolderText = placeholderText
+                SbContent = settings
             };
         }
 
