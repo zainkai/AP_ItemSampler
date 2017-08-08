@@ -133,7 +133,8 @@ export class ISPComponent extends React.Component<Props, State> {
             subjects: this.state.subjects || [],
             claims: this.state.claims || [],
             interactionTypes: this.state.interactionTypes || [],
-            performanceOnly: this.state.performanceOnly || false
+            performanceOnly: this.state.performanceOnly || false,
+            targets: this.state.targets
         };
         this.props.onChange(params);
     }
@@ -177,7 +178,8 @@ export class ISPComponent extends React.Component<Props, State> {
             this.setState({
                 subjects: newSubjectCodes,
                 claims: [],
-                interactionTypes: []
+                interactionTypes: [],
+                targets: []
             }, () => this.beginChangeTimeout());
             return;
         }
@@ -191,18 +193,36 @@ export class ISPComponent extends React.Component<Props, State> {
         const subjectInteractionCodes = newSubjects.reduce((prev: string[], cur: ItemsSearch.Subject) => prev.concat(cur.interactionTypeCodes), []);
         const newInteractionCodes = this.state.interactionTypes.filter(i => subjectInteractionCodes.indexOf(i) !== -1);
 
+        const subjectTargets = newSubjects.map(s => s.claims)
+            .reduce((a, b) => a.concat(b), [])
+            .map(c => c.targets)
+            .reduce((a, b) => a.concat(b), [])
+            .map(t => t.targetId);
+        const newTargets = this.state.targets.filter(t => subjectTargets.indexOf(t) !== -1);
+
         this.setState({
             subjects: newSubjectCodes,
             claims: newClaimCodes,
-            interactionTypes: newInteractionCodes
+            interactionTypes: newInteractionCodes,
+            targets: newTargets
         }, () => this.beginChangeTimeout());
     }
 
     toggleClaim(claim: string) {
         const claims = this.state.claims;
         const containsClaim = claims.indexOf(claim) !== -1;
+        const newClaimCodes = containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim]);
+        const newVisibleTargets = this.props.subjects.map(s => s.claims)
+            .reduce((a, b) => a.concat(b), [])
+            .filter(c => newClaimCodes.indexOf(c.code) !== -1)
+            .map(c => c.targets)
+            .reduce((a, b) => a.concat(b), [])
+            .map(t => t.targetId);
+        const newTargets = this.state.targets.filter(t => newVisibleTargets.indexOf(t) !== -1);
+
         this.setState({
-            claims: containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim])
+            claims: newClaimCodes,
+            targets: newTargets
         }, () => this.beginChangeTimeout());
     }
 
@@ -475,11 +495,11 @@ export class ISPComponent extends React.Component<Props, State> {
 
     renderTarget(target: ItemsSearch.Target): JSX.Element {
         const targets = this.state.targets;
-        const containsTarget = targets.indexOf(target.targetIdLabel) !== -1;
+        const containsTarget = targets.indexOf(target.targetId) !== -1;
         return (
-            <button role="button" key={target.targetIdLabel}
+            <button role="button" key={target.targetId}
                 className={(containsTarget ? "selected" : "") + " tag"}
-                onClick={() => this.toggleTarget(target.targetIdLabel)}
+                onClick={() => this.toggleTarget(target.targetId)}
                 tabIndex={0}
                 aria-pressed={containsTarget}>
 
@@ -499,7 +519,7 @@ export class ISPComponent extends React.Component<Props, State> {
             : [];
         let uniqueTargets: ItemsSearch.Target[] = [];
         visibleTargets.forEach(t => {
-            if (uniqueTargets.find(ut => ut.targetIdLabel == t.targetIdLabel) === undefined) {
+            if (uniqueTargets.find(ut => ut.targetId == t.targetId) === undefined) {
                 uniqueTargets.push(t);
             }
         });
@@ -628,4 +648,3 @@ export class ISPComponent extends React.Component<Props, State> {
         );
     }
 }
-

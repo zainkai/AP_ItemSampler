@@ -49,7 +49,7 @@ export interface Claim {
 
 
 export interface Target {
-    targetIdLabel: string;
+    targetId: string;
     targetShortName: string;
 }
 
@@ -166,6 +166,7 @@ export interface SearchAPIParams {
     claims: string[];
     interactionTypes: string[];
     performanceOnly: boolean;
+    targets: string[];
 }
 
 interface ItemsSearchViewModel {
