@@ -43,6 +43,7 @@ export interface State {
     expandSubjects: boolean;
     expandClaims: boolean;
     expandInteractionTypes: boolean;
+    expandTargets: boolean;
 }
 
 export class ISPComponent extends React.Component<Props, State> {
@@ -79,6 +80,7 @@ export class ISPComponent extends React.Component<Props, State> {
             expandSubjects: subjects.length !== 0,
             expandClaims: claims.length !== 0,
             expandInteractionTypes: interactionTypes.length !== 0,
+            expandTargets: targets.length !== 0
         };
 
         this.onChange();
@@ -253,6 +255,12 @@ export class ISPComponent extends React.Component<Props, State> {
         });
     }
 
+    toggleExpandTargets() {
+        this.setState({
+            expandTargets: !this.state.expandTargets
+        });
+    }
+
     toggleExpandInteractionTypes() {
         this.setState({
             expandInteractionTypes: !this.state.expandInteractionTypes
@@ -267,7 +275,8 @@ export class ISPComponent extends React.Component<Props, State> {
             expandGradeLevels: expandAll,
             expandSubjects: expandAll,
             expandClaims: expandAll,
-            expandInteractionTypes: expandAll
+            expandInteractionTypes: expandAll,
+            expandTargets: expandAll,
         });
     }
 
@@ -284,6 +293,12 @@ export class ISPComponent extends React.Component<Props, State> {
     keyPressResetFilters(e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
             this.resetFilters();
+        }
+    }
+
+    keyPressToggleExpandTargets(e: React.KeyboardEvent<HTMLElement>) {
+        if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+            this.toggleExpandTargets();
         }
     }
 
@@ -346,6 +361,7 @@ export class ISPComponent extends React.Component<Props, State> {
                     {this.renderClaims()}
                     {this.renderInteractionTypes()}
                     {this.renderSearchById()}
+                    {this.renderTargets()}
                 </div>
             </div>
         );
@@ -457,16 +473,56 @@ export class ISPComponent extends React.Component<Props, State> {
         );
     }
 
-    //renderTarget(target: ItemsSearch.Target): JSX.Element {
-    //    const targets = this.state.targets;
-    //    const containsTarget = targets.indexOf(target.code);
-    //    return (
-    //        <button role="button" key={target.code}
-    //            className={(containsTarget ? "selected" : "") + " tag"}
-    //            onClick={() => this.toggleClaim(target.code)}
+    renderTarget(target: ItemsSearch.Target): JSX.Element {
+        const targets = this.state.targets;
+        const containsTarget = targets.indexOf(target.targetIdLabel) !== -1;
+        return (
+            <button role="button" key={target.targetIdLabel}
+                className={(containsTarget ? "selected" : "") + " tag"}
+                onClick={() => this.toggleTarget(target.targetIdLabel)}
+                tabIndex={0}
+                aria-pressed={containsTarget}>
 
-    //    );
-    //}
+                {target.targetShortName}
+            </button>
+        );
+    }
+
+    renderTargets(): JSX.Element {
+        const selectedSubjects = this.props.subjects.filter(s => this.state.subjects.indexOf(s.code) !== -1);
+        const allClaims = selectedSubjects.length !== 0
+            ? selectedSubjects.map(s => s.claims).reduce((a, b) => a.concat(b))
+            : [];
+        const selectedClaims = allClaims.filter(c => this.state.claims.indexOf(c.code) !== -1);
+        const visibleTargets = selectedClaims.length !== 0
+            ? selectedClaims.map(c => c.targets).reduce((a, b) => a.concat(b))
+            : [];
+        let uniqueTargets: ItemsSearch.Target[] = [];
+        visibleTargets.forEach(t => {
+            if (uniqueTargets.find(ut => ut.targetIdLabel == t.targetIdLabel) === undefined) {
+                uniqueTargets.push(t);
+            }
+        });
+
+        const tags = uniqueTargets.length === 0
+            ? <p tabIndex={0}>Please select a claim first.</p>
+            : uniqueTargets.map(t => this.renderTarget(t));
+
+        return (
+            <div className="search-category" style={{ flexGrow: visibleTargets.length }}>
+                <label aria-expanded={this.state.expandTargets}
+                    onClick={() => this.toggleExpandTargets()}
+                    onKeyPress={e => this.keyPressToggleExpandTargets(e)}
+                    tabIndex={0}>
+
+                    {this.state.expandTargets ? hideArrow : showArrow} Targets
+                </label>
+                <div className="search-tags form-group">
+                    {this.state.expandTargets ? tags : undefined}
+                </div>
+            </div>
+        );
+    }
 
     renderClaims() {
         const selectedClaims = this.state.claims;

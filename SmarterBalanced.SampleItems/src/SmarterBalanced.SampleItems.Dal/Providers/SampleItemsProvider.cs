@@ -20,7 +20,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             SbContentSettings contentSettings = appSettings.SbContent;
 
             CoreStandardsXml standardsXml = LoadCoreStandards(contentSettings.CoreStandardsXMLPath);
-            var coreStandards = standardsXml.TargetRows
+            var targetCategories = standardsXml.TargetRows
                 .Where(tr => tr.SubjectCode == "ELA")
                 .Select(tr => StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, tr.StandardIdentifier))
                 .GroupBy(cs => cs.TargetShortName)
@@ -30,7 +30,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             var accessibilityResourceFamilies = LoadAccessibility(contentSettings.AccommodationsXMLPath);
             var interactionGroup = LoadInteractionGroup(contentSettings.InteractionTypesXMLPath);
             ImmutableArray<Subject> subjects = LoadSubjects(contentSettings.ClaimsXMLPath, interactionGroup.InteractionFamilies);
-            subjects = subjects.Select(s => s.WithClaimTargets(coreStandards)).ToImmutableArray();
+            subjects = subjects.Select(s => s.WithClaimTargets(targetCategories)).ToImmutableArray();
 
             var itemDigests = LoadItemDigests(appSettings).Result;
 
