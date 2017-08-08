@@ -23,7 +23,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 subjectLabel: sampleItem.Subject?.ShortLabel,
                 claimCode: sampleItem.Claim?.Code,
                 claimLabel: sampleItem.Claim?.Label,
-                target: sampleItem.CoreStandards?.TargetIdLabel,
+                targetHash: sampleItem.CoreStandards?.TargetHash ?? -1,
                 targetShortName: sampleItem.CoreStandards?.TargetShortName,
                 interactionTypeCode: sampleItem.InteractionType?.Code,
                 interactionTypeLabel: sampleItem.InteractionType?.Label,

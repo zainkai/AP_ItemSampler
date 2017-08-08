@@ -197,7 +197,7 @@ export class ISPComponent extends React.Component<Props, State> {
             .reduce((a, b) => a.concat(b), [])
             .map(c => c.targets)
             .reduce((a, b) => a.concat(b), [])
-            .map(t => t.targetId);
+            .map(t => t.targetHash);
         const newTargets = this.state.targets.filter(t => subjectTargets.indexOf(t) !== -1);
 
         this.setState({
@@ -217,7 +217,7 @@ export class ISPComponent extends React.Component<Props, State> {
             .filter(c => newClaimCodes.indexOf(c.code) !== -1)
             .map(c => c.targets)
             .reduce((a, b) => a.concat(b), [])
-            .map(t => t.targetId);
+            .map(t => t.targetHash);
         const newTargets = this.state.targets.filter(t => newVisibleTargets.indexOf(t) !== -1);
 
         this.setState({
@@ -495,11 +495,11 @@ export class ISPComponent extends React.Component<Props, State> {
 
     renderTarget(target: ItemsSearch.Target): JSX.Element {
         const targets = this.state.targets;
-        const containsTarget = targets.indexOf(target.targetId) !== -1;
+        const containsTarget = targets.indexOf(target.targetHash) !== -1;
         return (
-            <button role="button" key={target.targetId}
+            <button role="button" key={target.targetHash}
                 className={(containsTarget ? "selected" : "") + " tag"}
-                onClick={() => this.toggleTarget(target.targetId)}
+                onClick={() => this.toggleTarget(target.targetHash)}
                 tabIndex={0}
                 aria-pressed={containsTarget}>
 
@@ -519,7 +519,7 @@ export class ISPComponent extends React.Component<Props, State> {
             : [];
         let uniqueTargets: ItemsSearch.Target[] = [];
         visibleTargets.forEach(t => {
-            if (uniqueTargets.find(ut => ut.targetId == t.targetId) === undefined) {
+            if (uniqueTargets.find(ut => ut.targetHash == t.targetHash) === undefined) {
                 uniqueTargets.push(t);
             }
         });

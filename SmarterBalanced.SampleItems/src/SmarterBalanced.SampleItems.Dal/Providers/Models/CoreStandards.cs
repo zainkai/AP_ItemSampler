@@ -12,6 +12,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string TargetId { get; }
         public string TargetIdLabel { get; }
         public string TargetShortName { get; }
+        public int TargetHash { get; }
         public string CommonCoreStandardsId { get; }
         public string CommonCoreStandardsDescription { get; }
         public string ClaimId { get; }
@@ -37,6 +38,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             ClaimId = claimId;
             Publication = publication;
             Subject = subject;
+            TargetHash = TargetShortName.GetHashCode();
         }
 
         public static CoreStandards Create(

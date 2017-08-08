@@ -49,7 +49,7 @@ export interface Claim {
 
 
 export interface Target {
-    targetId: string;
+    targetHash: string;
     targetShortName: string;
 }
 

@@ -60,7 +60,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
             if (parms.Targets != null && parms.Targets.Any())
             {
-                query = query.Where(i => parms.Targets.Contains(i.Target));
+                query = query.Where(i => parms.Targets.Contains(i.TargetHash));
             }
 
             return query.OrderBy(i => i.SubjectCode).ThenBy(i => i.Grade).ThenBy(i => i.ClaimCode).ToList();

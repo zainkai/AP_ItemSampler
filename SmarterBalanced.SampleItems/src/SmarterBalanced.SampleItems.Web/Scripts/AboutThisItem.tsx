@@ -170,7 +170,7 @@ class AboutThisItemDetailComponent extends React.Component<Props, {}> {
                 {this.renderField("Subject", this.props.itemCardViewModel.subjectLabel, "subject")}
                 {this.renderField("Grade", this.props.itemCardViewModel.gradeLabel, "grade")}
                 {this.renderField("Claim", this.props.itemCardViewModel.claimLabel, "claim")}
-                {this.renderField("Target", this.props.itemCardViewModel.target, "target")}
+                {this.renderField("Target", this.props.itemCardViewModel.targetShortName, "target")}
                 {this.renderField("Item Type", this.props.itemCardViewModel.interactionTypeLabel, "interaction-type")}
                 {this.renderField("Item Id", this.props.itemCardViewModel.itemKey, "item-id")}
                 {this.renderField("Depth of Knowledge", this.props.depthOfKnowledge, "dok")}
