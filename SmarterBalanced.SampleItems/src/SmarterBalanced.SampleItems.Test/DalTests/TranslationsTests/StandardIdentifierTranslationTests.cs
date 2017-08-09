@@ -411,7 +411,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     levelType: "CCSS",
                     identifier: identifier));
 
-             var coreStandardsRowTarget = ImmutableArray.Create(
+            var coreStandardsRowTarget = ImmutableArray.Create(
                 CoreStandardsRow.Create(
                     subjectCode: "ELA",
                     key: "4-6|3-6",
@@ -429,6 +429,30 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(core.Target.IdLabel, "4");
             Assert.Equal(core.Target.Descripton, "Target Desc");
             Assert.Equal(core.CommonCoreStandardsDescription, "CCSS Desc");
+        }
+
+        [Fact]
+        public void TestCoreStandardsTarget()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var coreStandardsRowTarget = ImmutableArray.Create(
+                CoreStandardsRow.Create(
+                    subjectCode: "ELA",
+                    key: "4-6|3-6",
+                    description: "SHORT NAME: Target description",
+                    levelType: "Target",
+                    identifier: identifier));
+            CoreStandardsXml coreStandardsXml = new CoreStandardsXml(coreStandardsRowTarget, ImmutableArray.Create<CoreStandardsRow>());
+            var coreStandard = StandardIdentifierTranslation.CoreStandardFromIdentifier(coreStandardsXml, identifier);
+
+            Assert.NotNull(coreStandard);
+            Assert.Equal(coreStandard.Target.Descripton, "Target description");
+            Assert.Equal(coreStandard.Target.Name, "Short Name");
+            Assert.Equal(coreStandard.Target.Id, "4-6");
+            Assert.Equal(coreStandard.Target.IdLabel, "4");
+            Assert.Equal(coreStandard.Target.NameHash, coreStandard.Target.GetHashCode());
+            Assert.Equal(coreStandard.Target.Subject, "ELA");
+            Assert.Equal(coreStandard.Target.ClaimId, "3");
         }
     }
 }
