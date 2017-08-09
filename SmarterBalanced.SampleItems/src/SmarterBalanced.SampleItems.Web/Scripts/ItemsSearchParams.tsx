@@ -524,9 +524,14 @@ export class ISPComponent extends React.Component<Props, State> {
             }
         });
 
-        const tags = uniqueTargets.length === 0
-            ? <p tabIndex={0}>Please select a claim first.</p>
-            : uniqueTargets.map(t => this.renderTarget(t));
+        let tags: JSX.Element | JSX.Element[];
+        if (uniqueTargets.length === 0) {
+            tags = this.state.claims.length === 0 
+                ? <p tabIndex={0}>Please select a claim first.</p>
+                : <p tabIndex={0}>No targets found for the specified claim(s).</p>
+        } else {
+            tags = uniqueTargets.map(t => this.renderTarget(t));
+        }
 
         return (
             <div className="search-category" style={{ flexGrow: visibleTargets.length }}>
