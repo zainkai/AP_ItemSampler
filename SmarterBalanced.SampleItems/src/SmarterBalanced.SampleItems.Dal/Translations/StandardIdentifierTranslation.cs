@@ -300,14 +300,20 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                     StandardIdentifierCcssComparer.Instance.Equals(t.StandardIdentifier, itemIdentifier));
             }
 
+            var target = Target.Create(
+                desc: targetRow?.Description,
+                id: itemIdentifier?.Target,
+                idLabel: itemIdentifier?.ToTargetId(),
+                subject: targetRow?.SubjectCode ?? ccssRow?.SubjectCode,
+                claim: itemIdentifier?.ToClaimId());
+
             return CoreStandards.Create(
-                  targetId: itemIdentifier?.Target,
-                  targetIdLabel: itemIdentifier?.ToTargetId(),
+                  target: target,
                   commonCoreStandardsId: itemIdentifier?.CommonCoreStandard,
                   commonCoreStandardsDescription: ccssRow?.Description,
-                  targetDescription: targetRow?.Description,
                   claimId: itemIdentifier?.ToClaimId(),
-                  publication: itemIdentifier?.Publication);
+                  publication: itemIdentifier?.Publication,
+                  subject: targetRow?.SubjectCode ?? ccssRow?.SubjectCode);
         }
 
     }

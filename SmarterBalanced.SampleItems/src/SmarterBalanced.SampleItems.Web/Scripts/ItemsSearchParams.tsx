@@ -35,6 +35,7 @@ export interface State {
     subjects: string[];
     claims: string[];
     interactionTypes: string[];
+    targets: number[];
     performanceOnly: boolean;
 
     expandMore: boolean;
@@ -42,6 +43,7 @@ export interface State {
     expandSubjects: boolean;
     expandClaims: boolean;
     expandInteractionTypes: boolean;
+    expandTargets: boolean;
 }
 
 export class ISPComponent extends React.Component<Props, State> {
@@ -62,6 +64,7 @@ export class ISPComponent extends React.Component<Props, State> {
         const claims = queryObject["claims"] || [];
         const interactionTypes = queryObject["interactionTypes"] || [];
         const performanceOnly = (queryObject["performanceOnly"] || [])[0] === "true";
+        const targets = queryObject["targets"] || [];
 
         this.state = {
             itemId: itemId,
@@ -69,6 +72,7 @@ export class ISPComponent extends React.Component<Props, State> {
             subjects: subjects,
             claims: claims,
             interactionTypes: interactionTypes,
+            targets: targets.map(t => Number(t)),
             performanceOnly: performanceOnly,
 
             expandMore: itemId.length !== 0 || performanceOnly,
@@ -76,6 +80,7 @@ export class ISPComponent extends React.Component<Props, State> {
             expandSubjects: subjects.length !== 0,
             expandClaims: claims.length !== 0,
             expandInteractionTypes: interactionTypes.length !== 0,
+            expandTargets: targets.length !== 0
         };
 
         this.onChange();
@@ -101,6 +106,9 @@ export class ISPComponent extends React.Component<Props, State> {
         if (this.state.performanceOnly) {
             pairs.push("performanceOnly=true");
         }
+        if (this.state.targets && this.state.targets.length !== 0) {
+            pairs.push("targets=" + this.state.targets.join(","));
+        }
 
         if (pairs.length === 0) {
             return "/BrowseItems";
@@ -125,7 +133,8 @@ export class ISPComponent extends React.Component<Props, State> {
             subjects: this.state.subjects || [],
             claims: this.state.claims || [],
             interactionTypes: this.state.interactionTypes || [],
-            performanceOnly: this.state.performanceOnly || false
+            performanceOnly: this.state.performanceOnly || false,
+            targets: this.state.targets
         };
         this.props.onChange(params);
     }
@@ -169,7 +178,8 @@ export class ISPComponent extends React.Component<Props, State> {
             this.setState({
                 subjects: newSubjectCodes,
                 claims: [],
-                interactionTypes: []
+                interactionTypes: [],
+                targets: []
             }, () => this.beginChangeTimeout());
             return;
         }
@@ -183,18 +193,44 @@ export class ISPComponent extends React.Component<Props, State> {
         const subjectInteractionCodes = newSubjects.reduce((prev: string[], cur: ItemsSearch.Subject) => prev.concat(cur.interactionTypeCodes), []);
         const newInteractionCodes = this.state.interactionTypes.filter(i => subjectInteractionCodes.indexOf(i) !== -1);
 
+        const subjectTargets = newSubjects.map(s => s.claims)
+            .reduce((a, b) => a.concat(b), [])
+            .map(c => c.targets)
+            .reduce((a, b) => a.concat(b), [])
+            .map(t => t.nameHash);
+        const newTargets = this.state.targets.filter(t => subjectTargets.indexOf(t) !== -1);
+
         this.setState({
             subjects: newSubjectCodes,
             claims: newClaimCodes,
-            interactionTypes: newInteractionCodes
+            interactionTypes: newInteractionCodes,
+            targets: newTargets
         }, () => this.beginChangeTimeout());
     }
 
     toggleClaim(claim: string) {
         const claims = this.state.claims;
         const containsClaim = claims.indexOf(claim) !== -1;
+        const newClaimCodes = containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim]);
+        const newVisibleTargets = this.props.subjects.map(s => s.claims)
+            .reduce((a, b) => a.concat(b), [])
+            .filter(c => newClaimCodes.indexOf(c.code) !== -1)
+            .map(c => c.targets)
+            .reduce((a, b) => a.concat(b), [])
+            .map(t => t.nameHash);
+        const newTargets = this.state.targets.filter(t => newVisibleTargets.indexOf(t) !== -1);
+
         this.setState({
-            claims: containsClaim ? claims.filter(c => c !== claim) : claims.concat([claim])
+            claims: newClaimCodes,
+            targets: newTargets
+        }, () => this.beginChangeTimeout());
+    }
+
+    toggleTarget(target: number) {
+        const targets = this.state.targets;
+        const containsTarget = targets.indexOf(target) !== -1;
+        this.setState({
+            targets: containsTarget ? targets.filter(t => t !== target) : targets.concat([target])
         }, () => this.beginChangeTimeout());
     }
 
@@ -239,6 +275,12 @@ export class ISPComponent extends React.Component<Props, State> {
         });
     }
 
+    toggleExpandTargets() {
+        this.setState({
+            expandTargets: !this.state.expandTargets
+        });
+    }
+
     toggleExpandInteractionTypes() {
         this.setState({
             expandInteractionTypes: !this.state.expandInteractionTypes
@@ -253,7 +295,8 @@ export class ISPComponent extends React.Component<Props, State> {
             expandGradeLevels: expandAll,
             expandSubjects: expandAll,
             expandClaims: expandAll,
-            expandInteractionTypes: expandAll
+            expandInteractionTypes: expandAll,
+            expandTargets: expandAll,
         });
     }
 
@@ -270,6 +313,12 @@ export class ISPComponent extends React.Component<Props, State> {
     keyPressResetFilters(e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
             this.resetFilters();
+        }
+    }
+
+    keyPressToggleExpandTargets(e: React.KeyboardEvent<HTMLElement>) {
+        if (e.keyCode === 0 || e.keyCode === 13 || e.keyCode === 32) {
+            this.toggleExpandTargets();
         }
     }
 
@@ -332,6 +381,7 @@ export class ISPComponent extends React.Component<Props, State> {
                     {this.renderClaims()}
                     {this.renderInteractionTypes()}
                     {this.renderSearchById()}
+                    {this.renderTargets()}
                 </div>
             </div>
         );
@@ -443,6 +493,62 @@ export class ISPComponent extends React.Component<Props, State> {
         );
     }
 
+    renderTarget(target: ItemsSearch.Target): JSX.Element {
+        const targets = this.state.targets;
+        const containsTarget = targets.indexOf(target.nameHash) !== -1;
+        return (
+            <button role="button" key={target.nameHash}
+                className={(containsTarget ? "selected" : "") + " tag"}
+                onClick={() => this.toggleTarget(target.nameHash)}
+                tabIndex={0}
+                aria-pressed={containsTarget}>
+
+                {target.name}
+            </button>
+        );
+    }
+
+    renderTargets(): JSX.Element {
+        const selectedSubjects = this.props.subjects.filter(s => this.state.subjects.indexOf(s.code) !== -1);
+        const allClaims = selectedSubjects.length !== 0
+            ? selectedSubjects.map(s => s.claims).reduce((a, b) => a.concat(b))
+            : [];
+        const selectedClaims = allClaims.filter(c => this.state.claims.indexOf(c.code) !== -1);
+        const visibleTargets = selectedClaims.length !== 0
+            ? selectedClaims.map(c => c.targets).reduce((a, b) => a.concat(b))
+            : [];
+        let uniqueTargets: ItemsSearch.Target[] = [];
+        visibleTargets.forEach(t => {
+            if (uniqueTargets.find(ut => ut.nameHash == t.nameHash) === undefined) {
+                uniqueTargets.push(t);
+            }
+        });
+
+        let tags: JSX.Element | JSX.Element[];
+        if (uniqueTargets.length === 0) {
+            tags = this.state.claims.length === 0 
+                ? <p tabIndex={0}>Please select a claim first.</p>
+                : <p tabIndex={0}>No targets found for the specified claim(s).</p>
+        } else {
+            tags = uniqueTargets.map(t => this.renderTarget(t));
+        }
+
+        return (
+            <div className="search-category" style={{ flexGrow: visibleTargets.length }}>
+                <label aria-expanded={this.state.expandTargets}
+                    onClick={() => this.toggleExpandTargets()}
+                    onKeyPress={e => this.keyPressToggleExpandTargets(e)}
+                    tabIndex={0}>
+
+                    {this.state.expandTargets ? hideArrow : showArrow} Targets
+                </label>
+                <div className="search-tags form-group">
+                    {this.state.expandTargets ? tags : undefined}
+                </div>
+            </div>
+        );
+    }
+
     renderClaims() {
         const selectedClaims = this.state.claims;
 
@@ -547,4 +653,3 @@ export class ISPComponent extends React.Component<Props, State> {
         );
     }
 }
-

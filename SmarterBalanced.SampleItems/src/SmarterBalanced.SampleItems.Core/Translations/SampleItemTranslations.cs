@@ -25,14 +25,14 @@ namespace SmarterBalanced.SampleItems.Core.Translations
              subjectLabel: sampleItem.Subject?.ShortLabel,
              claimCode: sampleItem.Claim?.Code,
              claimLabel: sampleItem.Claim?.Label,
-             target: sampleItem.CoreStandards?.TargetIdLabel,
+             target: sampleItem.CoreStandards?.Target?.IdLabel,
              interactionTypeCode: sampleItem.InteractionType?.Code,
              interactionTypeLabel: sampleItem.InteractionType?.Label,
              isPerformanceItem: sampleItem.IsPerformanceItem,
              aslSupported: sampleItem.AslSupported,
              stimulusKey: sampleItem.AssociatedStimulus,
              ccssDesc: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
-             targetDesc: sampleItem.CoreStandards?.TargetDescription,
+             targetDesc: sampleItem.CoreStandards?.Target.Descripton,
              url : url,
              depthOfKnowledge: sampleItem.DepthOfKnowledge);
 

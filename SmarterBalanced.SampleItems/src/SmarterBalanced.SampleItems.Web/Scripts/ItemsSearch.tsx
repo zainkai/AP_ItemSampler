@@ -44,6 +44,13 @@ export interface Subject {
 export interface Claim {
     code: string;
     label: string;
+    targets: Target[];
+}
+
+
+export interface Target {
+    name: string;
+    nameHash: number;
 }
 
 namespace ItemsSearch {
@@ -159,6 +166,7 @@ export interface SearchAPIParams {
     claims: string[];
     interactionTypes: string[];
     performanceOnly: boolean;
+    targets: number[];
 }
 
 interface ItemsSearchViewModel {

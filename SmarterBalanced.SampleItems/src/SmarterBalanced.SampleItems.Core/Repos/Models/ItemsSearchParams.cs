@@ -14,6 +14,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
         public string ItemId { get; }
         public IList<string> Subjects { get; }
         public bool PerformanceOnly { get; }
+        public int[] Targets { get; }
 
         public ItemsSearchParams(
             string itemId,
@@ -21,7 +22,8 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             IList<string> subjects,
             string[] interactionTypes,
             string[] claimIds,
-            bool performanceOnly)
+            bool performanceOnly,
+            int[] targets)
         {
             ItemId = itemId;
             Grades = grades;
@@ -29,6 +31,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             InteractionTypes = interactionTypes;
             ClaimIds = claimIds;
             PerformanceOnly = performanceOnly;
+            Targets = targets;
         }
     }
 }

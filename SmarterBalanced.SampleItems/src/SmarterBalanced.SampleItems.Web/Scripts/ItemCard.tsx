@@ -11,7 +11,8 @@ export interface ItemCardViewModel {
     subjectLabel: string;
     claimCode: string;
     claimLabel: string;
-    target: string;
+    targetHash: string;
+    targetShortName: string;
     interactionTypeCode: string;
     interactionTypeLabel: string;
 }
@@ -59,7 +60,7 @@ export class ItemCard extends React.Component<ItemCardViewModel, {}> {
                     </p>
                     <p className="card-text target">
                         <span className="card-text-label">Target:</span>
-                        <span className="card-text-value"> {this.props.target}</span>
+                        <span className="card-text-value"> {this.props.targetShortName}</span>
                     </p>
                     <p className="card-text interaction-type">
                         <span className="card-text-label">Item Type:</span>
@@ -98,7 +99,7 @@ export class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
                     </p>
                     <p className="card-text target">
                         <span className="card-text-label">Target:</span>
-                        <span className="card-text-value"> {this.props.target}</span>
+                        <span className="card-text-value"> {this.props.targetShortName}</span>
                     </p>
                     <p className="card-text interaction-type">
                         <span className="card-text-label">Item Type:</span>

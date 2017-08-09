@@ -16,7 +16,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string SubjectLabel { get; }
         public string ClaimCode { get; }
         public string ClaimLabel { get; }
-        public string Target { get; }
+        public int TargetHash { get; }
+        public string TargetShortName { get; }
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
         public bool IsPerformanceItem { get; }
@@ -31,7 +32,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string subjectLabel,
             string claimCode,
             string claimLabel,
-            string target,
+            int targetHash,
+            string targetShortName,
             string interactionTypeCode,
             string interactionTypeLabel,
             bool isPerformanceItem,
@@ -46,7 +48,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             SubjectLabel = subjectLabel;
             ClaimCode = claimCode;
             ClaimLabel = claimLabel;
-            Target = target;
+            TargetHash = targetHash;
+            TargetShortName = targetShortName;
             InteractionTypeCode = interactionTypeCode;
             InteractionTypeLabel = interactionTypeLabel;
             IsPerformanceItem = isPerformanceItem;
@@ -66,7 +69,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string subjectLabel = "",
            string claimCode = "",
            string claimLabel = "",
-           string target = "",
+           int targetHash = -1,
+           string targetShortName = "",
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
            bool isPerformanceItem = false,
@@ -82,7 +86,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 subjectLabel: subjectLabel,
                 claimCode: claimCode,
                 claimLabel: claimLabel,
-                target: target,
+                targetHash: targetHash,
+                targetShortName: targetShortName,
                 interactionTypeCode: interactionTypeCode,
                 interactionTypeLabel: interactionTypeLabel,
                 isPerformanceItem: isPerformanceItem,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,49 +8,44 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
     public class CoreStandards
     {
-        public string TargetDescription { get; }
-        public string TargetId { get; }
-        public string TargetIdLabel { get; }
+        public Target Target { get; }
         public string CommonCoreStandardsId { get; }
         public string CommonCoreStandardsDescription { get; }
         public string ClaimId { get; }
         public string Publication { get; }
+        public string Subject { get; }
 
         public CoreStandards(
-            string targetDescription,
-            string targetId,
-            string targetIdLabel,
+            Target target,
             string commonCoreStandardsId,
             string commonCoreStandardsDescription,
             string claimId,
-            string publication)
+            string publication,
+            string subject)
         {
-            TargetDescription = targetDescription;
-            TargetId = targetId;
-            TargetIdLabel = targetIdLabel;
+            Target = target;
             CommonCoreStandardsId = commonCoreStandardsId;
             CommonCoreStandardsDescription = commonCoreStandardsDescription;
             ClaimId = claimId;
             Publication = publication;
+            Subject = subject;
         }
 
         public static CoreStandards Create(
-          string targetDescription = "",
-          string targetId = "",
-          string targetIdLabel = "",
+          Target target,
           string commonCoreStandardsId = "",
           string commonCoreStandardsDescription = "",
           string claimId = "",
-          string publication = "")
+          string publication = "",
+          string subject = "")
         {
             return new CoreStandards(
-                targetDescription: targetDescription,
-                targetId: targetId,
-                targetIdLabel:  targetIdLabel,
+                target: target,
                 commonCoreStandardsId: commonCoreStandardsId,
                 commonCoreStandardsDescription: commonCoreStandardsDescription,
                 claimId: claimId,
-                publication: publication);
+                publication: publication,
+                subject: subject);
         }
 
         public CoreStandards WithTargetCCSSDescriptions(
@@ -57,15 +53,14 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
          string commonCoreStandardsDescription = "")
         {
             return new CoreStandards(
-                targetDescription: targetDescription,
-                targetId: TargetId,
-                targetIdLabel: TargetIdLabel,
+                target: Target.WithDescription(targetDescription),
                 commonCoreStandardsId: CommonCoreStandardsId,
                 commonCoreStandardsDescription: commonCoreStandardsDescription,
                 claimId : ClaimId,
-                publication: Publication);
+                publication: Publication,
+                subject: Subject);
         }
 
-
+        
     }
 }

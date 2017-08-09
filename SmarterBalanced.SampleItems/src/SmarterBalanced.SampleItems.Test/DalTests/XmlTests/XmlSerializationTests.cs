@@ -9,6 +9,12 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
 {
     public class XmlSerializationTests
     {
+        // Path to directory containing content items for testing
+        static string testContentItemsPath = Directory.GetDirectories(
+            Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName,
+            "TestContentItems",
+            SearchOption.AllDirectories)[0];
+
         /// <summary>
         /// Test that the xml serializer deserializes the XML document
         /// </summary>
@@ -23,8 +29,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             string expectedClaim = "The student will identify and use the best academic or grade-level or below domain-specific (but not scientific or social studies) construct-relevant word(s)/phrase to convey the precise or intended meaning of a text especially with informational/explanatory writing.";
 
             string testFile = @"/Items/Item-187-856/metadata.xml";
-            string baseTestDirectory = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            FileInfo metadataFile = new FileInfo(baseTestDirectory + testFile);
+            FileInfo metadataFile = new FileInfo(testContentItemsPath + testFile);
             ItemMetadata metadata = XmlSerialization.DeserializeXml<ItemMetadata>(metadataFile);
 
             Assert.NotNull(metadata);
@@ -47,8 +52,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
             int expectedBankKey = 187;
 
             string testFile = @"/Items/Item-187-856/item-187-856.xml";
-            string baseTestDirectory = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            FileInfo metadataFile = new FileInfo(baseTestDirectory + testFile);
+            FileInfo metadataFile = new FileInfo(testContentItemsPath + testFile);
             ItemContents contents = XmlSerialization.DeserializeXml<ItemContents>(metadataFile);
 
             Assert.Equal(expectedItemKey, contents.Item.ItemKey);
@@ -61,12 +65,11 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         [Fact]
         public async void TestDeserializeXmlFiles()
         {
-            string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            IEnumerable<FileInfo> metadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            IEnumerable<FileInfo> metadataFiles = XmlSerialization.FindMetadataXmlFiles(testContentItemsPath);
             IEnumerable<ItemMetadata> metadata = await XmlSerialization.DeserializeXmlFilesAsync<ItemMetadata>(metadataFiles);
             Assert.Equal(metadataFiles.Count(), metadata.Count());
 
-            IEnumerable<FileInfo> contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
+            IEnumerable<FileInfo> contentFiles = XmlSerialization.FindContentXmlFiles(testContentItemsPath);
             IEnumerable<ItemContents> contents = await XmlSerialization.DeserializeXmlFilesAsync<ItemContents>(contentFiles);
             Assert.Equal(metadataFiles.Count(), contents.Count());
         }
@@ -78,8 +81,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         public void TestFindMetadataXmlFiles()
         {
             int metadataFilesCount = 6;
-            string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            var metadataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
+            var metadataFiles = XmlSerialization.FindMetadataXmlFiles(testContentItemsPath);
             Assert.Equal(metadataFilesCount, metadataFiles.Count());
         }
 
@@ -90,8 +92,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.XmlTests
         public void TestFindContentXmlFiles()
         {
             int contentFilesCount = 6;
-            string contentDir = Directory.GetDirectories(Directory.GetCurrentDirectory(), "TestContentItems", SearchOption.AllDirectories)[0];
-            var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);
+            var contentFiles = XmlSerialization.FindContentXmlFiles(testContentItemsPath);
             Assert.Equal(contentFilesCount, contentFiles.Count());
         }
     }

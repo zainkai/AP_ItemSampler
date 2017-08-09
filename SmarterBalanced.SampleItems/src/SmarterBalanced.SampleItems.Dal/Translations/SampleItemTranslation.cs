@@ -27,18 +27,27 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             AppSettings settings
             )
         {
+
             var sampleItems = digests.Select(d =>
-                ToSampleItem(
-                    itemDigest: d,
-                    standardsXml: standardsXml,
-                    subjects: subjects,
-                    interactionTypes: interactionTypes,
-                    resourceFamilies: resourceFamilies,
-                    patches: patches,
-                    brailleFileInfo: brailleFileInfo,
-                    settings: settings
-                    ))
-                .ToImmutableArray();
+                {
+                    try
+                    {
+                        return ToSampleItem(
+                           itemDigest: d,
+                           standardsXml: standardsXml,
+                           subjects: subjects,
+                           interactionTypes: interactionTypes,
+                           resourceFamilies: resourceFamilies,
+                           patches: patches,
+                           brailleFileInfo: brailleFileInfo,
+                           settings: settings
+                           );
+
+                    } catch (Exception e)
+                    {
+                        throw new Exception($"Item {d.BankKey}-{d.ItemKey}", innerException: e);
+                    }
+                }).ToImmutableArray();
 
             return sampleItems;
         }
@@ -330,7 +339,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 identifier = identifier.WithClaimAndTarget(claimNumber, target);
             }
 
-            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.TargetDescription;
+            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.Target.Descripton;
             string ccssDesc = (!string.IsNullOrEmpty(patch.CCSSDescription)) ? patch.CCSSDescription : coreStandards?.CommonCoreStandardsDescription;
             coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
             coreStandards = coreStandards.WithTargetCCSSDescriptions(targetDesc, ccssDesc);
