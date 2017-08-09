@@ -43,11 +43,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                            settings: settings
                            );
 
-                    }catch (Exception e)
+                    } catch (Exception e)
                     {
-                        throw new Exception($"Item {d.BankKey}-{d.ItemKey}");
+                        throw new Exception($"Item {d.BankKey}-{d.ItemKey}", innerException: e);
                     }
-                    return null;
                 }).ToImmutableArray();
 
             return sampleItems;
@@ -338,7 +337,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 identifier = identifier.WithClaimAndTarget(claimNumber, target);
             }
 
-            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.TargetDescription;
+            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.Target.Descripton;
             string ccssDesc = (!string.IsNullOrEmpty(patch.CCSSDescription)) ? patch.CCSSDescription : coreStandards?.CommonCoreStandardsDescription;
             coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
             coreStandards = coreStandards.WithTargetCCSSDescriptions(targetDesc, ccssDesc);

@@ -133,7 +133,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var aboutThisItemViewModel = new AboutThisItemViewModel(
                 rubrics: sampleItem.Rubrics,
                 itemCard: itemCardViewModel,
-                targetDescription: sampleItem.CoreStandards?.TargetDescription,
+                targetDescription: sampleItem.CoreStandards?.Target?.Descripton,
                 depthOfKnowledge: sampleItem.DepthOfKnowledge,
                 commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription);
 

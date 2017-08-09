@@ -52,7 +52,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         }
 
 
-        public Subject WithClaimTargets(IList<CoreStandards> allTargets)
+        public Subject WithClaimTargets(IList<Target> allTargets)
         {
             var newClaims = Claims
                 .Select(c => c.WithTargets(allTargets

@@ -197,7 +197,7 @@ export class ISPComponent extends React.Component<Props, State> {
             .reduce((a, b) => a.concat(b), [])
             .map(c => c.targets)
             .reduce((a, b) => a.concat(b), [])
-            .map(t => t.targetHash);
+            .map(t => t.nameHash);
         const newTargets = this.state.targets.filter(t => subjectTargets.indexOf(t) !== -1);
 
         this.setState({
@@ -217,7 +217,7 @@ export class ISPComponent extends React.Component<Props, State> {
             .filter(c => newClaimCodes.indexOf(c.code) !== -1)
             .map(c => c.targets)
             .reduce((a, b) => a.concat(b), [])
-            .map(t => t.targetHash);
+            .map(t => t.nameHash);
         const newTargets = this.state.targets.filter(t => newVisibleTargets.indexOf(t) !== -1);
 
         this.setState({
@@ -495,15 +495,15 @@ export class ISPComponent extends React.Component<Props, State> {
 
     renderTarget(target: ItemsSearch.Target): JSX.Element {
         const targets = this.state.targets;
-        const containsTarget = targets.indexOf(target.targetHash) !== -1;
+        const containsTarget = targets.indexOf(target.nameHash) !== -1;
         return (
-            <button role="button" key={target.targetHash}
+            <button role="button" key={target.nameHash}
                 className={(containsTarget ? "selected" : "") + " tag"}
-                onClick={() => this.toggleTarget(target.targetHash)}
+                onClick={() => this.toggleTarget(target.nameHash)}
                 tabIndex={0}
                 aria-pressed={containsTarget}>
 
-                {target.targetShortName}
+                {target.name}
             </button>
         );
     }
@@ -519,7 +519,7 @@ export class ISPComponent extends React.Component<Props, State> {
             : [];
         let uniqueTargets: ItemsSearch.Target[] = [];
         visibleTargets.forEach(t => {
-            if (uniqueTargets.find(ut => ut.targetHash == t.targetHash) === undefined) {
+            if (uniqueTargets.find(ut => ut.nameHash == t.nameHash) === undefined) {
                 uniqueTargets.push(t);
             }
         });

@@ -23,10 +23,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         /// The user facing name of the claim. e.g. Problem Solving and Modeling
         /// </summary>
         public string Label { get; }
+        
+        public ImmutableArray<Target> Targets { get; }
 
-        public ImmutableArray<CoreStandards> Targets { get; }
-
-        public Claim(string code, string claimNumber, string label, ImmutableArray<CoreStandards> targets)
+        public Claim(string code, string claimNumber, string label, ImmutableArray<Target> targets)
         {
             Code = code;
             ClaimNumber = claimNumber;
@@ -35,14 +35,14 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         }
 
         public static Claim Create(
-            ImmutableArray<CoreStandards> targets,
+            ImmutableArray<Target> targets,
             string code = "", 
             string claimNumber = "", 
             string label = "")
         {
             if (targets == null)
             {
-                targets = ImmutableArray.Create<CoreStandards>();
+                targets = ImmutableArray.Create<Target>();
             }
             return new Claim(
                  code: code,
@@ -57,12 +57,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 code: (string)element.Element("Code"),
                 label: (string)element.Element("Label"),
                 claimNumber: (string)element.Element("ClaimNumber"),
-                targets: ImmutableArray.Create<CoreStandards>());
+                targets: ImmutableArray.Create<Target>());
 
             return claim;
         }
 
-        public Claim WithTargets(IList<CoreStandards> targets)
+        public Claim WithTargets(IList<Target> targets)
         {
             return new Claim(
                 code: Code,

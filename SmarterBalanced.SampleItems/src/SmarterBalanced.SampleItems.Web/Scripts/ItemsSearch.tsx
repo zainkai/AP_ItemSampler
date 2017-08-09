@@ -49,8 +49,8 @@ export interface Claim {
 
 
 export interface Target {
-    targetHash: string;
-    targetShortName: string;
+    name: string;
+    nameHash: string;
 }
 
 namespace ItemsSearch {
