@@ -40,7 +40,6 @@ matrix:
 after_success:
   - docker --version
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  - nuget setApiKey $nugetAPI -source https://www.nuget.org
   - cd $TRAVIS_BUILD_DIR
   - chmod ugo+x DeployScripts/code_docker_deploy.sh
   - chmod ugo+x DeployScripts/app_docker_deploy.sh
