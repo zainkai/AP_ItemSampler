@@ -5,14 +5,13 @@ node_js:
 python:
   - "2.7"
 install: 
-  # - travis_retry pip install --upgrade pip
-  # - travis_retry pip install ecs-deploy
-  # - travis_retry pip install --user awscli
+#  - travis_retry pip install --upgrade pip
+#  - travis_retry pip install ecs-deploy
+#  - travis_retry pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
   - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
   - travis_retry npm install 
-  # - travis_retry $(npm bin)/bower install
-  - travis_retry dotnet restore ../
+  - travis_retry dotnet restore ../../
 
 services:
   - docker
@@ -33,7 +32,7 @@ matrix:
   - os: linux
     dist: trusty
     sudo: required
-    dotnet: 1.0.0-preview2-1-003177
+    dotnet: 1.0.4
     mono: none
 
 #Docker section
