@@ -17,7 +17,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         Subject Math, Ela;
         InteractionType ItEla, ItMath;
         List<AccessibilityResource> Resources;
-        SettingsConfig settings;
+        SbContentSettings settings;
         ItemMetadata metadata;
         AppSettings appSettings;
         ItemContents contents;
@@ -164,19 +164,19 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
-            settings = new SettingsConfig
+            settings = new SbContentSettings
             {
                 SupportedPublications = new string[] { "SupportedPubs" },
                 AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
                 InteractionTypesToItem = new Dictionary<string, string>(),
                 DictionarySupportedItemTypes = new List<string>(),
-                LanguageToLabel = new Dictionary<string, string>()
+                LanguageToLabel = new Dictionary<string, string>(),
+                RubricPlaceHolderText = placeholderText
             };
 
             appSettings = new AppSettings
             {
-                SettingsConfig = settings,
-                RubricPlaceHolderText = placeholderText
+                SbContent = settings
             };
 
             digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
@@ -266,7 +266,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestGetRubrics()
         {
-            appSettings.SettingsConfig.LanguageToLabel.Add("ENU", "English");
+            appSettings.SbContent.LanguageToLabel.Add("ENU", "English");
             digest.Contents = new List<Content>()
             {
                 new Content()

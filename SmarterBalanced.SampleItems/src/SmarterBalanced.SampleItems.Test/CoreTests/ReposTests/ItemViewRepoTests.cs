@@ -325,7 +325,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         public void TestGoodGetItemNames()
         {
             var item = ItemViewRepo.GetItemNames(PerformanceDigest);
-            var associatedItems = ItemViewRepo.GetAssociatedPerformanceItems(PerformanceDigest).Select(i => i.ToString());
+            var associatedItems = ItemViewRepo.GetAssociatedBrailleItems(PerformanceDigest).Select(i => i.ToString());
 
             Assert.True(item.Contains(associatedItems.ElementAt(0)));
             Assert.True(item.Contains(associatedItems.ElementAt(1)));
