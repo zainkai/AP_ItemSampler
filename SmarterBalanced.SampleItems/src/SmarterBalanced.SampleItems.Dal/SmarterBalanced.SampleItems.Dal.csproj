@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionSufix>$(VersionSuffix)</VersionSufix>
     <TargetFramework>netstandard1.6</TargetFramework>
     <AssemblyName>SmarterBalanced.SampleItems.Dal</AssemblyName>
     <PackageId>SmarterBalanced.SampleItems.Dal</PackageId>

@@ -40,21 +40,18 @@ matrix:
 after_success:
   - docker --version
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - nuget setApiKey $nugetAPI -source https://www.nuget.org
   - cd $TRAVIS_BUILD_DIR
   - chmod ugo+x DeployScripts/code_docker_deploy.sh
   - chmod ugo+x DeployScripts/app_docker_deploy.sh
   - chmod ugo+x DeployScripts/ecs_deploy.sh
+  - chmod ugo+x DeployScripts/nuget_deploy.sh
 
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/code_docker_deploy.sh
-    on:
-      all_branches: true
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && nuget_deploy.sh
     on:
         tags: true
   - provider: script
@@ -63,14 +60,8 @@ deploy:
     script: ./DeployScripts/app_docker_deploy.sh
     on:
       branch: master
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-stage SampleItemsWebsite-stage
-    on:
-      branch: stage
-  - provider: script
     skip_cleanup: true
     # script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/ecs_deploy.sh SampleItemsWebsite-dev SampleItemsWebsite-dev
-    script: ./DeployScripts/app_docker_deploy.sh
+    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$TRAVIS-BUILD"
     on:
       branch: dev

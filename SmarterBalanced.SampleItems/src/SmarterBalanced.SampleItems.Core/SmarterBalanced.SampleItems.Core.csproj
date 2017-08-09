@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionSuffix>$(VersionSuffix)</VersionSuffix>
     <TargetFramework>netstandard1.6</TargetFramework>
     <AssemblyName>SmarterBalanced.SampleItems.Core</AssemblyName>
     <PackageId>SmarterBalanced.SampleItems.Core</PackageId>
