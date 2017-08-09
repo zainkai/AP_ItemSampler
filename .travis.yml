@@ -20,7 +20,8 @@ before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
   - echo "$TRAVIS_COMMIT"
-
+  - export BUILD_NUMBER=$(echo TRAVIS_BUILD_ID)
+  - echo $BUILD_NUMBER
 script: 
   - dotnet build 
   - grunt all
@@ -60,7 +61,7 @@ deploy:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$TRAVIS_BUILD_NUMBER"
+    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$BUILD_NUMBER"
     on:
       branch: dev
   - provider: script
