@@ -10,7 +10,7 @@ const lessFiles = {
     'wwwroot/css/site.css': 'Styles/site.less'
 };
 
-const webpackConfig = require("./webpack.config")
+const webpackConfig = require("./webpack.config");
 
 module.exports = function (grunt) {
     grunt.initConfig({
@@ -60,9 +60,9 @@ module.exports = function (grunt) {
         ts: {
             default: {
                 tsconfig: {
-                    tsconfig: 'Scripts/tsconfig.json',
-                },
-            },
+                    tsconfig: 'Scripts/tsconfig.json'
+                }
+            }
         },
 
         watch: {
@@ -92,7 +92,7 @@ module.exports = function (grunt) {
                     '../SmarterBalanced.SampleItems.Test/SmarterBalanced.SampleItems.Test.csproj',
                     'SmarterBalanced.SampleItems.Web.csproj'
                 ]
-            },
+            }
             
         }
     });
