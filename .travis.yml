@@ -60,7 +60,7 @@ deploy:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$TRAVIS_BUILD_ID"
+    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$TRAVIS_BUILD_NUMBER"
     on:
       branch: dev
   - provider: script
