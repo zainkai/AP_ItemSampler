@@ -35,7 +35,7 @@ export interface State {
     subjects: string[];
     claims: string[];
     interactionTypes: string[];
-    targets: string[];
+    targets: number[];
     performanceOnly: boolean;
 
     expandMore: boolean;
@@ -72,7 +72,7 @@ export class ISPComponent extends React.Component<Props, State> {
             subjects: subjects,
             claims: claims,
             interactionTypes: interactionTypes,
-            targets: targets,
+            targets: targets.map(t => Number(t)),
             performanceOnly: performanceOnly,
 
             expandMore: itemId.length !== 0 || performanceOnly,
@@ -226,7 +226,7 @@ export class ISPComponent extends React.Component<Props, State> {
         }, () => this.beginChangeTimeout());
     }
 
-    toggleTarget(target: string) {
+    toggleTarget(target: number) {
         const targets = this.state.targets;
         const containsTarget = targets.indexOf(target) !== -1;
         this.setState({

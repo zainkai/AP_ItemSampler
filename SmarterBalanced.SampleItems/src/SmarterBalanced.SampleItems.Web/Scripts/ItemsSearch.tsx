@@ -50,7 +50,7 @@ export interface Claim {
 
 export interface Target {
     name: string;
-    nameHash: string;
+    nameHash: number;
 }
 
 namespace ItemsSearch {
@@ -166,7 +166,7 @@ export interface SearchAPIParams {
     claims: string[];
     interactionTypes: string[];
     performanceOnly: boolean;
-    targets: string[];
+    targets: number[];
 }
 
 interface ItemsSearchViewModel {
