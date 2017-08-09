@@ -27,6 +27,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public List<ItemMetadataAttribute> ItemMetadataAttributes { get; set; }
         public StimulusDigest StimulusDigest { get; set; }
         public string SmarterAppItemDescriptor { get; set; }
+        public string EducationalDifficulty { get; set; }
+        public string EvidenceStatement { get; set; }
         public override string ToString()
         {
             return $"{BankKey}-{ItemKey}";

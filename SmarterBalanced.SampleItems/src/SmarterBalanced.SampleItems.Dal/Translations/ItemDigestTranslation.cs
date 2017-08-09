@@ -115,7 +115,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 SubjectCode = itemMetadata.Metadata.SubjectCode,
                 ItemMetadataAttributes = itemContents.Item.ItemMetadataAttributes,
                 StimulusDigest = stimulusDigest,
-                SmarterAppItemDescriptor = itemMetadata.Metadata.SmarterAppItemDescriptor
+                SmarterAppItemDescriptor = itemMetadata.Metadata.SmarterAppItemDescriptor,
+                EducationalDifficulty = itemMetadata.Metadata.EducationalDifficulty,
+                EvidenceStatement = itemMetadata.Metadata.EvidenceStatement
             };
 
             return digest;

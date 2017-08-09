@@ -37,7 +37,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public ImmutableArray<string> BraillePassageCodes { get; }
         public bool BrailleOnlyItem { get; }
         public int? CopiedFromItem { get; }
-
+        public string EducationalDifficulty { get; set; }
+        public string EvidenceStatement { get; set; }
         public SampleItem(
             int bankKey,
             int itemKey,
@@ -61,7 +62,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             ImmutableArray<string> brailleItemCodes,
             ImmutableArray<string> braillePassageCodes,
             bool brailleOnlyItem,
-            int? copiedFromitem
+            int? copiedFromitem,
+            string educationalDifficulty,
+            string evidenceStatement
             )
         {
             BankKey = bankKey;
@@ -87,6 +90,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             BraillePassageCodes = braillePassageCodes;
             CopiedFromItem = copiedFromitem;
             BrailleOnlyItem = brailleOnlyItem;
+            EducationalDifficulty = educationalDifficulty;
+            EvidenceStatement = evidenceStatement;
         }
 
         public static SampleItem Create(
@@ -112,7 +117,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             ImmutableArray<string> brailleItemCodes = new ImmutableArray<string>(),
             ImmutableArray<string>  braillePassageCodes = new ImmutableArray<string>(),
             bool brailleOnlyItem = false,
-            int? copiedFromItem = null)
+            int? copiedFromItem = null,
+            string educationalDifficulty = "",
+            string evidenceStatement = "")
         {
             return new SampleItem(
                 bankKey,
@@ -137,7 +144,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 brailleItemCodes,
                 braillePassageCodes,
                 brailleOnlyItem,
-                copiedFromItem
+                copiedFromItem,
+                educationalDifficulty,
+                evidenceStatement
                 );
         }
 
