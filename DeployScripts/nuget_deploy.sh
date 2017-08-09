@@ -3,7 +3,7 @@ set -ev
 
 Suffix="$1"
 
-cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Dal
+cd "$TRAVIS_BUILD_DIR"/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Dal
 if [ -z "$SUFFIX" ]; then
     dotnet pack -o .
 else

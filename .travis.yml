@@ -19,6 +19,7 @@ services:
 before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
+  - echo "$TRAVIS_COMMIT"
 
 script: 
   - dotnet build 
@@ -64,3 +65,8 @@ deploy:
     script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$TRAVIS-BUILD"
     on:
       branch: dev
+- provider: script
+    skip_cleanup: true
+    script: ./nuget_deploy.sh
+    on:
+        branch: feat/travis-nuget
