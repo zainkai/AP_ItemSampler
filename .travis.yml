@@ -20,7 +20,7 @@ before_script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
   - echo "$TRAVIS_COMMIT"
-  - export BUILD_NUMBER=$(echo TRAVIS_BUILD_ID)
+  - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
   - echo $BUILD_NUMBER
 script: 
   - dotnet build 
