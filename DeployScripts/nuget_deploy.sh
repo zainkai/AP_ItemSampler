@@ -10,4 +10,4 @@ else
     dotnet pack --version-suffix "$Suffix" -o .
 fi
 
-nuget push *.nupkg -Source https://www.nuget.org/api/v2/package
+dotnet nuget push *.nupkg -Source https://www.nuget.org/api/v2/package
