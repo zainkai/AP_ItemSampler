@@ -51,7 +51,7 @@ after_success:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && nuget_deploy.sh
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh
     on:
         tags: true
   - provider: script
@@ -61,11 +61,11 @@ deploy:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$BUILD_NUMBER"
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
     on:
       branch: dev
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/nuget_deploy.sh "$nugetAPI"
+    script: ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
     on:
       branch: feat/travis-nuget
