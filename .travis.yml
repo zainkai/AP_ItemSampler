@@ -11,7 +11,7 @@ install:
   - export PATH=$PATH:$HOME/.local/bin
   - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
   - travis_retry npm install 
-  - travis_retry dotnet restore ../
+  - travis_retry dotnet restore ../../
 
 services:
   - docker
