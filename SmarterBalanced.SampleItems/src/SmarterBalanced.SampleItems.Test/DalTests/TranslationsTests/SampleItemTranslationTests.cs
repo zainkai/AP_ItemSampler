@@ -200,12 +200,12 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 "claim1",
                 "1",
                 "ELA Claim 1",
-                ImmutableArray.Create<CoreStandards>());
+                ImmutableArray.Create<Target>());
             Claim2 = new Claim(
                 "claim2",
                 "2",
                 "3",
-                ImmutableArray.Create<CoreStandards>());
+                ImmutableArray.Create<Target>());
 
             ItMath = new InteractionType("2", "EQ", "", 2);
             ItEla = new InteractionType("1", "WER", "", 1);
@@ -249,7 +249,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(items[0].ItemKey, digest.ItemKey);
             Assert.Equal(items[0].BankKey, digest.BankKey);
             Assert.Equal(items[0].CoreStandards.CommonCoreStandardsDescription, coreStandardsRowCcss[0].Description);
-            Assert.Equal(items[0].CoreStandards.TargetDescription, coreStandardsRowTarget[0].Description);
+            Assert.Equal(items[0].CoreStandards.Target.Descripton, coreStandardsRowTarget[0].Description);
             Assert.Equal(items[0].InteractionType.Code, ItMath.Code);
             Assert.Equal(items[0].InteractionType.Label, ItMath.Label);
             Assert.Equal(items[0].Subject.Code, digest.SubjectCode);

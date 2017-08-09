@@ -32,12 +32,12 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
                 "claim1", 
                 "1", 
                 "ELA Claim 1", 
-                ImmutableArray.Create<CoreStandards>());
+                ImmutableArray.Create<Target>());
             Claim2 = new Claim(
                 "claim2", 
                 "2", 
                 "Math Claim 1",
-                ImmutableArray.Create<CoreStandards>());
+                ImmutableArray.Create<Target>());
             ItMath = new InteractionType("2", "Math Itype", "", 2);
             ItEla = new InteractionType("1", "Ela Itype", "", 1);
             Math = Subject.Create("Math", "Mathematics", "Math", ImmutableArray.Create(Claim2), ImmutableArray.Create(ItMath.Code));
@@ -103,7 +103,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchGradeLevel()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.High, null, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.High, null, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => GradeLevelsUtils.Contains(GradeLevels.High, c.Grade)).ToList();
 
@@ -115,7 +115,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchSubject()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code).ToList();
 
@@ -127,7 +127,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchClaim()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code, Ela.Code }, new string[] { }, new string[] { Claim1.Code }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code, Ela.Code }, new string[] { }, new string[] { Claim1.Code }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.ClaimCode == Claim1.Code).ToList();
 
@@ -139,7 +139,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchItemType()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code, Ela.Code }, new string[] { ItEla.Code }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code, Ela.Code }, new string[] { ItEla.Code }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.InteractionTypeCode == ItEla.Code).ToList();
 
@@ -151,7 +151,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestNullItemId()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards;
 
@@ -163,7 +163,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestNonIntegerItemId()
         {
-            var parameters = new ItemsSearchParams("NOT A NUMBER!", GradeLevels.All, null, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams("NOT A NUMBER!", GradeLevels.All, null, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards;
 
@@ -185,7 +185,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsNull()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, null, null, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, null, null, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards;
 
@@ -197,7 +197,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchTwoClaims()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { }, new string[] { Claim1.Code, Claim2.Code }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { }, new string[] { Claim1.Code, Claim2.Code }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code && (c.ClaimCode == Claim1.Code
                                                      || c.ClaimCode == Claim2.Code)).ToList();
@@ -209,7 +209,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchTwoITypes()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { ItEla.Code, ItMath.Code }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { ItEla.Code, ItMath.Code }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code && (c.ClaimCode == Claim1.Code
                                                      || c.ClaimCode == Claim2.Code)).ToList();
@@ -221,7 +221,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchTwoSubjects()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code, Ela.Code }, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code, Ela.Code }, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code || c.SubjectCode == Ela.Code).ToList();
 
@@ -233,7 +233,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestSearchAllCategories()
         {
-            var parameters = new ItemsSearchParams(GoodItemKey.ToString(), GradeLevels.Grade6, new List<string>() { Math.Code }, new string[] { ItMath.Code }, new string[] { Claim1.Code }, false);
+            var parameters = new ItemsSearchParams(GoodItemKey.ToString(), GradeLevels.Grade6, new List<string>() { Math.Code }, new string[] { ItMath.Code }, new string[] { Claim1.Code }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code && c.ItemKey == GoodItemKey && c.Grade == GradeLevels.Grade6
                                                      && c.InteractionTypeCode == ItMath.Code && c.ClaimCode == Claim1.Code).ToList();
@@ -254,7 +254,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsMultipleGrade()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.Grade9 | GradeLevels.Grade4, null, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.Grade9 | GradeLevels.Grade4, null, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.Grade == GradeLevels.Grade9 || c.Grade == GradeLevels.Grade4 
                                                      || c.Grade == GradeLevels.Elementary || c.Grade == GradeLevels.High).ToList();
@@ -267,7 +267,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsEmptyList()
         {
-            var parameters = new ItemsSearchParams("-1", GradeLevels.High, null, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams("-1", GradeLevels.High, null, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             Assert.NotNull(cards);
             Assert.Empty(cards);
@@ -276,7 +276,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsItemKey()
         {
-            var parameters = new ItemsSearchParams(BadItemKey.ToString(), GradeLevels.All, null, new string[] { }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(BadItemKey.ToString(), GradeLevels.All, null, new string[] { }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.ItemKey.ToString().StartsWith(BadItemKey.ToString())).ToList();
 
@@ -288,7 +288,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsInteractionNoSubject()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { ItMath.Code }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { ItMath.Code }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             Assert.NotNull(cards);
             Assert.Equal(Context.ItemCards.Count(), cards.Count);
@@ -300,7 +300,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsClaimNoSubject()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { }, new string[] { Claim2.Code }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, null, new string[] { }, new string[] { Claim2.Code }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             Assert.NotNull(cards);
             Assert.Equal(Context.ItemCards.Count(), cards.Count);
@@ -312,7 +312,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsSubjectAndInteraction()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { ItMath.Code }, new string[] { }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { ItMath.Code }, new string[] { }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code && c.InteractionTypeCode == ItMath.Code).ToList();
 
@@ -324,7 +324,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetItemCardsSubjectAndClaim()
         {
-            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { }, new string[] { Claim2.Code }, false);
+            var parameters = new ItemsSearchParams(null, GradeLevels.All, new List<string>() { Math.Code }, new string[] { }, new string[] { Claim2.Code }, false, null);
             var cards = SampleItemsSearchRepo.GetItemCards(parameters);
             var cardsCheck = Context.ItemCards.Where(c => c.SubjectCode == Math.Code && c.ClaimCode == Claim2.Code).ToList();
 

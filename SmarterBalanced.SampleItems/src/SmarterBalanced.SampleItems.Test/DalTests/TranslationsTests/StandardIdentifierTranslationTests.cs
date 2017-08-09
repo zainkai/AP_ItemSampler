@@ -425,9 +425,9 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             Assert.NotNull(core);
             Assert.Equal(core.CommonCoreStandardsId, "6.SL.2");
-            Assert.Equal(core.TargetId, "4-6");
-            Assert.Equal(core.TargetIdLabel, "4");
-            Assert.Equal(core.TargetDescription, "Target Desc");
+            Assert.Equal(core.Target.Id, "4-6");
+            Assert.Equal(core.Target.IdLabel, "4");
+            Assert.Equal(core.Target.Descripton, "Target Desc");
             Assert.Equal(core.CommonCoreStandardsDescription, "CCSS Desc");
         }
     }
