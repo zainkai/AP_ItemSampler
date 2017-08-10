@@ -48,12 +48,34 @@ jobs:
       - cd $TRAVIS_BUILD_DIR
       - docker --version
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    - stage: deploy
+    - stage: deploy setup
       script: chmod ugo+x DeployScripts/code_docker_deploy.sh
     - script: chmod ugo+x DeployScripts/nuget_deploy.sh
     - script: chmod ugo+x DeployScripts/app_docker_deploy.sh
     - script: chmod ugo+x DeployScripts/ecs_deploy.sh
-
+    - stage: deploy 
+      script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh
+          on:
+              tags: true
+        - provider: script
+          skip_cleanup: true
+          script: ./DeployScripts/app_docker_deploy.sh
+          on:
+            branch: master
+        - provider: script
+          skip_cleanup: true
+          script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
+          on:
+            branch: dev
+        - provider: script
+          skip_cleanup: true
+          script: ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
+          on:
+            branch: feat/travis-nuget
 matrix:
   include:
   - os: linux
@@ -61,26 +83,3 @@ matrix:
     sudo: required
     dotnet: 1.0.4
     mono: none
-
-
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh
-    on:
-        tags: true
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh
-    on:
-      branch: master
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
-    on:
-      branch: dev
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
-    on:
-      branch: feat/travis-nuget
