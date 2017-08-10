@@ -7,14 +7,26 @@ python:
 services:
   - docker
 
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: required
+    dotnet: 1.0.4
+    mono: none
+
+before_install:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
+  - echo "$TRAVIS_COMMIT"
+  - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
+  - echo $BUILD_NUMBER
+  - travis_retry pip install --upgrade pip
+#    - travis_retry pip install ecs-deploy
+#    - travis_retry pip install --user awscli
+
 jobs: 
   include: 
-    - stage: before install 
-      script: 
-      - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-      - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
-      - echo "$TRAVIS_COMMIT"
-#      script: travis_retry pip install --upgrade pip
     - stage: install
       script: 
       - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
@@ -22,14 +34,6 @@ jobs:
     - script: 
       - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems
       - travis_retry dotnet restore
-#    - script: travis_retry pip install ecs-deploy
-#    - script: travis_retry pip install --user awscli
-    - script: 
-      - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-      - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
-      - echo "$TRAVIS_COMMIT"
-      - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
-      - echo $BUILD_NUMBER
     - stage: build
       script: 
       - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
@@ -60,7 +64,7 @@ jobs:
           skip_cleanup: true
           script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh
           on:
-              tags: true
+            tags: true
         - provider: script
           skip_cleanup: true
           script: ./DeployScripts/app_docker_deploy.sh
@@ -76,10 +80,3 @@ jobs:
           script: ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
           on:
             branch: feat/travis-nuget
-matrix:
-  include:
-  - os: linux
-    dist: trusty
-    sudo: required
-    dotnet: 1.0.4
-    mono: none
