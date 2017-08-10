@@ -4,22 +4,45 @@ node_js:
   - "7"
 python:
   - "2.7"
-install: 
-#  - travis_retry pip install --upgrade pip
-#  - travis_retry pip install ecs-deploy
-#  - travis_retry pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
-  - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-  - travis_retry npm install 
-  - travis_retry dotnet restore ../../
-
 services:
   - docker
 
-before_script:
-  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
-  - echo "$TRAVIS_COMMIT"
+jobs: 
+  include: 
+    - stage: before install
+      script: 
+      - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+      - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
+      - echo "$TRAVIS_COMMIT"
+    - stage: install
+      script: 
+      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+      - travis_retry npm install 
+    - script: 
+      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems
+      - travis_retry dotnet restore
+    - stage: build
+      script: 
+      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+      - dotnet build
+    - script: 
+      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+      - grunt all
+    - stage: test and publish
+      script: 
+      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test
+      - dotnet test
+    - script: 
+      - dotnet publish $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o $TRAVIS_BUILD_DIR/publish/
+    - 
+
+
+
+#install: 
+#  - travis_retry pip install --upgrade pip
+#  - travis_retry pip install ecs-deploy
+#  - travis_retry pip install --user awscli
+
 
 script: 
   - dotnet build 
