@@ -26,11 +26,11 @@ before_install:
 #  - travis_retry pip install ecs-deploy
 #  - travis_retry pip install --user awscli
 
-jobs: 
-  include: 
-    - stage: install
-      script: travis_retry npm install 
-    - script: travis_retry dotnet restore ../../
-    - stage: build
-      script: dotnet build
-    - script: grunt all
+# jobs: 
+#   include: 
+#     - stage: install
+#       script: travis_retry npm install 
+#     - script: travis_retry dotnet restore ../../
+#     - stage: build
+#       script: dotnet build
+#     - script: grunt all
