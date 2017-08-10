@@ -22,16 +22,13 @@ before_install:
   - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
   - echo $BUILD_NUMBER
   - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-#  - travis_retry pip install --upgrade pip
-#  - travis_retry pip install ecs-deploy
-#  - travis_retry pip install --user awscli
 
-jobs: 
-  include: 
-    - stage: install
-      script: travis_retry npm install 
-    - script: travis_retry dotnet restore ../../
-    - stage: build
-      script: dotnet build
-    - script: grunt all
+jobs:
+  include:
+    - stage: test
+      script: echo hi
+    - # stage name not required, will continue to use `test`
+      script: echo hi 2
+    - stage: deploy
+      script: echo deploy!
 
