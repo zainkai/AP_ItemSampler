@@ -6,17 +6,22 @@ using Xunit;
 
 namespace SmarterBalanced.SampleItems.Test.ModelTests
 {
-    class TargetTests
+    public class TargetTests
     {
-        [Fact]
-        public void TestTargetCreate()
+        Target target;
+
+        public TargetTests()
         {
-            var target = Target.Create(
+            target = Target.Create(
                 desc: "SHORT NAME: Long description",
                 id: "1-2",
                 idLabel: "1",
                 subject: "ELA",
                 claim: "1");
+        }
+        [Fact]
+        public void TestTargetCreate()
+        {
             Assert.Equal(target.Descripton, "Long description");
             Assert.Equal(target.Name, "Short Name");
             Assert.Equal(target.Id, "1-2");
@@ -24,6 +29,22 @@ namespace SmarterBalanced.SampleItems.Test.ModelTests
             Assert.Equal(target.ClaimId, "1");
             Assert.Equal(target.Subject, "ELA");
             Assert.Equal(target.NameHash, target.GetHashCode());
+        }
+
+        [Fact]
+        public void TestTargetWithDescription()
+        {
+            int oldHash = target.NameHash;
+            var newTarget = target.WithDescription("ANOTHER DESC: Blah blah blah!");
+
+            Assert.Equal(newTarget.Descripton, "Blah blah blah!");
+            Assert.Equal(newTarget.Name, "Another Desc");
+            Assert.Equal(newTarget.Id, "1-2");
+            Assert.Equal(newTarget.IdLabel, "1");
+            Assert.Equal(newTarget.ClaimId, "1");
+            Assert.Equal(newTarget.Subject, "ELA");
+            Assert.Equal(newTarget.NameHash, newTarget.GetHashCode());
+            Assert.NotEqual(newTarget.NameHash, target.NameHash);
         }
     }
 }

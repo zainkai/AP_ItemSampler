@@ -454,5 +454,30 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(coreStandard.Target.Subject, "ELA");
             Assert.Equal(coreStandard.Target.ClaimId, "3");
         }
+
+        [Fact]
+        public void TestTargetWithDescription()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var coreStandardsRowTarget = ImmutableArray.Create(
+                CoreStandardsRow.Create(
+                    subjectCode: "ELA",
+                    key: "4-6|3-6",
+                    description: "SHORT NAME: Target description",
+                    levelType: "Target",
+                    identifier: identifier));
+            CoreStandardsXml coreStandardsXml = new CoreStandardsXml(coreStandardsRowTarget, ImmutableArray.Create<CoreStandardsRow>());
+            var coreStandard = StandardIdentifierTranslation.CoreStandardFromIdentifier(coreStandardsXml, identifier);
+            var newCoreStandard = coreStandard.WithTargetCCSSDescriptions(targetDescription: "NEW NAME: New description");
+
+            Assert.Equal(newCoreStandard.Target.Descripton, "New description");
+            Assert.Equal(newCoreStandard.Target.Name, "New Name");
+            Assert.Equal(newCoreStandard.Target.Id, "4-6");
+            Assert.Equal(newCoreStandard.Target.IdLabel, "4");
+            Assert.Equal(newCoreStandard.Target.NameHash, newCoreStandard.Target.GetHashCode());
+            Assert.Equal(newCoreStandard.Target.Subject, "ELA");
+            Assert.Equal(newCoreStandard.Target.ClaimId, "3");
+            Assert.NotEqual(newCoreStandard.Target.NameHash, coreStandard.Target.NameHash);
+        }
     }
 }
