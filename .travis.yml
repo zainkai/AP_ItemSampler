@@ -44,6 +44,12 @@ jobs:
 #  - travis_retry pip install --user awscli
 
 
+before_script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
+  - echo "$TRAVIS_COMMIT"
+  - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
+  - echo $BUILD_NUMBER
 script: 
   - dotnet build 
   - grunt all
@@ -63,7 +69,6 @@ matrix:
 after_success:
   - docker --version
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  - nuget setApiKey $nugetAPI -source https://www.nuget.org
   - cd $TRAVIS_BUILD_DIR
   - chmod ugo+x DeployScripts/code_docker_deploy.sh
   - chmod ugo+x DeployScripts/app_docker_deploy.sh
@@ -74,7 +79,7 @@ after_success:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && nuget_deploy.sh
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/code_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh
     on:
         tags: true
   - provider: script
@@ -84,11 +89,11 @@ deploy:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && nuget_deploy.sh "alpha-$TRAVIS-BUILD"
+    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
     on:
       branch: dev
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/nuget_deploy.sh
+    script: ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
     on:
       branch: feat/travis-nuget
