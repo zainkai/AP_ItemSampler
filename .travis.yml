@@ -6,14 +6,9 @@ python:
   - "2.7"
 services:
   - docker
-
-matrix:
-  include:
-  - os: linux
-    dist: trusty
-    sudo: required
-    dotnet: 1.0.4
-    mono: none
+dist: trusty
+dotnet: 1.0.4
+mono: none
 
 before_install:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
@@ -27,8 +22,5 @@ jobs:
   include:
     - stage: test
       script: echo hi
-    - # stage name not required, will continue to use `test`
-      script: echo hi 2
-    - stage: deploy
-      script: echo deploy!
-
+    - stage: build
+      script: echo build
