@@ -6,7 +6,15 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@types/bootstrap": "3.3.32",
+    "@types/enzyme": "^2.8.5",
+    "@types/google.analytics": "0.0.29",
+    "@types/jest": "^20.0.6",
+    "@types/jquery": "2.0.40",
+    "@types/react": "15.0.39",
+    "@types/react-dom": "15.5.1",
     "awesome-typescript-loader": "3.2.1",
+    "enzyme": "^2.9.1",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
     "grunt-contrib-clean": "1.0.0",
@@ -19,6 +27,7 @@
     "grunt-version": "1.1.1",
     "grunt-webpack": "3.0.2",
     "jest": "^20.0.4",
+    "jest-enzyme": "^3.7.0",
     "less": "2.7.2",
     "react": "15.6.1",
     "react-dom": "15.6.1",
@@ -28,24 +37,22 @@
     "typescript": "2.4.2",
     "webpack": "3.4.0"
   },
-  "dependencies": {
-    "@types/bootstrap": "3.3.32",
-    "@types/google.analytics": "0.0.29",
-    "@types/jest": "^20.0.6",
-    "@types/jquery": "2.0.40",
-    "@types/react": "15.0.39",
-    "@types/react-dom": "15.5.1"
-  },
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "(Tests/.+)\\.(tsx?)",
+    "testRegex": "(/Tests/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
     "globals": {
       "ts-jest": {
         "tsConfigFile": "Scripts/tsconfig.json"
       }
     },
-    "moduleFileExtensions": [ "js", "jsx", "json", "ts", "tsx" ]
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "ts",
+      "tsx"
+    ]
   }
 }
