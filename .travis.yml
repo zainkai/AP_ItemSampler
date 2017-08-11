@@ -6,61 +6,50 @@ python:
   - "2.7"
 services:
   - docker
+dist: trusty
+dotnet: 1.0.4
+mono: none
 
-jobs: 
-  include: 
-    - stage: before install 
-      script: 
-      - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-      - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
-      - echo "$TRAVIS_COMMIT"
-#      script: travis_retry pip install --upgrade pip
-    - stage: install
-      script: 
-      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-      - travis_retry npm install 
-    - script: 
-      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems
-      - travis_retry dotnet restore
-#    - script: travis_retry pip install ecs-deploy
-#    - script: travis_retry pip install --user awscli
-    - script: 
-      - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-      - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
-      - echo "$TRAVIS_COMMIT"
-      - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
-      - echo $BUILD_NUMBER
-    - stage: build
-      script: 
-      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-      - dotnet build
-    - script: 
-      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
-      - grunt all
-    - stage: test and publish
-      script: 
-      - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test
-      - dotnet test
-    - script: 
-      - dotnet publish $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o $TRAVIS_BUILD_DIR/publish/
-    - stage: before deploy
-      script: 
-      - cd $TRAVIS_BUILD_DIR
-      - docker --version
-      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    - stage: deploy
-      script: chmod ugo+x DeployScripts/code_docker_deploy.sh
-    - script: chmod ugo+x DeployScripts/nuget_deploy.sh
-    - script: chmod ugo+x DeployScripts/app_docker_deploy.sh
-    - script: chmod ugo+x DeployScripts/ecs_deploy.sh
+language: csharp
+sudo: required
+node_js: 
+  - "7"
+python:
+  - "2.7"
+install: 
+#  - travis_retry pip install --upgrade pip
+#  - travis_retry pip install ecs-deploy
+#  - travis_retry pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+  - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web
+  - travis_retry npm install 
+  - travis_retry dotnet restore ../../
 
-matrix:
-  include:
-  - os: linux
-    dist: trusty
-    sudo: required
-    dotnet: 1.0.4
-    mono: none
+services:
+  - docker
+
+before_script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
+  - echo "$TRAVIS_COMMIT"
+  - export BUILD_NUMBER=$(echo $TRAVIS_BUILD_ID)
+  - echo $BUILD_NUMBER
+script: 
+  - dotnet build 
+  - grunt all
+  - cd $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Test
+  - dotnet test 
+  - dotnet publish $TRAVIS_BUILD_DIR/SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web -o $TRAVIS_BUILD_DIR/publish/
+
+#Docker section
+after_success:
+  - docker --version
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - cd $TRAVIS_BUILD_DIR
+  - chmod ugo+x DeployScripts/code_docker_deploy.sh
+  - chmod ugo+x DeployScripts/app_docker_deploy.sh
+  - chmod ugo+x DeployScripts/ecs_deploy.sh
+  - chmod ugo+x DeployScripts/nuget_deploy.sh
 
 
 deploy:
