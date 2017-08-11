@@ -1,4 +1,4 @@
-/// <binding ProjectOpened='all, watch' />
+/// <binding BeforeBuild='tsrecompile' ProjectOpened='all, watch' />
 'use strict';
 
 const lessFiles = {
