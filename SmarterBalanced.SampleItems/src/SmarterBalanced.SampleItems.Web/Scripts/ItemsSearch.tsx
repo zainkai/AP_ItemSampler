@@ -47,13 +47,12 @@ export interface Claim {
     targets: Target[];
 }
 
-
 export interface Target {
     name: string;
     nameHash: number;
 }
 
-namespace ItemsSearch {
+export namespace ItemsSearch {
     export interface Props {
         interactionTypes: InteractionType[];
         subjects: Subject[];
@@ -115,8 +114,8 @@ namespace ItemsSearch {
             if (searchResults.kind === "success" || searchResults.kind === "reloading") {
                 resultsElement = searchResults.content.length === 0
                     ? <span className="placeholder-text" role="alert">No results found for the given search terms.</span>
-                    : searchResults.content.map(digest =>
-                        <ItemCard.ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
+                    : searchResults.content.map(viewModel =>
+                        <ItemCard.ItemCard {...viewModel} key={viewModel.bankKey.toString() + "-" + viewModel.itemKey.toString()} />);
             } else if (searchResults.kind === "failure") {
                 resultsElement = <div className="placeholder-text" role="alert">An error occurred. Please try again later.</div>;
             } else {

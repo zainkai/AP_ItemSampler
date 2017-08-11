@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ItemCard should display the correct information 1`] = `
+<div
+  className="card card-block lnch"
+  onClick={[Function]}
+  onKeyUp={[Function]}
+  tabIndex={0}
+>
+  <div
+    className="card-contents"
+  >
+    <h4
+      className="card-title"
+      onClick={[Function]}
+      onKeyUp={[Function]}
+    >
+      Deciding What to Eat 101
+    </h4>
+    <p
+      className="card-text subject"
+    >
+      <span
+        className="card-text-label"
+      >
+        Subject:
+      </span>
+      <span
+        className="card-text-value"
+      >
+         
+        LNCH/eating
+      </span>
+    </p>
+    <p
+      className="card-text grade"
+    >
+      <span
+        className="card-text-label"
+      >
+        Grade:
+      </span>
+      <span
+        className="card-text-value"
+      >
+         
+        Grade 3
+      </span>
+    </p>
+    <p
+      className="card-text claim"
+    >
+      <span
+        className="card-text-label"
+      >
+        Claim:
+      </span>
+      <span
+        className="card-text-value"
+      >
+         
+        Reading
+      </span>
+    </p>
+    <p
+      className="card-text target"
+    >
+      <span
+        className="card-text-label"
+      >
+        Target:
+      </span>
+      <span
+        className="card-text-value"
+      >
+         
+        Key Details
+      </span>
+    </p>
+    <p
+      className="card-text interaction-type"
+    >
+      <span
+        className="card-text-label"
+      >
+        Item Type:
+      </span>
+      <span
+        className="card-text-value"
+      >
+         
+        Multiple Choice
+      </span>
+    </p>
+    <p
+      className="card-text item-id"
+    >
+      <span
+        className="card-text-label"
+      >
+        Item Id:
+      </span>
+      <span
+        className="card-text-value"
+      >
+         
+        1
+      </span>
+    </p>
+  </div>
+</div>
+`;

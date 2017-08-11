@@ -251,7 +251,7 @@ paket-files/
 .idea/
 *.sln.iml
 
-#Javascript/Typescript
+# Javascript/Typescript
 _references.js
 /**/wwwroot/scripts/
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/.tscache/*
@@ -264,10 +264,11 @@ _references.js
 # css generated from less files
 /**/wwwroot/css/
 
-#jmeter
+# jmeter
 /jmeter/Results/
 
-#lib
+# lib
 /**/wwwroot/lib/
 
-
+# SmarterBalanced Test Content directory
+/content
