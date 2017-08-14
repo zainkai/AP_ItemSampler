@@ -8,7 +8,8 @@
     "target": "es5",
     "outDir": "../wwwroot/scripts",
     "jsx": "react",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "lib": ["es5", "es6", "dom"] 
   },
   "exclude": [
     "node_modules",
