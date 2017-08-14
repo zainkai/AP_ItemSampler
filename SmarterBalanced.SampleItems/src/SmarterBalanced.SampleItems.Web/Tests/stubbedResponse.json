@@ -1,0 +1,384 @@
+{
+    "interactionTypes": [
+        {
+            "code": "EBSR",
+            "label": "Evidence-Based Selected Response",
+            "description": "\r\n    This item presents students with a two-part question, parts A and B. \n Students select a correct response from four options in Part A and then identify textual support for that response in Part B.",
+            "order": 1
+        },
+        {
+            "code": "EQ",
+            "label": "Equation",
+            "description": "\r\n    The Equation item type has one or more text boxes for a response area and a key pad containing mathematical characters. \n The student enters an equation or numerical answer into the text box using the key pad or keyboard.",
+            "order": 2
+        },
+        {
+            "code": "GI1",
+            "label": "Grid Item: Drag and Drop",
+            "description": "\r\n    There are three types of Grid Items. This is an example of a Drag and Drop Grid Item. \n This item type requires students to click on a single element or multiple elements and drag-and-drop the element(s) into a background image.",
+            "order": 4
+        },
+        {
+            "code": "GI",
+            "label": "Grid Item",
+            "description": "\r\n    Smarter Balanced uses three variations of the Grid Item type, each with a distinct\n appearance and interaction mode.\r\n    \r\n    \n \n\t\t\t\r\n    \n\r\n    Graphing variant consists of a grid in which students plot\n points and/or lines. The available tools include a select, delete, add point, and connect line.\n Depending on the item, the point or line tool may not appear. A text box below the grid offers\n hints on what the student can do with each tool. The response area may have a background image on which the student plots points or lines\n as in this example. Grid Item – Graphing Variants may constrain points and lines; for example they may be\n constrained to a number line. The background, whether a simple grid, a graph with axes, or\n another image is simply a bitmap.\r\n    \n \n\r\n    Hot Spot variant consists of a space in which images are\n displayed. Clicking on certain hot spot areas causes images appear or disappear.\n Transparent sections of the images allow the background to show through.\r\n    \n \n\r\n    Drag and Drop variant has a workspace with a background image. Other\n images can be dragged and dropped into the workspace. The drop locations may or may not\n be constrained. When they are constrained, dropped images snap to nearby locaitons.\r\n    \n\t\t\t",
+            "order": 4
+        },
+        {
+            "code": "GI2",
+            "label": "Grid Item: Hot Spot",
+            "description": "\r\n    This is an example of a Hot Spot Grid item. This item type requires students to click on certain areas of an image.",
+            "order": 5
+        },
+        {
+            "code": "GI3",
+            "label": "Grid Item: Graphing",
+            "description": "\r\n    This is an example of a Graphing Grid Item. This item type requires students to plot points and/or draw lines.",
+            "order": 6
+        },
+        {
+            "code": "HTQ",
+            "label": "Hot Text",
+            "description": "\r\n    The Hot Text item type includes words or phrases that students can either select (highlight) by clicking or rearrange by clicking and dragging.",
+            "order": 8
+        },
+        {
+            "code": "MI",
+            "label": "Matching Item",
+            "description": "\r\n    The Matching item type requires students to match text or images in rows to values in columns. The student selects the boxes where a match is valid.",
+            "order": 9
+        },
+        {
+            "code": "MC",
+            "label": "Multiple Choice",
+            "description": "\r\n    The Multiple Choice item type presents students with a number of answer options. The student may select only one option.",
+            "order": 10
+        },
+        {
+            "code": "MS",
+            "label": "Multi Select",
+            "description": "\r\n    The Multi Select item type presents students with a number of answer options. The student may select one or more options. \n For this example, two of the options will be selected.",
+            "order": 11
+        },
+        {
+            "code": "SA",
+            "label": "Short Answer",
+            "description": "\r\n    The Short Answer item type has a text box for a response area and requires a keyboard entry of alphanumeric characters.",
+            "order": 12
+        },
+        {
+            "code": "TI",
+            "label": "Table Item",
+            "description": "\r\n    The Table item type requires a keyboard entry into table cells.",
+            "order": 13
+        },
+        {
+            "code": "WER",
+            "label": "Writing Extended Response",
+            "description": "\r\n    The Writing Extended Response item type has a text box for a response area and requires a keyboard entry of alphanumeric characters. This item type provides more space for students to provide a longer written response. It also includes text formatting tools – bold, underline, italic, numbered and bulleted lists, indentation, clipboard, undo, redo, and spell checking.",
+            "order": 14
+        }
+    ],
+    "subjects": [
+        {
+            "code": "MATH",
+            "label": "Mathematics",
+            "shortLabel": "Math",
+            "claims": [
+                {
+                    "code": "MATH1",
+                    "claimNumber": "1",
+                    "label": "Concepts and Procedures",
+                    "targets": []
+                },
+                {
+                    "code": "MATH2",
+                    "claimNumber": "2",
+                    "label": "Problem Solving",
+                    "targets": []
+                },
+                {
+                    "code": "MATH3",
+                    "claimNumber": "3",
+                    "label": "Communicating Reasoning",
+                    "targets": []
+                },
+                {
+                    "code": "MATH4",
+                    "claimNumber": "4",
+                    "label": "Modeling/Data Analysis",
+                    "targets": []
+                }
+            ],
+            "interactionTypeCodes": [
+                "EQ",
+                "GI",
+                "MC",
+                "MI",
+                "MS",
+                "TI",
+                "SA"
+            ]
+        },
+        {
+            "code": "ELA",
+            "label": "English language arts/literacy",
+            "shortLabel": "ELA/literacy",
+            "claims": [
+                {
+                    "code": "ELA1",
+                    "claimNumber": "1",
+                    "label": "Reading",
+                    "targets": [
+                        {
+                            "name": "Word Meanings",
+                            "descripton": "Determine intended meanings of words, including domain-specific (tier3) words and academic (tier2) words with multiple meanings, based on context, word relationships, word structure (e.g., common roots, affixes), or use of resources (e.g., beginning dictionary, glossary)",
+                            "id": "10-1",
+                            "idLabel": "10",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 1262
+                        },
+                        {
+                            "name": "Reasoning & Evidence",
+                            "descripton": "Use supporting evidence to interpret and explain how information is presented or connected within or across texts (author’s point of view, ideas and supporting details, relationships)",
+                            "id": "11-1",
+                            "idLabel": "11",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 1839
+                        },
+                        {
+                            "name": "Reasoning & Evaluation",
+                            "descripton": "Apply reasoning and a range of textual evidence to or justify analyses of author’s presentation of information (author’s line of reasoning, point of view/purpose; relevance of evidence or elaboration to support claims; development or connections among complex concepts ideas)",
+                            "id": "11-10",
+                            "idLabel": "11",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 2084
+                        },
+                        {
+                            "name": "Analysis Within Or Across Texts",
+                            "descripton": "Specify, integrate, or compare information within or across texts (e.g., cause effect, integrate information)",
+                            "id": "12-1",
+                            "idLabel": "12",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 2939
+                        },
+                        {
+                            "name": "Text Structures/ Features",
+                            "descripton": "Relate knowledge of text structures or text features (e.g., graphics, bold text, headings) to obtain, interpret, or explain information",
+                            "id": "13-1",
+                            "idLabel": "13",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 2455
+                        },
+                        {
+                            "name": "Text Structures & Features",
+                            "descripton": "Relate knowledge of text structures to compare or connect information across texts",
+                            "id": "13-5",
+                            "idLabel": "13",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 2478
+                        },
+                        {
+                            "name": "Language Use",
+                            "descripton": "Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context",
+                            "id": "14-1",
+                            "idLabel": "14",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 1137
+                        },
+                        {
+                            "name": "Key Details",
+                            "descripton": "Use explicit details and implicit information from the text to support answers or inferences about information presented.",
+                            "id": "8-1",
+                            "idLabel": "8",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 1039
+                        },
+                        {
+                            "name": "Central Ideas",
+                            "descripton": "Identify or summarize central ideas/ key events, or procedures and details that support them.",
+                            "id": "9-1",
+                            "idLabel": "9",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 1231
+                        },
+                        {
+                            "name": "Text Structures/features",
+                            "descripton": "Analyze text structures, genre-specific features, or formats (visual/graphic/auditory effects) of texts and the impact of those choices on meaning or presentation)",
+                            "id": "6-11",
+                            "idLabel": "6",
+                            "subject": "ELA",
+                            "claimId": "1",
+                            "nameHash": 2455
+                        }
+                    ]
+                },
+                {
+                    "code": "ELA2",
+                    "claimNumber": "2",
+                    "label": "Writing",
+                    "targets": [
+                        {
+                            "name": "Write/revise Brief Texts",
+                            "descripton": "Write or revise one or more paragraphs demonstrating specific narrative strategies (use of dialogue, sensory or concrete details, description), chronology, or authors’ craft appropriate to purpose (detailing characters, plot, setting, or an event)",
+                            "id": "1-1",
+                            "idLabel": "1",
+                            "subject": "ELA",
+                            "claimId": "2",
+                            "nameHash": 2312
+                        },
+                        {
+                            "name": "Technology",
+                            "descripton": "Use tools of technology to gather information, make revisions, or to produce texts",
+                            "id": "10-1",
+                            "idLabel": "10",
+                            "subject": "ELA",
+                            "claimId": "2",
+                            "nameHash": 1052
+                        },
+                        {
+                            "name": "Compose Full Texts",
+                            "descripton": "Write full compositions demonstrating narrative strategies (dialogue, sensory or concrete details, description), structures, and authors’ craft appropriate to purpose (detailing characters, plot, and setting)",
+                            "id": "2-1",
+                            "idLabel": "2",
+                            "subject": "ELA",
+                            "claimId": "2",
+                            "nameHash": 1729
+                        },
+                        {
+                            "name": "Use Text Features",
+                            "descripton": "Use text features (headings, bold text, captions, etc.) in informational texts to enhance meaning",
+                            "id": "5-1",
+                            "idLabel": "5",
+                            "subject": "ELA",
+                            "claimId": "2",
+                            "nameHash": 1617
+                        },
+                        {
+                            "name": "Language & Vocabulary Use",
+                            "descripton": "Strategically use language and vocabulary (including academic or domain-specific vocabulary) appropriate to the purpose and audience when revising or composing texts",
+                            "id": "8-1",
+                            "idLabel": "8",
+                            "subject": "ELA",
+                            "claimId": "2",
+                            "nameHash": 2287
+                        },
+                        {
+                            "name": "Edit/clarify",
+                            "descripton": "Apply or edit grade-appropriate grammar usage and mechanics to clarify a message and edit narrative, informational, and persuasive/opinion texts",
+                            "id": "9-1",
+                            "idLabel": "9",
+                            "subject": "ELA",
+                            "claimId": "2",
+                            "nameHash": 1183
+                        }
+                    ]
+                },
+                {
+                    "code": "ELA3",
+                    "claimNumber": "3",
+                    "label": "Listening",
+                    "targets": [
+                        {
+                            "name": "Listen/interpret",
+                            "descripton": "Interpret and use information delivered orally or visually",
+                            "id": "4-1",
+                            "idLabel": "4",
+                            "subject": "ELA",
+                            "claimId": "3",
+                            "nameHash": 1659
+                        },
+                        {
+                            "name": "Clarify Message",
+                            "descripton": "Use grade-appropriate grammar and mechanics to clarify a message appropriate to the purpose and audience",
+                            "id": "2-1",
+                            "idLabel": "2",
+                            "subject": "ELA",
+                            "claimId": "3",
+                            "nameHash": 1455
+                        },
+                        {
+                            "name": "Plan/speak/present",
+                            "descripton": "Compose (gather and organize information) and orally deliver short (e.g., summarize, paraphrase) and longer presentations for different purposes and audiences, adding visual/graphic/audio enhancements when appropriate for clarifying the message",
+                            "id": "3-1",
+                            "idLabel": "3",
+                            "subject": "ELA",
+                            "claimId": "3",
+                            "nameHash": 1790
+                        }
+                    ]
+                },
+                {
+                    "code": "ELA4",
+                    "claimNumber": "4",
+                    "label": "Research/Inquiry",
+                    "targets": [
+                        {
+                            "name": "Plan/research",
+                            "descripton": "Conduct short research projects to answer a multi-step question or to investigate different aspects (subtopics) of a broader topic or concept",
+                            "id": "1-1",
+                            "idLabel": "1",
+                            "subject": "ELA",
+                            "claimId": "4",
+                            "nameHash": 1287
+                        },
+                        {
+                            "name": "Interpret & Integrate Information",
+                            "descripton": "Locate information to support central ideas and subtopics; Select and integrate information from data or print and non-print text sources",
+                            "id": "2-1",
+                            "idLabel": "2",
+                            "subject": "ELA",
+                            "claimId": "4",
+                            "nameHash": 3180
+                        },
+                        {
+                            "name": "Analyze/integrate Information",
+                            "descripton": "Gather, analyze, and integrate multiple sources of information/evidence to support a presentation on a topic",
+                            "id": "2-10",
+                            "idLabel": "2",
+                            "subject": "ELA",
+                            "claimId": "4",
+                            "nameHash": 2924
+                        },
+                        {
+                            "name": "Evaluate Information/sources",
+                            "descripton": "Distinguish relevant-irrelevant information (e.g., fact/opinion)",
+                            "id": "3-1",
+                            "idLabel": "3",
+                            "subject": "ELA",
+                            "claimId": "4",
+                            "nameHash": 2832
+                        },
+                        {
+                            "name": "Use Evidence",
+                            "descripton": "Generate conjectures or opinions and cite evidence to support them based on prior knowledge and evidence collected and analyzed",
+                            "id": "4-1",
+                            "idLabel": "4",
+                            "subject": "ELA",
+                            "claimId": "4",
+                            "nameHash": 1136
+                        }
+                    ]
+                }
+            ],
+            "interactionTypeCodes": [
+                "EBSR",
+                "SA",
+                "HTQ",
+                "MC",
+                "MS",
+                "MI",
+                "WER"
+            ]
+        }
+    ]
+}
