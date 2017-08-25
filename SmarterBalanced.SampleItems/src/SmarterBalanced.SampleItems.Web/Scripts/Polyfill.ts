@@ -13,7 +13,7 @@ declare interface String {
 }
 
 if (typeof Object.assign != 'function') {
-    Object.assign = function (target, varArgs) { // .length of function is 2
+    Object.assign = function (target: any, varArgs: any) { // .length of function is 2
         'use strict';
         if (target == null) { // TypeError if undefined or null
             throw new TypeError('Cannot convert undefined or null to object');
@@ -38,7 +38,7 @@ if (typeof Object.assign != 'function') {
 }
 
 if (!Array.prototype.find) {
-    Array.prototype.find = function (predicate) {
+    Array.prototype.find = function (predicate: any) {
         if (this == null) {
             throw new TypeError('Array.prototype.find called on null or undefined');
         }
@@ -61,13 +61,13 @@ if (!Array.prototype.find) {
 }
 
 if (!String.prototype.startsWith) {
-    String.prototype.startsWith = function (searchString) {
+    String.prototype.startsWith = function (searchString: any) {
         return this.substr(0, searchString.length) === searchString;
     };
 }
 
 if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function (suffix) {
+    String.prototype.endsWith = function (suffix: any) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
