@@ -130,7 +130,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             }
 
             var itemCardViewModel = GetItemCardViewModel(sampleItem.BankKey, sampleItem.ItemKey);
-            var aboutThisItemViewModel = new AboutThisItemViewModel(
+            var aboutThisItemViewModel = AboutThisItemViewModel.Create(
                 rubrics: sampleItem.Rubrics,
                 itemCard: itemCardViewModel,
                 targetDescription: sampleItem.CoreStandards?.Target?.Descripton,

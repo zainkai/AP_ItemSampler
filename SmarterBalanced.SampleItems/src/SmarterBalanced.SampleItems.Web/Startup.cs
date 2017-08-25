@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Diagnostics;
 using SmarterBalanced.SampleItems.Core.Repos;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
+using SmarterBalanced.SampleItems.Core.ScoreGuide;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using System;
@@ -82,6 +83,8 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddScoped<ISampleItemsSearchRepo, SampleItemsSearchRepo>();
             services.AddScoped<IAboutItemsRepo, AboutItemsRepo>();
             services.AddScoped<IDiagnosticManager, DiagnosticManager>();
+            services.AddScoped<IScoringRepo, ScoringRepo>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

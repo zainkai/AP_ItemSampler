@@ -2,6 +2,7 @@
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
@@ -47,6 +48,40 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 aboutThisItemViewModel: aboutThisItemViewModel);
 
             return model;
+        }
+
+        public AboutThisItemViewModel GetAboutThisItem(int itemBank, int itemKey)
+        {
+            var sampleItem = context.SampleItems.FirstOrDefault(s => s.ItemKey == itemKey && s.BankKey == itemBank);
+            if (sampleItem == null)
+            {
+                throw new Exception($"invalid request for {itemBank}-{itemKey}");
+            }
+
+            var aboutThis = GetAboutThisItem(sampleItem);
+
+            return aboutThis;
+
+        }
+
+        private AboutThisItemViewModel GetAboutThisItem(SampleItem sampleItem)
+        {
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
+            var itemCardViewModel = GetItemCardViewModel(sampleItem.BankKey, sampleItem.ItemKey);
+            var aboutThisItemViewModel = AboutThisItemViewModel.Create(
+                rubrics: sampleItem.Rubrics,
+                itemCard: itemCardViewModel,
+                targetDescription: sampleItem.CoreStandards?.Target.Descripton,
+                depthOfKnowledge: sampleItem.DepthOfKnowledge,
+                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
+                educationalDifficulty: sampleItem.EducationalDifficulty,
+                evidenceStatement: sampleItem.EvidenceStatement);
+
+            return aboutThisItemViewModel;
         }
 
         /// <summary>

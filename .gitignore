@@ -256,7 +256,7 @@ _references.js
 /**/wwwroot/scripts/
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/.tscache/*
 /SmarterBalanced.SampleItems/src/SmarterBalanced.SampleItems.Web/Scripts/.baseDir.ts
-
+/**/wwwroot/js/
 
 # minified css
 **/*.min.css
