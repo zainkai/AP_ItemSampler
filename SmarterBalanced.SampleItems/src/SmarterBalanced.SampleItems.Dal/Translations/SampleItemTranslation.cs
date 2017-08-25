@@ -27,18 +27,27 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             AppSettings settings
             )
         {
+
             var sampleItems = digests.Select(d =>
-                ToSampleItem(
-                    itemDigest: d,
-                    standardsXml: standardsXml,
-                    subjects: subjects,
-                    interactionTypes: interactionTypes,
-                    resourceFamilies: resourceFamilies,
-                    patches: patches,
-                    brailleFileInfo: brailleFileInfo,
-                    settings: settings
-                    ))
-                .ToImmutableArray();
+                {
+                    try
+                    {
+                        return ToSampleItem(
+                           itemDigest: d,
+                           standardsXml: standardsXml,
+                           subjects: subjects,
+                           interactionTypes: interactionTypes,
+                           resourceFamilies: resourceFamilies,
+                           patches: patches,
+                           brailleFileInfo: brailleFileInfo,
+                           settings: settings
+                           );
+
+                    } catch (Exception e)
+                    {
+                        throw new Exception($"Item {d.BankKey}-{d.ItemKey}", innerException: e);
+                    }
+                }).ToImmutableArray();
 
             return sampleItems;
         }
@@ -56,7 +65,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             IList<BrailleFileInfo> brailleFileInfo,
             AppSettings settings)
         {
-            var supportedPubs = settings.SettingsConfig.SupportedPublications;
+            var supportedPubs = settings.SbContent.SupportedPublications;
             var rubrics = GetRubrics(itemDigest, settings);       
             var brailleItemCodes = GetBrailleItemCodes(itemDigest.ItemKey, brailleFileInfo);
             var braillePassageCodes = GetBraillePassageCodes(itemDigest, brailleFileInfo);
@@ -116,7 +125,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 isPerformance, aslSupported, claim, interactionType, brailleItemCodes, settings);
 
             string interactionTypeSubCat = "";
-            settings.SettingsConfig.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
+            settings.SbContent.InteractionTypesToItem.TryGetValue(itemDigest.ToString(), out interactionTypeSubCat);
 
             SampleItem sampleItem = new SampleItem(
                 itemType: itemType,
@@ -141,7 +150,9 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 brailleItemCodes: brailleItemCodes,
                 braillePassageCodes: braillePassageCodes,
                 brailleOnlyItem: brailleOnly,
-                copiedFromitem: copiedFromItem);
+                copiedFromitem: copiedFromItem,
+                educationalDifficulty: itemDigest.EducationalDifficulty,
+                evidenceStatement: itemDigest.EvidenceStatement);
 
             return sampleItem;
         }
@@ -208,13 +219,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
              .Select(r => r.ApplyFlags(
                  itemDigest,
                  interactionType?.Code, isPerformance,
-                 settings.SettingsConfig.DictionarySupportedItemTypes,
+                 settings.SbContent.DictionarySupportedItemTypes,
                  brailleItemCodes,
                  claim,
                  aslSupported))
              .ToImmutableArray() ?? ImmutableArray<AccessibilityResource>.Empty;
 
-            var groups = settings.SettingsConfig.AccessibilityTypes
+            var groups = settings.SbContent.AccessibilityTypes
                 .Select(accType => GroupItemResources(accType, flaggedResources))
                 .OrderBy(g => g.Order)
                 .ToImmutableArray();
@@ -237,13 +248,13 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
             int? maxPoints,
             AppSettings appSettings)
         {
-            if (appSettings == null || appSettings.RubricPlaceHolderText == null || appSettings.SettingsConfig == null)
+            if (appSettings == null || appSettings.SbContent.RubricPlaceHolderText == null || appSettings.SbContent == null)
             {
                 throw new ArgumentNullException(nameof(appSettings));
             }
 
-            var placeholder = appSettings.RubricPlaceHolderText;
-            var languageToLabel = appSettings.SettingsConfig.LanguageToLabel;
+            var placeholder = appSettings.SbContent.RubricPlaceHolderText;
+            var languageToLabel = appSettings.SbContent.LanguageToLabel;
 
             if (content == null ||
                 content.RubricList == null ||
@@ -328,7 +339,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 identifier = identifier.WithClaimAndTarget(claimNumber, target);
             }
 
-            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.TargetDescription;
+            string targetDesc = (!string.IsNullOrEmpty(patch.TargetDescription)) ? patch.TargetDescription : coreStandards?.Target.Descripton;
             string ccssDesc = (!string.IsNullOrEmpty(patch.CCSSDescription)) ? patch.CCSSDescription : coreStandards?.CommonCoreStandardsDescription;
             coreStandards = StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, identifier);
             coreStandards = coreStandards.WithTargetCCSSDescriptions(targetDesc, ccssDesc);

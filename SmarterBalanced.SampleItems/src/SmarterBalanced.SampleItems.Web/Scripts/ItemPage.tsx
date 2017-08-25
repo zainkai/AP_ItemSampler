@@ -1,17 +1,21 @@
-﻿interface AccessibilityResource {
-    resourceCode: string; // ID for this resource
-    defaultSelection: string;
-    description: string;
-    disabled: boolean;
-    label: string;
-    currentSelectionCode: string; // ID of the current selection
-    order: number;
-    selections: Dropdown.Selection[];
-}
+﻿/// <reference types="google.analytics" />
+
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import * as Accessibility from './Accessibility';
+import * as AccessibilityModal from './AccessibilityModal';
+import * as Dropdown from './DropDown';
+import * as MoreLikeThis from './MoreLikeThisModal';
+import * as AboutThisItem from './AboutThisItem';
+import * as AboutPT from './AboutPT';
+import * as AboutPTPopup from './AboutPTPopup';
+import * as Braille from './Braille';
+import * as Share from './ShareModal';
+import { ItemFrame } from './ItemViewerFrame';
 
 namespace ItemPage {
 
-    function toiSAAP(accResourceGroups: AccResourceGroup[]): string {
+    function toiSAAP(accResourceGroups: Accessibility.AccResourceGroup[]): string {
         let isaapCodes = "TDS_ITM1;TDS_APC_SCRUBBER;"; // always enable item tools menu
         for (let group of accResourceGroups) {
             for (let res of group.accessibilityResources) {
@@ -24,21 +28,21 @@ namespace ItemPage {
         return encodeURIComponent(isaapCodes);
     }
 
-    function resetResource(model: AccessibilityResource): AccessibilityResource {
+    function resetResource(model: Accessibility.AccessibilityResource): Accessibility.AccessibilityResource {
         const newModel = Object.assign({}, model);
         newModel.currentSelectionCode = model.defaultSelection;
         return newModel;
     }
 
-    function trimAccResource(resource: AccessibilityResource): { label: string, selectedCode: string } {
+    function trimAccResource(resource: Accessibility.AccessibilityResource): { label: string, selectedCode: string } {
         return {
             label: resource.label,
             selectedCode: resource.currentSelectionCode,
         };
     }
 
-    function toCookie(accGroups: AccResourceGroup[]): string {
-        let prefs: AccessibilityModal.ResourceSelections = {};
+    function toCookie(accGroups: Accessibility.AccResourceGroup[]): string {
+        let prefs: Accessibility.ResourceSelections = {};
         for (const group of accGroups) {
             for (const resource of group.accessibilityResources) {
                 prefs[resource.resourceCode] = resource.currentSelectionCode;
@@ -50,7 +54,7 @@ namespace ItemPage {
         return cookie;
     }
 
-    function addDisabledPlaceholder(resource: AccessibilityResource): AccessibilityResource {
+    function addDisabledPlaceholder(resource: Accessibility.AccessibilityResource): Accessibility.AccessibilityResource {
         if (resource.disabled) {
             let newSelection = Object.assign(resource, resource);
             let disabledOption: Dropdown.Selection = {
@@ -70,59 +74,6 @@ namespace ItemPage {
         }
     }
 
-    export function getResource(resourceCode: string, resourceGroups: AccResourceGroup[]): AccessibilityResource | null {
-        for (let accGroup of resourceGroups) {
-            const resource = accGroup.accessibilityResources.find(rg => rg.resourceCode == resourceCode);
-            if (resource) {
-                return resource;
-            }
-        }
-
-        return null;
-    }
-
-    export function getBrailleAccommodation(accResourceGroups: AccResourceGroup[]): string {
-        const brailleResource = getResource("BrailleType", accResourceGroups);
-        if (brailleResource) {
-            return brailleResource.currentSelectionCode;
-        }
-
-        return "";
-    }
-
-    export function isBrailleEnabled(accResourceGroups: AccResourceGroup[]): boolean {
-        const brailleResource = getResource("BrailleType", accResourceGroups);
-        if (brailleResource && !brailleResource.currentSelectionCode.endsWith("0")) {
-            return true;
-        }
-
-        return false;
-    }
-
-    export function isStreamlinedEnabled(accResourceGroups: AccResourceGroup[]): boolean {
-        const resource = getResource("StreamlinedInterface", accResourceGroups);
-        if (resource && !resource.currentSelectionCode.endsWith("0")) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-
-
-    // Returns list of resource group labels, sorted ascending by AccResourceGroup.order
-    export function getResourceTypes(resourceGroups: AccResourceGroup[]): string[] {
-        let resourceTypes = resourceGroups.map(t => t.label);
-        return resourceTypes;
-    }
-
-    export interface AccResourceGroup {
-        label: string;
-        order: number;
-        accessibilityResources: AccessibilityResource[];
-    }
-
     export interface ItemIdentifier {
         itemName: string;
         bankKey: number;
@@ -140,7 +91,7 @@ namespace ItemPage {
         isPerformanceItem: boolean;
         performanceItemDescription: string;
         subject: string;
-        accResourceGroups: AccResourceGroup[];
+        accResourceGroups: Accessibility.AccResourceGroup[];
         moreLikeThisVM: MoreLikeThis.Props;
         aboutThisItemVM: AboutThisItem.Props;
         brailleItemCodes: string[];
@@ -149,7 +100,7 @@ namespace ItemPage {
     }
 
     export interface Props extends ViewModel {
-        onSave: (selections: AccessibilityModal.ResourceSelections) => void;
+        onSave: (selections: Accessibility.ResourceSelections) => void;
         onReset: () => void;
     }
 
@@ -160,7 +111,7 @@ namespace ItemPage {
             super(props);
         }
     
-        saveOptions = (resourceSelections: AccessibilityModal.ResourceSelections): void => {
+        saveOptions = (resourceSelections: Accessibility.ResourceSelections): void => {
             this.props.onSave(resourceSelections);
         }
 
@@ -192,7 +143,7 @@ namespace ItemPage {
             }
         }
 
-        openAccessibilityModal(e: React.KeyboardEvent<HTMLAnchorElement>) {
+        openAccessibilityModal(e: React.KeyboardEvent<HTMLButtonElement>) {
             if (e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 32) {
                 const modal: any = ($("#accessibility-modal-container"));
                 modal.modal();
@@ -221,8 +172,8 @@ namespace ItemPage {
 
         render() {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            const itemNames = (isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
-            let scrollTo: string = isStreamlinedEnabled(this.props.accResourceGroups) ? "" : ("&scrollToId=").concat(this.props.currentItem.itemName);
+            const itemNames = (Accessibility.isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
+            let scrollTo: string = Accessibility.isStreamlinedEnabled(this.props.accResourceGroups) ? "" : ("&scrollToId=").concat(this.props.currentItem.itemName);
             let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, scrollTo);
 
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
@@ -253,7 +204,7 @@ namespace ItemPage {
                             {this.renderPerformanceItemModalBtn(this.props.isPerformanceItem)}
 
                             <Braille.BrailleLink
-                                currentSelectionCode={getBrailleAccommodation(this.props.accResourceGroups)}
+                                currentSelectionCode={Accessibility.getBrailleAccommodation(this.props.accResourceGroups)}
                                 brailleItemCodes={this.props.brailleItemCodes}
                                 braillePassageCodes={this.props.braillePassageCodes}
                                 bankKey={this.props.currentItem.bankKey}
@@ -262,13 +213,13 @@ namespace ItemPage {
                         </div>
 
                         <div className="item-nav-right-group" role="group" aria-label="Second group">
-                            <a type="button" className="accessibility-btn btn btn-primary" data-toggle="modal"
+                            <button className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
-                                onClick={e => ga("send", "event", "button", "OpenAccessibility")}
+                                onClick={e =>ga("send", "event", "button", "OpenAccessibility")}
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
                                 <span className="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
                                 Accessibility
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <ItemFrame url={ivsUrl} />
@@ -288,16 +239,16 @@ namespace ItemPage {
 
     export class Controller {
         constructor(private itemProps: ViewModel, private rootDiv: HTMLDivElement) {
-            this.itemProps.currentItem = isBrailleEnabled(this.itemProps.accResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
+            this.itemProps.currentItem = Accessibility.isBrailleEnabled(this.itemProps.accResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
             this.fetchUpdatedAboutThisItem();
         }
 
-        onSave = (selections: AccessibilityModal.ResourceSelections) => {
+        onSave = (selections: Accessibility.ResourceSelections) => {
 
-            const newGroups: AccResourceGroup[] = [];
+            const newGroups: Accessibility.AccResourceGroup[] = [];
             for (let group of this.itemProps.accResourceGroups) {
                 const newGroup = Object.assign({}, group);
-                const newResources: AccessibilityResource[] = [];
+                const newResources: Accessibility.AccessibilityResource[] = [];
                 for (let res of newGroup.accessibilityResources) {
                     const newRes = Object.assign({}, res); 
                     newRes.currentSelectionCode = selections[newRes.resourceCode] || newRes.currentSelectionCode;
@@ -312,7 +263,7 @@ namespace ItemPage {
             let cookieValue = toCookie(this.itemProps.accResourceGroups);
             document.cookie = this.itemProps.accessibilityCookieName.concat("=", cookieValue, "; path=/");
 
-            this.itemProps.currentItem = isBrailleEnabled(newGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
+            this.itemProps.currentItem = Accessibility.isBrailleEnabled(newGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
             this.fetchUpdatedAboutThisItem();
 
             this.render();
@@ -330,7 +281,7 @@ namespace ItemPage {
             this.itemProps = Object.assign({}, this.itemProps);
             this.itemProps.accResourceGroups = newAccResourceGroups;
 
-            this.itemProps.currentItem = isBrailleEnabled(newAccResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
+            this.itemProps.currentItem = Accessibility.isBrailleEnabled(newAccResourceGroups) ? this.itemProps.brailleItem : this.itemProps.nonBrailleItem;
             this.fetchUpdatedAboutThisItem();
 
             this.render();
@@ -374,7 +325,7 @@ namespace ItemPage {
     }
 }
 
-function initializeItemPage(itemProps: ItemPage.ViewModel) {
+export function initializeItemPage(itemProps: ItemPage.ViewModel) {
     const controller = new ItemPage.Controller(
         itemProps,
         document.getElementById("item-container") as HTMLDivElement);

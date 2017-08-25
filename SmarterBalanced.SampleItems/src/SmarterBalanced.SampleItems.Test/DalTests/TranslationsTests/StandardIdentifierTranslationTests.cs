@@ -96,15 +96,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
-            var settings = new SettingsConfig
+            var settings = new SbContentSettings
             {
-                SupportedPublications = new string[] { "" }
+                SupportedPublications = new string[] { "" },
+                RubricPlaceHolderText = placeholderText
             };
 
             appSettings = new AppSettings
             {
-                SettingsConfig = settings,
-                RubricPlaceHolderText = placeholderText
+                SbContent = settings
             };
         }
 
@@ -411,7 +411,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                     levelType: "CCSS",
                     identifier: identifier));
 
-             var coreStandardsRowTarget = ImmutableArray.Create(
+            var coreStandardsRowTarget = ImmutableArray.Create(
                 CoreStandardsRow.Create(
                     subjectCode: "ELA",
                     key: "4-6|3-6",
@@ -425,10 +425,59 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             Assert.NotNull(core);
             Assert.Equal(core.CommonCoreStandardsId, "6.SL.2");
-            Assert.Equal(core.TargetId, "4-6");
-            Assert.Equal(core.TargetIdLabel, "4");
-            Assert.Equal(core.TargetDescription, "Target Desc");
+            Assert.Equal(core.Target.Id, "4-6");
+            Assert.Equal(core.Target.IdLabel, "4");
+            Assert.Equal(core.Target.Descripton, "Target Desc");
             Assert.Equal(core.CommonCoreStandardsDescription, "CCSS Desc");
+        }
+
+        [Fact]
+        public void TestCoreStandardsTarget()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var coreStandardsRowTarget = ImmutableArray.Create(
+                CoreStandardsRow.Create(
+                    subjectCode: "ELA",
+                    key: "4-6|3-6",
+                    description: "SHORT NAME: Target description",
+                    levelType: "Target",
+                    identifier: identifier));
+            CoreStandardsXml coreStandardsXml = new CoreStandardsXml(coreStandardsRowTarget, ImmutableArray.Create<CoreStandardsRow>());
+            var coreStandard = StandardIdentifierTranslation.CoreStandardFromIdentifier(coreStandardsXml, identifier);
+
+            Assert.NotNull(coreStandard);
+            Assert.Equal(coreStandard.Target.Descripton, "Target description");
+            Assert.Equal(coreStandard.Target.Name, "Short Name");
+            Assert.Equal(coreStandard.Target.Id, "4-6");
+            Assert.Equal(coreStandard.Target.IdLabel, "4");
+            Assert.Equal(coreStandard.Target.NameHash, coreStandard.Target.GetHashCode());
+            Assert.Equal(coreStandard.Target.Subject, "ELA");
+            Assert.Equal(coreStandard.Target.ClaimId, "3");
+        }
+
+        [Fact]
+        public void TestTargetWithDescription()
+        {
+            StandardIdentifier identifier = StandardIdentifierTranslation.StandardStringToStandardIdentifier(elaStandardString);
+            var coreStandardsRowTarget = ImmutableArray.Create(
+                CoreStandardsRow.Create(
+                    subjectCode: "ELA",
+                    key: "4-6|3-6",
+                    description: "SHORT NAME: Target description",
+                    levelType: "Target",
+                    identifier: identifier));
+            CoreStandardsXml coreStandardsXml = new CoreStandardsXml(coreStandardsRowTarget, ImmutableArray.Create<CoreStandardsRow>());
+            var coreStandard = StandardIdentifierTranslation.CoreStandardFromIdentifier(coreStandardsXml, identifier);
+            var newCoreStandard = coreStandard.WithTargetCCSSDescriptions(targetDescription: "NEW NAME: New description");
+
+            Assert.Equal(newCoreStandard.Target.Descripton, "New description");
+            Assert.Equal(newCoreStandard.Target.Name, "New Name");
+            Assert.Equal(newCoreStandard.Target.Id, "4-6");
+            Assert.Equal(newCoreStandard.Target.IdLabel, "4");
+            Assert.Equal(newCoreStandard.Target.NameHash, newCoreStandard.Target.GetHashCode());
+            Assert.Equal(newCoreStandard.Target.Subject, "ELA");
+            Assert.Equal(newCoreStandard.Target.ClaimId, "3");
+            Assert.NotEqual(newCoreStandard.Target.NameHash, coreStandard.Target.NameHash);
         }
     }
 }

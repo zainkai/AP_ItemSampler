@@ -12,15 +12,16 @@ using CoreFtp;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
+using SmarterBalanced.SampleItems.Core.Braille;
 
 namespace SmarterBalanced.SampleItems.Core.Repos
 {
-    public class ItemViewRepo : IItemViewRepo
+    public class ItemViewRepo : BrailleRepo, IItemViewRepo
     {
         private readonly SampleItemsContext context;
         private readonly ILogger logger;
 
-        public ItemViewRepo(SampleItemsContext context, ILoggerFactory loggerFactory)
+        public ItemViewRepo(SampleItemsContext context, ILoggerFactory loggerFactory) : base(context, loggerFactory)
         {
             this.context = context;
             logger = loggerFactory.CreateLogger<ItemViewRepo>();
@@ -46,99 +47,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return baseUrl;
         }
 
-        /// <summary>
-        /// Gets a list of items that share a stimulus with the given item.
-        /// Given item is returned as the first element of the list.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public List<SampleItem> GetAssociatedPerformanceItems(SampleItem item)
-        {
-            List<SampleItem> associatedStimulusDigests = context.SampleItems
-                .Where(i => i.IsPerformanceItem && 
-                    i.FieldTestUse != null &&
-                    i.AssociatedStimulus == item.AssociatedStimulus &&
-                    i.Grade == item.Grade && i.Subject?.Code == item.Subject?.Code)
-                .OrderBy(i => i.FieldTestUse?.Section)
-                .ThenBy(i => i.FieldTestUse?.QuestionNumber)
-                .ToList();
-
-            return associatedStimulusDigests;
-        }
-
-        public string GetItemNames(SampleItem item)
-        {
-            if(item == null)
-            {
-                return string.Empty;
-            }
-
-            var itemNames = item.ToString();
-
-            if (item.IsPerformanceItem)
-            {
-                itemNames = string.Join(",", GetAssociatedPerformanceItems(item).Select(d => d.ToString()));
-            }
-
-            return itemNames;
-        }
-
-        public string GetBrailleItemNames(SampleItem item)
-        {
-            if (item == null)
-            {
-                return string.Empty;
-            }
-
-            var items = GetAssociatedBrailleItems(item);
-            var names = items.Select(i => i.ToString());
-            string res = string.Join(",", names);
-
-            return res;
-        }
-
-        public IList<SampleItem> GetAssociatedBrailleItems(SampleItem item)
-        {
-            var items = Enumerable.Repeat(item, 1);
-
-            if (item.IsPerformanceItem)
-            {
-                items = GetAssociatedPerformanceItems(item);
-            }
-
-            var order = items.Select(i => i.ItemKey).ToList();
-
-            var matchingBraille = context.SampleItems.Where(s => s.BrailleOnlyItem &&
-                items.Any(i => i.ItemKey == s.CopiedFromItem));
-
-            var itemNames = items.Where(pt => !matchingBraille.Any(bi => bi.CopiedFromItem == pt.ItemKey))
-                .Concat(matchingBraille)
-                .OrderBy(i => order.IndexOf(i.CopiedFromItem ?? i.ItemKey))
-                .ToList();
-
-            return itemNames;
-        }
-
-        public SampleItem GetAssoicatedBrailleItem(SampleItem item)
-        {
-            var matchingBraille = context.SampleItems
-                .FirstOrDefault(s => s.BrailleOnlyItem &&
-                    s.CopiedFromItem == item.ItemKey);
-
-            return matchingBraille;
-        }
-
-        private ImmutableArray<SampleItem> GetAllAssociatedItems(SampleItem item)
-        {
-            if (item.BrailleOnlyItem && item.CopiedFromItem.HasValue)
-            {
-                item = GetSampleItem(item.BankKey, item.CopiedFromItem.Value);
-            }
-
-            var brailleItems = GetAssociatedBrailleItems(item);
-            var associatedItems = GetAssociatedPerformanceItems(item);
-            return brailleItems.Union(associatedItems).ToImmutableArray();
-        }
 
         private string GetPerformanceDescription(SampleItem item)
         {
@@ -161,124 +69,21 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             return string.Empty;
         }
 
-        private string GetItemRootDirectory(SampleItem item)
+        public string GetItemNames(SampleItem item)
         {
-            return $"{context.AppSettings.SettingsConfig.BrailleFtpBaseDirectory}{item.Subject.Code}/{item.Grade.IndividualGradeToNumString()}";
-        }
-        private string GetItemFtpDirectory(SampleItem item)
-        {
-           return $"{GetItemRootDirectory(item)}/item-{item.ItemKey}";
-        }
-
-        private string GetPassageFtpDirectory(SampleItem item)
-        {
-            return $"{GetItemRootDirectory(item)}/stim-{item.AssociatedStimulus.Value}";
-        }
-
-        private ImmutableArray<string> GetItemBrailleDirectories(SampleItem item)
-        {
-            var associatedItems = GetAllAssociatedItems(item);
-            associatedItems.Add(item);
-
-            List<string> itemDirectories = associatedItems.Select(a => GetItemFtpDirectory(a)).ToList();
-
-            if (item.AssociatedStimulus.HasValue)
-            {
-                itemDirectories.Add(GetPassageFtpDirectory(item));
-            }
-
-            return itemDirectories.Distinct().ToImmutableArray();
-        }
-
-        private string GetBrailleTypeFromCode(string code)
-        {
-            //Codes look like TDS_BT_TYPE except for the no braille code which looks like TDS_BT0
-            var bt = code.Split('_');
-            if (bt.Length != 3)
+            if (item == null)
             {
                 return string.Empty;
             }
-            return bt[2];
-        }
 
-        public async Task<Dictionary<string, string>> GetBrailleFileNames(
-            FtpClient ftpClient, 
-            IEnumerable<string> baseDirectories, 
-            string brailleCode)
-        {
-            string brailleType = GetBrailleTypeFromCode(brailleCode).ToLower();
-            Dictionary<string, string> brailleFiles = new Dictionary<string, string>();
-            foreach (string directory in baseDirectories)
+            var itemNames = item.ToString();
+
+            if (item.IsPerformanceItem)
             {
-                
-                try
-                {
-                    await ftpClient.ChangeWorkingDirectoryAsync(directory);
-                }
-                catch (CoreFtp.Infrastructure.FtpException)
-                {
-                    logger.LogError($"Failed to load braille from ftp server for {directory}");
-                    continue;
-                }
-                
-                var files = await ftpClient.ListFilesAsync();
-                var fileNames = files.Select(f => f.Name).Where(f => Regex.IsMatch(f, $"(?i){brailleType}"));
-                foreach(string file in fileNames)
-                {
-                    if (!brailleFiles.ContainsKey(file))
-                    {
-                        brailleFiles.Add(file, $"{directory}/{file}");
-                    }
-                }
-            }
-            return brailleFiles;
-        }
-
-        public string GenerateBrailleZipName(int itemId, string brailleCode)
-        {
-            return $"{itemId}-{GetBrailleTypeFromCode(brailleCode)}.zip";
-        }
-
-
-        public async Task<Stream> GetItemBrailleZip(int itemBank, int itemKey, string brailleCode)
-        {
-            SampleItem item = GetSampleItem(itemBank, itemKey);
-            string brailleType = GetBrailleTypeFromCode(brailleCode);
-            if (brailleType == string.Empty || item == null)
-            {
-                throw new ArgumentException("Invalid arguments for item or braille");
+                itemNames = string.Join(",", context.GetAssociatedPerformanceItems(item).Select(d => d.ToString()));
             }
 
-            ImmutableArray<string> itemDirectories = GetItemBrailleDirectories(item);
-            
-            using (var ftpClient = new FtpClient(new FtpClientConfiguration
-            {
-                Host = context.AppSettings.SettingsConfig.SmarterBalancedFtpHost,
-                Username = context.AppSettings.SettingsConfig.SmarterBalancedFtpUsername,
-                Password = context.AppSettings.SettingsConfig.SmarterBalancedFtpPassword
-            }))
-            {
-                await ftpClient.LoginAsync();
-                var brailleFiles = await GetBrailleFileNames(ftpClient, itemDirectories, brailleCode);
-
-                var memoryStream = new MemoryStream();
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-                {
-                    foreach (KeyValuePair<string, string> file in brailleFiles)
-                    {
-                        var entry = archive.CreateEntry(file.Key);
-                        using (var ftpStream = await ftpClient.OpenFileReadStreamAsync(file.Value))
-                        using (var entryStream = entry.Open())
-                        {
-                            ftpStream.CopyTo(entryStream);
-                        }
-                    }
-                }
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                return memoryStream;
-            }
-
+            return itemNames;
         }
 
         public ItemViewModel GetItemViewModel(
@@ -328,7 +133,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
             var aboutThisItemViewModel = new AboutThisItemViewModel(
                 rubrics: sampleItem.Rubrics,
                 itemCard: itemCardViewModel,
-                targetDescription: sampleItem.CoreStandards?.TargetDescription,
+                targetDescription: sampleItem.CoreStandards?.Target?.Descripton,
                 depthOfKnowledge: sampleItem.DepthOfKnowledge,
                 commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription);
 
@@ -416,6 +221,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos
 
             return aboutThis;
         }
+
     }
 
 }

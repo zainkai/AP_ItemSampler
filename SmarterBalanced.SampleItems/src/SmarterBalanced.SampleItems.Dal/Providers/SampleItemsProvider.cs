@@ -17,14 +17,24 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
     {
         public static SampleItemsContext LoadContext(AppSettings appSettings, ILogger logger)
         {
-            CoreStandardsXml standardsXml = LoadCoreStandards(appSettings.SettingsConfig.CoreStandardsXMLPath);
-            var accessibilityResourceFamilies = LoadAccessibility(appSettings.SettingsConfig.AccommodationsXMLPath);
-            var interactionGroup = LoadInteractionGroup(appSettings.SettingsConfig.InteractionTypesXMLPath);
-            ImmutableArray<Subject> subjects = LoadSubjects(appSettings.SettingsConfig.ClaimsXMLPath, interactionGroup.InteractionFamilies);
-            
+            SbContentSettings contentSettings = appSettings.SbContent;
+
+            CoreStandardsXml standardsXml = LoadCoreStandards(contentSettings.CoreStandardsXMLPath);
+            var targetCategories = standardsXml.TargetRows
+                .Where(tr => tr.SubjectCode == "ELA")
+                .Select(tr => StandardIdentifierTranslation.CoreStandardFromIdentifier(standardsXml, tr.StandardIdentifier).Target)
+                .GroupBy(t => t.Name)
+                .Select(g => g.First())
+                .ToImmutableArray();
+
+            var accessibilityResourceFamilies = LoadAccessibility(contentSettings.AccommodationsXMLPath);
+            var interactionGroup = LoadInteractionGroup(contentSettings.InteractionTypesXMLPath);
+            ImmutableArray<Subject> subjects = LoadSubjects(contentSettings.ClaimsXMLPath, interactionGroup.InteractionFamilies);
+            subjects = subjects.Select(s => s.WithClaimTargets(targetCategories)).ToImmutableArray();
+
             var itemDigests = LoadItemDigests(appSettings).Result;
 
-            var itemPatchPath = appSettings.SettingsConfig.PatchXMLPath;
+            var itemPatchPath = appSettings.SbContent.PatchXMLPath;
             var itemPatchRoot = XmlSerialization.DeserializeXml<ItemPatchRoot>(filePath: itemPatchPath);
             var brailleFileInfo = BrailleManifestReader.GetBrailleFileInfo(appSettings).Result;
 
@@ -61,7 +71,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         private static async Task<ImmutableArray<ItemDigest>> LoadItemDigests(
             AppSettings appSettings)
         {
-            string contentDir = appSettings.SettingsConfig.ContentRootDirectory;
+            string contentDir = appSettings.SbContent.ContentRootDirectory;
 
             var metaDataFiles = XmlSerialization.FindMetadataXmlFiles(contentDir);
             var contentFiles = XmlSerialization.FindContentXmlFiles(contentDir);

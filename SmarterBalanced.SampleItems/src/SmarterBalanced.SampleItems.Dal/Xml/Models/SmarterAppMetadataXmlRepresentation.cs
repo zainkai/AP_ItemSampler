@@ -50,5 +50,10 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         [XmlElement("SmarterAppItemDescriptor")]
         public string SmarterAppItemDescriptor { get; set; }
 
+        [XmlElement("EducationalDifficulty")]
+        public string EducationalDifficulty { get; set; }
+
+        [XmlElement("EvidenceStatement")]
+        public string EvidenceStatement { get; set; }
     }
 }

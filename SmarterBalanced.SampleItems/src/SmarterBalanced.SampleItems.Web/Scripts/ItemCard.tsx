@@ -1,24 +1,27 @@
-﻿
-interface ItemCardViewModel {
+﻿import * as React from 'react';
+import * as GradeLevels from './GradeLevels';
+
+export interface ItemCardViewModel {
     bankKey: number;
     itemKey: number;
     title: string;
-    grade: GradeLevels;
+    grade: GradeLevels.GradeLevels;
     gradeLabel: string;
     subjectCode: string;
     subjectLabel: string;
     claimCode: string;
     claimLabel: string;
-    target: string;
+    targetHash: string;
+    targetShortName: string;
     interactionTypeCode: string;
     interactionTypeLabel: string;
 }
 
-function itemPageLink(bankKey: number, itemKey: number) {
+export function itemPageLink(bankKey: number, itemKey: number) {
     window.location.href = "/Item/Details?bankKey=" + bankKey + "&itemKey=" + itemKey;
 }
 
-class ItemCard extends React.Component<ItemCardViewModel, {}> {
+export class ItemCard extends React.Component<ItemCardViewModel, {}> {
 
     handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 13 || e.keyCode === 23) {
@@ -57,7 +60,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
                     </p>
                     <p className="card-text target">
                         <span className="card-text-label">Target:</span>
-                        <span className="card-text-value"> {this.props.target}</span>
+                        <span className="card-text-value"> {this.props.targetShortName}</span>
                     </p>
                     <p className="card-text interaction-type">
                         <span className="card-text-label">Item Type:</span>
@@ -73,7 +76,7 @@ class ItemCard extends React.Component<ItemCardViewModel, {}> {
     }
 }
 
-class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
+export class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
 
     handleKeyPress(bankKey: number, itemKey: number, e: React.KeyboardEvent<HTMLElement>) {
         if (e.keyCode === 13) {
@@ -96,7 +99,7 @@ class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
                     </p>
                     <p className="card-text target">
                         <span className="card-text-label">Target:</span>
-                        <span className="card-text-value"> {this.props.target}</span>
+                        <span className="card-text-value"> {this.props.targetShortName}</span>
                     </p>
                     <p className="card-text interaction-type">
                         <span className="card-text-label">Item Type:</span>

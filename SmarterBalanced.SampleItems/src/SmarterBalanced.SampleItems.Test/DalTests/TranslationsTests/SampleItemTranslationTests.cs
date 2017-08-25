@@ -17,7 +17,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         Subject Math, Ela;
         InteractionType ItEla, ItMath;
         List<AccessibilityResource> Resources;
-        SettingsConfig settings;
+        SbContentSettings settings;
         ItemMetadata metadata;
         AppSettings appSettings;
         ItemContents contents;
@@ -164,19 +164,19 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
-            settings = new SettingsConfig
+            settings = new SbContentSettings
             {
                 SupportedPublications = new string[] { "SupportedPubs" },
                 AccessibilityTypes = new List<AccessibilityType>() { accessibilityType },
                 InteractionTypesToItem = new Dictionary<string, string>(),
                 DictionarySupportedItemTypes = new List<string>(),
-                LanguageToLabel = new Dictionary<string, string>()
+                LanguageToLabel = new Dictionary<string, string>(),
+                RubricPlaceHolderText = placeholderText
             };
 
             appSettings = new AppSettings
             {
-                SettingsConfig = settings,
-                RubricPlaceHolderText = placeholderText
+                SbContent = settings
             };
 
             digest = ItemDigestTranslation.ToItemDigest(metadata, contents, appSettings);
@@ -196,8 +196,17 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             MergedAccessibilityFamily resourceFamily = AccessibilityResourceTranslation.MergeGlobalResources(noPartialResourcesFamily, Resources);
             var resourceFamilies = ImmutableArray.Create(resourceFamily);
 
-            Claim1 = new Claim("claim1", "1", "ELA Claim 1");
-            Claim2 = new Claim("claim2", "2", "3");
+            Claim1 = new Claim(
+                "claim1",
+                "1",
+                "ELA Claim 1",
+                ImmutableArray.Create<Target>());
+            Claim2 = new Claim(
+                "claim2",
+                "2",
+                "3",
+                ImmutableArray.Create<Target>());
+
             ItMath = new InteractionType("2", "EQ", "", 2);
             ItEla = new InteractionType("1", "WER", "", 1);
             Math = Subject.Create("MATH", "Mathematics", "Math", ImmutableArray.Create(Claim2), ImmutableArray.Create(ItMath.Code));
@@ -240,7 +249,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
             Assert.Equal(items[0].ItemKey, digest.ItemKey);
             Assert.Equal(items[0].BankKey, digest.BankKey);
             Assert.Equal(items[0].CoreStandards.CommonCoreStandardsDescription, coreStandardsRowCcss[0].Description);
-            Assert.Equal(items[0].CoreStandards.TargetDescription, coreStandardsRowTarget[0].Description);
+            Assert.Equal(items[0].CoreStandards.Target.Descripton, coreStandardsRowTarget[0].Description);
             Assert.Equal(items[0].InteractionType.Code, ItMath.Code);
             Assert.Equal(items[0].InteractionType.Label, ItMath.Label);
             Assert.Equal(items[0].Subject.Code, digest.SubjectCode);
@@ -266,7 +275,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
         [Fact]
         public void TestGetRubrics()
         {
-            appSettings.SettingsConfig.LanguageToLabel.Add("ENU", "English");
+            settings.LanguageToLabel.Add("ENU", "English");
             digest.Contents = new List<Content>()
             {
                 new Content()

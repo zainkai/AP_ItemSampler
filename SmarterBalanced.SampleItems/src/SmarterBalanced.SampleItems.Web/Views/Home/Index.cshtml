@@ -2,6 +2,12 @@
     ViewData["Title"] = "Home Page";
 }
 
+<environment names="Development">
+    <link rel="stylesheet" href="~/css/home.css" />
+</environment>
+<environment names="Staging, Production">
+    <link rel="stylesheet" href="~/css/home.min.css" />
+</environment>
 
 <div class="home-container">
     <div>
@@ -37,9 +43,3 @@
     </div>
 </div>
 
-<environment names="Development">
-    <link rel="stylesheet" href="~/css/home.css" />
-</environment>
-<environment names="Staging, Production">
-    <link rel="stylesheet" href="~/css/home.min.css" />
-</environment>

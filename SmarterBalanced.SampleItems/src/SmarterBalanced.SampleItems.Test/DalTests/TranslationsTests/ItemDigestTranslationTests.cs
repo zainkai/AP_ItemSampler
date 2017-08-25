@@ -65,15 +65,15 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
                 RubricPlaceHolderEquals = new string[0]
             };
 
-            var settings = new SettingsConfig
+            var contentSettings = new SbContentSettings
             {
-                SupportedPublications = new string[] { "" }
+                SupportedPublications = new string[] { "" },
+                RubricPlaceHolderText = placeholderText
             };
 
             AppSettings appSettings = new AppSettings
                                 {
-                                    SettingsConfig = settings,                                                         
-                                    RubricPlaceHolderText = placeholderText
+                                    SbContent = contentSettings                                                    
                                 };
             
 
@@ -113,7 +113,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var settings = new AppSettings
             {
-                SettingsConfig = new SettingsConfig
+                SbContent = new SbContentSettings
                 {
                     SupportedPublications = new string[] { "" }
                 }
@@ -200,7 +200,7 @@ namespace SmarterBalanced.SampleItems.Test.DalTests.TranslationsTests
 
             var settings = new AppSettings
             {
-                SettingsConfig = new SettingsConfig
+                SbContent = new SbContentSettings
                 {
                     AccessibilityTypes = new List<AccessibilityType>(),
                     SupportedPublications = new string[] { "" } 
