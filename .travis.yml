@@ -62,11 +62,6 @@ deploy:
     skip_cleanup: true
     script: ./DeployScripts/app_docker_deploy.sh
     on:
-      branch: 
-  - provider: script
-    skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh
-    on:
       branch: scoreguide
   - provider: script
     skip_cleanup: true
