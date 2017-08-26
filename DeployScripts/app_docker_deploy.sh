@@ -3,7 +3,7 @@ set -ev
 
 cd publish/
 mkdir content
-wget "$CONTENT_PACKAGE_URL" -O content.zip
+wget -q "$CONTENT_PACKAGE_URL" -O content.zip
 unzip -o content.zip -d content/ &> /dev/null
 rm content.zip 
 docker build -t sampleitemsapp .
