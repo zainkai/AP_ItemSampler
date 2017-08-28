@@ -12,6 +12,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Core.ScoreGuide;
 using SmarterBalanced.SampleItems.Dal.Configurations.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 
@@ -77,6 +78,11 @@ namespace SmarterBalanced.SampleItems.Web
             services.AddMvc();
             services.AddRouting();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Item Sampler API", Version = "v1" });
+            });
+
             services.AddSingleton(context);
             services.AddSingleton(appSettings);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
@@ -124,6 +130,12 @@ namespace SmarterBalanced.SampleItems.Web
                     name: "diagnostic",
                     template: "status/{level?}",
                     defaults: new { controller = "Diagnostic", action = "Index" });
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ItemSampler");
             });
 
         }

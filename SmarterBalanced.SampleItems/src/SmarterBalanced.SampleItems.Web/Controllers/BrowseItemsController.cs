@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
+    [Route("BrowseItems")]
     public class BrowseItemsController : Controller
     {
         private readonly ISampleItemsSearchRepo sampleItemsSearchRepo;
@@ -22,6 +23,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
+        [HttpGet("Index")]
         public IActionResult Index()
         {
             var model = sampleItemsSearchRepo.GetItemsSearchViewModel();
@@ -33,7 +35,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet("Search")]
         public IActionResult Search(string itemID, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims, bool performanceOnly, int[] targets)
         {
             var parms = new ItemsSearchParams(itemID, gradeLevels, subjects, interactionTypes, claims, performanceOnly, targets);
@@ -41,7 +43,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return Json(items);
         }
 
-        [HttpGet]
+        [HttpGet("ExportItems")]
         public IActionResult ExportItems()
         {
             var baseUrl = Request.Host.ToString();
@@ -49,7 +51,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return Json(items);
         }
 
-        [HttpGet]
+        [HttpGet("Export")]
         public IActionResult Export()
         {
             var baseUrl = Request.Host.ToString();

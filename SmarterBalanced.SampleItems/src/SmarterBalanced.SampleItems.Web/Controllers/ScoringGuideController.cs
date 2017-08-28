@@ -17,12 +17,15 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             logger = loggerFactory.CreateLogger<ScoringGuideController>();
 
         }
+
+        [HttpGet("ScoringGuideViewModel")]
         public IActionResult ScoringGuideViewModel()
         {
             var vm = scoringRepo.GetScoringGuideViewModel();
             return Json(vm);
         }
 
+        [HttpGet("AboutThisItem")]
         public IActionResult AboutThisItem(int? bankKey, int? itemKey)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
@@ -51,6 +54,8 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return Json(aboutThis);
 
         }
+
+        [HttpGet("Search")]
         public IActionResult Search(GradeLevels gradeLevels, string[] subject, string[] techType, bool braille)
         {
             var items = scoringRepo.GetItemCards(gradeLevels, subject, techType, braille);

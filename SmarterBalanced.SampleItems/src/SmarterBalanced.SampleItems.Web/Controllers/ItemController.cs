@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
+    [Route("Item")]
     public class ItemController : Controller
     {
         private readonly IItemViewRepo repo;
@@ -27,6 +28,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
+        [HttpGet("Index")]
         public IActionResult Index()
         {
             logger.LogDebug($"{nameof(Index)} redirect to itemssearch");
@@ -64,6 +66,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         /// <param name="bankKey"></param>
         /// <param name="itemKey"></param>
         /// <param name="iSAAP"></param>
+        [HttpGet("Details")]
         public IActionResult Details(int? bankKey, int? itemKey, string iSAAP)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
@@ -88,6 +91,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return View(itemViewModel);
         }
 
+        [HttpGet("Braille")]
         public async Task<ActionResult> Braille(int? bankKey, int? itemKey, string brailleCode)
         {
             if(!bankKey.HasValue || !itemKey.HasValue || string.IsNullOrEmpty(brailleCode))
@@ -120,6 +124,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             }
         }
 
+        [HttpGet("AboutThisItemViewModel")]
         public IActionResult AboutThisItemViewModel(int? bankKey, int? itemKey)
         {
             if(!bankKey.HasValue || !itemKey.HasValue)

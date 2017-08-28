@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
+    [Route("AboutItems")]
     public class AboutItemsController : Controller
     {
         private readonly IAboutItemsRepo repo;
@@ -23,13 +24,14 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
+        [HttpGet("Index")]
         public IActionResult Index()
         {
             var viewModel = repo.GetAboutItemsViewModel();
             return View(viewModel);
         }
 
-        [HttpGet]
+        [HttpGet("GetItemUrl")]
         public IActionResult GetItemUrl(string interactionTypeCode)
         {
             var viewModel = repo.GetAboutItemsViewModel(interactionTypeCode);
