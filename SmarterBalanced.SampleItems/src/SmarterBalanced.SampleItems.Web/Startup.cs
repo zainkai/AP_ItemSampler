@@ -83,6 +83,8 @@ namespace SmarterBalanced.SampleItems.Web
                 c.SwaggerDoc("v1", new Info { Title = "Item Sampler API", Version = "v1" });
             });
 
+            services.AddCors();
+
             services.AddSingleton(context);
             services.AddSingleton(appSettings);
             services.AddScoped<IItemViewRepo, ItemViewRepo>();
