@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos;
@@ -36,6 +37,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet("Search")]
+        [EnableCors("AllowAllOrigins")]
         public IActionResult Search(string itemID, GradeLevels gradeLevels, string[] subjects, string[] interactionTypes, string[] claims, bool performanceOnly, int[] targets)
         {
             var parms = new ItemsSearchParams(itemID, gradeLevels, subjects, interactionTypes, claims, performanceOnly, targets);
@@ -44,6 +46,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet("ExportItems")]
+        [EnableCors("AllowAllOrigins")]
         public IActionResult ExportItems()
         {
             var baseUrl = Request.Host.ToString();

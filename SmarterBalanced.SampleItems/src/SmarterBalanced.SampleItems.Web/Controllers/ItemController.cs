@@ -1,4 +1,5 @@
 ﻿using CoreFtp;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -125,6 +126,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet("AboutThisItemViewModel")]
+        [EnableCors("AllowAllOrigins")]
         public IActionResult AboutThisItemViewModel(int? bankKey, int? itemKey)
         {
             if(!bankKey.HasValue || !itemKey.HasValue)

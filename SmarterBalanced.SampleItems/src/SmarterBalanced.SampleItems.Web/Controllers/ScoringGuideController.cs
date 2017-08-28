@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Core.ScoreGuide;
@@ -19,6 +20,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet("ScoringGuideViewModel")]
+        [EnableCors("AllowAllOrigins")]
         public IActionResult ScoringGuideViewModel()
         {
             var vm = scoringRepo.GetScoringGuideViewModel();
@@ -26,6 +28,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet("AboutThisItem")]
+        [EnableCors("AllowAllOrigins")]
         public IActionResult AboutThisItem(int? bankKey, int? itemKey)
         {
             if (!bankKey.HasValue || !itemKey.HasValue)
@@ -56,6 +59,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         [HttpGet("Search")]
+        [EnableCors("AllowAllOrigins")]
         public IActionResult Search(GradeLevels gradeLevels, string[] subject, string[] techType, bool braille)
         {
             var items = scoringRepo.GetItemCards(gradeLevels, subject, techType, braille);
