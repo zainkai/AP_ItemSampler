@@ -83,7 +83,13 @@ namespace SmarterBalanced.SampleItems.Web
                 c.SwaggerDoc("v1", new Info { Title = "Item Sampler API", Version = "v1" });
             });
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder => 
+                    builder.AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod());
+            });
 
             services.AddSingleton(context);
             services.AddSingleton(appSettings);
