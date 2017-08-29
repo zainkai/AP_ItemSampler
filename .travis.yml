@@ -60,12 +60,12 @@ deploy:
         tags: true
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh
+    script: ./DeployScripts/code_docker_deploy.sh
     on:
       branch: scoreguide
   - provider: script
     skip_cleanup: true
-    script: ./DeployScripts/app_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
+    script: ./DeployScripts/code_docker_deploy.sh && ./DeployScripts/nuget_deploy.sh "alpha-$BUILD_NUMBER"
     on:
       branch: dev
   - provider: script
