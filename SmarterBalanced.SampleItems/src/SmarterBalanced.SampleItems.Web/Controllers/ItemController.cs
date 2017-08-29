@@ -29,7 +29,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
-        [HttpGet("Index")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             logger.LogDebug($"{nameof(Index)} redirect to itemssearch");

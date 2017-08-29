@@ -24,7 +24,7 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
         }
 
         // GET: /<controller>/
-        [HttpGet("Index")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             var model = sampleItemsSearchRepo.GetItemsSearchViewModel();
