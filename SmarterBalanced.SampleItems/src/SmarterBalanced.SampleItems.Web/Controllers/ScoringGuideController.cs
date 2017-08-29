@@ -8,6 +8,7 @@ using System;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
+    [Route("ScoringGuide")]
     public class ScoringGuideController : Controller
     {
         private readonly IScoringRepo scoringRepo;
