@@ -180,8 +180,8 @@ namespace ItemPage {
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
             return (
                 <div>
-                    <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
-                        <div className="item-nav-left-group" role="group" aria-label="First group">
+                    <div className="item-nav">
+                        <div className="item-nav-left-group" role="group">
 
                             <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
                                 onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
@@ -212,7 +212,7 @@ namespace ItemPage {
 
                         </div>
 
-                        <div className="item-nav-right-group" role="group" aria-label="Second group">
+                        <div className="item-nav-right-group" role="group" >
                             <button className="accessibility-btn btn btn-primary" data-toggle="modal"
                                 data-target="#accessibility-modal-container"
                                 onClick={e =>ga("send", "event", "button", "OpenAccessibility")}

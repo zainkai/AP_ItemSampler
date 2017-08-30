@@ -36,7 +36,7 @@ export class ShareModal extends React.Component<Props, {}>{
                             <h4 className="modal-title" id="myModalLabel">Share</h4>
                         </div>
                         <div className="modal-body ">
-                            <span>The following URL can be used to load this question with your currently saved accessibility options.</span>
+                            <span><label htmlFor="shareUrl">The following URL can be used to load this question with your currently saved accessibility options.</label></span>
                             <div className="input-group">
                                 <input type="text" className="form-control readonly-select" id="shareUrl" style={{ "maxWidth": "inherit" }} readOnly={true} value={url} />
                                 <span className="input-group-btn">
