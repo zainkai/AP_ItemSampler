@@ -41,11 +41,11 @@ export class ItemCard extends React.Component<ItemCardViewModel, {}> {
                 onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}
                 tabIndex={0}>
                 <div className="card-contents">
-                    <h4 className="card-title"
+                    <h3 className="card-title"
                         onClick={e => itemPageLink(bankKey, itemKey)}
                         onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}>
                         {this.props.title}
-                    </h4>
+                    </h3>
                     <p className="card-text subject">
                         <span className="card-text-label">Subject:</span>
                         <span className="card-text-value"> {this.props.subjectLabel}</span>
@@ -92,7 +92,7 @@ export class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
                 onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}
                 tabIndex={0}>
                 <div className="card-contents">
-                    <h4 className="card-title">{this.props.subjectLabel}</h4>
+                    <h3 className="card-title">{this.props.subjectLabel}</h3>
                     <p className="card-text claim">
                         <span className="card-text-label">Claim:</span>
                         <span className="card-text-value"> {this.props.claimLabel}</span>
