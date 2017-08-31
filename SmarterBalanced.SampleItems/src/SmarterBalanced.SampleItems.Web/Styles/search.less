@@ -64,10 +64,16 @@ body {
     border-radius: 5px;
 }
 
-    .search-category > label {
-        cursor: pointer;
-        padding-top: 15px;
-    }
+.search-category > button {
+    cursor: pointer;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+    background-color: Transparent;
+    border: none;
+    outline: none;
+    padding: 15px 0 0 0;
+}
 
 .search-tags {
     display: flex;
@@ -83,6 +89,16 @@ body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .tag {

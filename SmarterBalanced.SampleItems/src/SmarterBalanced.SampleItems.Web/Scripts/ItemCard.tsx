@@ -88,9 +88,8 @@ export class ItemCardCondensed extends React.Component<ItemCardViewModel, {}> {
         const { bankKey, itemKey } = this.props;
         return (
             <div className={`card card-block ${this.props.subjectCode.toLowerCase()} condensed`}
-                onClick={e => itemPageLink(bankKey, itemKey)}
-                onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}
-                tabIndex={0}>
+                onClick={e => itemPageLink(bankKey, itemKey)} onKeyUp={e => this.handleKeyPress(bankKey, itemKey, e)}>
+                <a href="#"></a>
                 <div className="card-contents">
                     <h3 className="card-title">{this.props.subjectLabel}</h3>
                     <p className="card-text claim">

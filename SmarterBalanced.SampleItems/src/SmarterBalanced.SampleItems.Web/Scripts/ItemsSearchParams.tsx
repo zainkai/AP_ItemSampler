@@ -2,11 +2,11 @@
 import * as ItemsSearch from './ItemsSearch';
 import * as GradeLevels from './GradeLevels';
 const hideArrow = (
-    <span aria-label="Hide">▼</span>
+    <span aria-hidden="true">▼</span>
 );
 
 const showArrow = (
-    <span aria-label="Show">▶</span>
+    <span aria-hidden="true">▶</span>
 );
 
 function parseQueryString(url: string): { [key: string]: string[] | undefined } {
@@ -364,7 +364,7 @@ export class ISPComponent extends React.Component<Props, State> {
         return (
             <div className="search-params">
                 <div className="search-header">
-                    <h1 className="search-title" tabIndex={0}>Browse Items</h1>
+                    <h1 className="search-title">Browse Items</h1>
                     <div className="search-status">
                         {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
                         <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
@@ -375,7 +375,7 @@ export class ISPComponent extends React.Component<Props, State> {
                         </div>
                     </div>
                 </div>
-                <div className="search-categories" aria-live="polite" aria-relevant="additions removals">
+                <div role="region" aria-label="Search Filters" className="search-categories" aria-live="polite" aria-relevant="additions removals">
                     {this.renderGrades()}
                     {this.renderSubjects()}
                     {this.renderClaims()}
@@ -389,7 +389,7 @@ export class ISPComponent extends React.Component<Props, State> {
 
     renderSearchById() {
         const input = (
-            <input type="tel" className="form-control"
+            <input type="number" className="form-control" id="browseById"
                 placeholder="Item ID"
                 onChange={e => this.onItemIDInput(e)}
                 onKeyUp={e => this.onItemIDKeyUp(e)}
@@ -397,11 +397,12 @@ export class ISPComponent extends React.Component<Props, State> {
             </input>
         );
         return (
-            <div className="search-category" style={{ "maxWidth":"250px" }}>
-                <label aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
+            <div className="search-category" style={{ "maxWidth": "250px" }}>
+                <label className="hidden" htmlFor="browseById">Item ID</label>
+                <button aria-label="Search Filters" aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
                     onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
                     {this.state.expandMore ? hideArrow : showArrow} Browse By Id
-                </label>
+                </button>
                 { this.state.expandMore ? input : undefined }
             </div>
         );
@@ -443,13 +444,13 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: 3 }}>
-                <label aria-expanded={this.state.expandGradeLevels}
+                <button aria-label="Search Filters" aria-expanded={this.state.expandGradeLevels}
                     onClick={() => this.toggleExpandGradeLevels()}
                     onKeyPress={e => this.keyPressToggleExpandGrades(e)}
                     tabIndex={0}>
 
                     {this.state.expandGradeLevels ? hideArrow : showArrow} Grade Levels
-                </label>
+                </button>
                 <div className="search-tags form-group">
                     {this.state.expandGradeLevels ? tags : undefined}
                 </div>
@@ -479,13 +480,13 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: 2 }}>
-                <label aria-expanded={this.state.expandSubjects}
+                <button aria-label="Search Filters" aria-expanded={this.state.expandSubjects}
                     onClick={() => this.toggleExpandSubjects()}
                     onKeyPress={e => this.keyPressToggleExpandSubjects(e)}
                     tabIndex={0}>
 
                     {this.state.expandSubjects ? hideArrow : showArrow} Subjects
-                </label>
+                </button>
                 <div className="search-tags form-group">
                     {tags}
                 </div>
@@ -535,13 +536,13 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: visibleTargets.length }}>
-                <label aria-expanded={this.state.expandTargets}
+                <button aria-expanded={this.state.expandTargets}
                     onClick={() => this.toggleExpandTargets()}
                     onKeyPress={e => this.keyPressToggleExpandTargets(e)}
                     tabIndex={0}>
 
                     {this.state.expandTargets ? hideArrow : showArrow} Targets
-                </label>
+                </button>
                 <div className="search-tags form-group">
                     {this.state.expandTargets ? tags : undefined}
                 </div>
@@ -579,13 +580,13 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
-                <label aria-expanded={this.state.expandClaims}
+                <button aria-label="Search Filters" aria-expanded={this.state.expandClaims}
                     onClick={() => this.toggleExpandClaims()}
                     onKeyPress={e => this.keyPressToggleExpandClaims(e)}
                     tabIndex={0}>
 
                     {this.state.expandClaims ? hideArrow : showArrow} Claims
-                </label>
+                </button>
                 <div className="search-tags form-group">
                     {this.state.expandClaims ? tags : undefined}
                 </div>
@@ -642,12 +643,12 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
-                <label aria-expanded={this.state.expandInteractionTypes}
+                <button aria-label="Search Filters" aria-expanded={this.state.expandInteractionTypes}
                     onClick={() => this.toggleExpandInteractionTypes()}
                     onKeyUp={e => this.toggleExpandItemTypes(e)}
                     tabIndex={0}>
                     {this.state.expandInteractionTypes ? hideArrow : showArrow} Item Types
-                </label>
+                </button>
                 {this.state.expandInteractionTypes ? itemTypesContents : undefined}
             </div>
         );
