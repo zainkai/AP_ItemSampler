@@ -363,27 +363,30 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-params">
-                <div className="search-header">
-                    <h1 className="search-title">Browse Items</h1>
-                    <div className="search-status">
-                        {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
-                        <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
-                        <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}
-                            aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
-                            {this.getExpandAll() ? hideArrow : showArrow}
-                            {this.getExpandAll() ? " Hide" : " Show"} all
+                <section role="region" aria-labelledby="searchTitle">
+                    <div className="search-header">
+                        <h1 id="searchTitle" className="search-title">Browse Items</h1>
+                        <div className="search-status">
+                            {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
+                            <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} role="button" tabIndex={0}>Reset filters</a></div>
+                            <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} role="button" tabIndex={0}
+                                aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
+                                {this.getExpandAll() ? hideArrow : showArrow}
+                                {this.getExpandAll() ? " Hide" : " Show"} all
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div role="region" aria-label="Search Filters" className="search-categories" aria-live="polite" aria-relevant="additions removals">
-                    {this.renderGrades()}
-                    {this.renderSubjects()}
-                    {this.renderClaims()}
-                    {this.renderInteractionTypes()}
-                    {this.renderSearchById()}
-                    {this.renderTargets()}
-                </div>
+                    <div aria-label="Search Filters" className="search-categories" aria-live="polite" aria-relevant="additions removals">
+                        {this.renderGrades()}
+                        {this.renderSubjects()}
+                        {this.renderClaims()}
+                        {this.renderInteractionTypes()}
+                        {this.renderSearchById()}
+                        {this.renderTargets()}
+                    </div>
+                </section>
             </div>
+
         );
     }
 
@@ -399,7 +402,7 @@ export class ISPComponent extends React.Component<Props, State> {
         return (
             <div className="search-category" style={{ "maxWidth": "250px" }}>
                 <label className="hidden" htmlFor="browseById">Item ID</label>
-                <button aria-label="Search Filters" aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
+                <button aria-expanded={this.state.expandMore} onClick={() => this.toggleExpandItemIDInput()}
                     onKeyUp={e => this.keyPressToggleExpandItemId(e)} tabIndex={0}>
                     {this.state.expandMore ? hideArrow : showArrow} Browse By Id
                 </button>
@@ -444,7 +447,7 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: 3 }}>
-                <button aria-label="Search Filters" aria-expanded={this.state.expandGradeLevels}
+                <button aria-expanded={this.state.expandGradeLevels}
                     onClick={() => this.toggleExpandGradeLevels()}
                     onKeyPress={e => this.keyPressToggleExpandGrades(e)}
                     tabIndex={0}>
@@ -480,7 +483,7 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: 2 }}>
-                <button aria-label="Search Filters" aria-expanded={this.state.expandSubjects}
+                <button aria-expanded={this.state.expandSubjects}
                     onClick={() => this.toggleExpandSubjects()}
                     onKeyPress={e => this.keyPressToggleExpandSubjects(e)}
                     tabIndex={0}>
@@ -580,7 +583,7 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: this.props.subjects.length }}>
-                <button aria-label="Search Filters" aria-expanded={this.state.expandClaims}
+                <button aria-expanded={this.state.expandClaims}
                     onClick={() => this.toggleExpandClaims()}
                     onKeyPress={e => this.keyPressToggleExpandClaims(e)}
                     tabIndex={0}>
@@ -643,7 +646,7 @@ export class ISPComponent extends React.Component<Props, State> {
 
         return (
             <div className="search-category" style={{ flexGrow: this.props.interactionTypes.length }}>
-                <button aria-label="Search Filters" aria-expanded={this.state.expandInteractionTypes}
+                <button aria-expanded={this.state.expandInteractionTypes}
                     onClick={() => this.toggleExpandInteractionTypes()}
                     onKeyUp={e => this.toggleExpandItemTypes(e)}
                     tabIndex={0}>
