@@ -14,13 +14,13 @@
     </environment>
 
     <environment names="Production">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
 <body>
-    <nav role="navigation">
+    <header class="sbNav-header">
         <div class="sbNav">
             <div class="sbNav-titleGroup">
                 <div class="sbNav-titleGroup-item">
@@ -32,8 +32,7 @@
                     <h2>Sample Items</h2>
                 </div>
             </div>
-
-            <div class="sbNav-linksGroup">
+            <nav role="navigation" class="sbNav-linksGroup">
                 <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "Home")">
                     Home
                 </a>
@@ -43,9 +42,9 @@
                 <a class="sbNav-linksGroup-item" href="@Url.Action(action: "Index", controller: "BrowseItems")">
                     Browse Test Items
                 </a>
-            </div>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <main class="container" role="main">
         @RenderBody()
@@ -61,17 +60,17 @@
 
     <environment names="Development">
         <script src="~/scripts/Polyfill.js"></script>
-        <script>  window.ga = function () {console.log(arguments)} </script>
+        <script>  window.ga = function () { console.log(arguments) } </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/scripts/Polyfill.min.js"></script>
-        
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js"></script>
         <script>
-            window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+            window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
             ga('create', 'UA-27429193-4', 'auto');
             ga('send', 'pageview');
         </script>
