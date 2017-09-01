@@ -82,7 +82,7 @@ namespace AboutItems {
             }
 
             return (
-                <div aria-live="polite" aria-relevant="text"
+                <div aria-relevant="text"
                     dangerouslySetInnerHTML={{ __html: desc }} className="aboutitems-desc" />
             );
         }
@@ -96,9 +96,12 @@ namespace AboutItems {
             }
 
             return (
-                <select className="form-control" onChange={this.handleChange}>
-                    {items}
-                </select>
+                <div>
+                    <label className="hidden" htmlFor="itemTypesSelect">Item Types</label>
+                    <select className="form-control" id="itemTypesSelect" onChange={this.handleChange}>
+                        {items}
+                    </select>
+                </div>
             );
         }
 

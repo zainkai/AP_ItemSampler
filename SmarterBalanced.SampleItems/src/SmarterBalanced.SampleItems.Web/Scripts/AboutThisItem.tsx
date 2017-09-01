@@ -156,7 +156,7 @@ class AboutThisItemDetailComponent extends React.Component<Props, {}> {
         }
 
         return (
-            <p className={`card-text ${className}`} tabIndex={0}>
+            <p className={`card-text ${className}`}>
                 <span className="card-text-label">{label}:</span>
                 <span className="card-text-value"> {value}</span>
             </p>
