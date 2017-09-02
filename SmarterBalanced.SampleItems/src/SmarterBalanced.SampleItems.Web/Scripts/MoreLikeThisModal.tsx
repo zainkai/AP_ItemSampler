@@ -14,6 +14,21 @@ export interface Props {
 
 export class Modal extends React.Component<Props, {}> {
 
+    constructor(props: Props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e: React.KeyboardEvent<HTMLButtonElement>) {
+        if ($('#modalCloseFirst-More').is(":focus") && (e.shiftKey && e.keyCode == 9)) {
+            e.preventDefault();
+            $('#modalCloseLast-More').focus();
+        } else if ($('#modalCloseLast-More').is(":focus") && (e.which || e.keyCode == 9)) {
+            e.preventDefault();
+            $('#modalCloseFirst-More').focus();
+        }
+    }
+
     renderColumn(column: Column | null) {
         if (!column || column.label == "NA") {
             return undefined;
@@ -39,7 +54,7 @@ export class Modal extends React.Component<Props, {}> {
                 <div className="modal-dialog more-like-this-modal" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" className="close" data-dismiss="modal" id="modalCloseFirst-More" onKeyDown={this.handleChange} aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <h4 className="modal-title" id="myModalLabel">More Like This</h4>
@@ -53,7 +68,7 @@ export class Modal extends React.Component<Props, {}> {
                             </div>        
                         </div>
                         <div className="modal-footer">
-                            <button className="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button className="btn btn-primary" data-dismiss="modal" onKeyDown={this.handleChange} id="modalCloseLast-More">Close</button>
                         </div>
                     </div>
                 </div>

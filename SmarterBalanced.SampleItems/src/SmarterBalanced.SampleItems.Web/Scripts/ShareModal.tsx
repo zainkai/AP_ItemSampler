@@ -14,6 +14,19 @@ interface Props {
 export class ShareModal extends React.Component<Props, {}>{
     constructor(props: Props) {
         super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e: React.KeyboardEvent<HTMLButtonElement>) {
+        console.log(e.currentTarget.id)
+        if ($('#modalCloseFirst-Share').is(":focus") && (e.shiftKey && e.keyCode == 9)) {
+            e.preventDefault();
+            $('#modalCloseLast-Share').focus();
+            console.log(e.currentTarget.id)
+        } else if ($('#modalCloseLast-Share').is(":focus") && (e.shiftKey && e.keyCode == 9)) {
+            e.preventDefault();
+            $('#modalCloseFirst-Share').focus();
+        }
     }
 
     copyToClipboard(event: any): void {
@@ -30,7 +43,7 @@ export class ShareModal extends React.Component<Props, {}>{
                 <div className="modal-dialog share-modal" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" id="modalCloseFirst-Share" onKeyDown={this.handleChange} className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <h4 className="modal-title" id="myModalLabel">Share</h4>
@@ -48,7 +61,7 @@ export class ShareModal extends React.Component<Props, {}>{
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button className="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button id="modalCloseLast-Share" onKeyDown={this.handleChange} className="btn btn-primary" data-dismiss="modal" >Close</button>
                         </div>
                     </div>
                 </div>
