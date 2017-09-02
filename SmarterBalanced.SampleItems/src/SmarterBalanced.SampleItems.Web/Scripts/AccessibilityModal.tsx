@@ -20,7 +20,7 @@ export class ItemAccessibilityModal extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-
+        this.handleChange = this.handleChange.bind(this);
         const expandeds: IsResourceExpanded = {};
         const resourceTypes = this.props.accResourceGroups.map((res) => {
             return res.label;
@@ -32,6 +32,16 @@ export class ItemAccessibilityModal extends React.Component<Props, State> {
             resourceTypeExpanded: expandeds,
             resourceSelections: {}
         };
+    }
+
+    handleChange(e: React.KeyboardEvent<HTMLButtonElement>) {
+        if ($('#modalCloseFirst-Acc').is(":focus") && (e.shiftKey && e.keyCode == 9)) {
+            e.preventDefault();
+            $('#modalCloseLast-Acc').focus();
+        } else if ($('#modalCloseLast-Acc').is(":focus") && (e.which || e.keyCode == 9)) {
+            e.preventDefault();
+            $('#modalCloseFirst-Acc').focus();
+        }
     }
 
     toggleResourceType(resourceType: string) {
@@ -157,7 +167,7 @@ export class ItemAccessibilityModal extends React.Component<Props, State> {
                 <div className="modal-dialog accessibility-modal" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.onCancel}>
+                            <button type="button" id="modalCloseFirst-Acc" onKeyDown={this.handleChange} className="close" data-dismiss="modal" aria-label="Close" onClick={this.onCancel}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
@@ -179,7 +189,7 @@ export class ItemAccessibilityModal extends React.Component<Props, State> {
                         <div className="modal-footer">
                             <button className="btn btn-primary" aria-label="Update options and reload item" form="accessibility-form" data-dismiss="modal" onClick={this.onSave}> Update</button>
                             <button className="btn btn-primary" aria-label="Reset all options to default and reload item" data-dismiss="modal" onClick={this.onReset} >Reset to Default</button>
-                            <button className="btn btn-primary btn-cancel" aria-label="Cancel and undo changes" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
+                            <button className="btn btn-primary btn-cancel" id="modalCloseLast-Acc" onKeyDown={this.handleChange} aria-label="Cancel and undo changes" data-dismiss="modal" onClick={this.onCancel}>Cancel</button>
                         </div>
                     </div>
                 </div>
