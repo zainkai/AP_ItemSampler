@@ -183,19 +183,19 @@ namespace ItemPage {
                     <div className="item-nav">
                         <div className="item-nav-left-group" role="group">
 
-                            <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container" aria-haspopup="dialog"
                                 onKeyUp={e => this.openAboutItemModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-info-sign glyphicon-pad" aria-hidden="true" />
                                 {abtText}
                             </a>
 
-                            <a className="item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#more-like-this-modal-container" aria-haspopup="dialog"
                                 onKeyUp={e => this.openMoreLikeThisModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-th-large glyphicon-pad" aria-hidden="true" />
                                 {moreText}
                             </a>
 
-                            <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container"
+                            <a className="item-nav-btn" data-toggle="modal" data-target="#share-modal-container" aria-haspopup="dialog"
                                 onKeyUp={e => this.openShareModal(e)} role="button" tabIndex={0}>
                                 <span className="glyphicon glyphicon-share-alt glyphicon-pad" aria-hidden="true" />
                                 Share
@@ -213,7 +213,7 @@ namespace ItemPage {
                         </div>
 
                         <div className="item-nav-right-group" role="group" >
-                            <button className="accessibility-btn btn btn-primary" data-toggle="modal"
+                            <button className="accessibility-btn btn btn-primary" data-toggle="modal" aria-haspopup="dialog"
                                 data-target="#accessibility-modal-container"
                                 onClick={e =>ga("send", "event", "button", "OpenAccessibility")}
                                 onKeyUp={e => this.openAccessibilityModal(e)} tabIndex={0}>
