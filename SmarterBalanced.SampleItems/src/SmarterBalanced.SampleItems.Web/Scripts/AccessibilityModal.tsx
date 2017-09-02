@@ -170,7 +170,7 @@ export class ItemAccessibilityModal extends React.Component<Props, State> {
                             <button type="button" id="modalCloseFirst-Acc" onKeyDown={this.handleChange} className="close" data-dismiss="modal" aria-label="Close" onClick={this.onCancel}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 className="modal-title" id="myModalLabel">Accessibility Options</h4>
+                            <h3 className="modal-title" id="myModalLabel">Accessibility Options</h3>
                         </div>
                         <div className="modal-body">
                             <p><span>Options displayed in grey are not available for this item.</span></p>

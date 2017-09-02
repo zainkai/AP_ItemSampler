@@ -57,7 +57,7 @@ export class Modal extends React.Component<Props, {}> {
                             <button type="button" className="close" data-dismiss="modal" id="modalCloseFirst-More" onKeyDown={this.handleChange} aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 className="modal-title" id="myModalLabel">More Like This</h4>
+                            <h3 className="modal-title" id="myModalLabel">More Like This</h3>
                         </div>
                         <div className="modal-body">
                             <br />

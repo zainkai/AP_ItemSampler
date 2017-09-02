@@ -18,7 +18,6 @@ export class ShareModal extends React.Component<Props, {}>{
     }
 
     handleChange(e: React.KeyboardEvent<HTMLButtonElement>) {
-        console.log(e.currentTarget.id)
         if ($('#modalCloseFirst-Share').is(":focus") && (e.shiftKey && e.keyCode == 9)) {
             e.preventDefault();
             $('#modalCloseLast-Share').focus();
@@ -46,7 +45,7 @@ export class ShareModal extends React.Component<Props, {}>{
                             <button type="button" id="modalCloseFirst-Share" onKeyDown={this.handleChange} className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 className="modal-title" id="myModalLabel">Share</h4>
+                            <h3 className="modal-title" id="myModalLabel">Share</h3>
                         </div>
                         <div className="modal-body ">
                             <span><label htmlFor="shareUrl">The following URL can be used to load this question with your currently saved accessibility options.</label></span>

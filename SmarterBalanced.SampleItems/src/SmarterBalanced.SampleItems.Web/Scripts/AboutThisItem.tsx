@@ -74,7 +74,7 @@ export class ATIComponent extends React.Component<Props, {}> {
                             <button type="button" id="modalCloseFirst" onKeyDown={this.handleChange } className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 className="modal-title">About This Item</h4>
+                            <h3 className="modal-title">About This Item</h3>
                         </div>
                        
                         <div className="modal-body">
