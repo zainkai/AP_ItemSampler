@@ -2,13 +2,13 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as Accessibility from './Accessibility';
-import * as AccessibilityModal from './AccessibilityModal';
-import * as Dropdown from './DropDown';
-import * as MoreLikeThis from './MoreLikeThisModal';
-import * as AboutThisItem from './AboutThisItem';
-import * as AboutPT from './AboutPT';
-import * as AboutPTPopup from './AboutPTPopup';
+import * as Accessibility from '../Accessibility/Accessibility';
+import * as AccessibilityModal from '../Accessibility/AccessibilityModal';
+import * as Dropdown from '../Accessibility/DropDown';
+import * as MoreLikeThis from '../Modals/MoreLikeThisModal';
+import * as AboutThisItem from '../AboutItem/AboutThisItem';
+import * as AboutPT from '../PerformanceType/AboutPT';
+import * as AboutPTPopup from '../PerformanceType/AboutPTPopup';
 import * as Braille from './Braille';
 import * as Share from './ShareModal';
 import { ItemFrame } from './ItemViewerFrame';
