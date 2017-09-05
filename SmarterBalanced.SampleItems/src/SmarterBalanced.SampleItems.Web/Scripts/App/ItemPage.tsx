@@ -9,9 +9,9 @@ import * as MoreLikeThis from '../Modals/MoreLikeThisModal';
 import * as AboutThisItem from '../AboutItem/AboutThisItem';
 import * as AboutPT from '../PerformanceType/AboutPT';
 import * as AboutPTPopup from '../PerformanceType/AboutPTPopup';
-import * as Braille from './Braille';
-import * as Share from './ShareModal';
-import { ItemFrame } from './ItemViewerFrame';
+import * as Braille from '../Accessibility/Braille';
+import * as Share from '../Modals/ShareModal';
+import { ItemFrame } from '../AboutItem/ItemViewerFrame';
 
 namespace ItemPage {
 

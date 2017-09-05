@@ -1,8 +1,8 @@
 ﻿import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as ItemCard from './ItemCard';
+import * as ItemCard from '../ItemCard';
 import * as ItemsSearchParams from './ItemsSearchParams';
-import * as GradeLevels from './GradeLevels';
+import * as GradeLevels from '../GradeLevels';
 
 interface SubjectClaims {
     [subject: string]: { text: string; value: string }[];

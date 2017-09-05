@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import * as ItemsSearch from './ItemsSearch';
-import * as GradeLevels from './GradeLevels';
+import * as GradeLevels from '../GradeLevels';
 const hideArrow = (
     <span aria-label="Hide">▼</span>
 );
