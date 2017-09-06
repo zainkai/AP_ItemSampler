@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public sealed class ItemCardViewModel
+    public class ItemCardViewModel
     {
         public int BankKey { get; }
         public int ItemKey { get; }
