@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
-    public class ItemCardViewModel
+    public sealed class ItemCardViewModel
     {
         public int BankKey { get; }
         public int ItemKey { get; }
@@ -22,6 +22,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string InteractionTypeLabel { get; }
         public bool IsPerformanceItem { get; }
         public bool BrailleOnlyItem { get;}
+        public string Domain { get; }
+        public string DepthOfKnowledge { get; }
+        public string CommonCoreStandardId { get; }
+
         public ItemCardViewModel(
             int bankKey,
             int itemKey,
@@ -37,7 +41,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string interactionTypeCode,
             string interactionTypeLabel,
             bool isPerformanceItem,
-            bool brailleOnlyItem)
+            bool brailleOnlyItem,
+            string domain,
+            string depthOfKnowledge,
+            string ccss)
         {
             BankKey = bankKey;
             ItemKey = itemKey;
@@ -54,6 +61,9 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             InteractionTypeLabel = interactionTypeLabel;
             IsPerformanceItem = isPerformanceItem;
             BrailleOnlyItem = brailleOnlyItem;
+            DepthOfKnowledge = depthOfKnowledge;
+            Domain = domain;
+            CommonCoreStandardId = ccss;
         }
 
         /// <summary>
@@ -74,7 +84,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
            bool isPerformanceItem = false,
-           bool brailleOnlyitem = false)
+           bool brailleOnlyitem = false
+           string domain = "",
+           string depthOfKnowledge = "",
+           string ccss = "")
         {
             return new ItemCardViewModel(
                 bankKey: bankKey,
@@ -91,7 +104,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 interactionTypeCode: interactionTypeCode,
                 interactionTypeLabel: interactionTypeLabel,
                 isPerformanceItem: isPerformanceItem,
-                brailleOnlyItem: brailleOnlyitem);
+                brailleOnlyItem: brailleOnlyitem,
+                domain: domain,
+                depthOfKnowledge: depthOfKnowledge,
+                ccss: ccss);
         }
 
     }
