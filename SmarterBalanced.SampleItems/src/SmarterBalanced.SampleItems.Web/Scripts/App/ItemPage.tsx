@@ -170,12 +170,14 @@ namespace ItemPage {
             );
         }
 
-        renderModalLinks(): JSX.Element {
+        renderModals(): JSX.Element {
             const abtText = <span>About <span className="item-nav-long-label">This Item</span></span>;
             const moreText = <span>More <span className="item-nav-long-label">Like This</span></span>;
+            
 
             return (
                 <div className="item-nav" role="toolbar" aria-label="Toolbar with button groups">
+                    
                     <div className="item-nav-left-group" role="group" aria-label="First group">
 
                         <a className="item-nav-btn" data-toggle="modal" data-target="#about-item-modal-container"
@@ -205,6 +207,7 @@ namespace ItemPage {
                             bankKey={this.props.currentItem.bankKey}
                             itemKey={this.props.currentItem.itemKey} />
                     </div>
+                    {this.renderModalFrames()}
                     {this.renderAccessabilityBtn()}
                 </div>
                 
@@ -226,22 +229,10 @@ namespace ItemPage {
                 );
         }
 
-        renderIFrame(): JSX.Element {
+        renderModalFrames(): JSX.Element {
             let isaap = toiSAAP(this.props.accResourceGroups);
-            const itemNames = (Accessibility.isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
-            let scrollTo: string = Accessibility.isStreamlinedEnabled(this.props.accResourceGroups) ? "" : ("&scrollToId=").concat(this.props.currentItem.itemName);
-            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, scrollTo);
-
-            return (<ItemFrame url={ivsUrl} />);
-        }
-
-        render() {
-            let isaap = toiSAAP(this.props.accResourceGroups);
-
             return (
                 <div>
-                    {this.renderModalLinks()}
-                    {this.renderIFrame()}
                     <AboutThisItem.ATIComponent {...this.props.aboutThisItemVM} />
                     <AccessibilityModal.ItemAccessibilityModal
                         accResourceGroups={this.props.accResourceGroups}
@@ -251,6 +242,25 @@ namespace ItemPage {
                     <Share.ShareModal iSAAP={isaap} />
                     <AboutPTPopup.Modal subject={this.props.subject} description={this.props.performanceItemDescription} isPerformance={this.props.isPerformanceItem} />
                     <AboutPT.Modal subject={this.props.subject} description={this.props.performanceItemDescription} />
+                </div>
+                );
+        }
+
+        renderIFrame(): JSX.Element {
+            let isaap = toiSAAP(this.props.accResourceGroups);
+            const itemNames = (Accessibility.isBrailleEnabled(this.props.accResourceGroups)) ? this.props.brailleItemNames : this.props.itemNames;
+            let scrollTo: string = Accessibility.isStreamlinedEnabled(this.props.accResourceGroups) ? "" : ("&scrollToId=").concat(this.props.currentItem.itemName);
+            let ivsUrl: string = this.props.itemViewerServiceUrl.concat("/items?ids=", itemNames, "&isaap=", isaap, scrollTo);
+
+            return (<ItemFrame url={ivsUrl} />);
+        }
+        
+        render() {
+            
+            return (
+                <div>
+                    {this.renderModals()}
+                    {this.renderIFrame()}
                 </div >
             );
         }
