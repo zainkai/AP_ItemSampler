@@ -152,7 +152,8 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 brailleOnlyItem: brailleOnly,
                 copiedFromitem: copiedFromItem,
                 educationalDifficulty: itemDigest.EducationalDifficulty,
-                evidenceStatement: itemDigest.EvidenceStatement);
+                evidenceStatement: itemDigest.EvidenceStatement,
+                domain: identifier.ContentDomain);
 
             return sampleItem;
         }
