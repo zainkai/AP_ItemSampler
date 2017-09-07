@@ -153,7 +153,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 copiedFromitem: copiedFromItem,
                 educationalDifficulty: itemDigest.EducationalDifficulty,
                 evidenceStatement: itemDigest.EvidenceStatement,
-                domain: identifier.ContentDomain);
+                domain: identifier?.ContentDomain);
 
             return sampleItem;
         }
