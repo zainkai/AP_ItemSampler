@@ -3,65 +3,17 @@ import * as ReactDOM from 'react-dom';
 import * as ItemCard from '../ItemCard';
 import * as ItemsSearchParams from './ItemsSearchParams';
 import * as GradeLevels from '../GradeLevels';
-
-interface SubjectClaims {
-    [subject: string]: { text: string; value: string }[];
-}
-
-interface Loading {
-    kind: "loading";
-}
-
-interface Success<T> {
-    kind: "success";
-    content: T;
-}
-
-interface Failure {
-    kind: "failure";
-}
-
-interface Reloading<T> {
-    kind: "reloading";
-    content: T;
-}
-
-/** Represents the state of an asynchronously obtained resource at a particular time. */
-type Resource<T> = Loading | Success<T> | Reloading<T> | Failure
-
-export interface InteractionType {
-    code: string;
-    label: string;
-}
-
-export interface Subject {
-    code: string;
-    label: string;
-    claims: Claim[];
-    interactionTypeCodes: string[];
-}
-
-export interface Claim {
-    code: string;
-    label: string;
-    targets: Target[];
-}
-
-
-export interface Target {
-    name: string;
-    nameHash: number;
-}
+import * as Models from './ItemsSearchModels';
 
 namespace ItemsSearch {
     export interface Props {
-        interactionTypes: InteractionType[];
-        subjects: Subject[];
+        interactionTypes: Models.InteractionType[];
+        subjects: Models.Subject[];
         apiClient: ItemsSearchClient;
     }
 
     export interface State {
-        searchResults: Resource<ItemCard.ItemCardViewModel[]>;
+        searchResults: Models.Resource<ItemCard.ItemCardViewModel[]>;
     }
     
     export class ISComponent extends React.Component<Props, State> {
@@ -181,8 +133,8 @@ export interface SearchAPIParams {
 }
 
 interface ItemsSearchViewModel {
-    interactionTypes: InteractionType[];
-    subjects: Subject[];
+    interactionTypes: Models.InteractionType[];
+    subjects: Models.Subject[];
 }
 
 export function initializeItemsSearch(viewModel: ItemsSearchViewModel) {
