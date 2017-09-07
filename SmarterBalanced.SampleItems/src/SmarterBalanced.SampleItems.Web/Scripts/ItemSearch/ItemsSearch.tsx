@@ -108,7 +108,7 @@ namespace ItemsSearch {
             return this.state.searchResults.kind === "loading" || this.state.searchResults.kind === "reloading";
         }
 
-        render() {
+        renderResultElement(): JSX.Element|JSX.Element[]|undefined {
             const searchResults = this.state.searchResults;
 
             let resultsElement: JSX.Element[] | JSX.Element | undefined;
@@ -122,17 +122,28 @@ namespace ItemsSearch {
             } else {
                 resultsElement = undefined;
             }
+            return resultsElement;
+        }
+
+        renderISPComponent(): JSX.Element {
             const isLoading = this.isLoading();
+
+            return (
+                <ItemsSearchParams.ISPComponent
+                    interactionTypes={this.props.interactionTypes}
+                    subjects={this.props.subjects}
+                    onChange={(params) => this.beginSearch(params)}
+                    selectSingleResult={() => this.selectSingleResult()}
+                    isLoading={isLoading} />
+                );
+        }
+
+        render() {
             return (
                 <div className="search-container">
-                    <ItemsSearchParams.ISPComponent
-                        interactionTypes={this.props.interactionTypes}
-                        subjects={this.props.subjects}
-                        onChange={(params) => this.beginSearch(params)}
-                        selectSingleResult={() => this.selectSingleResult()}
-                        isLoading={isLoading} />
+                    {this.renderISPComponent()}
                     <div className="search-results" >
-                        {resultsElement}
+                        {this.renderResultElement()}
                     </div>
                 </div>
             );
