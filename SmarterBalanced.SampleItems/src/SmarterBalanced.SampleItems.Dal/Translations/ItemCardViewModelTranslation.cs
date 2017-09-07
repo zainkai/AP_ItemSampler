@@ -30,7 +30,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 isPerformanceItem: sampleItem.IsPerformanceItem,
                 brailleOnlyitem: sampleItem.BrailleOnlyItem,
                 depthOfKnowledge: sampleItem.DepthOfKnowledge,
-                ccss: sampleItem.CoreStandards.CommonCoreStandardsId,
+                ccss: sampleItem.CoreStandards?.CommonCoreStandardsId,
                 domain: sampleItem.Domain);
 
             return card;
