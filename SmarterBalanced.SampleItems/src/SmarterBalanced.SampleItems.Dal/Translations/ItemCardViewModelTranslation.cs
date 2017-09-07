@@ -24,6 +24,7 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 claimCode: sampleItem.Claim?.Code,
                 claimLabel: sampleItem.Claim?.Label,
                 targetHash: sampleItem.CoreStandards?.Target?.GetHashCode() ?? 0,
+                targetId: sampleItem.CoreStandards?.Target?.Id,
                 targetShortName: sampleItem.CoreStandards?.Target?.Name,
                 interactionTypeCode: sampleItem.InteractionType?.Code,
                 interactionTypeLabel: sampleItem.InteractionType?.Label,

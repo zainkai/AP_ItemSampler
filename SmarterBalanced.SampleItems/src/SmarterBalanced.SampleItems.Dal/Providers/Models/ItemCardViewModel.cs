@@ -17,6 +17,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public string ClaimCode { get; }
         public string ClaimLabel { get; }
         public int TargetHash { get; }
+        public string TargetId { get; }
         public string TargetShortName { get; }
         public string InteractionTypeCode { get; }
         public string InteractionTypeLabel { get; }
@@ -37,6 +38,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             string claimCode,
             string claimLabel,
             int targetHash,
+            string targetId,
             string targetShortName,
             string interactionTypeCode,
             string interactionTypeLabel,
@@ -64,6 +66,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             DepthOfKnowledge = depthOfKnowledge;
             Domain = domain;
             CommonCoreStandardId = ccss;
+            TargetId = targetId;
         }
 
         /// <summary>
@@ -80,6 +83,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string claimCode = "",
            string claimLabel = "",
            int targetHash = -1,
+           string targetId = "",
            string targetShortName = "",
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
@@ -107,7 +111,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 brailleOnlyItem: brailleOnlyitem,
                 domain: domain,
                 depthOfKnowledge: depthOfKnowledge,
-                ccss: ccss);
+                ccss: ccss,
+                targetId: targetId);
         }
 
     }
