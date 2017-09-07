@@ -84,7 +84,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
            string interactionTypeCode = "",
            string interactionTypeLabel = "",
            bool isPerformanceItem = false,
-           bool brailleOnlyitem = false
+           bool brailleOnlyitem = false,
            string domain = "",
            string depthOfKnowledge = "",
            string ccss = "")

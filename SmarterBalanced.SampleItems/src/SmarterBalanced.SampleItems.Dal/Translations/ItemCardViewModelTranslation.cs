@@ -28,7 +28,10 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 interactionTypeCode: sampleItem.InteractionType?.Code,
                 interactionTypeLabel: sampleItem.InteractionType?.Label,
                 isPerformanceItem: sampleItem.IsPerformanceItem,
-                brailleOnlyitem: sampleItem.BrailleOnlyItem);
+                brailleOnlyitem: sampleItem.BrailleOnlyItem,
+                depthOfKnowledge: sampleItem.DepthOfKnowledge,
+                ccss: sampleItem.CoreStandards.CommonCoreStandardsId,
+                domain: "");
 
             return card;
         }
