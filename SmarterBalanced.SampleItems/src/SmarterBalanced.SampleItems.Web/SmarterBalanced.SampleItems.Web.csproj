@@ -70,10 +70,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\App\ItemPageController.tsx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update=".dockerignore">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
