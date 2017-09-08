@@ -360,23 +360,28 @@ export class ISPComponent extends React.Component<Props, State> {
         }
     }
 
-    render() {
-        history.replaceState(null, "", this.encodeQuery());
-
+    renderSearchHeader(): JSX.Element {
         return (
-            <div className="search-params">
-                <div className="search-header">
-                    <h1 className="search-title" tabIndex={0}>Browse Items</h1>
-                    <div className="search-status">
-                        {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
-                        <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
-                        <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}
-                            aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
-                            {this.getExpandAll() ? hideArrow : showArrow}
-                            {this.getExpandAll() ? " Hide" : " Show"} all
-                        </div>
+            <div className="search-header">
+                <h1 className="search-title" tabIndex={0}>Browse Items</h1>
+                <div className="search-status">
+                    {this.props.isLoading ? <img src="images/spin.gif" className="spin" /> : undefined}
+                    <div><a onClick={() => this.resetFilters()} onKeyPress={e => this.keyPressResetFilters(e)} tabIndex={0}>Reset filters</a></div>
+                    <div onClick={() => this.toggleExpandAll()} onKeyPress={e => this.keyPressToggleExpandAll(e)} tabIndex={0}
+                        aria-label={(this.getExpandAll() ? " Hide" : " Show") + " all"}>
+                        {this.getExpandAll() ? hideArrow : showArrow}
+                        {this.getExpandAll() ? " Hide" : " Show"} all
                     </div>
                 </div>
+            </div>
+        );
+    }
+
+    render() {
+        history.replaceState(null, "", this.encodeQuery());
+        return (
+            <div className="search-params">
+                {this.renderSearchHeader()}
                 <div className="search-categories" aria-live="polite" aria-relevant="additions removals">
                     {this.renderGrades()}
                     {this.renderSubjects()}
