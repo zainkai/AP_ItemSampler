@@ -9,17 +9,17 @@
     <OutputType>Exe</OutputType>
     <PackageId>SmarterBalanced.SampleItems.Web</PackageId>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
+    <TypeScriptCompileBlocked>True</TypeScriptCompileBlocked>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;dnxcore50;portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\App\ItemPageController.tsx" />
+    <None Remove="Scripts\ApiModel.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\scripts\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +67,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="SimpleMvcSitemap" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\ApiModel.ts" />
+    <TypeScriptCompile Include="Scripts\App\ItemPageContainer.tsx" />
   </ItemGroup>
 
   <ItemGroup>
