@@ -21,9 +21,9 @@ export namespace ItemPageContainer {
     export class Container extends React.Component<Props, State>{
         constructor(props:Props){
             super(props);
-            const itemPageVM = {... props.itemPage };
+            const itemPageVM = {...props.itemPage };
 
-            itemPageVM.currentItem = Accessibility.isBrailleEnabled(itemPageVM.accResourceGroups) ? itemPageVM.brailleItem : itemPageVM.nonBrailleItem
+            itemPageVM.currentItem = Accessibility.isBrailleEnabled(itemPageVM.accResourceGroups) ? itemPageVM.brailleItem : itemPageVM.nonBrailleItem;
 
             this.state = {
                 aboutThisItem: { kind: "loading" },
@@ -54,8 +54,8 @@ export namespace ItemPageContainer {
             itemPageVM.accResourceGroups = newGroups;
             let cookieValue = ItemPage.toCookie(itemPageVM.accResourceGroups);
             document.cookie = itemPageVM.accessibilityCookieName.concat("=", cookieValue, "; path=/");
-
             itemPageVM.currentItem = Accessibility.isBrailleEnabled(newGroups) ? itemPageVM.brailleItem : itemPageVM.nonBrailleItem;
+
             this.fetchUpdatedAboutThisItem(); //TODO: why does this need to refetch?
             this.setState({
                 itemPageVM: itemPageVM
@@ -109,13 +109,16 @@ export namespace ItemPageContainer {
 
         render() {
             const aboutThisItemResult = this.state.aboutThisItem;
+            const ItemDetails = this.state.itemPageVM.currentItem;
 
             if ((aboutThisItemResult.kind === "success" || aboutThisItemResult.kind === "reloading") && aboutThisItemResult.content) {
                 return <ItemPage.Page
                     {...this.props.itemPage}
                     aboutThisItemVM={aboutThisItemResult.content}
                     onSave={this.onSave}
-                    onReset={this.onReset} />
+                    onReset={this.onReset}
+                    currentItem={ItemDetails}
+                    />
             }
             else {
                 return <div></div>
