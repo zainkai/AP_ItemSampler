@@ -55,7 +55,7 @@ export function toCookie(accGroups: Accessibility.AccResourceGroup[]): string {
 
 function addDisabledPlaceholder(resource: Accessibility.AccessibilityResource): Accessibility.AccessibilityResource {
     if (resource.disabled) {
-        let newSelection = Object.assign(resource, resource);
+        let newSelection = { ...resource };
         let disabledOption: Dropdown.Selection = {
             label: "Disabled for item",
             selectionCode: "",

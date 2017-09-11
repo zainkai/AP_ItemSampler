@@ -19,8 +19,6 @@ export namespace ItemPageContainer {
     }
 
     export class Container extends React.Component<Props, State>{
-
-        //constructor(private itemProps: ItemPage.ViewModel, private rootDiv: HTMLDivElement) {
         constructor(props:Props){
             super(props);
             const itemPageVM = {... props.itemPage };
@@ -52,8 +50,7 @@ export namespace ItemPageContainer {
 
 
             const itemPageVM = { ...this.state.itemPageVM };
-
-            //this.props = { ...this.itemProps };
+            
             itemPageVM.accResourceGroups = newGroups;
             let cookieValue = ItemPage.toCookie(itemPageVM.accResourceGroups);
             document.cookie = itemPageVM.accessibilityCookieName.concat("=", cookieValue, "; path=/");
@@ -62,7 +59,7 @@ export namespace ItemPageContainer {
             this.fetchUpdatedAboutThisItem(); //TODO: why does this need to refetch?
             this.setState({
                 itemPageVM: itemPageVM
-            })
+            });
         }
 
         onReset = () => {
