@@ -80,7 +80,7 @@ export namespace ItemPageContainer {
 
             this.setState({
                 itemPageVM: itemPageVM
-            })
+            });
         }
 
         fetchUpdatedAboutThisItem() {
@@ -97,21 +97,20 @@ export namespace ItemPageContainer {
         onFetchedUpdatedViewModel(viewModel: AboutThisItem.Props) {
             this.setState({
                 aboutThisItem: { kind: "success", content: viewModel }
-            })
-
+            });
         }
 
         onFetchUpdatedAboutError(err: any) {
             console.error(err);
             this.setState({
                 aboutThisItem: { kind: "failure" }
-            })
+            });
         }
 
         render() {
             const aboutThisItemResult = this.state.aboutThisItem;
 
-            if ((aboutThisItemResult.kind === "success" || aboutThisItemResult.kind === "reloading") && aboutThisItemResult.content != undefined) {
+            if ((aboutThisItemResult.kind === "success" || aboutThisItemResult.kind === "reloading") && aboutThisItemResult.content) {
                 return <ItemPage.Page
                     {...this.props.itemPage}
                     aboutThisItemVM={aboutThisItemResult.content}
@@ -127,6 +126,5 @@ export namespace ItemPageContainer {
 
 export function initializeItemPage(itemProps: ItemPage.ViewModel) {
     ReactDOM.render(<ItemPageContainer.Container itemPage={itemProps} />, document.getElementById("item-container"));
-
 }
 

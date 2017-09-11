@@ -4,7 +4,7 @@ module.exports = {
   entry: {
       "sb.itemsampler.aboutitems": "./Scripts/AboutItem/AboutItems.tsx",
       "sb.itemsampler.itemssearch": "./Scripts/ItemSearch/ItemsSearch.tsx",
-      "sb.itemsampler.itempage": "./Scripts/App/ItemPage.tsx",
+      "sb.itemsampler.itempagecontainer": "./Scripts/App/ItemPageContainer.tsx",
       "polyfill": "./Scripts/Polyfill.ts"
   },
 
