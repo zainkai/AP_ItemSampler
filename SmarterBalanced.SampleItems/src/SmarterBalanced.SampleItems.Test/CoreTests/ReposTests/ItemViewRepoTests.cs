@@ -303,51 +303,6 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetAboutThisItemViewModelGoodItem()
         {
-            //var rubricEntry = new RubricEntry
-            //{
-            //    Scorepoint = "0",
-            //    Name = "TestName",
-            //    Value = "TestValue"
-            //};
-
-            //var sampleResponces = new List<SampleResponse>()
-            //{
-            //    new SampleResponse()
-            //    {
-            //        Purpose = "TestPurpose",
-            //        ScorePoint = "0",
-            //        Name = "TestName",
-            //        SampleContent = "TestSampleContent"
-            //    },
-            //    new SampleResponse()
-            //    {
-            //        Purpose = "TestPurpose1",
-            //        ScorePoint = "1",
-            //        Name = "TestName1",
-            //        SampleContent = "TestSampleContent1"
-            //    }
-            //};
-
-            //var rubricSample = new RubricSample
-            //{
-            //    MaxValue = "MaxVal",
-            //    MinValue = "MinVal",
-            //    SampleResponses = sampleResponces
-            //};
-
-            //var entries = ImmutableArray.Create(rubricEntry);
-            //var samples = ImmutableArray.Create(rubricSample);
-            //var rubric = new Rubric("ENU", entries, samples);
-            //var rubrics = ImmutableArray.Create(rubric);
-            //SampleItem item = SampleItem.Create(
-            //    bankKey: GoodBankKey,
-            //    itemKey: GoodItemKey,
-            //    isPerformanceItem: true,
-            //    associatedStimulus: 1,
-            //    fieldTestUse: fieldTestUseVar,
-            //    rubrics: rubrics,
-            //    depthOfKnowledge: "TestDepth");
-
             var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(MathDigest);
 
             Assert.NotNull(aboutThisItemViewModel);
