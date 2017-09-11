@@ -41,7 +41,7 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
             string itemURL = GetItemViewerUrlSingleItem(sampleItem);
 
-            AboutThisItemViewModel aboutThisItemViewModel = GetAboutThisItemViewModel(sampleItem);
+            AboutThisItemViewModel aboutThisItemViewModel = GetAboutThisItem(sampleItem);
             AboutItemsViewModel model = new AboutItemsViewModel(
                 interactionTypes: interactionTypes,
                 itemUrl: itemURL,

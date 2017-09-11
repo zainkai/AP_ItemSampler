@@ -129,14 +129,10 @@ namespace SmarterBalanced.SampleItems.Core.Repos
                 return null;
             }
 
-            var itemCardViewModel = GetItemCardViewModel(sampleItem.BankKey, sampleItem.ItemKey);
-            var aboutThisItemViewModel = AboutThisItemViewModel.Create(
-                rubrics: sampleItem.Rubrics,
-                itemCard: itemCardViewModel,
-                targetDescription: sampleItem.CoreStandards?.Target?.Descripton,
-                depthOfKnowledge: sampleItem.DepthOfKnowledge,
-                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription);
-
+            var aboutThisItemViewModel = context.AboutAllItems.FirstOrDefault(item =>
+                item.ItemCardViewModel?.BankKey == sampleItem.BankKey
+                && item.ItemCardViewModel?.ItemKey == sampleItem.ItemKey);
+            
             return aboutThisItemViewModel;
         }
 
