@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import * as $ from 'jquery';
 import * as AboutThisItem from './AboutThisItem';
 import { ItemFrame } from './ItemViewerFrame';
+import * as Api from '../ApiModel';
 
 interface InteractionType {
     code: string;
@@ -19,6 +20,8 @@ interface AboutItemsViewModel {
 }
 
 namespace AboutItems {
+
+    const fetchUpdatedViewModelClient = (params: { interactionTypeCode: string }) => Api.get<AboutItemsViewModel>("/AboutItems/GetItemUrl",params);
 
     interface State {
         selectedCode: string;
@@ -51,13 +54,7 @@ namespace AboutItems {
                 interactionTypeCode: newCode
             };
 
-            $.ajax({
-                dataType: "JSON",
-                type: "GET",
-                url: "/AboutItems/GetItemUrl",
-                data: params,
-                success: this.onFetchedUpdatedViewModel
-            });
+            fetchUpdatedViewModelClient(params).then((data) => this.onFetchedUpdatedViewModel(data)).catch();
         }
 
         onFetchedUpdatedViewModel = (viewModel: AboutItemsViewModel) => {
