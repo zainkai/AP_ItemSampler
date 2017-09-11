@@ -10,7 +10,7 @@
     "outDir": "../wwwroot/scripts",
     "jsx": "react",
     "strictNullChecks": true,
-    "lib": ["dom","es2015"]
+    "lib": ["dom", "es6"]
   },
   "exclude": [
     "node_modules",

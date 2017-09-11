@@ -24,11 +24,15 @@ namespace SmarterBalanced.SampleItems.Dal.Translations
                 claimCode: sampleItem.Claim?.Code,
                 claimLabel: sampleItem.Claim?.Label,
                 targetHash: sampleItem.CoreStandards?.Target?.GetHashCode() ?? 0,
+                targetId: sampleItem.CoreStandards?.Target?.Id,
                 targetShortName: sampleItem.CoreStandards?.Target?.Name,
                 interactionTypeCode: sampleItem.InteractionType?.Code,
                 interactionTypeLabel: sampleItem.InteractionType?.Label,
                 isPerformanceItem: sampleItem.IsPerformanceItem,
-                brailleOnlyitem: sampleItem.BrailleOnlyItem);
+                brailleOnlyitem: sampleItem.BrailleOnlyItem,
+                depthOfKnowledge: sampleItem.DepthOfKnowledge,
+                ccss: sampleItem.CoreStandards?.CommonCoreStandardsId,
+                domain: sampleItem.Domain);
 
             return card;
         }

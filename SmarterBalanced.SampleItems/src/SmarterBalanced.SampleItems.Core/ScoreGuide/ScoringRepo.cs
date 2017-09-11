@@ -8,6 +8,7 @@ using System.Linq;
 using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Core.ScoreGuide.Models;
 using SmarterBalanced.SampleItems.Core.Repos;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Core.ScoreGuide
 {
@@ -68,6 +69,11 @@ namespace SmarterBalanced.SampleItems.Core.ScoreGuide
             }
 
             return query.OrderBy(i => i.SubjectCode).ThenBy(i => i.Grade).ThenBy(i => i.ClaimCode).ToList();
+        }
+
+        public ImmutableArray<AboutThisItemViewModel> GetAboutAllItems()
+        {
+            return context.AboutAllItems;
         }
     }
 }

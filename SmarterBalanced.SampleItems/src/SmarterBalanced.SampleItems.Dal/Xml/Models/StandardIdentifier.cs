@@ -68,7 +68,7 @@ namespace SmarterBalanced.SampleItems.Dal.Xml.Models
         {
             return new StandardIdentifier(
             claim: claim,
-            contentDomain:contentDomain,
+            contentDomain: contentDomain,
             contentCategory: contentCategory,
             target: target,
             targetSet: targetSet,

@@ -52,6 +52,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 .Select(i => i.ToItemCardViewModel())
                 .ToImmutableArray();
 
+            var aboutItems = sampleItems
+                .Select(item => AboutThisItemViewModel.FromSampleItem(item, itemCards))
+                .ToImmutableArray();
+
             var aboutInteractionTypes = LoadAboutInteractionTypes(interactionGroup);
 
             SampleItemsContext context = new SampleItemsContext(
@@ -60,6 +64,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 interactionTypes: interactionGroup.InteractionTypes,
                 subjects: subjects,
                 appSettings: appSettings,
+                aboutAllItems: aboutItems,
                 aboutInteractionTypes: aboutInteractionTypes);
 
             logger.LogInformation($"Loaded {sampleItems.Length} sample items");

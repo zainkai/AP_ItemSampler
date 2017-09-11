@@ -37,8 +37,10 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
         public ImmutableArray<string> BraillePassageCodes { get; }
         public bool BrailleOnlyItem { get; }
         public int? CopiedFromItem { get; }
+        public string Domain { get; }
         public string EducationalDifficulty { get; set; }
         public string EvidenceStatement { get; set; }
+
         public SampleItem(
             int bankKey,
             int itemKey,
@@ -64,7 +66,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             bool brailleOnlyItem,
             int? copiedFromitem,
             string educationalDifficulty,
-            string evidenceStatement
+            string evidenceStatement,
+            string domain
             )
         {
             BankKey = bankKey;
@@ -92,6 +95,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             BrailleOnlyItem = brailleOnlyItem;
             EducationalDifficulty = educationalDifficulty;
             EvidenceStatement = evidenceStatement;
+            Domain = domain;
         }
 
         public static SampleItem Create(
@@ -115,11 +119,12 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
             FieldTestUse fieldTestUse = null,
             string interactionTypeSubCat = "",
             ImmutableArray<string> brailleItemCodes = new ImmutableArray<string>(),
-            ImmutableArray<string>  braillePassageCodes = new ImmutableArray<string>(),
+            ImmutableArray<string> braillePassageCodes = new ImmutableArray<string>(),
             bool brailleOnlyItem = false,
             int? copiedFromItem = null,
             string educationalDifficulty = "",
-            string evidenceStatement = "")
+            string evidenceStatement = "",
+            string domain = "")
         {
             return new SampleItem(
                 bankKey,
@@ -146,8 +151,8 @@ namespace SmarterBalanced.SampleItems.Dal.Providers.Models
                 brailleOnlyItem,
                 copiedFromItem,
                 educationalDifficulty,
-                evidenceStatement
-                );
+                evidenceStatement,
+                domain: domain);
         }
 
         public override string ToString()
