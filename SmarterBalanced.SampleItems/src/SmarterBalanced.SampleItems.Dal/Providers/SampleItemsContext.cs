@@ -15,7 +15,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
         public ImmutableArray<ItemCardViewModel> ItemCards { get; }
         public ImmutableArray<InteractionType> InteractionTypes { get; }
         public ImmutableArray<InteractionType> AboutInteractionTypes { get; }
-
+        public ImmutableArray<AboutThisItemViewModel> AboutAllItems { get; }
         public ImmutableArray<Subject> Subjects { get; }
         public AppSettings AppSettings { get; }
 
@@ -25,6 +25,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             ImmutableArray<InteractionType> interactionTypes,
             ImmutableArray<InteractionType> aboutInteractionTypes,
             ImmutableArray<Subject> subjects,
+            ImmutableArray<AboutThisItemViewModel> aboutAllItems,
             AppSettings appSettings)
         {
             SampleItems = sampleItems;
@@ -33,6 +34,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             Subjects = subjects;
             AppSettings = appSettings;
             AboutInteractionTypes = aboutInteractionTypes;
+            AboutAllItems = aboutAllItems;
         }
 
         /// <summary>
@@ -44,6 +46,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
             ImmutableArray<InteractionType> interactionTypes = default(ImmutableArray<InteractionType>),
             ImmutableArray<InteractionType> aboutInteractionTypes = default(ImmutableArray<InteractionType>),
             ImmutableArray<Subject> subjects = default(ImmutableArray<Subject>),
+            ImmutableArray<AboutThisItemViewModel> aboutAllItems = default(ImmutableArray<AboutThisItemViewModel>),
             AppSettings appSettings = null)
         {
             var context = new SampleItemsContext(
@@ -52,6 +55,7 @@ namespace SmarterBalanced.SampleItems.Dal.Providers
                 interactionTypes: interactionTypes,
                 subjects: subjects,
                 appSettings: appSettings,
+                aboutAllItems: aboutAllItems,
                 aboutInteractionTypes: aboutInteractionTypes);
 
             return context;
