@@ -2,27 +2,6 @@
     [subject: string]: { text: string; value: string }[];
 }
 
-export interface Loading {
-    kind: "loading";
-}
-
-export interface Success<T> {
-    kind: "success";
-    content: T;
-}
-
-export interface Failure {
-    kind: "failure";
-}
-
-export interface Reloading<T> {
-    kind: "reloading";
-    content: T;
-}
-
-/** Represents the state of an asynchronously obtained resource at a particular time. */
-export type Resource<T> = Loading | Success<T> | Reloading<T> | Failure
-
 export interface InteractionType {
     code: string;
     label: string;

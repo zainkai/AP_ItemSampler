@@ -4,6 +4,7 @@ import * as ItemCard from '../ItemCard';
 import * as ItemsSearchParams from './ItemsSearchParams';
 import * as GradeLevels from '../GradeLevels';
 import * as Models from './ItemsSearchModels';
+import { Resource } from '../ApiModel';
 
 namespace ItemsSearch {
     export interface Props {
@@ -13,7 +14,7 @@ namespace ItemsSearch {
     }
 
     export interface State {
-        searchResults: Models.Resource<ItemCard.ItemCardViewModel[]>;
+        searchResults: Resource<ItemCard.ItemCardViewModel[]>;
     }
     
     export class ISComponent extends React.Component<Props, State> {
@@ -50,7 +51,7 @@ namespace ItemsSearch {
 
         selectSingleResult() {
             const searchResults = this.state.searchResults;
-            if (searchResults.kind === "success" && searchResults.content.length === 1) {
+            if (searchResults.kind === "success" && searchResults.content && searchResults.content.length === 1) {
                 const searchResult = searchResults.content[0];
                 ItemCard.itemPageLink(searchResult.bankKey, searchResult.itemKey);
             }
@@ -64,8 +65,8 @@ namespace ItemsSearch {
             const searchResults = this.state.searchResults;
 
             let resultsElement: JSX.Element[] | JSX.Element | undefined;
-            if (searchResults.kind === "success" || searchResults.kind === "reloading") {
-                resultsElement = searchResults.content.length === 0
+            if ((searchResults.kind === "success" || searchResults.kind === "reloading") && searchResults.content) {
+                resultsElement = searchResults.content && searchResults.content.length === 0
                     ? <span className="placeholder-text" role="alert">No results found for the given search terms.</span>
                     : searchResults.content.map(digest =>
                         <ItemCard.ItemCard {...digest} key={digest.bankKey.toString() + "-" + digest.itemKey.toString()} />);
