@@ -3,6 +3,7 @@ using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using SmarterBalanced.SampleItems.Dal.Providers;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Core.Repos.Models
 {
@@ -52,16 +53,16 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
 
         public AboutThisItemViewModel GetAboutThisItem(int itemBank, int itemKey)
         {
-            var sampleItem = context.SampleItems.FirstOrDefault(s => s.ItemKey == itemKey && s.BankKey == itemBank);
-            if (sampleItem == null)
+            var aboutThisItemViewModel = context.AboutAllItems.FirstOrDefault(item =>
+                item.ItemCardViewModel?.BankKey == itemBank
+                && item.ItemCardViewModel?.ItemKey == itemKey);
+
+            if (aboutThisItemViewModel == null)
             {
                 throw new Exception($"invalid request for {itemBank}-{itemKey}");
             }
 
-            var aboutThis = GetAboutThisItem(sampleItem);
-
-            return aboutThis;
-
+            return aboutThisItemViewModel;
         }
 
         private AboutThisItemViewModel GetAboutThisItem(SampleItem sampleItem)
@@ -71,15 +72,9 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
                 return null;
             }
 
-            var itemCardViewModel = GetItemCardViewModel(sampleItem.BankKey, sampleItem.ItemKey);
-            var aboutThisItemViewModel = AboutThisItemViewModel.Create(
-                rubrics: sampleItem.Rubrics,
-                itemCard: itemCardViewModel,
-                targetDescription: sampleItem.CoreStandards?.Target.Descripton,
-                depthOfKnowledge: sampleItem.DepthOfKnowledge,
-                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
-                educationalDifficulty: sampleItem.EducationalDifficulty,
-                evidenceStatement: sampleItem.EvidenceStatement);
+            var aboutThisItemViewModel = context.AboutAllItems.FirstOrDefault(item =>
+                item.ItemCardViewModel?.BankKey == sampleItem.BankKey
+                && item.ItemCardViewModel?.ItemKey == sampleItem.ItemKey);
 
             return aboutThisItemViewModel;
         }
@@ -97,7 +92,6 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             string baseUrl = context.AppSettings.SettingsConfig.ItemViewerServiceURL;
             return $"{baseUrl}/items?ids={sampleItem.ToString()}";
         }
-
     }
 
 }
