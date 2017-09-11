@@ -29,7 +29,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         int BadBankKey;
         int DuplicateItemKey, DuplicateBankKey;
         ItemCardViewModel MathCard, ElaCard, DuplicateCard;
-
+        Rubric TestRubric;
 
         public ItemViewRepoTests()
         {
@@ -44,7 +44,7 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             DuplicateCard = ItemCardViewModel.Create(bankKey: DuplicateBankKey, itemKey: DuplicateItemKey);
             MathDigest = SampleItem.Create(bankKey: GoodBankKey, itemKey: GoodItemKey);
             ElaDigest = SampleItem.Create(bankKey: BadBankKey, itemKey: BadItemKey);
-
+            TestRubric = BuildRubric();
             fieldTestUseVar = new FieldTestUse();
             fieldTestUseVar.Code = "ELA";
             fieldTestUseVar.QuestionNumber = 1;
@@ -87,12 +87,58 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
             itemCards = itemCards.AddRange(MoreItemCards());
             var settings = new AppSettings() { SettingsConfig = new SettingsConfig() { NumMoreLikeThisItems = 3 } };
 
-            Context = SampleItemsContext.Create(sampleItems: SampleItems, itemCards: itemCards, appSettings: settings);
+            var aboutGoodItem = AboutThisItemViewModel.Create(
+                rubrics: ImmutableArray.Create(TestRubric),
+                itemCard: MathCard,
+                depthOfKnowledge: "TestDepth");
+            var aboutItems = ImmutableArray.Create(aboutGoodItem);
+
+            Context = SampleItemsContext.Create(sampleItems: SampleItems, itemCards: itemCards, appSettings: settings, aboutAllItems: aboutItems);
 
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(lf => lf.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             ItemViewRepo = new ItemViewRepo(Context, loggerFactory.Object);
+        }
+
+        private Rubric BuildRubric()
+        {
+            var rubricEntry = new RubricEntry
+            {
+                Scorepoint = "0",
+                Name = "TestName",
+                Value = "TestValue"
+            };
+
+            var sampleResponces = new List<SampleResponse>()
+            {
+                new SampleResponse()
+                {
+                    Purpose = "TestPurpose",
+                    ScorePoint = "0",
+                    Name = "TestName",
+                    SampleContent = "TestSampleContent"
+                },
+                new SampleResponse()
+                {
+                    Purpose = "TestPurpose1",
+                    ScorePoint = "1",
+                    Name = "TestName1",
+                    SampleContent = "TestSampleContent1"
+                }
+            };
+
+            var rubricSample = new RubricSample
+            {
+                MaxValue = "MaxVal",
+                MinValue = "MinVal",
+                SampleResponses = sampleResponces
+            };
+
+            var entries = ImmutableArray.Create(rubricEntry);
+            var samples = ImmutableArray.Create(rubricSample);
+            var rubric = new Rubric("ENU", entries, samples);
+            return rubric;
         }
 
         private ImmutableArray<ItemCardViewModel> MoreItemCards()
@@ -257,56 +303,56 @@ namespace SmarterBalanced.SampleItems.Test.CoreTests.ReposTests
         [Fact]
         public void TestGetAboutThisItemViewModelGoodItem()
         {
-            var rubricEntry = new RubricEntry
-            {
-                Scorepoint = "0",
-                Name = "TestName",
-                Value = "TestValue"
-            };
+            //var rubricEntry = new RubricEntry
+            //{
+            //    Scorepoint = "0",
+            //    Name = "TestName",
+            //    Value = "TestValue"
+            //};
 
-            var sampleResponces = new List<SampleResponse>()
-            {
-                new SampleResponse()
-                {
-                    Purpose = "TestPurpose",
-                    ScorePoint = "0",
-                    Name = "TestName",
-                    SampleContent = "TestSampleContent"
-                },
-                new SampleResponse()
-                {
-                    Purpose = "TestPurpose1",
-                    ScorePoint = "1",
-                    Name = "TestName1",
-                    SampleContent = "TestSampleContent1"
-                }
-            };
+            //var sampleResponces = new List<SampleResponse>()
+            //{
+            //    new SampleResponse()
+            //    {
+            //        Purpose = "TestPurpose",
+            //        ScorePoint = "0",
+            //        Name = "TestName",
+            //        SampleContent = "TestSampleContent"
+            //    },
+            //    new SampleResponse()
+            //    {
+            //        Purpose = "TestPurpose1",
+            //        ScorePoint = "1",
+            //        Name = "TestName1",
+            //        SampleContent = "TestSampleContent1"
+            //    }
+            //};
 
-            var rubricSample = new RubricSample
-            {
-                MaxValue = "MaxVal",
-                MinValue = "MinVal",
-                SampleResponses = sampleResponces
-            };
+            //var rubricSample = new RubricSample
+            //{
+            //    MaxValue = "MaxVal",
+            //    MinValue = "MinVal",
+            //    SampleResponses = sampleResponces
+            //};
 
-            var entries = ImmutableArray.Create(rubricEntry);
-            var samples = ImmutableArray.Create(rubricSample);
-            var rubric = new Rubric("ENU", entries, samples);
-            var rubrics = ImmutableArray.Create(rubric);
-            SampleItem item = SampleItem.Create(
-                bankKey: GoodBankKey,
-                itemKey: 209,
-                isPerformanceItem: true,
-                associatedStimulus: 1,
-                fieldTestUse: fieldTestUseVar,
-                rubrics: rubrics,
-                depthOfKnowledge: "TestDepth");
+            //var entries = ImmutableArray.Create(rubricEntry);
+            //var samples = ImmutableArray.Create(rubricSample);
+            //var rubric = new Rubric("ENU", entries, samples);
+            //var rubrics = ImmutableArray.Create(rubric);
+            //SampleItem item = SampleItem.Create(
+            //    bankKey: GoodBankKey,
+            //    itemKey: GoodItemKey,
+            //    isPerformanceItem: true,
+            //    associatedStimulus: 1,
+            //    fieldTestUse: fieldTestUseVar,
+            //    rubrics: rubrics,
+            //    depthOfKnowledge: "TestDepth");
 
-            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(item);
+            var aboutThisItemViewModel = ItemViewRepo.GetAboutThisItemViewModel(MathDigest);
 
             Assert.NotNull(aboutThisItemViewModel);
             Assert.Equal(aboutThisItemViewModel.Rubrics.Length, 1);
-            Assert.Equal(aboutThisItemViewModel.Rubrics[0], rubric);
+            Assert.Equal(aboutThisItemViewModel.Rubrics[0], TestRubric);
             Assert.Equal(aboutThisItemViewModel.DepthOfKnowledge, "TestDepth");
         }
 
