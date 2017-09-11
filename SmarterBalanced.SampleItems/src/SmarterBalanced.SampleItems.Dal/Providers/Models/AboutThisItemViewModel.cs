@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SmarterBalanced.SampleItems.Core.Repos.Models
+namespace SmarterBalanced.SampleItems.Dal.Providers.Models
 {
 
     public class AboutThisItemViewModel
@@ -58,6 +58,27 @@ namespace SmarterBalanced.SampleItems.Core.Repos.Models
             );
 
 
+        }
+
+        public static AboutThisItemViewModel FromSampleItem(SampleItem sampleItem, ImmutableArray<ItemCardViewModel> itemCards)
+        {
+            if (sampleItem == null)
+            {
+                return null;
+            }
+
+            var itemCardViewModel = itemCards
+                .FirstOrDefault(card => card.BankKey == sampleItem.BankKey && card.ItemKey == sampleItem.ItemKey);
+            var aboutThisItemViewModel = Create(
+                rubrics: sampleItem.Rubrics,
+                itemCard: itemCardViewModel,
+                targetDescription: sampleItem.CoreStandards?.Target.Descripton,
+                depthOfKnowledge: sampleItem.DepthOfKnowledge,
+                commonCoreStandardsDescription: sampleItem.CoreStandards?.CommonCoreStandardsDescription,
+                educationalDifficulty: sampleItem.EducationalDifficulty,
+                evidenceStatement: sampleItem.EvidenceStatement);
+
+            return aboutThisItemViewModel;
         }
     }
 }

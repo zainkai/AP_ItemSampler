@@ -5,6 +5,7 @@ using SmarterBalanced.SampleItems.Core.Repos.Models;
 using SmarterBalanced.SampleItems.Core.ScoreGuide;
 using SmarterBalanced.SampleItems.Dal.Providers.Models;
 using System;
+using System.Collections.Immutable;
 
 namespace SmarterBalanced.SampleItems.Web.Controllers
 {
@@ -28,35 +29,28 @@ namespace SmarterBalanced.SampleItems.Web.Controllers
             return Json(vm);
         }
 
-        [HttpGet("AboutThisItem")]
+        [HttpGet("AboutAllItems")]
         [EnableCors("AllowAllOrigins")]
-        public IActionResult AboutThisItem(int? bankKey, int? itemKey)
+        public IActionResult AboutAllItems()
         {
-            if (!bankKey.HasValue || !itemKey.HasValue)
-            {
-                logger.LogWarning($"{nameof(AboutThisItem)} null param(s), given {bankKey} {itemKey}");
-                return BadRequest();
-            }
-
-            AboutThisItemViewModel aboutThis;
+            ImmutableArray<AboutThisItemViewModel> aboutThis;
             try
             {
-                aboutThis = scoringRepo.GetAboutThisItem(bankKey.Value, itemKey.Value);
+                aboutThis = scoringRepo.GetAboutAllItems();
             }
             catch (Exception e)
             {
-                logger.LogWarning($"{nameof(AboutThisItem)} invalid request: {e.Message}");
+                logger.LogWarning($"{nameof(AboutAllItems)} invalid request: {e.Message}");
                 return BadRequest();
             }
 
             if (aboutThis == null)
             {
-                logger.LogWarning($"{nameof(AboutThisItem)} incorrect param(s), given {bankKey} {itemKey}");
+                logger.LogWarning($"{nameof(AboutAllItems)} unable to get about all items from context");
                 return BadRequest();
             }
 
             return Json(aboutThis);
-
         }
 
         [HttpGet("Search")]
